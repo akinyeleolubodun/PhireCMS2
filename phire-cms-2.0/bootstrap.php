@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Pop PHP Framework Bootstrap File
  *
@@ -52,5 +51,3 @@ $project = Phire\Project::factory(
         substr(SYSTEM_URI, 1) => 'Phire\\Controller\\SystemController'
     ))
 );
-
-

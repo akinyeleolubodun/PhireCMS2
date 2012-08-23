@@ -1,5 +1,4 @@
 <?php
-
 /**
  * URI and Path Configuration Settings
  */
