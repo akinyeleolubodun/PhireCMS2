@@ -1,3 +1,3 @@
-INSTALLATION
-============
+Phire CMS 2.0.0 Installation
+============================
 
