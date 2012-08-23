@@ -21,7 +21,6 @@ CREATE TABLE [[{prefix}]comments] (
   UNIQUE ([id])
 ) ;
 
-
 --
 -- Table structure for table [content_types]
 --
