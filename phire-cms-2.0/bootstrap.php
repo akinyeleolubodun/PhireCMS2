@@ -20,6 +20,16 @@
  *
  */
 
+// Require the config file
+require_once 'config.php';
+
+// Check the path and URI constants
+if (!defined('BASE_URI') || !defined('SYSTEM_URI') || !defined('SYSTEM_DIR') ||
+    !defined('CONTENT_DIR') || !defined('DB_INTERFACE') || !defined('DB_NAME')) {
+    echo 'The config file is not properly configured. Please check the config file or install the system.';
+    exit(0);
+}
+
 // Require the Autoloader class file
 require_once __DIR__ . SYSTEM_DIR . '/vendor/PopPHPFramework/src/Pop/Loader/Autoloader.php';
 

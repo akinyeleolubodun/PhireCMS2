@@ -37,28 +37,61 @@ class SystemController extends C
     }
 
     /**
-     * Add your model data here within the 'index()' method to inject into
-     * the view.
+     * Index method
      *
      * @return void
      */
     public function index()
     {
-        $this->view = View::factory($this->viewPath . '/index.phtml');
-        $this->send();
+        if ($this->isInstalled()) {
+            $this->view = View::factory($this->viewPath . '/index.phtml');
+            $this->send();
+        }
     }
 
     /**
-     * Add your model data here within the 'error()' method to inject into
-     * the view.
+     * Install method
+     *
+     * @return void
+     */
+    public function install()
+    {
+        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
+            throw new \Exception('The system is already installed.');
+        } else {
+            $this->view = View::factory($this->viewPath . '/install.phtml');
+            $this->send();
+        }
+    }
+
+    /**
+     * Error method
      *
      * @return void
      */
     public function error()
     {
-        $this->isError = true;
-        $this->view = View::factory($this->viewPath . '/error.phtml');
-        $this->send();
+        if ($this->isInstalled()) {
+            $this->isError = true;
+            $this->view = View::factory($this->viewPath . '/error.phtml');
+            $this->send();
+        }
+    }
+
+    /**
+     * Method to check if the system is installed
+     *
+     * @throws Exception
+     * @return boolean
+     */
+    public function isInstalled()
+    {
+        if ((DB_INTERFACE == '') || (DB_NAME == '')) {
+            throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
+            exit(0);
+        }
+
+        return true;
     }
 
 }
