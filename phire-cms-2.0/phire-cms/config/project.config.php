@@ -1,8 +1,8 @@
 <?php
 
 $config = array(
-    'base'      => $_SERVER['DOCUMENT_ROOT'] . SYSTEM_DIR,
-	'docroot'   => $_SERVER['DOCUMENT_ROOT']
+    'base'    => $_SERVER['DOCUMENT_ROOT'] . SYSTEM_DIR,
+    'docroot' => $_SERVER['DOCUMENT_ROOT']
 );
 
 if ((DB_INTERFACE != '') && (DB_NAME != '')) {
