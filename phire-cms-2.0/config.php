@@ -4,7 +4,7 @@
  */
 
 // Define the base URI
-define('BASE_URI', str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__));
+define('BASE_URI', str_replace('\\', '/', str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', realpath(__DIR__))));
 
 // Define the system URI
 define('SYSTEM_URI', '/phire');
