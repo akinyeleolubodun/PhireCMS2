@@ -15,9 +15,9 @@ class Install extends Form
 {
 
     /**
-	 * Available database adapters
-	 * @var array
-	 */
+     * Available database adapters
+     * @var array
+     */
     protected $dbAdapters = array();
 
     /**
@@ -131,13 +131,13 @@ class Install extends Form
         parent::__construct($action, $method, $fields, $indent);
     }
 
-	/**
-	 * Set the field values
-	 *
-	 * @param array $values
-	 * @param mixed $filters
-	 * @return Pop\Form\Form
-	 */
+    /**
+     * Set the field values
+     *
+     * @param array $values
+     * @param mixed $filters
+     * @return Pop\Form\Form
+     */
     public function setFieldValues(array $values = null, $filters = null)
     {
         parent::setFieldValues($values, $filters);
@@ -169,7 +169,7 @@ class Install extends Form
 
                 $dbCheck = Dbs::check(array(
                     'database' => $this->db_name,
-                	'username' => $this->db_username,
+                    'username' => $this->db_username,
                     'password' => $this->db_password,
                     'host'     => $this->db_host,
                     'type'     => $this->db_adapter,

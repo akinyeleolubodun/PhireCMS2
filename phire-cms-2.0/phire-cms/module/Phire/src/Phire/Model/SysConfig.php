@@ -24,11 +24,11 @@ class SysConfig extends Model
     }
 
     /**
-	 * Install config file
-	 *
-	 * @param Pop\Form\Form $form
-	 * @return void
-	 */
+     * Install config file
+     *
+     * @param Pop\Form\Form $form
+     * @return void
+     */
     public function install($form)
     {
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
