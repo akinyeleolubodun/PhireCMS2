@@ -19,8 +19,13 @@ define('CONTENT_DIR', '/phire-content');
  * Database Configuration Settings
  */
 
-// Define the database interface type
+// Define the database interface
+// 'Mysql', 'Mysqli', 'Sqlsrv', 'Pgsql', 'Sqlite' or 'Pdo'
 define('DB_INTERFACE', '');
+
+// Define the database type (for Pdo only)
+// 'mysql', 'sqlsrv', 'pgsql' or 'sqlite'
+define('DB_TYPE', '');
 
 // Define the database name
 define('DB_NAME', '');
@@ -36,3 +41,10 @@ define('DB_HOST', '');
 
 // Define the database prefix
 define('DB_PREFIX', '');
+
+/**
+ * Language Settings
+ */
+
+// Define the default language
+define('POP_DEFAULT_LANG', 'en');

@@ -1,11 +1,16 @@
-<html>
-<head>
-    <title>Phire CMS 2.0.0 &gt; System Installation</title>
-</head>
-<body>
-    <h1 style="color: #00f;">Phire CMS 2.0.0 &gt; System Installation</h1>
-    <p>
-        This is the system installation page for Phire CMS 2.0.0.
-    </p>
-</body>
-</html>
+<?php include __DIR__ . '/header.phtml'; ?>
+    <h1 style="color: #1058a0;">Phire CMS 2.0.0 &gt; System Installation</h1>
+<?php
+if (isset($configWritable)) {
+    if ($configWritable) {
+        echo '    <p>The configuration file has been successfully written.</p>' . PHP_EOL;
+    } else {
+        echo '    <p>The configuration file is not writable. You will have to copy the code below and paste it into the \'config.php\' file.</p>' . PHP_EOL;
+        echo '    <textarea rows="25" cols="120">' . $config . '</textarea>' . PHP_EOL;
+    }
+    echo '    <p><a href="./install/user">Continue</a></p>' . PHP_EOL;
+} else if (isset($form)) {
+    echo $form;
+}
+?>
+<?php include __DIR__ . '/footer.phtml'; ?>

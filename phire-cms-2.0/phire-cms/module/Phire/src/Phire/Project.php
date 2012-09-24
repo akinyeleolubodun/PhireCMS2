@@ -27,5 +27,20 @@ class Project extends P
         }
     }
 
+    /**
+     * Method to check if the system is installed
+     *
+     * @throws Exception
+     * @return boolean
+     */
+    public static function isInstalled()
+    {
+        if ((DB_INTERFACE == '') || (DB_NAME == '')) {
+            throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
+        }
+
+        return true;
+    }
+
 }
 

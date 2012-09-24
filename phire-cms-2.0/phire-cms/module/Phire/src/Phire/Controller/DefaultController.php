@@ -4,7 +4,8 @@
  */
 namespace Phire\Controller;
 
-use Pop\Http\Response,
+use Phire\Project as PhireProject,
+    Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\Controller as C,
     Pop\Mvc\Model,
@@ -43,7 +44,7 @@ class DefaultController extends C
      */
     public function index()
     {
-        if ($this->isInstalled()) {
+        if (PhireProject::isInstalled()) {
             $this->view = View::factory($this->viewPath . '/index.phtml');
             $this->send();
         }
@@ -56,27 +57,11 @@ class DefaultController extends C
      */
     public function error()
     {
-        if ($this->isInstalled()) {
+        if (PhireProject::isInstalled()) {
             $this->isError = true;
             $this->view = View::factory($this->viewPath . '/error.phtml');
             $this->send();
         }
-    }
-
-    /**
-     * Method to check if the system is installed
-     *
-     * @throws Exception
-     * @return boolean
-     */
-    public function isInstalled()
-    {
-        if ((DB_INTERFACE == '') || (DB_NAME == '')) {
-            throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
-            exit(0);
-        }
-
-        return true;
     }
 
 }

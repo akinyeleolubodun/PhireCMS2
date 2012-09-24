@@ -4,12 +4,16 @@
  */
 namespace Phire\Controller;
 
-use Pop\Http\Response,
+use Phire\Project as PhireProject,
+    Phire\Form\Install,
+    Phire\Model\SysConfig,
+    Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\Controller as C,
     Pop\Mvc\Model,
     Pop\Mvc\View,
-    Pop\Project\Project;
+    Pop\Project\Project,
+    Pop\Version;
 
 class SystemController extends C
 {
@@ -43,7 +47,7 @@ class SystemController extends C
      */
     public function index()
     {
-        if ($this->isInstalled()) {
+        if (PhireProject::isInstalled()) {
             $this->view = View::factory($this->viewPath . '/index.phtml');
             $this->send();
         }
@@ -59,8 +63,29 @@ class SystemController extends C
         if ((DB_INTERFACE != '') && (DB_NAME != '')) {
             throw new \Exception('The system is already installed.');
         } else {
-            $this->view = View::factory($this->viewPath . '/install.phtml');
-            $this->send();
+            if ((null != $this->request->getPath(1)) && ($this->request->getPath(1) == 'user')) {
+                echo 'Install initial user.';
+            } else {
+                $config = new SysConfig();
+                $form = new Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+                if ($this->request->isPost()) {
+                    $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
+                    if ($form->isValid()) {
+                        $config->install($form);
+                        $config->set('form', '    <p>We are good!</p>');
+                        $this->view = View::factory($this->viewPath . '/install.phtml', $config);
+                        $this->send();
+                    } else {
+                        $config->set('form', $form);
+                        $this->view = View::factory($this->viewPath . '/install.phtml', $config);
+                        $this->send();
+                    }
+                } else {
+                    $config->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/install.phtml', $config);
+                    $this->send();
+                }
+            }
         }
     }
 
@@ -71,27 +96,11 @@ class SystemController extends C
      */
     public function error()
     {
-        if ($this->isInstalled()) {
+        if (PhireProject::isInstalled()) {
             $this->isError = true;
             $this->view = View::factory($this->viewPath . '/error.phtml');
             $this->send();
         }
-    }
-
-    /**
-     * Method to check if the system is installed
-     *
-     * @throws Exception
-     * @return boolean
-     */
-    public function isInstalled()
-    {
-        if ((DB_INTERFACE == '') || (DB_NAME == '')) {
-            throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
-            exit(0);
-        }
-
-        return true;
     }
 
 }
