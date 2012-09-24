@@ -4,7 +4,8 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form,
+use Phire\Project as PhireProject,
+    Pop\Form\Form,
     Pop\Form\Element,
     Pop\Locale\Locale,
     Pop\Project\Install\Dbs,
@@ -151,8 +152,11 @@ class Install extends Form
             // Check the content directory
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir)) {
                 $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory does not exist.');
-            } else if (!is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir)) {
-                $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory is not writable.');
+            } else {
+                $checkDirs = PhireProject::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir, true);
+                if (count($checkDirs) > 0) {
+                    $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory (or subdirectories) are not writable.');
+                }
             }
 
             if (strpos($this->db_adapter, 'Sqlite') === false) {

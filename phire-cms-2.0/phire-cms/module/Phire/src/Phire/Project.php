@@ -4,7 +4,8 @@
  */
 namespace Phire;
 
-use Pop\Project\Project as P;
+use Pop\Dir\Dir,
+    Pop\Project\Project as P;
 
 class Project extends P
 {
@@ -41,6 +42,62 @@ class Project extends P
 
         return true;
     }
+    
+    /**
+     * Determine whether or not the necessary system directories are writable or not.
+     *
+     * @param  boolean $msgs
+     * @return boolean|array
+     */
+    public static function checkDirs($contentDir, $msgs = false)
+    {
+        $dir = new Dir($contentDir, true, true);
+        $errorMsgs = array();
 
+        // Check if the necessary directories are writable for Windows.
+        if (stripos(PHP_OS, 'win') !== false) {
+            touch($contentDir . '/writetest.txt');
+            clearstatcache();
+            if (!file_exists($contentDir . '/writetest.txt')) {
+                $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
+            } else {
+                unlink($contentDir . '/writetest.txt');
+            }
+            foreach ($dir->files as $value) {
+                if (is_dir($value)) {
+                    touch($value . '/writetest.txt');
+                    clearstatcache();
+                    if (!file_exists($value . '/writetest.txt')) {
+                        $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $value) . " is not writable.";
+                    } else {
+                        unlink($value . '/writetest.txt');
+                    }
+                }
+            }
+        // Check if the necessary directories are writable for Unix/Linux.
+        } else {
+            clearstatcache();
+            if (!is_writable($contentDir)) {
+                $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
+            }
+            foreach ($dir->files as $value) {
+                if (is_dir($value)) {
+                    clearstatcache();
+                    if (!is_writable($value)) {
+                        $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $value) . " is not writable.";
+                    }
+                }
+            }
+        }
+
+        // If the messaging flag was passed, return any
+        // error messages, else return true/false.
+        if ($msgs) {
+            return $errorMsgs;
+        } else {
+            return (count($errorMsgs) == 0) ? true : false;
+        }
+
+    }
 }
 
