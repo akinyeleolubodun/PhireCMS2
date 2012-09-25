@@ -22,6 +22,11 @@ abstract class AbstractController extends C
     protected $sess = null;
 
     /**
+     * Called controller class
+     */
+    protected $calledClass = null;
+
+    /**
      * Constructer method to instantiate the controller object
      *
      * @param  Request  $request
@@ -32,32 +37,32 @@ abstract class AbstractController extends C
      */
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
-        $cls = get_called_class();
-
         // Determine controller-specific settings
-        switch ($cls) {
+        $this->calledClass = get_called_class();
+
+        switch ($this->calledClass) {
             case 'Phire\Controller\DefaultController':
-                $view = 'default';
+                $view = null;
                 $basePath = BASE_URI;
                 break;
 
             default:
                 $basePath = BASE_URI . SYSTEM_URI;
 
-                if ($cls != 'Phire\Controller\PhireController') {
-                    $uri = str_replace('Phire\\Controller\\', '', $cls);
+                if ($this->calledClass != 'Phire\Controller\PhireController') {
+                    $uri = str_replace('Phire\\Controller\\', '', $this->calledClass);
                     $uri = '/' . strtolower(str_replace('Controller', '', $uri));
                 } else {
                     $uri = null;
                 }
 
                 $basePath = BASE_URI . SYSTEM_URI . $uri;
-                $view = 'system' . $uri;
+                $view = '/phire' . $uri;
         }
 
         // Set the view path
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../view/' . $view;
+            $viewPath = __DIR__ . '/../../../view' . $view;
         }
 
         // Create a request
