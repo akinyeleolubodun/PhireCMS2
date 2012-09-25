@@ -6,7 +6,8 @@ namespace Phire\Model;
 
 use Pop\File\File,
     Pop\Filter\String,
-    Pop\Mvc\Model;
+    Pop\Mvc\Model,
+    Pop\Project\Install\Dbs;
 
 class SysConfig extends Model
 {
@@ -29,7 +30,7 @@ class SysConfig extends Model
      * @param Pop\Form\Form $form
      * @return void
      */
-    public function install($form)
+    public function installConfig($form)
     {
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
         $config = $cfgFile->read();
@@ -47,7 +48,7 @@ class SysConfig extends Model
         }
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            $dbName = null;
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . $contentDir . '/.phirecms.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
@@ -80,6 +81,40 @@ class SysConfig extends Model
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();
         }
+    }
+
+    /**
+     * Install the database
+     *
+     * @param Pop\Form\Form $form
+     * @return void
+     */
+    public function installDb($form)
+    {
+        $contentDir = (string)String::factory($form->content_dir)->dehtml();
+
+        if (strpos($form->db_adapter, 'Sqlite') !== false) {
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . $contentDir . '/.phirecms.sqlite');
+            $dbUser = null;
+            $dbPassword = null;
+            $dbHost = null;
+            $installFile = $dbName;
+        } else {
+            $dbName = (string)String::factory($form->db_name)->dehtml();
+            $dbUser = (string)String::factory($form->db_username)->dehtml();
+            $dbPassword = (string)String::factory($form->db_password)->dehtml();
+            $dbHost = (string)String::factory($form->db_host)->dehtml();
+            $installFile = null;
+        }
+
+
+        $db = array(
+            'database' => $dbName,
+            'username' => $dbUser,
+            'password' => $dbPassword,
+            'host'     => $dbHost,
+            'type'     => $form->db_adapter
+        );
     }
 
 }

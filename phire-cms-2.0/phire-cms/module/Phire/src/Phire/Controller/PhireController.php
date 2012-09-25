@@ -86,7 +86,8 @@ class PhireController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
                     if ($form->isValid()) {
-                        $config->install($form);
+                        $config->installConfig($form);
+                        $config->installDb($form);
                         $config->set('form', '    <p>We are good!</p>');
                         $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                         $this->send();
