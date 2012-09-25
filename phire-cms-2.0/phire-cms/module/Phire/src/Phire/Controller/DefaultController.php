@@ -33,8 +33,10 @@ class DefaultController extends C
         if (null === $request) {
             $request = new Request(null, BASE_URI);
         }
-
-        parent::__construct($request, $response, $project, $viewPath);
+        
+        if (PhireProject::isInstalled()) {
+            parent::__construct($request, $response, $project, $viewPath);
+        }
     }
 
     /**
@@ -44,10 +46,8 @@ class DefaultController extends C
      */
     public function index()
     {
-        if (PhireProject::isInstalled()) {
-            $this->view = View::factory($this->viewPath . '/index.phtml');
-            $this->send();
-        }
+        $this->view = View::factory($this->viewPath . '/index.phtml');
+        $this->send();
     }
 
     /**
@@ -57,11 +57,9 @@ class DefaultController extends C
      */
     public function error()
     {
-        if (PhireProject::isInstalled()) {
-            $this->isError = true;
-            $this->view = View::factory($this->viewPath . '/error.phtml');
-            $this->send();
-        }
+        $this->isError = true;
+        $this->view = View::factory($this->viewPath . '/error.phtml');
+        $this->send();
     }
 
 }
