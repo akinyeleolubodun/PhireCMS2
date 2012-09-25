@@ -5,6 +5,7 @@
 namespace Phire\Form;
 
 use Phire\Project as PhireProject,
+    Pop\Db\Db,
     Pop\Form\Form,
     Pop\Form\Element,
     Pop\Locale\Locale,
@@ -20,6 +21,16 @@ class Install extends Form
      * @var array
      */
     protected $dbAdapters = array();
+
+	/**
+	 * DB versions
+	 * @var array
+	 */
+    protected static $dbVersions = array(
+        'Mysql'  => '5.0',
+        'Pgsql'  => '9.0',
+        'Sqlsrv' => '10.0'
+    );
 
     /**
      * Constructer method to instantiate the form object
@@ -41,7 +52,7 @@ class Install extends Form
                     if ((strpos($db, 'Pdo') !== false) && ($db != 'Pdo')) {
                         $db = 'Pdo_' . ucfirst(strtolower(str_replace('Pdo', '', $db)));
                         $this->dbAdapters[$db] = $db;
-                    } else if ($db != 'Pdo') {
+                    } else if (($db != 'Pdo') && ($db != 'Oracle')) {
                         $db = ucfirst(strtolower($db));
                         $this->dbAdapters[$db] = $db;
                     }
@@ -181,6 +192,33 @@ class Install extends Form
 
                 if (null != $dbCheck) {
                     $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter), $dbCheck);
+                } else {
+                    // Check the database version
+                    if (strpos($this->db_adapter, 'Sqlite') === false) {
+                        $adapter = (stripos($this->db_adapter, 'Pdo_') !== false) ? str_replace('Pdo_', '', $this->db_adapter) : $this->db_adapter;
+                        $db = Db::factory($adapter, array(
+                        	'database' => $this->db_name,
+                        	'username' => $this->db_username,
+                        	'password' => $this->db_password,
+                        	'host'     => $this->db_host,
+                        	'type'     => strtolower(str_replace('Pdo_', '', $this->db_adapter))
+                        ));
+
+                        $version = $db->adapter->version();
+                        $version = substr($version, (strrpos($version, ' ') + 1));
+
+                        if (stripos($this->db_adapter, 'Mysql') !== false) {
+                            $dbVerKey = 'Mysql';
+                        } else if (stripos($this->db_adapter, 'Pgsql') !== false) {
+                            $dbVerKey = 'Pgsql';
+                        } else if (stripos($this->db_adapter, 'Sqlsrv') !== false) {
+                            $dbVerKey = 'Sqlsrv';
+                        }
+
+                        if (version_compare($version, self::$dbVersions[$dbVerKey]) < 0) {
+                            $this->getElement('db_adapter')->addValidator(new Validator\Equal($version), 'The ' . $dbVerKey . ' database version must be ' . self::$dbVersions[$dbVerKey] . ' or greater. (' . $version . ' detected.)');
+                        }
+                    }
                 }
 
                 error_reporting($oldError);
