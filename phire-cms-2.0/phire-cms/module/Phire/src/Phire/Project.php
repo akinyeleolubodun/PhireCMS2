@@ -36,7 +36,8 @@ class Project extends P
      */
     public static function isInstalled()
     {
-        if ((DB_INTERFACE == '') || (DB_NAME == '')) {
+        if (($_SERVER['REQUEST_URI'] != BASE_URI . SYSTEM_URI . '/install') &&
+           ((DB_INTERFACE == '') || (DB_NAME == ''))) {
             throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
         }
 
