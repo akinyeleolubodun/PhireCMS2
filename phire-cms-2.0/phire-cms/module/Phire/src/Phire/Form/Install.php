@@ -206,6 +206,9 @@ class Install extends Form
 
                         $version = $db->adapter->version();
                         $version = substr($version, (strrpos($version, ' ') + 1));
+                        if (strpos($version, '-') !== false) {
+                            $version = substr($version, 0, strpos($version, '-'));
+                        }
 
                         if (stripos($this->db_adapter, 'Mysql') !== false) {
                             $dbVerKey = 'Mysql';
@@ -216,7 +219,7 @@ class Install extends Form
                         }
 
                         if (version_compare($version, self::$dbVersions[$dbVerKey]) < 0) {
-                            $this->getElement('db_adapter')->addValidator(new Validator\Equal($version), 'The ' . $dbVerKey . ' database version must be ' . self::$dbVersions[$dbVerKey] . ' or greater. (' . $version . ' detected.)');
+                            $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter), 'The ' . $dbVerKey . ' database version must be ' . self::$dbVersions[$dbVerKey] . ' or greater. (' . $version . ' detected.)');
                         }
                     }
                 }
