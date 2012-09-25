@@ -13,11 +13,17 @@ use Phire\Project as PhireProject,
     Pop\Mvc\Model,
     Pop\Mvc\View,
     Pop\Project\Project,
+    Pop\Web\Session,
     Pop\Version;
 
 class SystemController extends C
 {
-
+    
+    /**
+     * Session property
+     */
+    protected $sess = null;
+    
     /**
      * Constructer method to instantiate the controller object
      *
@@ -39,6 +45,7 @@ class SystemController extends C
                 
         if (($request->getRequestUri() == '/install') || (PhireProject::isInstalled())) {
             parent::__construct($request, $response, $project, $viewPath);
+            $this->sess = Session::getInstance();
         }
     }
 
@@ -49,10 +56,54 @@ class SystemController extends C
      */
     public function index()
     {
-        $this->view = View::factory($this->viewPath . '/index.phtml');
-        $this->send();
+        if (!$this->isAuth()) {
+            Response::redirect($this->request->getBasePath() . '/login');
+        } else {
+            $this->view = View::factory($this->viewPath . '/index.phtml');
+            $this->send();
+        }
     }
 
+    /**
+     * Login method
+     *
+     * @return void
+     */
+    public function login()
+    {
+        if ($this->isAuth()) {
+            Response::redirect($this->request->getBasePath());
+        } else {
+            $this->view = View::factory($this->viewPath . '/login.phtml');
+            $this->send();
+        }
+    }
+    
+    /**
+     * Logout method
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        if (isset($this->sess)) {
+            $this->sess->kill();
+            unset($this->sess);
+        }
+        Response::redirect($this->request->getBasePath() . '/login');
+    }
+
+    /**
+     * Forgot method
+     *
+     * @return void
+     */
+    public function forgot()
+    {
+        $this->view = View::factory($this->viewPath . '/forgot.phtml');
+        $this->send();
+    }
+    
     /**
      * Install method
      *
@@ -99,6 +150,17 @@ class SystemController extends C
         $this->isError = true;
         $this->view = View::factory($this->viewPath . '/error.phtml');
         $this->send();
+    }
+
+    /**
+     * Auth method
+     *
+     * @param  mixed  $role
+     * @return boolean
+     */
+    protected function isAuth($role = null)
+    {
+        return (isset($this->sess->user_id));
     }
 
 }
