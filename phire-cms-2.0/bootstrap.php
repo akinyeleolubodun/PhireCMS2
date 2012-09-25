@@ -57,7 +57,8 @@ $project = Phire\Project::factory(
     include __DIR__ . SYSTEM_DIR . '/config/project.config.php',
     include __DIR__ . SYSTEM_DIR . '/module/Phire/config/module.config.php',
     new Pop\Mvc\Router(array(
-        'default' => 'Phire\\Controller\\DefaultController',
-        substr(SYSTEM_URI, 1) => 'Phire\\Controller\\SystemController'
+        'default'                       => 'Phire\Controller\DefaultController',
+        substr(SYSTEM_URI, 1)           => 'Phire\Controller\SystemController',
+        substr(SYSTEM_URI, 1) . '/user' => 'Phire\Controller\UserController'
     ))
 );

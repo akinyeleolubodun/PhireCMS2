@@ -43,10 +43,10 @@ class SystemController extends C
             $request = new Request(null, BASE_URI . SYSTEM_URI);
         }
                 
-        if (($request->getRequestUri() == '/install') || (PhireProject::isInstalled())) {
+        //if (($request->getRequestUri() == '/install') || (PhireProject::isInstalled())) {
             parent::__construct($request, $response, $project, $viewPath);
             $this->sess = Session::getInstance();
-        }
+        //}
     }
 
     /**
