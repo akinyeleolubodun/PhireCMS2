@@ -124,6 +124,15 @@ class SysConfig extends Model
             "', docroot = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) .
             "' WHERE id = 2001"
         );
+
+        // Set the system configuration
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '2.0' WHERE setting = 'system_version'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_docroot'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . PHP_OS . "' WHERE setting = 'server_os'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($_SERVER['SERVER_SOFTWARE']) . "' WHERE setting = 'server_software'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->version() . "' WHERE setting = 'db_version'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
     }
 
 }
