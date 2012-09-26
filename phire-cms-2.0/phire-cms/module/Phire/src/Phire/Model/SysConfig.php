@@ -49,11 +49,13 @@ class SysConfig extends Model
         }
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . $contentDir . '/.phirecms.sqlite');
+            touch($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.phirecms.sqlite');
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.phirecms.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
             $installFile = $dbName;
+            chmod($dbName, 0777);
         } else {
             $dbName = (string)String::factory($form->db_name)->dehtml();
             $dbUser = (string)String::factory($form->db_username)->dehtml();
