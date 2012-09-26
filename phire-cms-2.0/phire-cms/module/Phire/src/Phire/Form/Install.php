@@ -22,10 +22,10 @@ class Install extends Form
      */
     protected $dbAdapters = array();
 
-	/**
-	 * DB versions
-	 * @var array
-	 */
+    /**
+     * DB versions
+     * @var array
+     */
     protected static $dbVersions = array(
         'Mysql'  => '5.0',
         'Pgsql'  => '9.0',
@@ -197,11 +197,11 @@ class Install extends Form
                     if (strpos($this->db_adapter, 'Sqlite') === false) {
                         $adapter = (stripos($this->db_adapter, 'Pdo_') !== false) ? str_replace('Pdo_', '', $this->db_adapter) : $this->db_adapter;
                         $db = Db::factory($adapter, array(
-                        	'database' => $this->db_name,
-                        	'username' => $this->db_username,
-                        	'password' => $this->db_password,
-                        	'host'     => $this->db_host,
-                        	'type'     => strtolower(str_replace('Pdo_', '', $this->db_adapter))
+                            'database' => $this->db_name,
+                            'username' => $this->db_username,
+                            'password' => $this->db_password,
+                            'host'     => $this->db_host,
+                            'type'     => strtolower(str_replace('Pdo_', '', $this->db_adapter))
                         ));
 
                         $version = $db->adapter->version();

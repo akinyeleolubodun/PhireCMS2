@@ -119,10 +119,10 @@ class SysConfig extends Model
         ));
 
         $db->adapter->query(
-        	"UPDATE " . $db->adapter->escape($dbPrefix) .
-        	"sites SET domain = '" . $db->adapter->escape($_SERVER['HTTP_HOST']) .
-        	"', docroot = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) .
-        	"' WHERE id = 2001"
+            "UPDATE " . $db->adapter->escape($dbPrefix) .
+            "sites SET domain = '" . $db->adapter->escape($_SERVER['HTTP_HOST']) .
+            "', docroot = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) .
+            "' WHERE id = 2001"
         );
     }
 
