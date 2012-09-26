@@ -4,7 +4,8 @@
  */
 namespace Phire\Model;
 
-use Pop\File\File,
+use Pop\Db\Db,
+    Pop\File\File,
     Pop\Filter\String,
     Pop\Mvc\Model,
     Pop\Project\Install\Dbs;
@@ -25,12 +26,12 @@ class SysConfig extends Model
     }
 
     /**
-     * Install config file
+     * Install system
      *
      * @param Pop\Form\Form $form
      * @return void
      */
-    public function installConfig($form)
+    public function install($form)
     {
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
         $config = $cfgFile->read();
@@ -52,11 +53,13 @@ class SysConfig extends Model
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
+            $installFile = $dbName;
         } else {
             $dbName = (string)String::factory($form->db_name)->dehtml();
             $dbUser = (string)String::factory($form->db_username)->dehtml();
             $dbPassword = (string)String::factory($form->db_password)->dehtml();
             $dbHost = (string)String::factory($form->db_host)->dehtml();
+            $installFile = null;
         }
 
         $dbPrefix = (string)String::factory($form->db_prefix)->dehtml();
@@ -81,39 +84,43 @@ class SysConfig extends Model
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();
         }
-    }
 
-    /**
-     * Install the database
-     *
-     * @param Pop\Form\Form $form
-     * @return void
-     */
-    public function installDb($form)
-    {
-        $contentDir = (string)String::factory($form->content_dir)->dehtml();
-
-        if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . $contentDir . '/.phirecms.sqlite');
-            $dbUser = null;
-            $dbPassword = null;
-            $dbHost = null;
-            $installFile = $dbName;
-        } else {
-            $dbName = (string)String::factory($form->db_name)->dehtml();
-            $dbUser = (string)String::factory($form->db_username)->dehtml();
-            $dbPassword = (string)String::factory($form->db_password)->dehtml();
-            $dbHost = (string)String::factory($form->db_host)->dehtml();
-            $installFile = null;
-        }
-
+        // Install the database
+        $sqlFile = __DIR__ . '/../../../data/phire.' . str_replace('mysqli', 'mysql', strtolower(str_replace('Pdo_', '', $form->db_adapter))) . '.sql';
 
         $db = array(
             'database' => $dbName,
             'username' => $dbUser,
             'password' => $dbPassword,
             'host'     => $dbHost,
+            'prefix'   => $dbPrefix,
             'type'     => $form->db_adapter
+        );
+
+        Dbs::install($dbName, $db, $sqlFile, $installFile, true);
+
+        if (stripos($form->db_adapter, 'Pdo_') !== false) {
+            $adapter = 'Pdo';
+            $type = strtolower(substr($form->db_adapter, (strpos($form->db_adapter, '_') + 1)));
+        } else {
+            $adapter = $form->db_adapter;
+            $type = null;
+        }
+
+        // Set the default site's domain and docroot
+        $db = Db::factory($adapter, array(
+            'database' => $dbName,
+            'username' => $dbUser,
+            'password' => $dbPassword,
+            'host'     => $dbHost,
+            'type'     => $type
+        ));
+
+        $db->adapter->query(
+        	"UPDATE " . $db->adapter->escape($dbPrefix) .
+        	"sites SET domain = '" . $db->adapter->escape($_SERVER['HTTP_HOST']) .
+        	"', docroot = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) .
+        	"' WHERE id = 2001"
         );
     }
 
