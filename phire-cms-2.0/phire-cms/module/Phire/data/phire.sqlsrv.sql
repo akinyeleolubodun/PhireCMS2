@@ -6,7 +6,7 @@
 -- Table structure for table [comments]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'comments' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]comments' AND xtype = 'U')
 CREATE TABLE [[{prefix}]comments] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(9001, 1),
   [content_id] int NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE [[{prefix}]comments] (
 -- Table structure for table [content_types]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'content_types' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]content_types' AND xtype = 'U')
 CREATE TABLE [[{prefix}]content_types] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(4001, 1),
   [name] varchar(255) NOT NULL,
@@ -50,7 +50,7 @@ INSERT INTO [[{prefix}]content_types] ([name], [type]) VALUES
 -- Table structure for table [content]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'content' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]content' AND xtype = 'U')
 CREATE TABLE [[{prefix}]content] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(6001, 1),
   [site_id] int NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE [[{prefix}]content] (
 -- Table structure for table [events]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'events' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]events' AND xtype = 'U')
 CREATE TABLE [[{prefix}]events] (
   [content_id] int NOT NULL PRIMARY KEY,
   [template_id] int NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE [[{prefix}]events] (
 -- Table structure for table [feeds]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'feeds' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]feeds' AND xtype = 'U')
 CREATE TABLE [[{prefix}]feeds] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(8001, 1),
   [site_id] int NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE [[{prefix}]feeds] (
 -- Table structure for table [fields]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'fields' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]fields' AND xtype = 'U')
 CREATE TABLE [[{prefix}]fields] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(16001, 1),
   [name] varchar(255) NOT NULL,
@@ -140,7 +140,7 @@ INSERT INTO [[{prefix}]fields] ([name], [type], [attributes], [option_values], [
 -- Table structure for table [field_values]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'field_values' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]field_values' AND xtype = 'U')
 CREATE TABLE [[{prefix}]field_values] (
   [field_id] int NOT NULL,
   [object_id] int NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE [[{prefix}]field_values] (
 -- Table structure for table [members]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'members' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]members' AND xtype = 'U')
 CREATE TABLE [[{prefix}]members] (
     [id] int NOT NULL PRIMARY KEY IDENTITY(10001, 1),
     [site_id] int NOT NULL,
@@ -187,7 +187,7 @@ CREATE TABLE [[{prefix}]members] (
 -- Table structure for table [pages]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'pages' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]pages' AND xtype = 'U')
 CREATE TABLE [[{prefix}]pages] (
   [content_id] int NOT NULL PRIMARY KEY,
   [parent_id] int NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE [[{prefix}]pages] (
 -- Table structure for table [plugins]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'plugins' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]plugins' AND xtype = 'U')
 CREATE TABLE [[{prefix}]plugins] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(15001, 1),
   [site_id] int NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE [[{prefix}]plugins] (
 -- Table structure for table [sections]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'sections' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]sections' AND xtype = 'U')
 CREATE TABLE [[{prefix}]sections] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(7001, 1),
   [site_id] int NOT NULL,
@@ -246,7 +246,7 @@ CREATE TABLE [[{prefix}]sections] (
 -- Table structure for table [sessions]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'sessions' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]sessions' AND xtype = 'U')
 CREATE TABLE [[{prefix}]sessions] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(13001, 1),
   [user_id] int NOT NULL,
@@ -261,7 +261,7 @@ CREATE TABLE [[{prefix}]sessions] (
 -- Table structure for table [sites]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'sites' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]sites' AND xtype = 'U')
 CREATE TABLE [[{prefix}]sites] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(2001, 1),
   [domain] varchar(255) NOT NULL,
@@ -296,7 +296,7 @@ INSERT INTO [[{prefix}]sites] ([domain], [aliases], [docroot], [email], [default
 -- Table structure for table [site_404s]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'site_404s' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]site_404s' AND xtype = 'U')
 CREATE TABLE [[{prefix}]site_404s] (
   [site_id] int NOT NULL,
   [uri] varchar(255) NOT NULL,
@@ -308,7 +308,7 @@ CREATE TABLE [[{prefix}]site_404s] (
 -- Table structure for table [site_config_comments]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'site_config_comments' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]site_config_comments' AND xtype = 'U')
 CREATE TABLE [[{prefix}]site_config_comments] (
   [site_id] int NOT NULL PRIMARY KEY,
   [allow_comments] int NOT NULL,
@@ -330,7 +330,7 @@ INSERT INTO [[{prefix}]site_config_comments] ([site_id], [allow_comments], [allo
 -- Table structure for table [site_config_media]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'site_config_media' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]site_config_media' AND xtype = 'U')
 CREATE TABLE [[{prefix}]site_config_media] (
   [site_id] int NOT NULL PRIMARY KEY,
   [large_action] varchar(255) NOT NULL,
@@ -357,7 +357,7 @@ INSERT INTO [[{prefix}]site_config_media] ([site_id], [large_action], [large_siz
 -- Table structure for table [site_config_members]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'site_config_members' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]site_config_members' AND xtype = 'U')
 CREATE TABLE [[{prefix}]site_config_members] (
   [site_id] int NOT NULL PRIMARY KEY,
   [allow_login] int NOT NULL,
@@ -390,7 +390,7 @@ INSERT INTO [[{prefix}]site_config_members] ([site_id], [allow_login], [allow_re
 -- Table structure for table [site_searches]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'site_searches' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]site_searches' AND xtype = 'U')
 CREATE TABLE [[{prefix}]site_searches] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(12001, 1),
   [site_id] int NOT NULL,
@@ -404,7 +404,7 @@ CREATE TABLE [[{prefix}]site_searches] (
 -- Table structure for table [sys_access]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'sys_access' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]sys_access' AND xtype = 'U')
 CREATE TABLE [[{prefix}]sys_access] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(3001, 1),
   [type] varchar(255) NOT NULL,
@@ -428,7 +428,7 @@ INSERT INTO [[{prefix}]sys_access] ([type], [name], [level]) VALUES
 -- Table structure for table [sys_config]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'sys_config' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]sys_config' AND xtype = 'U')
 CREATE TABLE [[{prefix}]sys_config] (
   [setting] varchar(255) NOT NULL PRIMARY KEY,
   [value] varchar(max) NOT NULL,
@@ -473,7 +473,7 @@ INSERT INTO [[{prefix}]sys_config] ([setting], [value]) VALUES
 -- Table structure for table [tags]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'tags' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]tags' AND xtype = 'U')
 CREATE TABLE [[{prefix}]tags] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(11001, 1),
   [site_id] int NOT NULL,
@@ -485,7 +485,7 @@ CREATE TABLE [[{prefix}]tags] (
 -- Table structure for table [templates]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'templates' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]templates' AND xtype = 'U')
 CREATE TABLE [[{prefix}]templates] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(5001, 1),
   [site_id] int NOT NULL,
@@ -501,7 +501,7 @@ CREATE TABLE [[{prefix}]templates] (
 -- Table structure for table [themes]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'themes' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]themes' AND xtype = 'U')
 CREATE TABLE [[{prefix}]themes] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(14001, 1),
   [site_id] int NOT NULL,
@@ -519,7 +519,7 @@ CREATE TABLE [[{prefix}]themes] (
 -- Table structure for table [users]
 --
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'users' AND xtype = 'U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '[{prefix}]users' AND xtype = 'U')
 CREATE TABLE [[{prefix}]users] (
   [id] int NOT NULL PRIMARY KEY IDENTITY(1001, 1),
   [username] varchar(255) NOT NULL,

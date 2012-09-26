@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]comments (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('comments', 9000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]comments', 9000);
 
 --
 -- Table structure for table content_types
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]content_types (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('content_types', 4000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]content_types', 4000);
 
 --
 -- Dumping data for table content_types
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]content (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('content', 6000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]content', 6000);
 
 --
 -- Table structure for table events
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]feeds (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('feeds', 8000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]feeds', 8000);
 
 --
 -- Table structure for table fields
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]fields (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('fields', 16000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]fields', 16000);
 
 --
 -- Dumping data for table fields
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]members (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('members', 10000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]members', 10000);
 
 --
 -- Table structure for table pages
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]plugins (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('plugins', 15000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]plugins', 15000);
 
 --
 -- Table structure for table sections
@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]sections (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('sections', 7000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]sections', 7000);
 
 --
 -- Table structure for table sessions
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]sessions (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('sessions', 13000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]sessions', 13000);
 
 --
 -- Table structure for table sites
@@ -294,7 +294,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]sites (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('sites', 2000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]sites', 2000);
 
 --
 -- Dumping data for table sites
@@ -406,7 +406,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]site_searches (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('site_searches', 12000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]site_searches', 12000);
 
 --
 -- Table structure for table sys_access
@@ -420,7 +420,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]sys_access (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('sys_access', 3000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]sys_access', 3000);
 
 --
 -- Dumping data for table sys_access
@@ -486,7 +486,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]tags (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('tags', 11000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]tags', 11000);
 
 --
 -- Table structure for table templates
@@ -503,7 +503,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]templates (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('templates', 5000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]templates', 5000);
 
 --
 -- Table structure for table themes
@@ -522,7 +522,7 @@ CREATE TABLE IF NOT EXISTS [{prefix}]themes (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('themes', 14000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]themes', 14000);
 
 --
 -- Table structure for table users
@@ -544,4 +544,4 @@ CREATE TABLE IF NOT EXISTS [{prefix}]users (
   UNIQUE (id)
 ) ;
 
-INSERT INTO sqlite_sequence (name, seq) VALUES ('users', 1000);
+INSERT INTO sqlite_sequence (name, seq) VALUES ('[{prefix}]users', 1000);
