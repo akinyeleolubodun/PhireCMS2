@@ -49,8 +49,8 @@ class SysConfig extends Model
         }
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            touch($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.phirecms.sqlite');
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.phirecms.sqlite');
+            touch($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.htphire.sqlite');
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.htphire.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
