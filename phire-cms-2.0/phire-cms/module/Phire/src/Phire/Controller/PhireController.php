@@ -4,9 +4,9 @@
  */
 namespace Phire\Controller;
 
-use Phire\Form\Install,
+use Phire\Form\Install as InstallForm,
     Phire\Form\User,
-    Phire\Model\SysConfig,
+    Phire\Model\Install,
     Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\View;
@@ -80,7 +80,7 @@ class PhireController extends AbstractController
             throw new \Exception('The system is already installed.');
         } else {
             $this->sess->install = true;
-            $config = new SysConfig();
+            $config = new Install();
             if ((null != $this->request->getPath(1)) && ($this->request->getPath(1) == 'user')) {
                 if (!isset($this->sess->config)) {
                     Response::redirect(BASE_URI . SYSTEM_URI . '/install');
@@ -111,7 +111,7 @@ class PhireController extends AbstractController
                     }
                 }
             } else {
-                $form = new Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+                $form = new InstallForm($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                 if ($this->request->isPost()) {
                     $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
                     if ($form->isValid()) {
