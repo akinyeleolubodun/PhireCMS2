@@ -75,19 +75,26 @@ class PhireController extends AbstractController
      */
     public function install()
     {
-        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
+        if ((DB_INTERFACE != '') && (DB_NAME != '') && (!isset($this->sess->config))) {
             throw new \Exception('The system is already installed.');
         } else {
+            $config = new SysConfig();
             if ((null != $this->request->getPath(1)) && ($this->request->getPath(1) == 'user')) {
-                echo 'Install initial user.';
+                if ((DB_INTERFACE == '') || (DB_NAME == '')) {
+                    $config->set('configWritable', false);
+                    $config->set('config', unserialize($this->sess->config));
+                    $this->view = View::factory($this->viewPath . '/install.phtml', $config);
+                    $this->send();
+                } else {
+                    //unset($this->sess->config);
+                    echo 'Set up initial user.';
+                }
             } else {
-                $config = new SysConfig();
                 $form = new Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                 if ($this->request->isPost()) {
                     $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
                     if ($form->isValid()) {
                         $config->install($form);
-                        $config->set('form', '    <p>We are good!</p>');
                         $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                         $this->send();
                     } else {

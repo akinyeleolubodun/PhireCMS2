@@ -5,10 +5,10 @@ if (isset($configWritable)) {
     if ($configWritable) {
         echo '    <p>The configuration file has been successfully written.</p>' . PHP_EOL;
     } else {
-        echo '    <p>The configuration file is not writable. You will have to copy the code below and paste it into the \'config.php\' file.</p>' . PHP_EOL;
+        echo '    <p>The configuration file is not writable and the configuration has not been written to the file.<br />You will have to copy the code below and paste it into the \'config.php\' file to continue.</p>' . PHP_EOL;
         echo '    <textarea rows="25" cols="120">' . $config . '</textarea>' . PHP_EOL;
     }
-    echo '    <p><a href="./install/user">Continue</a></p>' . PHP_EOL;
+    echo '    <p><a href="' . BASE_URI . SYSTEM_URI . '/install/user">Continue</a></p>' . PHP_EOL;
 } else if (isset($form)) {
     echo $form;
 }

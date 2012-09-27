@@ -8,7 +8,8 @@ use Pop\Db\Db,
     Pop\File\File,
     Pop\Filter\String,
     Pop\Mvc\Model,
-    Pop\Project\Install\Dbs;
+    Pop\Project\Install\Dbs,
+    Pop\Web\Session;
 
 class SysConfig extends Model
 {
@@ -82,6 +83,9 @@ class SysConfig extends Model
 
         $this->data['config'] = (string)String::factory($config)->html();
         $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
+
+        $sess = Session::getInstance();
+        $sess->config = serialize($this->data['config']);
 
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();

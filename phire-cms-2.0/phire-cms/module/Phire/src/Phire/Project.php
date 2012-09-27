@@ -37,13 +37,14 @@ class Project extends P
     public static function isInstalled()
     {
         if (($_SERVER['REQUEST_URI'] != BASE_URI . SYSTEM_URI . '/install') &&
-           ((DB_INTERFACE == '') || (DB_NAME == ''))) {
+            ($_SERVER['REQUEST_URI'] != BASE_URI . SYSTEM_URI . '/install/user') &&
+            ((DB_INTERFACE == '') || (DB_NAME == ''))) {
             throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
         }
 
         return true;
     }
-    
+
     /**
      * Determine whether or not the necessary system directories are writable or not.
      *
