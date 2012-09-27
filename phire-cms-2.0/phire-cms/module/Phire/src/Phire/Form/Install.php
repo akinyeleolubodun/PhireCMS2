@@ -133,6 +133,16 @@ class Install extends Form
                 'value' => CONTENT_DIR
             ),
             array (
+                'type' => 'select',
+                'name' => 'password_encryption',
+                'label' => 'Password Encryption:',
+                'value' => array(
+                    '2' => 'SHA1',
+                    '1' => 'MD5',
+                    '0' => 'None'
+                )
+            ),
+            array (
                 'type' => 'submit',
                 'name' => 'submit',
                 'label' => '&nbsp;',

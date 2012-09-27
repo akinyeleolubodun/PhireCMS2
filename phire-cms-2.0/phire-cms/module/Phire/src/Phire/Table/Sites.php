@@ -1,6 +1,6 @@
 <?php
 /**
- * @namespace 
+ * @namespace
  */
 namespace Phire\Table;
 
@@ -23,6 +23,23 @@ class Sites extends Record
      * @var   string
      */
     protected $prefix = DB_PREFIX;
+
+    /**
+     * Get sites
+     *
+     * @return array
+     */
+    public static function getSites()
+    {
+        $sitesAry = array();
+
+        $sites = static::findAll('id ASC');
+        foreach ($sites->rows as $site) {
+            $sitesAry[$site->id] = $site->domain;
+        }
+
+        return $sitesAry;
+    }
 
 }
 

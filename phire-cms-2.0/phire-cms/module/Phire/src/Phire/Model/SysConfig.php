@@ -4,7 +4,9 @@
  */
 namespace Phire\Model;
 
-use Pop\Db\Db,
+use Phire\Table\SysConfig as SysConfigTable,
+    Phire\Table\Users,
+    Pop\Db\Db,
     Pop\File\File,
     Pop\Filter\String,
     Pop\Mvc\Model,
@@ -81,11 +83,11 @@ class SysConfig extends Model
 
         $config = str_replace("define('POP_DEFAULT_LANG', 'en');", "define('POP_DEFAULT_LANG', '" . $form->language . "');", $config);
 
-        $this->data['config'] = (string)String::factory($config)->html();
-        $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
-
         $sess = Session::getInstance();
-        $sess->config = serialize($this->data['config']);
+        $sess->config = serialize((string)String::factory($config)->html());
+        $sess->system_uri = $systemUri;
+
+        $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
 
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();
@@ -137,6 +139,42 @@ class SysConfig extends Model
         $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->version() . "' WHERE setting = 'db_version'");
         $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
         $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
+        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($form->password_encryption) . "' WHERE setting = 'password_encryption'");
+    }
+
+    /**
+     * Install initial user
+     *
+     * @param Pop\Form\Form $form
+     * @return void
+     */
+    public function installUser($form)
+    {
+        $password = (string)String::factory($form->password1)->dehtml();
+
+        switch (SysConfigTable::findById('password_encryption')->value) {
+            case 1:
+                $password = md5($password);
+                break;
+            case 2:
+                $password = sha1($password);
+        }
+
+        $user = new Users(array(
+            'username' => (string)String::factory($form->username)->dehtml(),
+            'password' => $password,
+            'fname' => (string)String::factory($form->fname)->dehtml(),
+            'lname' => (string)String::factory($form->lname)->dehtml(),
+            'email' => (string)String::factory($form->email1)->dehtml(),
+            'allowed_sites' => implode('|', $form->allowed_sites),
+            'access_id' => $form->access_id,
+            'last_login' => '',
+            'last_ua' => '',
+            'last_ip' => '',
+            'failed_attempts' => 0
+        ));
+
+        $user->save();
     }
 
 }
