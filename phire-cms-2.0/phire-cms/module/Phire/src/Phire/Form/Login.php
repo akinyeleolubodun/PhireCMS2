@@ -12,7 +12,7 @@ class Login extends Form
 {
 
     /**
-     * Constructer method to instantiate the form object
+     * Constructor method to instantiate the form object
      *
      * @param  string $action
      * @param  string $method

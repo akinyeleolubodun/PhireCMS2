@@ -27,7 +27,7 @@ abstract class AbstractController extends C
     protected $calledClass = null;
 
     /**
-     * Constructer method to instantiate the controller object
+     * Constructor method to instantiate the controller object
      *
      * @param  Request  $request
      * @param  Response $response
