@@ -118,14 +118,6 @@ class Install extends Form
             ),
             array (
                 'type' => 'text',
-                'name' => 'system_dir',
-                'label' => 'System Directory:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(Where the system files are located)</em>',
-                'required' => true,
-                'attributes' => array('size', 25),
-                'value' => SYSTEM_DIR
-            ),
-            array (
-                'type' => 'text',
                 'name' => 'content_dir',
                 'label' => 'Content Directory:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(Where the content files are located)</em>',
                 'required' => true,
@@ -165,11 +157,6 @@ class Install extends Form
         parent::setFieldValues($values, $filters);
 
         if ($_POST) {
-            // Check the system directory
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->system_dir)) {
-                $this->getElement('system_dir')->addValidator(new Validator\NotEqual($this->system_dir), 'The system directory does not exist.');
-            }
-
             // Check the content directory
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir)) {
                 $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory does not exist.');

@@ -40,7 +40,6 @@ class Install extends Model
         $config = $cfgFile->read();
 
         $systemUri = (string)String::factory($form->system_uri)->dehtml();
-        $systemDir = (string)String::factory($form->system_dir)->dehtml();
         $contentDir = (string)String::factory($form->content_dir)->dehtml();
 
         if (strpos($form->db_adapter, 'Pdo') !== false) {
@@ -70,7 +69,6 @@ class Install extends Model
         $dbPrefix = (string)String::factory($form->db_prefix)->dehtml();
 
         $config = str_replace("define('SYSTEM_URI', '/phire');", "define('SYSTEM_URI', '" . $systemUri . "');", $config);
-        $config = str_replace("define('SYSTEM_DIR', '/phire-cms');", "define('SYSTEM_DIR', '" . $systemDir . "');", $config);
         $config = str_replace("define('CONTENT_DIR', '/phire-content');", "define('CONTENT_DIR', '" . $contentDir . "');", $config);
 
         $config = str_replace("define('DB_INTERFACE', '');", "define('DB_INTERFACE', '" . $dbInterface . "');", $config);
