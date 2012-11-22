@@ -29,16 +29,14 @@
     <script type="text/javascript" src="http://www.jaxjs.org/latest/jax.min.js"></script>
     <script type="text/javascript">
         var checkConfig = function(url) {
-            alert(url + ' : ' + location.href);
-            return false;
-            //if (url != location.href) {
-            //    if (JaxXmlHttp().getRequest(url) == "The config file is not properly configured. Please check the config file or install the system.") {
-            //        alert('Please copy and paste the code into the \'config.php\' file.');
-            //        return false;
-            //    } else {
-            //        return true;
-            //    }
-            //}
+            if (url != location.href) {
+                if (JaxXmlHttp().getRequest(url) == "The config file is not properly configured. Please check the config file or install the system.") {
+                    alert('Please copy and paste the code into the \'config.php\' file.');
+                    return false;
+                } else {
+                    return true;
+                }
+            }
         }
     </script>
 </head>
