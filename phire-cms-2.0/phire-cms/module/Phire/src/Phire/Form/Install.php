@@ -150,11 +150,12 @@ class Install extends Form
      *
      * @param array $values
      * @param mixed $filters
+     * @param mixed $params
      * @return Pop\Form\Form
      */
-    public function setFieldValues(array $values = null, $filters = null)
+    public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
-        parent::setFieldValues($values, $filters);
+        parent::setFieldValues($values, $filters, $params);
 
         if ($_POST) {
             // Check the content directory

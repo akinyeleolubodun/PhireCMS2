@@ -4,7 +4,7 @@
  */
 namespace Phire;
 
-use Pop\Dir\Dir,
+use Pop\File\Dir,
     Pop\Project\Project as P;
 
 class Project extends P
@@ -54,6 +54,7 @@ class Project extends P
     public static function checkDirs($contentDir, $msgs = false)
     {
         $dir = new Dir($contentDir, true, true);
+        $files = $dir->getFiles();
         $errorMsgs = array();
 
         // Check if the necessary directories are writable for Windows.
@@ -65,7 +66,7 @@ class Project extends P
             } else {
                 unlink($contentDir . '/writetest.txt');
             }
-            foreach ($dir->files as $value) {
+            foreach ($files as $value) {
                 if (is_dir($value)) {
                     touch($value . '/writetest.txt');
                     clearstatcache();
@@ -82,7 +83,7 @@ class Project extends P
             if (!is_writable($contentDir)) {
                 $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
             }
-            foreach ($dir->files as $value) {
+            foreach ($files as $value) {
                 if (is_dir($value)) {
                     clearstatcache();
                     if (!is_writable($value)) {

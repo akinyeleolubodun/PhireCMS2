@@ -41,7 +41,7 @@ abstract class AbstractController extends C
         $this->calledClass = get_called_class();
 
         switch ($this->calledClass) {
-            case 'Phire\Controller\DefaultController':
+            case 'Phire\Controller\IndexController':
                 $view = null;
                 $basePath = BASE_URI;
                 break;
@@ -49,8 +49,8 @@ abstract class AbstractController extends C
             default:
                 $basePath = BASE_URI . SYSTEM_URI;
 
-                if ($this->calledClass != 'Phire\Controller\PhireController') {
-                    $uri = str_replace('Phire\\Controller\\', '', $this->calledClass);
+                if ($this->calledClass != 'Phire\Controller\Phire\IndexController') {
+                    $uri = str_replace('Phire\\Controller\\Phire\\', '', $this->calledClass);
                     $uri = '/' . strtolower(str_replace('Controller', '', $uri));
                 } else {
                     $uri = null;

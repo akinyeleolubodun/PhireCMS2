@@ -8,7 +8,7 @@ use Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\View;
 
-class UserController extends AbstractController
+class IndexController extends AbstractController
 {
 
     /**
@@ -20,16 +20,6 @@ class UserController extends AbstractController
     {
         $this->view = View::factory($this->viewPath . '/index.phtml');
         $this->send();
-    }
-
-    /**
-     * Test method
-     *
-     * @return void
-     */
-    public function test()
-    {
-        echo 'User test<br />' . PHP_EOL;
     }
 
 }

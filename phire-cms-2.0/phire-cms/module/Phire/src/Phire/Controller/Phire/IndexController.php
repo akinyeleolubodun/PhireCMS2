@@ -2,16 +2,17 @@
 /**
  * @namespace
  */
-namespace Phire\Controller;
+namespace Phire\Controller\Phire;
 
-use Phire\Form\Install as InstallForm,
+use Phire\Controller\AbstractController,
+    Phire\Form\Install as InstallForm,
     Phire\Form\User,
     Phire\Model\Install,
     Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\View;
 
-class PhireController extends AbstractController
+class IndexController extends AbstractController
 {
 
     /**

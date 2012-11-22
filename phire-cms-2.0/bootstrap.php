@@ -57,10 +57,10 @@ $project = Phire\Project::factory(
     include __DIR__ . SYSTEM_DIR . '/config/project.config.php',
     include __DIR__ . SYSTEM_DIR . '/module/Phire/config/module.config.php',
     new Pop\Mvc\Router(array(
-        '/'        => 'Phire\Controller\DefaultController',
+        '/'        => 'Phire\Controller\IndexController',
         SYSTEM_URI => array(
-            '/'     => 'Phire\Controller\PhireController',
-            '/user' => 'Phire\Controller\UserController'
+            '/'     => 'Phire\Controller\Phire\IndexController',
+            '/user' => 'Phire\Controller\Phire\UserController'
         )
     ))
 );
