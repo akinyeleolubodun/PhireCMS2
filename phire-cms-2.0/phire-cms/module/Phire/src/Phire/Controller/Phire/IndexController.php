@@ -94,7 +94,11 @@ class IndexController extends AbstractController
                 } else {
                     $form = new User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                     if ($this->request->isPost()) {
-                        $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
+                        $form->setFieldValues(
+                            $this->request->getPost(),
+                            array('strip_tags', 'htmlentities'),
+                            array(null, array(ENT_QUOTES, 'UTF-8'))
+                        );
                         if ($form->isValid()) {
                             unset($this->sess->install);
                             $config->installUser($form);
@@ -115,7 +119,11 @@ class IndexController extends AbstractController
             } else {
                 $form = new InstallForm($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                 if ($this->request->isPost()) {
-                    $form->setFieldValues($this->request->getPost(), array('html', 'stripTags'));
+                    $form->setFieldValues(
+                        $this->request->getPost(),
+                        array('strip_tags', 'htmlentities'),
+                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                    );
                     if ($form->isValid()) {
                         $config->install($form);
                         $url = ($config->configWritable) ? BASE_URI . $form->system_uri . '/install/user' : BASE_URI . SYSTEM_URI . '/install/user';

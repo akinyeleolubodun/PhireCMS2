@@ -202,7 +202,7 @@ class Install extends Form
                             'type'     => strtolower(str_replace('Pdo_', '', $this->db_adapter))
                         ));
 
-                        $version = $db->adapter->version();
+                        $version = $db->adapter()->version();
                         $version = substr($version, (strrpos($version, ' ') + 1));
                         if (strpos($version, '-') !== false) {
                             $version = substr($version, 0, strpos($version, '-'));

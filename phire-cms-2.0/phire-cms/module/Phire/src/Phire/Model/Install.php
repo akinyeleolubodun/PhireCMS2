@@ -8,7 +8,6 @@ use Phire\Table\SysConfig,
     Phire\Table\Users,
     Pop\Db\Db,
     Pop\File\File,
-    Pop\Filter\String,
     Pop\Mvc\Model,
     Pop\Project\Install\Dbs,
     Pop\Web\Session;
@@ -39,14 +38,14 @@ class Install extends Model
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
         $config = $cfgFile->read();
 
-        $systemUri = (string)String::factory($form->system_uri)->dehtml();
-        $contentDir = (string)String::factory($form->content_dir)->dehtml();
+        $systemUri = html_entity_decode($form->system_uri, ENT_QUOTES, 'UTF-8');
+        $contentDir = html_entity_decode($form->content_dir, ENT_QUOTES, 'UTF-8');
 
         if (strpos($form->db_adapter, 'Pdo') !== false) {
             $dbInterface = 'Pdo';
             $dbType = strtolower(substr($form->db_adapter, (strrpos($form->db_adapter, '_') + 1)));
         } else {
-            $dbInterface = (string)String::factory($form->db_adapter)->dehtml();
+            $dbInterface = html_entity_decode($form->db_adapter, ENT_QUOTES, 'UTF-8');
             $dbType = null;
         }
 
@@ -59,14 +58,14 @@ class Install extends Model
             $installFile = $dbName;
             chmod($dbName, 0777);
         } else {
-            $dbName = (string)String::factory($form->db_name)->dehtml();
-            $dbUser = (string)String::factory($form->db_username)->dehtml();
-            $dbPassword = (string)String::factory($form->db_password)->dehtml();
-            $dbHost = (string)String::factory($form->db_host)->dehtml();
+            $dbName = html_entity_decode($form->db_name, ENT_QUOTES, 'UTF-8');
+            $dbUser = html_entity_decode($form->db_username, ENT_QUOTES, 'UTF-8');
+            $dbPassword = html_entity_decode($form->db_password, ENT_QUOTES, 'UTF-8');
+            $dbHost = html_entity_decode($form->db_host, ENT_QUOTES, 'UTF-8');
             $installFile = null;
         }
 
-        $dbPrefix = (string)String::factory($form->db_prefix)->dehtml();
+        $dbPrefix = html_entity_decode($form->db_prefix, ENT_QUOTES, 'UTF-8');
 
         $config = str_replace("define('SYSTEM_URI', '/phire');", "define('SYSTEM_URI', '" . $systemUri . "');", $config);
         $config = str_replace("define('CONTENT_DIR', '/phire-content');", "define('CONTENT_DIR', '" . $contentDir . "');", $config);
@@ -82,7 +81,7 @@ class Install extends Model
         $config = str_replace("define('POP_DEFAULT_LANG', 'en');", "define('POP_DEFAULT_LANG', '" . $form->language . "');", $config);
 
         $sess = Session::getInstance();
-        $sess->config = serialize((string)String::factory($config)->html());
+        $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
         $sess->system_uri = $systemUri;
 
         $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
@@ -122,22 +121,22 @@ class Install extends Model
             'type'     => $type
         ));
 
-        $db->adapter->query(
-            "UPDATE " . $db->adapter->escape($dbPrefix) .
-            "sites SET domain = '" . $db->adapter->escape($_SERVER['HTTP_HOST']) .
-            "', docroot = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) .
+        $db->adapter()->query(
+            "UPDATE " . $db->adapter()->escape($dbPrefix) .
+            "sites SET domain = '" . $db->adapter()->escape($_SERVER['HTTP_HOST']) .
+            "', docroot = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) .
             "' WHERE id = 2001"
         );
 
         // Set the system configuration
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '2.0' WHERE setting = 'system_version'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_docroot'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . PHP_OS . "' WHERE setting = 'server_os'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($_SERVER['SERVER_SOFTWARE']) . "' WHERE setting = 'server_software'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->version() . "' WHERE setting = 'db_version'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
-        $db->adapter->query("UPDATE " . $db->adapter->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter->escape($form->password_encryption) . "' WHERE setting = 'password_encryption'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '2.0' WHERE setting = 'system_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_docroot'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . PHP_OS . "' WHERE setting = 'server_os'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter()->escape($_SERVER['SERVER_SOFTWARE']) . "' WHERE setting = 'server_software'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter()->version() . "' WHERE setting = 'db_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "sys_config SET value = '" . $db->adapter()->escape($form->password_encryption) . "' WHERE setting = 'password_encryption'");
     }
 
     /**
@@ -148,7 +147,7 @@ class Install extends Model
      */
     public function installUser($form)
     {
-        $password = (string)String::factory($form->password1)->dehtml();
+        $password = html_entity_decode($form->password1, ENT_QUOTES, 'UTF-8');
 
         switch (SysConfig::findById('password_encryption')->value) {
             case 1:
@@ -159,11 +158,11 @@ class Install extends Model
         }
 
         $user = new Users(array(
-            'username' => (string)String::factory($form->username)->dehtml(),
+            'username' => html_entity_decode($form->username, ENT_QUOTES, 'UTF-8'),
             'password' => $password,
-            'fname' => (string)String::factory($form->fname)->dehtml(),
-            'lname' => (string)String::factory($form->lname)->dehtml(),
-            'email' => (string)String::factory($form->email1)->dehtml(),
+            'fname' => html_entity_decode($form->fname, ENT_QUOTES, 'UTF-8'),
+            'lname' => html_entity_decode($form->lname, ENT_QUOTES, 'UTF-8'),
+            'email' => html_entity_decode($form->email1, ENT_QUOTES, 'UTF-8'),
             'allowed_sites' => implode('|', $form->allowed_sites),
             'access_id' => $form->access_id,
             'last_login' => '',
