@@ -37,7 +37,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Projects
 {
@@ -59,7 +59,7 @@ class Projects
 
         // Set namespace
         $ns = new NamespaceGenerator($install->project->name);
-        $ns->setUse('Pop\\Project\\Project', 'P');
+        $ns->setUse('Pop\Project\Project', 'P');
 
         // Create 'run' method
         $run = new MethodGenerator('run');
@@ -90,8 +90,7 @@ class Projects
                 $index = new Generator(__DIR__ . '/Web/index.php');
                 $contents = $index->read() .
                     '// Run the project' . PHP_EOL .
-                    '$project->run();' . PHP_EOL . PHP_EOL .
-                    '?>' . PHP_EOL;
+                    '$project->run();' . PHP_EOL;
                 file_put_contents($install->project->docroot . '/index.php', $contents);
             }
             if ($input == 'a') {

@@ -32,7 +32,7 @@ namespace Pop\Geo;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Geo
 {
@@ -151,7 +151,7 @@ class Geo
             $latitude = (null !== $geo->latitude) ? $geo->latitude : null;
             $longitude = (null !== $geo->longitude) ? $geo->longitude : null;
         } else if (null === $longitude) {
-            throw new Exception('You must either pass a Pop\\Geo\\Geo object or a set of latitude/longitude coordinates.');
+            throw new Exception('You must either pass a Pop\Geo\Geo object or a set of latitude/longitude coordinates.');
         }
 
         // Calculate approximate distance between the two points in miles

@@ -25,9 +25,7 @@
 namespace Pop\Archive\Adapter;
 
 use Pop\Archive\ArchiveInterface,
-    Pop\Dir\Dir,
-    Pop\File\File,
-    Pop\Filter\String;
+    Pop\File\Dir;
 
 /**
  * This is the Phar class for the Archive component.
@@ -37,7 +35,7 @@ use Pop\Archive\ArchiveInterface,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Phar implements ArchiveInterface
 {
@@ -57,12 +55,12 @@ class Phar implements ArchiveInterface
     /**
      * Method to instantiate an archive adapter object
      *
-     * @param  string $archive
+     * @param  Pop\Archive\Archive $archive
      * @return void
      */
     public function __construct($archive)
     {
-        $this->path = $archive->fullpath;
+        $this->path = $archive->getFullpath();
         $this->archive = new \Phar($this->path);
     }
 
@@ -90,22 +88,20 @@ class Phar implements ArchiveInterface
         }
 
         // Directory separator clean up
-        $seps = array(
-                    array('\\', '/'),
-                    array('../', ''),
-                    array('./', '')
-                );
+        $search = array('\\', '../', './');
+        $replace = array('/', '', '');
 
         foreach ($files as $file) {
             // If file is a directory, loop through and add the files.
             if (file_exists($file) && is_dir($file)) {
                 $dir = new Dir($file, true, true);
-                $this->archive->addEmptyDir((string)String::factory($dir->path)->replace($seps));
-                foreach ($dir->files as $fle) {
+                $this->archive->addEmptyDir(str_replace($search, $replace, $dir->getPath()));
+                $dirFiles = $dir->getFiles();
+                foreach ($dirFiles as $fle) {
                     if (file_exists($fle) && is_dir($fle)) {
-                        $this->archive->addEmptyDir((string)String::factory($fle)->replace($seps));
+                        $this->archive->addEmptyDir(str_replace($search, $replace, $fle));
                     } else if (file_exists($fle)) {
-                        $this->archive->addFile($fle, (string)String::factory($fle)->replace($seps));
+                        $this->archive->addFile($fle, str_replace($search, $replace, $fle));
                     }
                 }
             // Else, just add the file.
@@ -136,10 +132,10 @@ class Phar implements ArchiveInterface
                         } else {
                             $f = $fileInfo->getPath() . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
                             $list[] = array(
-                                          'name'  => substr($f, (stripos($f, '.phar') + 6)),
-                                          'mtime' => $fileInfo->getMTime(),
-                                          'size'  => $fileInfo->getSize()
-                                      );
+                                'name'  => substr($f, (stripos($f, '.phar') + 6)),
+                                'mtime' => $fileInfo->getMTime(),
+                                'size'  => $fileInfo->getSize()
+                            );
                         }
                     }
                 }
@@ -149,10 +145,10 @@ class Phar implements ArchiveInterface
                 } else {
                     $f = $fileInfo->getPath() . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
                     $list[] = array(
-                                  'name'  => substr($f, (stripos($f, '.phar') + 6)),
-                                  'mtime' => $fileInfo->getMTime(),
-                                  'size'  => $fileInfo->getSize()
-                              );
+                        'name'  => substr($f, (stripos($f, '.phar') + 6)),
+                        'mtime' => $fileInfo->getMTime(),
+                        'size'  => $fileInfo->getSize()
+                    );
                 }
             }
         }

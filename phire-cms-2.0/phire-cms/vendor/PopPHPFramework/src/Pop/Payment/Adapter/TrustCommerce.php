@@ -34,7 +34,7 @@ use Pop\Curl\Curl;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class TrustCommerce extends AbstractAdapter
 {
@@ -185,7 +185,7 @@ class TrustCommerce extends AbstractAdapter
         $curl = new Curl($options);
         $this->response = $curl->execute();
         $this->responseCodes = $this->parseResponseCodes();
-        $this->responseCode = $this->responseCodes['transid'];
+        $this->responseCode = (isset($this->responseCodes['transid']) ? $this->responseCodes['transid'] : null);
         $this->message = $this->responseCodes['status'];
 
         switch ($this->responseCodes['status']) {

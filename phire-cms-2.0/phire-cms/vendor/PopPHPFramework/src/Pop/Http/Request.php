@@ -32,7 +32,7 @@ namespace Pop\Http;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Request
 {
@@ -421,8 +421,12 @@ class Request
             $uri = $_SERVER['REQUEST_URI'];
         }
 
-        if ((null !== $basePath) && (substr($uri, 0, (strlen($basePath) + 1)) == $basePath . '/')) {
-            $uri = substr($uri, (strpos($uri, $basePath) + strlen($basePath)));
+        if (null !== $basePath) {
+            if (substr($uri, 0, (strlen($basePath) + 1)) == $basePath . '/') {
+                $uri = substr($uri, (strpos($uri, $basePath) + strlen($basePath)));
+            } else if (substr($uri, 0, (strlen($basePath) + 1)) == $basePath . '?') {
+                $uri = '/' . substr($uri, (strpos($uri, $basePath) + strlen($basePath)));
+            }
         }
 
         if (($uri == '') || ($uri == $basePath)) {

@@ -24,8 +24,7 @@
  */
 namespace Pop\Auth\Adapter;
 
-use Pop\Auth\Auth,
-    Pop\File\File;
+use Pop\Auth\Auth;
 
 /**
  * This is the AuthFile adapter class for the Auth component.
@@ -35,9 +34,9 @@ use Pop\Auth\Auth,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
-class AuthFile extends File implements AdapterInterface
+class AuthFile implements AdapterInterface
 {
 
     /**
@@ -55,7 +54,7 @@ class AuthFile extends File implements AdapterInterface
     /**
      * Constructor
      *
-     * Instantiate the AccessFile object
+     * Instantiate the AuthFile object
      *
      * @param string $filename
      * @param string $delimiter
@@ -67,9 +66,9 @@ class AuthFile extends File implements AdapterInterface
         if (!file_exists($filename)) {
             throw new Exception('The access file does not exist.');
         }
-        parent::__construct($filename, array());
+
         $this->delimiter = $delimiter;
-        $this->parse();
+        $this->parse($filename);
     }
 
     /**
@@ -103,11 +102,12 @@ class AuthFile extends File implements AdapterInterface
     /**
      * Method to parse the source file.
      *
+     * @param  string $filename
      * @return void
      */
-    protected function parse()
+    protected function parse($filename)
     {
-        $entries = explode("\n", trim($this->read()));
+        $entries = explode("\n", trim(file_get_contents($filename)));
 
         foreach ($entries as $entry) {
             $ent = trim($entry);

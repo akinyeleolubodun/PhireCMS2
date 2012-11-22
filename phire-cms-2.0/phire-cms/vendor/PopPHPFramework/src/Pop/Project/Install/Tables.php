@@ -38,7 +38,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Tables
 {
@@ -63,10 +63,10 @@ class Tables
         // Loop through the tables, creating the classes
         foreach ($dbTables as $table => $value) {
             $prefix = (isset($value['prefix'])) ? $value['prefix'] : null;
-            $tableName = String::factory(str_replace($prefix, '', $table))->underscoreToCamelcase()->upperFirst();
+            $tableName = ucfirst(String::underscoreToCamelcase(str_replace($prefix, '', $table)));
 
-            $ns = new NamespaceGenerator($install->project->name . '\\Table');
-            $ns->setUse('Pop\\Record\\Record');
+            $ns = new NamespaceGenerator($install->project->name . '\Table');
+            $ns->setUse('Pop\Record\Record');
 
             if (strpos($value['primaryId'], '|') !== false) {
                 $pIdType = 'array';

@@ -24,8 +24,6 @@
  */
 namespace Pop\Db;
 
-use Pop\Db\Sql;
-
 /**
  * This is the Db class for the Db component.
  *
@@ -34,7 +32,7 @@ use Pop\Db\Sql;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Db
 {
@@ -43,13 +41,13 @@ class Db
      * SQL object
      * @var Pop\Db\Sql
      */
-    public $sql = null;
+    protected $sql = null;
 
     /**
      * Default database adapter object
      * @var mixed
      */
-    public $adapter = null;
+    protected $adapter = null;
 
     /**
      * Constructor
@@ -84,6 +82,26 @@ class Db
     public static function factory($type, array $options)
     {
         return new self($type, $options);
+    }
+
+    /**
+     * Get the database adapter.
+     *
+     * @return mixed
+     */
+    public function adapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * Get the database SQL object.
+     *
+     * @return mixed
+     */
+    public function sql()
+    {
+        return $this->sql;
     }
 
     /**

@@ -35,7 +35,7 @@ use Pop\Db\Db,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Record
 {
@@ -143,7 +143,7 @@ class Record
             } else {
                 $cls = $class;
             }
-            $this->tableName = $this->prefix . (string)String::factory($cls)->camelCaseToUnderscore();
+            $this->tableName = $this->prefix . String::camelCaseToUnderscore($cls);
         } else {
             $this->tableName = $this->prefix . $this->tableName;
         }
@@ -471,7 +471,7 @@ class Record
      */
     public function escape($value)
     {
-        return $this->interface->db->adapter->escape($value);
+        return $this->interface->db->adapter()->escape($value);
     }
 
     /**
@@ -481,7 +481,7 @@ class Record
      */
     public function lastId()
     {
-        return $this->interface->db->adapter->lastId();
+        return $this->interface->db->adapter()->lastId();
     }
 
     /**
@@ -491,7 +491,7 @@ class Record
      */
     public function numRows()
     {
-        return $this->interface->db->adapter->numRows();
+        return $this->interface->db->adapter()->numRows();
     }
 
     /**
@@ -501,7 +501,7 @@ class Record
      */
     public function numFields()
     {
-        return $this->interface->db->adapter->numFields();
+        return $this->interface->db->adapter()->numFields();
     }
 
     /**

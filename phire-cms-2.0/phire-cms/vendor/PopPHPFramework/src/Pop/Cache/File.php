@@ -24,8 +24,7 @@
  */
 namespace Pop\Cache;
 
-use Pop\Dir\Dir,
-    Pop\File\File as PopFile;
+use Pop\File\Dir;
 
 /**
  * This is the File class for the Cache component.
@@ -35,7 +34,7 @@ use Pop\Dir\Dir,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class File implements CacheInterface
 {
@@ -88,9 +87,8 @@ class File implements CacheInterface
     {
         $time = (null === $time) ? time() : time() + $time;
 
-        $file = new PopFile($this->dir . DIRECTORY_SEPARATOR . sha1($id));
-        $file->write($time . '|' . serialize($value));
-        $file->save();
+        $file = $this->dir . DIRECTORY_SEPARATOR . sha1($id);
+        file_put_contents($file, $time . '|' . serialize($value));
     }
 
     /**
@@ -106,8 +104,7 @@ class File implements CacheInterface
         $value = false;
 
         if (file_exists($fileId)) {
-            $file = new PopFile($fileId);
-            $fileData = $file->read();
+            $fileData = file_get_contents($fileId);
             $fileTime = substr($fileData, 0, strpos($fileData, '|'));
             $data = substr($fileData, (strpos($fileData, '|') + 1));
             if (($time == 0) || ((time() - $fileTime) <= $time)) {

@@ -32,7 +32,7 @@ namespace Pop\Http;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Response
 {
@@ -158,23 +158,38 @@ class Response
      * either from a URL or a full response string
      *
      * @param  string $response
+     * @param  resource $context
      * @throws Exception
      * @return Pop\Http\Response
      */
-    public static function parse($response)
+    public static function parse($response, $context = null)
     {
         $headers = array();
 
         // If a URL, use a stream to get the header and URL contents
         if ((strtolower(substr($response, 0, 7)) == 'http://') || (strtolower(substr($response, 0, 8)) == 'https://')) {
-            $stream = fopen($response, 'r');
-            $meta = stream_get_meta_data($stream);
-            $body = stream_get_contents($stream);
+            $http_response_header = null;
 
-            $firstLine = $meta['wrapper_data'][0];
-            unset($meta['wrapper_data'][0]);
-            $allHeadersAry = $meta['wrapper_data'];
-            $bodyStr = $body;
+            if (null !== $context) {
+                $stream = @fopen($response, 'r', false, $context);
+            } else {
+                $stream = @fopen($response, 'r');
+            }
+
+            if ($stream != false) {
+                $meta = stream_get_meta_data($stream);
+                $body = stream_get_contents($stream);
+
+                $firstLine = $meta['wrapper_data'][0];
+                unset($meta['wrapper_data'][0]);
+                $allHeadersAry = $meta['wrapper_data'];
+                $bodyStr = $body;
+            } else {
+                $firstLine = $http_response_header[0];
+                unset($http_response_header[0]);
+                $allHeadersAry = $http_response_header;
+                $bodyStr = null;
+            }
         // Else, if a response string, parse the headers and contents
         } else if (substr($response, 0, 5) == 'HTTP/'){
             if (strpos($response, "\r") !== false) {
@@ -192,6 +207,7 @@ class Response
         } else {
             throw new Exception('The response was not properly formatted.');
         }
+
         // Get the version, code and message
         $version = substr($firstLine, 0, strpos($firstLine, ' '));
         preg_match('/\d\d\d/', trim($firstLine), $match);

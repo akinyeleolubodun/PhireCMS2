@@ -24,8 +24,6 @@
  */
 namespace Pop\Dom;
 
-use Pop\Http\Response;
-
 /**
  * This is the Dom class for the Dom component.
  *
@@ -34,7 +32,7 @@ use Pop\Http\Response;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Dom extends AbstractDom
 {
@@ -273,8 +271,8 @@ class Dom extends AbstractDom
         } else {
             if (null !== $this->doctype) {
                 if (!headers_sent()) {
-                    $response = new Response(200, array('Content-type' => $this->contentType));
-                    $response->sendHeaders();
+                    header("HTTP/1.1 200 OK");
+                    header("Content-type: " . $this->contentType);
                 }
                 echo str_replace('[{charset}]', $this->charset, Dom::$doctypes[$this->doctype]);
             }

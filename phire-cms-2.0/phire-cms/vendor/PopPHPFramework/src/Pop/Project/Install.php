@@ -24,18 +24,9 @@
  */
 namespace Pop\Project;
 
-use Pop\Dir\Dir,
+use Pop\File\Dir,
     Pop\File\File,
-    Pop\Filter\String,
-    Pop\Locale\Locale,
-    Pop\Project\Install\Base,
-    Pop\Project\Install\Bootstrap,
-    Pop\Project\Install\Controllers,
-    Pop\Project\Install\Dbs,
-    Pop\Project\Install\Forms,
-    Pop\Project\Install\Models,
-    Pop\Project\Install\Projects,
-    Pop\Project\Install\Tables;
+    Pop\Locale\Locale;
 
 /**
  * This is the Install class for the Project component.
@@ -45,7 +36,7 @@ use Pop\Dir\Dir,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Install
 {
@@ -129,14 +120,14 @@ class Install
                         echo Locale::factory()->__('The database type and database name must be set for the database ') . '\'' . $dbname . '\'.' . PHP_EOL . PHP_EOL;
                         exit(0);
                     }
-                    $check = Dbs::check($db);
+                    $check = Install\Dbs::check($db);
                     if (null !== $check) {
                         echo $check . PHP_EOL . PHP_EOL;
                         exit(0);
                     } else {
                         echo Locale::factory()->__('Database') . ' \'' . $dbname . '\' passed.' . PHP_EOL;
                         echo Locale::factory()->__('Installing database') .' \'' . $dbname . '\'...' . PHP_EOL;
-                        $tables = Dbs::install($dbname, $db, $installDir, $install);
+                        $tables = Install\Dbs::install($dbname, $db, $installDir, $install);
                         if (count($tables) > 0) {
                             $dbTables = array_merge($dbTables, $tables);
                         }
@@ -147,33 +138,33 @@ class Install
             }
 
             // Install base folder and file structure
-            Base::install($install);
+            Install\Base::install($install);
 
             // Install project files
-            Projects::install($install, $installDir);
+            Install\Projects::install($install, $installDir);
 
             // Install table class files
             if (count($dbTables) > 0) {
-                Tables::install($install, $dbTables);
+                Install\Tables::install($install, $dbTables);
             }
 
             // Install controller class files
             if (isset($install->controllers)) {
-                Controllers::install($install, $installDir);
+                Install\Controllers::install($install, $installDir);
             }
 
             // Install form class files
             if (isset($install->forms)) {
-                Forms::install($install);
+                Install\Forms::install($install);
             }
 
             // Install model class files
             if (isset($install->models)) {
-                Models::install($install);
+                Install\Models::install($install);
             }
 
             // Create 'bootstrap.php' file
-            Bootstrap::install($install);
+            Install\Bootstrap::install($install);
 
             echo Locale::factory()->__('Project install complete.') . PHP_EOL . PHP_EOL;
         }
@@ -224,13 +215,11 @@ class Install
             $match = array();
             preg_match('/^require(.*)Autoloader.php[\'|\"];$/m', $bootstrapContents, $match);
             if (isset($match[0])) {
+                $search = array(';', '"', "'");
+                $replace = array('', '', "");
                 $autoloader = trim(substr($match[0], strpos($match[0], ' ')));
-                $autoloader = (string)String::factory($autoloader)->replace(array(
-                        array(';', ''),
-                        array('"', ''),
-                        array("'", "")
-                    )
-                );
+                $autoloader = str_replace($search, $replace, $autoloader);
+
                 if (!file_exists($autoloader)) {
                     echo Locale::factory()->__('The Pop autoloader class file was not found.') . PHP_EOL;
                     $input = self::getPop();
@@ -246,7 +235,9 @@ class Install
 
         // Get the module folders
         $moduleDir = new Dir($projectFolder . DIRECTORY_SEPARATOR . 'module', true);
-        foreach ($moduleDir->files as $module) {
+        $moduleFiles = $moduleDir->getFiles();
+
+        foreach ($moduleFiles as $module) {
             // Reconfigure the module config file and replace the path
             if (is_dir($module) && (file_exists($module . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'module.config.php'))) {
                 $moduleCfg = new File($module . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'module.config.php');

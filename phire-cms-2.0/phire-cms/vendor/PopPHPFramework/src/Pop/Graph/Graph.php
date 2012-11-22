@@ -26,7 +26,6 @@ namespace Pop\Graph;
 
 use Pop\Color\ColorInterface,
     Pop\Color\Rgb,
-    Pop\File\File,
     Pop\Image\Gd,
     Pop\Image\Imagick,
     Pop\Image\Svg,
@@ -40,7 +39,7 @@ use Pop\Color\ColorInterface,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Graph
 {
@@ -247,8 +246,14 @@ class Graph
             $this->font = $this->adapter->getLastFontName();
             $this->fonts[$this->font] = $this->font;
         } else {
-            $fontFile = new File($font);
-            $this->font = $fontFile->filename;
+            $this->font = $font;
+            if (strpos($this->font, DIRECTORY_SEPARATOR) !== false) {
+                $this->font = substr($this->font, (strrpos($this->font, DIRECTORY_SEPARATOR) + 1));
+            }
+            if (strpos($this->font, '.') !== false) {
+                $this->font = substr($this->font, 0, strrpos($this->font, '.'));
+            }
+
             $this->fonts[$this->font] = $font;
         }
 
@@ -915,21 +920,19 @@ class Graph
         $xDiv = $xLength / (count($xAxis) - 1);
         $yDiv = $yLength / (count($yAxis) - 1);
 
-        $points = new \ArrayObject(
-                                   array(
-                                       'zeroPoint' => $zeroPoint,
-                                       'endX'      => $endX,
-                                       'endY'      => $endY,
-                                       'xOffset'   => $xOffset,
-                                       'yOffset'   => $yOffset,
-                                       'xLength'   => $xLength,
-                                       'yLength'   => $yLength,
-                                       'xRange'    => $xRange,
-                                       'yRange'    => $yRange,
-                                       'xDiv'      => $xDiv,
-                                       'yDiv'      => $yDiv
-                                   ), \ArrayObject::ARRAY_AS_PROPS
-                                   );
+        $points = new \ArrayObject(array(
+            'zeroPoint' => $zeroPoint,
+            'endX'      => $endX,
+            'endY'      => $endY,
+            'xOffset'   => $xOffset,
+            'yOffset'   => $yOffset,
+            'xLength'   => $xLength,
+            'yLength'   => $yLength,
+            'xRange'    => $xRange,
+            'yRange'    => $yRange,
+            'xDiv'      => $xDiv,
+            'yDiv'      => $yDiv
+        ), \ArrayObject::ARRAY_AS_PROPS);
 
         return $points;
     }

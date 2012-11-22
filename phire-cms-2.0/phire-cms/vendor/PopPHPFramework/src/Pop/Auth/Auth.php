@@ -24,8 +24,7 @@
  */
 namespace Pop\Auth;
 
-use Pop\Auth\Adapter\AdapterInterface,
-    Pop\Validator\Validator,
+use Pop\Validator\Validator,
     Pop\Validator\Validator\Excluded,
     Pop\Validator\Validator\Included,
     Pop\Validator\Validator\Ipv4,
@@ -43,7 +42,7 @@ use Pop\Auth\Adapter\AdapterInterface,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Auth
 {
@@ -215,12 +214,12 @@ class Auth
      * Constructor
      *
      * Instantiate the auth object
-     * @param AdapterInterface $adapter
-     * @param int              $encryption
-     * @param string           $salt
+     * @param Adapter\AdapterInterface $adapter
+     * @param int                      $encryption
+     * @param string                   $salt
      * @return void
      */
-    public function __construct(AdapterInterface $adapter, $encryption = 0, $salt = null)
+    public function __construct(Adapter\AdapterInterface $adapter, $encryption = 0, $salt = null)
     {
         $this->adapter = $adapter;
         $this->start = time();

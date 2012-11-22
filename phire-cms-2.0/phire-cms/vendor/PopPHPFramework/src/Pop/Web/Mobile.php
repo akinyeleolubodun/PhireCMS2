@@ -24,9 +24,6 @@
  */
 namespace Pop\Web;
 
-use Pop\Http\Response,
-    Pop\Web\Session;
-
 /**
  * This is the Mobile class for the Web component.
  *
@@ -35,7 +32,7 @@ use Pop\Http\Response,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Mobile
 {
@@ -111,7 +108,8 @@ class Mobile
         if (null === $this->mobile) {
             throw new Exception('The mobile site is not set.');
         }
-        Response::redirect($this->mobile);
+        header("HTTP/1.1 302 Found");
+        header("Location: " . $this->mobile);
     }
 
     /**
@@ -125,7 +123,8 @@ class Mobile
         if (null === $this->standard) {
             throw new Exception('The standard site is not set.');
         }
-        Response::redirect($this->standard);
+        header("HTTP/1.1 302 Found");
+        header("Location: " . $this->standard);
     }
 
     /**
@@ -136,7 +135,8 @@ class Mobile
      */
     public function goToURL($url)
     {
-        Response::redirect($url);
+        header("HTTP/1.1 302 Found");
+        header("Location: " . $url);
     }
 
     /**

@@ -35,7 +35,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Bootstrap
 {
@@ -66,7 +66,7 @@ class Bootstrap
         // Else, just append to the existing bootstrap file
         $bootstrap->appendToBody("\$autoloader->register('{$install->project->name}', '{$moduleSrc}');" . PHP_EOL)
                   ->appendToBody("// Create a project object")
-                  ->appendToBody("\$project = {$install->project->name}\\Project::factory(")
+                  ->appendToBody("\$project = {$install->project->name}\Project::factory(")
                   ->appendToBody("    include '{$projectCfg}',")
                   ->appendToBody("    include '{$moduleCfg}',");
 
@@ -75,8 +75,34 @@ class Bootstrap
             $controllers = $install->controllers->asArray();
             $ctrls = array();
             foreach ($controllers as $key => $value) {
-                $controllerName = ($key == '/') ? 'default' : substr($key, 1);
-                $ctrls[] = "'{$key}' => '{$install->project->name}\\Controller\\" . ucfirst(String::factory($controllerName)->underscoreToCamelcase()) . "Controller'";
+                $subs = array();
+                foreach ($value as $k => $v) {
+                    if (is_array($v)) {
+                        $subs[] = $k;
+                    }
+                }
+                if (count($subs) > 0) {
+                    $ctls = "'{$key}' => array(" . PHP_EOL;
+                    if (array_key_exists('index', $value)) {
+                        $ctls .= "            '/' => '{$install->project->name}\Controller\\" . ucfirst(String::underscoreToCamelcase(substr($key, 1))) . "\\IndexController'," . PHP_EOL;
+                    }
+                    foreach ($subs as $sub) {
+                        $ctls .= "            '{$sub}' => '{$install->project->name}\Controller\\" . ucfirst(String::underscoreToCamelcase(substr($key, 1))) . "\\" . ucfirst(String::underscoreToCamelcase(substr($sub, 1))) . "Controller'," . PHP_EOL;
+                    }
+                    $ctls .= '        )';
+                    $ctrls[] = $ctls;
+                } else {
+                    if ($key == '/') {
+                        $ctrls[] = "'{$key}' => '{$install->project->name}\Controller\IndexController'";
+                    } else {
+                        $controllerName = substr($key, 1);
+                        if (array_key_exists('index', $value)) {
+                            $ctrls[] = "'{$key}' => '{$install->project->name}\Controller\\" . ucfirst(String::underscoreToCamelcase($controllerName)) . "\\IndexController'";
+                        } else {
+                            $ctrls[] = "'{$key}' => '{$install->project->name}\Controller\\" . ucfirst(String::underscoreToCamelcase($controllerName)) . "Controller'";
+                        }
+                    }
+                }
             }
             $bootstrap->appendToBody("    new Pop\\Mvc\\Router(array(");
             $i = 1;

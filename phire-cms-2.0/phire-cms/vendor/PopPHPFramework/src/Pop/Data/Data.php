@@ -24,12 +24,7 @@
  */
 namespace Pop\Data;
 
-use Pop\Data\Csv,
-    Pop\Data\Json,
-    Pop\Data\Sql,
-    Pop\Data\Xml,
-    Pop\Data\Yaml,
-    Pop\File\File;
+use Pop\File\File;
 
 /**
  * This is the Data class for the Data component.
@@ -39,7 +34,7 @@ use Pop\Data\Csv,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Data
 {
@@ -100,7 +95,7 @@ class Data
 
             $file = new File($data);
             $this->file = $file->read();
-            $this->type = ($file->ext == 'yml') ? 'Yaml' : ucfirst(strtolower($file->ext));
+            $this->type = ($file->getExt() == 'yml') ? 'Yaml' : ucfirst(strtolower($file->getExt()));
         } else {
             $this->data = $data;
         }
@@ -256,7 +251,7 @@ class Data
     {
         $file = new File($toFile);
 
-        $to = strtolower($file->ext);
+        $to = strtolower($file->getExt());
         $types = array('csv', 'json', 'sql', 'xml', 'yaml');
 
         if (!in_array($to, $types)) {

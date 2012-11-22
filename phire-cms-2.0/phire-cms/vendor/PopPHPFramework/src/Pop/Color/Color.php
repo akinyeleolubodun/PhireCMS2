@@ -24,12 +24,6 @@
  */
 namespace Pop\Color;
 
-use Pop\Color\Cmyk,
-    Pop\Color\Hex,
-    Pop\Color\Hsb,
-    Pop\Color\Lab,
-    Pop\Color\Rgb;
-
 /**
  * This is the Color class for the Color component.
  *
@@ -38,7 +32,7 @@ use Pop\Color\Cmyk,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Color
 {
@@ -146,7 +140,7 @@ class Color
     {
         $class = get_class($color);
 
-        if ($class == 'Pop\\Color\\Cmyk') {
+        if ($class == 'Pop\Color\Cmyk') {
             throw new Exception('That color space object is already that type.');
         }
 
@@ -174,7 +168,7 @@ class Color
     {
         $class = get_class($color);
 
-        if ($class == 'Pop\\Color\\Hex') {
+        if ($class == 'Pop\Color\Hex') {
             throw new Exception('That color space object is already that type.');
         }
 
@@ -202,7 +196,7 @@ class Color
     {
         $class = get_class($color);
 
-        if ($class == 'Pop\\Color\\Hsb') {
+        if ($class == 'Pop\Color\Hsb') {
             throw new Exception('That color space object is already that type.');
         }
 
@@ -230,7 +224,7 @@ class Color
     {
         $class = get_class($color);
 
-        if ($class == 'Pop\\Color\\Lab') {
+        if ($class == 'Pop\Color\Lab') {
             throw new Exception('That color space object is already that type.');
         }
 
@@ -258,7 +252,7 @@ class Color
     {
         $class = get_class($color);
 
-        if ($class == 'Pop\\Color\\Rgb') {
+        if ($class == 'Pop\Color\Rgb') {
             throw new Exception('That color space object is already that type.');
         }
 

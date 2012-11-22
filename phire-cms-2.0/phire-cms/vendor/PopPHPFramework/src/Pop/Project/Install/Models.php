@@ -24,10 +24,9 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\MethodGenerator;
-
 use Pop\Code\Generator,
     Pop\Code\PropertyGenerator,
+    Pop\Code\MethodGenerator,
     Pop\Code\NamespaceGenerator,
     Pop\Filter\String,
     Pop\Locale\Locale;
@@ -40,7 +39,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Models
 {
@@ -63,11 +62,11 @@ class Models
 
         $models = $install->models->asArray();
         foreach ($models as $model) {
-            $modelName = String::factory($model)->underscoreToCamelcase()->upperFirst();
+            $modelName = ucfirst(String::underscoreToCamelcase($model));
 
             // Define namespace
-            $ns = new NamespaceGenerator($install->project->name . '\\Model');
-            $ns->setUse('Pop\\Mvc\\Model');
+            $ns = new NamespaceGenerator($install->project->name . '\Model');
+            $ns->setUse('Pop\Mvc\Model');
 
             // Create the constructor
             $construct = new MethodGenerator('__construct');

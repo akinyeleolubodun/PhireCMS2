@@ -27,9 +27,7 @@ namespace Pop\Image;
 use Pop\Color\Color,
     Pop\Color\ColorInterface,
     Pop\Color\Rgb,
-    Pop\Http\Response,
-    Pop\Image\AbstractImage,
-    Pop\Image\Exception;
+    Pop\Http\Response;
 
 /**
  * This is the Imagick class for the Image component.
@@ -39,7 +37,7 @@ use Pop\Color\Color,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Imagick extends AbstractImage
 {

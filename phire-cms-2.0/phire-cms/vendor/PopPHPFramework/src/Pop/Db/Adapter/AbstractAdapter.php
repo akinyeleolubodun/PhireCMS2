@@ -32,7 +32,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 abstract class AbstractAdapter
 {
@@ -54,12 +54,6 @@ abstract class AbstractAdapter
      * @var array
      */
     protected $tables = array();
-
-    /**
-     * Language object
-     * @var Pop\Locale\Locale
-     */
-    protected $lang = null;
 
     /**
      * Constructor

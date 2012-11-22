@@ -25,14 +25,7 @@
 namespace Pop\Form;
 
 use Pop\Dom\Dom,
-    Pop\Dom\Child,
-    Pop\File\File,
-    Pop\Filter\String,
-    Pop\Form\Element,
-    Pop\Form\Element\Checkbox,
-    Pop\Form\Element\Radio,
-    Pop\Form\Element\Select,
-    Pop\Form\Element\Textarea;
+    Pop\Dom\Child;
 
 /**
  * This is the Form class for the Form component.
@@ -42,7 +35,7 @@ use Pop\Dom\Dom,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT   T  New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Form extends Dom
 {
@@ -130,11 +123,11 @@ class Form extends Dom
         if (!$isValid) {
             throw new Exception('The array parameter passed must contain an array of field values.');
         }
-        
+
         foreach ($fields as $key => $value) {
             $this->fields[$value['name']] = (isset($value['value'])) ? $value['value'] : null;
         }
-        
+
         $this->initFieldsValues = $fields;
         return $this;
     }
@@ -154,13 +147,14 @@ class Form extends Dom
      *
      * @param  array $values
      * @param  mixed $filters
+     * @param  mixed $params
      * @return Pop\Form\Form
      */
-    public function setFieldValues(array $values = null, $filters = null)
+    public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
         // Filter values if passed
         if ((null !== $values) && (null !== $filters)) {
-            $values = $this->filterValues($values, $filters);
+            $values = $this->filterValues($values, $filters, $params);
         }
 
         // Loop through the initial fields values and build the fields
@@ -190,16 +184,16 @@ class Form extends Dom
                     // Initialize the form element.
                     switch ($type) {
                         case 'checkbox':
-                            $elem = new Checkbox($name, $value, $marked);
+                            $elem = new Element\Checkbox($name, $value, $marked);
                             break;
                         case 'radio':
-                            $elem = new Radio($name, $value, $marked);
+                            $elem = new Element\Radio($name, $value, $marked);
                             break;
                         case 'select':
-                            $elem = new Select($name, $value, $marked);
+                            $elem = new Element\Select($name, $value, $marked);
                             break;
                         case 'textarea':
-                            $elem = new Textarea($name, $value, $marked);
+                            $elem = new Element\Textarea($name, $value, $marked);
                             break;
                         default:
                             $elem = new Element($type, $name, $value, $marked);
@@ -301,8 +295,7 @@ class Form extends Dom
     public function setTemplate($tmpl)
     {
         if (file_exists($tmpl)) {
-            $tmplFile = new File($tmpl);
-            $this->template = $tmplFile->read();
+            $this->template = file_get_contents($tmpl);
         } else {
             $this->template = $tmpl;
         }
@@ -360,21 +353,21 @@ class Form extends Dom
 
         foreach ($children as $child) {
             $attribs = $child->getAttributes();
-            if ($child instanceof Textarea) {
+            if ($child instanceof Element\Textarea) {
                 if (isset($attribs['name'])) {
                     $this->fields[$attribs['name']] = (isset($child->value) ? $child->value : null);
                 }
-            } else if ($child instanceof Select) {
+            } else if ($child instanceof Element\Select) {
                 if (isset($attribs['name'])) {
                     $this->fields[$attribs['name']] = (isset($child->marked) ? $child->marked : null);
                 }
-            } else if ($child instanceof Radio) {
+            } else if ($child instanceof Element\Radio) {
                 $radioChildren = $child->getChildren();
                 $childAttribs = $radioChildren[0]->getAttributes();
                 if (isset($childAttribs['name'])) {
                     $this->fields[$childAttribs['name']] = (isset($child->marked) ? $child->marked : null);
                 }
-            } else if ($child instanceof Checkbox) {
+            } else if ($child instanceof Element\Checkbox) {
                 $radioChildren = $child->getChildren();
                 $childAttribs = $radioChildren[0]->getAttributes();
                 if (isset($childAttribs['name'])) {
@@ -520,9 +513,10 @@ class Form extends Dom
      *
      * @param  array $values
      * @param  mixed $filters
+     * @param  mixed $params
      * @return array
      */
-    protected function filterValues($values, $filters)
+    protected function filterValues($values, $filters, $params)
     {
         $filteredValues = array();
 
@@ -530,21 +524,39 @@ class Form extends Dom
             $filters = array($filters);
         }
 
+        if ((null !== $params) && !is_array($params)) {
+            $params = array($params);
+        }
+
         foreach ($values as $key => $value) {
-            foreach ($filters as $filter) {
-                if (method_exists('Pop\\Filter\\String', $filter)) {
+            foreach ($filters as $fk => $filter) {
+                if (function_exists($filter)) {
                     if ($value instanceof \ArrayObject) {
                         $value = (array)$value;
                     }
                     if (is_array($value)) {
                         $filteredAry = array();
                         foreach ($value as $k => $v) {
-                            $filteredAry[$k] = (string)String::factory($v)->$filter();
+                            if ((null !== $params) && isset($params[$fk])) {
+                                $pars = (!is_array($params[$fk])) ?
+                                    array($v, $params[$fk]) :
+                                    array_merge(array($v), $params[$fk]);
+                                $filteredAry[$k] = call_user_func_array($filter, $pars);
+                            } else {
+                                $filteredAry[$k] = $filter($v);
+                            }
                         }
                         $filteredValues[$key] = $filteredAry;
                         $value = $filteredAry;
                     } else {
-                        $filteredValues[$key] = (string)String::factory($value)->$filter();
+                        if ((null !== $params) && isset($params[$fk])) {
+                            $pars = (!is_array($params[$fk])) ?
+                                    array($value, $params[$fk]) :
+                                    array_merge(array($value), $params[$fk]);
+                            $filteredValues[$key] = call_user_func_array($filter, $pars);
+                        } else {
+                            $filteredValues[$key] = $filter($value);
+                        }
                         $value = $filteredValues[$key];
                     }
                 } else {
@@ -573,6 +585,12 @@ class Form extends Dom
 
         // Loop through the children and create and attach the appropriate DT and DT elements, with labels where applicable.
         foreach ($children as $child) {
+            // Clear the password field from display.
+            if ($child->getAttribute('type') == 'password') {
+                $child->value = null;
+                $child->setAttributes('value', null);
+            }
+
             // If the element label is set, render the appropriate DT and DD elements.
             if (isset($child->label) && (null !== $child->label)) {
                 // Create the DT and DD elements.
@@ -639,6 +657,12 @@ class Form extends Dom
 
         // Loop through the child elements of the form.
         foreach ($children as $child) {
+            // Clear the password field from display.
+            if ($child->getAttribute('type') == 'password') {
+                $child->value = null;
+                $child->setAttributes('value', null);
+            }
+
             // Get the element name.
             if ($child->getNodeName() == 'fieldset') {
                 $chdrn = $child->getChildren();

@@ -24,8 +24,7 @@
  */
 namespace Pop\Loader;
 
-use Pop\Dir\Dir,
-    Pop\File\File;
+use Pop\File\Dir;
 
 /**
  * This is the Classmap class for the Loader component.
@@ -35,7 +34,7 @@ use Pop\Dir\Dir,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Classmap
 {
@@ -51,21 +50,20 @@ class Classmap
     {
         $dir = new Dir(realpath($inputFolder), true, true);
         $matches = array();
+        $files = $dir->getFiles();
 
-        foreach ($dir->files as $file) {
+        foreach ($files as $file) {
             if (substr($file, -4) == '.php') {
                 $classMatch = array();
                 $namespaceMatch = array();
-
-                $classFile = new File($file);
-                $classFileContents = $classFile->read();
+                $classFileContents = file_get_contents($file);
 
                 preg_match('/^class(.*)$/m', $classFileContents, $classMatch);
                 preg_match('/^namespace(.*)$/m', $classFileContents, $namespaceMatch);
 
                 $ary = array();
                 if (isset($classMatch[0])) {
-                    $ary['file'] = $file;
+                    $ary['file'] = str_replace('\\', '/', $file);
                     $ary['class'] = self::parseClass($classMatch[0]);
                     $ary['namespace'] = (isset($namespaceMatch[0])) ? self::parseNamespace($namespaceMatch[0]) : null;
                     $matches[] = $ary;
@@ -79,16 +77,14 @@ class Classmap
             $i = 1;
             foreach ($matches as $class) {
                 $comma = ($i < count($matches)) ? ',' : null;
-                $className = (null !== $class['namespace']) ? addslashes($class['namespace'] . '\\' . $class['class']) : addslashes($class['class']);
-                $classMap .= PHP_EOL . '    \'' . $className . '\' => \'' . addslashes($class['file']) . '\'' . $comma;
+                $className = (null !== $class['namespace']) ? $class['namespace'] . '\\' . $class['class'] : $class['class'];
+                $classMap .= PHP_EOL . '    \'' . $className . '\' => \'' . $class['file'] . '\'' . $comma;
                 $i++;
             }
 
             $classMap .= PHP_EOL . ');' . PHP_EOL;
 
-            $output = new File($outputFile);
-            $output->write($classMap)
-                   ->save();
+            file_put_contents($outputFile, $classMap);
         }
     }
 

@@ -24,8 +24,6 @@
  */
 namespace Pop\Db\Adapter;
 
-use Pop\Filter\String;
-
 /**
  * This is the Oracle adapter class for the Db component.
  *
@@ -34,7 +32,7 @@ use Pop\Filter\String;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Oracle extends AbstractAdapter
 {
@@ -174,7 +172,10 @@ class Oracle extends AbstractAdapter
      */
     public function escape($value)
     {
-        return (string)String::factory($value)->escape(true);
+        $search = array('\\', "\n", "\r", "\x00", "\x1a", '\'', '"');
+        $replace = array('\\\\', "\\n", "\\r", "\\x00", "\\x1a", '\\\'', '\\"');
+
+        return str_replace($search, $replace, $value);
     }
 
     /**

@@ -32,7 +32,7 @@ namespace Pop\Web;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Cookie
 {
@@ -80,14 +80,21 @@ class Cookie
     /**
      * Set a property in the cookie object that is linked to the $_COOKIE global variable.
      *
-     * @param  string $name
-     * @param  mixed $value
-     * @param  int $exp
+     * @param  string  $name
+     * @param  mixed   $value
+     * @param  int     $expire
+     * @param  string  $path
+     * @param  string  $domain
+     * @param  boolean $secure
+     * @param  boolean $httponly
      * @return void
      */
-    public function set($name, $value, $exp = 0)
+    public function set($name, $value, $expire = 0, $path = '/', $domain = null, $secure = false, $httponly = false)
     {
-        setcookie($name, $value, $exp);
+        if (null !== $domain) {
+            $domain = $_SERVER['HTTP_HOST'];
+        }
+        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 
     /**

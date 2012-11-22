@@ -24,8 +24,7 @@
  */
 namespace Pop\Font\TrueType;
 
-use Pop\Font\TrueType,
-    Pop\Font\TrueType\Table\Os2;
+use Pop\Font\TrueType;
 
 /**
  * This is the OpenType class for the Font component.
@@ -35,7 +34,7 @@ use Pop\Font\TrueType,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class OpenType extends TrueType
 {
@@ -62,7 +61,7 @@ class OpenType extends TrueType
     {
         // OS/2
         if (isset($this->tableInfo['OS/2'])) {
-            $this->tables['OS/2'] = new Os2($this);
+            $this->tables['OS/2'] = new Table\Os2($this);
 
             $this->flags->isSerif = $this->tables['OS/2']->flags->isSerif;
             $this->flags->isScript = $this->tables['OS/2']->flags->isScript;

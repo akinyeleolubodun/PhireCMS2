@@ -24,8 +24,6 @@
  */
 namespace Pop\Data;
 
-use Pop\Filter\String;
-
 /**
  * This is the Csv class for the Data component.
  *
@@ -34,7 +32,7 @@ use Pop\Filter\String;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Csv implements DataInterface
 {
@@ -120,12 +118,12 @@ class Csv implements DataInterface
 
         foreach ($tempAry as $key => $value) {
             if (!in_array($value, $omit)) {
-                $v = new String((string)$value);
+                $v = (string)$value;
                 if (strpos($v, $esc) !== false) {
-                    $v->replace($esc, $esc . $esc);
+                    $v = str_replace($esc, $esc . $esc, $v);
                 }
                 if (strpos($v, $delim) !== false) {
-                    $v = new String($esc . $v . $esc);
+                    $v = $esc . $v . $esc;
                 }
                 $headerAry[] = (string)$v;
             }
@@ -141,18 +139,18 @@ class Csv implements DataInterface
                 if (!in_array($key, $omit)) {
                     if (null !== $dt) {
                         if ((strtotime($val) !== false) || (stripos($key, 'date') !== false)) {
-                            $v = (date($dt, strtotime($val)) != '12/31/1969') ? new String(date($dt, strtotime((string)$val))) : new String('');
+                            $v = (date($dt, strtotime($val)) != '12/31/1969') ? date($dt, strtotime((string)$val)) : '';
                         } else {
-                            $v = new String((string)$val);
+                            $v = (string)$val;
                         }
                     } else {
-                        $v = new String((string)$val);
+                        $v = (string)$val;
                     }
                     if (strpos($v, $esc) !== false) {
-                        $v->replace($esc, $esc . $esc);
+                        $v = str_replace($esc, $esc . $esc, $v);
                     }
                     if (strpos($v, $delim) !== false) {
-                        $v = new String($esc . (string)$v . $esc);
+                        $v = $esc . (string)$v . $esc;
                     }
                     $rowAry[] = $v;
                 }

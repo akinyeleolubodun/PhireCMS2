@@ -24,8 +24,6 @@
  */
 namespace Pop\Pdf;
 
-use Pop\File\File;
-
 /**
  * This is the Import class for the Pdf component.
  *
@@ -34,7 +32,7 @@ use Pop\File\File;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Import
 {
@@ -81,8 +79,7 @@ class Import
     public function __construct($pdf, $pgs = null)
     {
         // Read the file data from the imported PDF.
-        $import_file = new File($pdf);
-        $this->data = $import_file->read();
+        $this->data = file_get_contents($pdf);
 
         // Strip any and all XREF tables, as the structure of the PDF will change.
         while (strpos($this->data, 'xref') !== false) {

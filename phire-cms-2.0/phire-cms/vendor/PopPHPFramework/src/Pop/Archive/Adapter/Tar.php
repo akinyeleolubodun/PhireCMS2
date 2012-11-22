@@ -27,8 +27,7 @@ namespace Pop\Archive\Adapter;
 use Pop\Archive\ArchiveInterface,
     Pop\Compress\Bzip2,
     Pop\Compress\Gzip,
-    Pop\Dir\Dir,
-    Pop\File\File;
+    Pop\File\Dir;
 
 /**
  * This is the Tar class for the Archive component.
@@ -38,7 +37,7 @@ use Pop\Archive\ArchiveInterface,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Tar implements ArchiveInterface
 {
@@ -69,12 +68,12 @@ class Tar implements ArchiveInterface
      */
     public function __construct($archive)
     {
-        if (stripos($archive->ext, 'bz') !== false) {
+        if (stripos($archive->getExt(), 'bz') !== false) {
             $this->compression = 'bz';
-        } else if (stripos($archive->ext, 'gz') !== false) {
+        } else if (stripos($archive->getExt(), 'gz') !== false) {
             $this->compression = 'gz';
         }
-        $this->path = $archive->fullpath;
+        $this->path = $archive->getFullpath();
         $this->archive = new \Archive_Tar($this->path);
     }
 
@@ -112,7 +111,8 @@ class Tar implements ArchiveInterface
             // If file is a directory, loop through and add the files.
             if (file_exists($file) && is_dir($file)) {
                 $dir = new Dir($file, true, true);
-                foreach ($dir->files as $fle) {
+                $dirFiles = $dir->getFiles();
+                foreach ($dirFiles as $fle) {
                     if (file_exists($fle) && !is_dir($fle)) {
                         $this->archive->add($fle);
                     }

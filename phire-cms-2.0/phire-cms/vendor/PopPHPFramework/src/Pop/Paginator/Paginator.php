@@ -24,8 +24,6 @@
  */
 namespace Pop\Paginator;
 
-use Pop\Filter\String;
-
 /**
  * This is the Paginator class to paginate result sets.
  *
@@ -34,7 +32,7 @@ use Pop\Filter\String;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Paginator
 {
@@ -488,7 +486,7 @@ class Paginator
         $uri = null;
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?'));
-    
+
             if (count($_GET) > 0) {
                 foreach ($_GET as $key => $value) {
                     if ($key != 'page') {
@@ -528,11 +526,10 @@ class Paginator
             }
             $this->output .= '<table class="paged-table" cellpadding="0" cellspacing="0">' . PHP_EOL;
         } else {
-            $hdr = new String($this->header);
             if (count($this->links) > 1) {
-                $hdr->replace('[{page_links}]', implode($this->separator, $this->links));
+                $hdr = str_replace('[{page_links}]', implode($this->separator, $this->links), $this->header);
             } else {
-                $hdr->replace('[{page_links}]', '');
+                $hdr = str_replace('[{page_links}]', '', $this->header);
             }
             $this->output .= $hdr;
         }
@@ -553,7 +550,7 @@ class Paginator
                     $this->output .= "</tr>" . PHP_EOL;
                 }
             } else {
-                $tmpl = new String($this->rowTemplate);
+                $tmpl = $this->rowTemplate;
                 if (isset($this->items[$i])) {
                     foreach ($this->items[$i] as $key => $value) {
                         if (null !== $this->dateFormat) {
@@ -561,7 +558,7 @@ class Paginator
                         } else {
                             $val = $value;
                         }
-                        $tmpl->replace('[{' . $key . '}]', $val);
+                        $tmpl = str_replace('[{' . $key . '}]', $val, $tmpl);
                     }
                     $this->output .= $tmpl;
                 }
@@ -575,11 +572,10 @@ class Paginator
                 $this->output .= implode($this->separator, $this->links) . PHP_EOL;
             }
         } else {
-            $ftr = new String($this->footer);
             if (count($this->links) > 1) {
-                $ftr->replace('[{page_links}]', implode($this->separator, $this->links));
+                $ftr = str_replace('[{page_links}]', implode($this->separator, $this->links), $this->footer);
             } else {
-                $ftr->replace('[{page_links}]', '');
+                $ftr = str_replace('[{page_links}]', '', $this->footer);
             }
             $this->output .= $ftr;
         }

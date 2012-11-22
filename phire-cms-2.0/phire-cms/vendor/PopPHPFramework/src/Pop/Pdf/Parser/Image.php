@@ -24,7 +24,7 @@
  */
 namespace Pop\Pdf\Parser;
 
-use Pop\Dir\Dir,
+use Pop\File\Dir,
     Pop\Image\Gd,
     Pop\Image\Imagick,
     Pop\Pdf\Object;
@@ -37,7 +37,7 @@ use Pop\Dir\Dir,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Image
 {
@@ -298,7 +298,7 @@ class Image
     protected function scaleImage($scl)
     {
         // Define the temp scaled image.
-        $this->scaledImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->filename . '_' . time() . '.' . $this->img->ext;
+        $this->scaledImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.' . $this->img->getExt();
 
         // Scale or resize the image
         if (is_array($scl) && (isset($scl['w']) || isset($scl['h']))) {
@@ -333,7 +333,7 @@ class Image
     protected function convertImage()
     {
         // Define the temp converted image.
-        $this->convertedImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->filename . '_' . time() . '.png';
+        $this->convertedImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.png';
 
         // Convert the GIF to PNG, save and clear the output buffer.
         $this->img->convert('png')->save($this->convertedImage);
@@ -373,7 +373,7 @@ class Image
         if ($this->img->getColorMode() == 'Gray') {
             $colorspace = '/DeviceGray';
             $numOfColors = 1;
-        } else if ($this->img->getColorMode() == 'RGB') {
+        } else if (stripos($this->img->getColorMode(), 'RGB') !== false) {
             $colorspace = '/DeviceRGB';
             $numOfColors = 3;
         } else if ($this->img->getColorMode() == 'Indexed') {

@@ -25,7 +25,6 @@
 namespace Pop\Project\Install;
 
 use Pop\Code\Generator,
-    Pop\Filter\String,
     Pop\Locale\Locale;
 
 /**
@@ -36,7 +35,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Base
 {
@@ -91,7 +90,7 @@ class Base
             foreach ($databases as $dbname => $db) {
                 $isPdo = (stripos($db['type'], 'pdo') !== false) ? true : false;
                 $isSqlite = (stripos($db['type'], 'sqlite') !== false) ? true : false;
-                
+
                 if ($isPdo) {
                     $pdoType = strtolower(substr($db['type'], (strpos($db['type'], '_') + 1)));
                     $realDbType = 'Pdo';
@@ -99,7 +98,7 @@ class Base
                     $pdoType = null;
                     $realDbType = $db['type'];
                 }
-                
+
                 $projectCfg->appendToBody("        '" . $dbname . "' => Pop\\Db\\Db::factory('" . $realDbType . "', array (");
                 $j = 0;
                 $default = ($db['default']) ? $dbname : null;

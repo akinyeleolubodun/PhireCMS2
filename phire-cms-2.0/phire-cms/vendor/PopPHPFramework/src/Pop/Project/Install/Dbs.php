@@ -26,8 +26,7 @@ namespace Pop\Project\Install;
 
 use Pop\Data\Sql,
     Pop\Db\Db,
-    Pop\Dir\Dir,
-    Pop\File\File,
+    Pop\File\Dir,
     Pop\Locale\Locale;
 
 /**
@@ -38,7 +37,7 @@ use Pop\Data\Sql,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Dbs
 {
@@ -99,8 +98,9 @@ class Dbs
             $sqlFiles[] = $dir;
         } else {
             $dir = new Dir($dir, true);
+            $files = $dir->getFiles();
 
-            foreach ($dir->files as $file) {
+            foreach ($files as $file) {
                 if (strtolower(substr($file, -4)) == '.sql') {
                     $sqlFiles[] = $file;
                 }
@@ -149,19 +149,17 @@ class Dbs
             }
 
             // Clear database
-            $oldTables = $popdb->adapter->getTables();
+            $oldTables = $popdb->adapter()->getTables();
             if (count($oldTables) > 0) {
                 foreach ($oldTables as $tab) {
-                    $popdb->adapter->query("DROP TABLE " . $tab);
+                    $popdb->adapter()->query("DROP TABLE " . $tab);
                 }
             }
 
             $prefix = (isset($db['prefix'])) ? $db['prefix'] : null;
 
             foreach ($sqlFiles as $sqlFile) {
-                $file = new File($sqlFile);
-
-                $sql = trim($file->read());
+                $sql = trim(file_get_contents($sqlFile));
                 $explode = (strpos($sql, ";\r\n") !== false) ? ";\r\n" : ";\n";
                 $statements = explode($explode, $sql);
 
@@ -169,7 +167,7 @@ class Dbs
                 foreach ($statements as $s) {
                     if (!empty($s)) {
                         try {
-                            $popdb->adapter->query(str_replace('[{prefix}]', $prefix, trim($s)));
+                            $popdb->adapter()->query(str_replace('[{prefix}]', $prefix, trim($s)));
                         } catch (\Exception $e) {
                             echo $e->getMessage() . PHP_EOL . PHP_EOL;
                             exit(0);
@@ -185,12 +183,12 @@ class Dbs
         try {
             // Get Sqlite table info
             if (stripos($db['type'], 'sqlite') !== false) {
-                $tablesFromDb = $popdb->adapter->getTables();
+                $tablesFromDb = $popdb->adapter()->getTables();
                 if (count($tablesFromDb) > 0) {
                     foreach ($tablesFromDb as $table) {
                         $tables[$table] = array('primaryId' => null, 'auto' => false);
-                        $popdb->adapter->query("PRAGMA table_info('" . $table . "')");
-                        while (($row = $popdb->adapter->fetch()) != false) {
+                        $popdb->adapter()->query("PRAGMA table_info('" . $table . "')");
+                        while (($row = $popdb->adapter()->fetch()) != false) {
                             if ($row['pk'] == 1) {
                                 $tables[$table] = array('primaryId' => $row['name'], 'auto' => true);
                             }
@@ -218,10 +216,10 @@ class Dbs
                     $constraintName = 'CONSTRAINT_NAME';
                     $columnName = 'COLUMN_NAME';
                 }
-                $popdb->adapter->query("SELECT * FROM information_schema.TABLES WHERE TABLE_" . $schema . " = '" . $dbname . "'" . $tableSchema);
+                $popdb->adapter()->query("SELECT * FROM information_schema.TABLES WHERE TABLE_" . $schema . " = '" . $dbname . "'" . $tableSchema);
 
                 // Get the auto increment info (mysql) and set table name
-                while (($row = $popdb->adapter->fetch()) != false) {
+                while (($row = $popdb->adapter()->fetch()) != false) {
                     $auto = (!empty($row['AUTO_INCREMENT'])) ? true : false;
                     $tables[$row[$tableName]] = array('primaryId' => null, 'auto' => $auto);
                 }
@@ -230,16 +228,16 @@ class Dbs
                 foreach ($tables as $table => $value) {
                     // Pgsql sequence info for auto increment
                     if ($db['type'] == 'Pgsql') {
-                        $popdb->adapter->query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '" . $table . "'");
+                        $popdb->adapter()->query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '" . $table . "'");
                         $columns = array();
-                        while (($row = $popdb->adapter->fetch()) != false) {
+                        while (($row = $popdb->adapter()->fetch()) != false) {
                             $columns[] = $row['column_name'];
                         }
 
                         if (count($columns) > 0) {
                             foreach ($columns as $column) {
-                                $popdb->adapter->query("SELECT pg_get_serial_sequence('" . $table . "', '" . $column . "')");
-                                while (($row = $popdb->adapter->fetch()) != false) {
+                                $popdb->adapter()->query("SELECT pg_get_serial_sequence('" . $table . "', '" . $column . "')");
+                                while (($row = $popdb->adapter()->fetch()) != false) {
                                     if (!empty($row['pg_get_serial_sequence'])) {
                                         $idAry = explode('_', $row['pg_get_serial_sequence']);
                                         if (isset($idAry[1]) && (in_array($idAry[1], $columns))) {
@@ -253,8 +251,8 @@ class Dbs
 
                     // Get primary id, if there is one
                     $ids = array();
-                    $popdb->adapter->query("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE CONSTRAINT_" . $schema . " = '" . $dbname . "' AND TABLE_NAME = '" . $table . "'");
-                    while (($row = $popdb->adapter->fetch()) != false) {
+                    $popdb->adapter()->query("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE CONSTRAINT_" . $schema . " = '" . $dbname . "' AND TABLE_NAME = '" . $table . "'");
+                    while (($row = $popdb->adapter()->fetch()) != false) {
                         if (isset($row[$constraintName])) {
                             if (!isset($tables[$table]['primaryId'])) {
                                 $tables[$table]['primaryId'] = $row[$columnName];

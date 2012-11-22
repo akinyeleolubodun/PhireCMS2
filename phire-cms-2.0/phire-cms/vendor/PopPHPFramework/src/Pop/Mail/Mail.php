@@ -34,7 +34,7 @@ use Pop\File\File;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Mail
 {
@@ -359,7 +359,7 @@ class Mail
     {
         // Determine if the file is valid.
         if (!($file instanceof File) && !file_exists($file)) {
-            throw new Exception('Error: The parameter passed must either be a valid file or an instance of Pop\\File\\File.');
+            throw new Exception('Error: The parameter passed must either be a valid file or an instance of Pop\File\File.');
         }
 
         $fle = (!($file instanceof File)) ? new File($file) : $file;
@@ -419,10 +419,10 @@ class Mail
 
                 foreach ($this->attachments as $file) {
                     $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->basename .
+                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->basename . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->basename .
+                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
+                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
                 }
 
@@ -446,10 +446,10 @@ class Mail
 
                 foreach ($this->attachments as $file) {
                     $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->basename .
+                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->basename . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->basename .
+                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
+                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
                 }
                 $this->message .= '--' . $this->getBoundary() . PHP_EOL .
@@ -468,10 +468,10 @@ class Mail
 
                 foreach ($this->attachments as $file) {
                     $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->basename .
+                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->basename . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->basename .
+                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
+                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
                         '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
                 }
                 $this->message .= '--' . $this->getBoundary() . PHP_EOL .

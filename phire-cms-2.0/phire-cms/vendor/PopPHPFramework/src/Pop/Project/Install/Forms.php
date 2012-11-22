@@ -24,11 +24,10 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\MethodGenerator;
-
 use Pop\Code\Generator,
-    Pop\Code\PropertyGenerator,
+    Pop\Code\MethodGenerator,
     Pop\Code\NamespaceGenerator,
+    Pop\Code\PropertyGenerator,
     Pop\Filter\String,
     Pop\Locale\Locale;
 
@@ -40,7 +39,7 @@ use Pop\Code\Generator,
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0
+ * @version    1.0.2
  */
 class Forms
 {
@@ -63,13 +62,13 @@ class Forms
 
         $forms = $install->forms->asArray();
         foreach ($forms as $name => $form) {
-            $formName = String::factory($name)->underscoreToCamelcase()->upperFirst();
+            $formName = ucfirst(String::underscoreToCamelcase($name));
 
             // Define namespace
-            $ns = new NamespaceGenerator($install->project->name . '\\Form');
-            $ns->setUse('Pop\\Form\\Form')
-               ->setUse('Pop\\Form\\Element')
-               ->setUse('Pop\\Validator\\Validator');
+            $ns = new NamespaceGenerator($install->project->name . '\Form');
+            $ns->setUse('Pop\Form\Form')
+               ->setUse('Pop\Form\Element')
+               ->setUse('Pop\Validator\Validator');
 
             // Create the constructor
             $construct = new MethodGenerator('__construct');
