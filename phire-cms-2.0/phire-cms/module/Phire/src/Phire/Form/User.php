@@ -136,6 +136,14 @@ class User extends Form
             'value' => $accessAry
         );
         $this->initFieldsValues[] = array(
+            'type' => 'checkbox',
+            'name' => 'send_creds',
+            'label' => '&nbsp;',
+            'value' => array(
+                'Yes' => 'Send credentials to user?'
+            )
+        );
+        $this->initFieldsValues[] = array(
             'type' => 'hidden',
             'name' => 'id',
             'value' => 0

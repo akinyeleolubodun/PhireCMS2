@@ -8,6 +8,7 @@ use Phire\Table\SysConfig,
     Phire\Table\Users,
     Pop\Db\Db,
     Pop\File\File,
+    Pop\Mail\Mail,
     Pop\Mvc\Model,
     Pop\Project\Install\Dbs,
     Pop\Web\Session;
@@ -148,6 +149,7 @@ class Install extends Model
     public function installUser($form)
     {
         $password = html_entity_decode($form->password1, ENT_QUOTES, 'UTF-8');
+        $origPassword = $password;
 
         switch (SysConfig::findById('password_encryption')->value) {
             case 1:
@@ -158,20 +160,45 @@ class Install extends Model
         }
 
         $user = new Users(array(
-            'username' => html_entity_decode($form->username, ENT_QUOTES, 'UTF-8'),
-            'password' => $password,
-            'fname' => html_entity_decode($form->fname, ENT_QUOTES, 'UTF-8'),
-            'lname' => html_entity_decode($form->lname, ENT_QUOTES, 'UTF-8'),
-            'email' => html_entity_decode($form->email1, ENT_QUOTES, 'UTF-8'),
-            'allowed_sites' => implode('|', $form->allowed_sites),
-            'access_id' => $form->access_id,
-            'last_login' => '',
-            'last_ua' => '',
-            'last_ip' => '',
+            'username'        => html_entity_decode($form->username, ENT_QUOTES, 'UTF-8'),
+            'password'        => $password,
+            'fname'           => html_entity_decode($form->fname, ENT_QUOTES, 'UTF-8'),
+            'lname'           => html_entity_decode($form->lname, ENT_QUOTES, 'UTF-8'),
+            'email'           => html_entity_decode($form->email1, ENT_QUOTES, 'UTF-8'),
+            'allowed_sites'   => implode('|', $form->allowed_sites),
+            'access_id'       => $form->access_id,
+            'last_login'      => '',
+            'last_ua'         => '',
+            'last_ip'         => '',
             'failed_attempts' => 0
         ));
 
         $user->save();
+
+        if (null !== $form->send_creds) {
+            $rcpts = array(
+                'name'       => $user->fname . ' ' . $user->lname,
+                'email'      => $user->email,
+                'username'   => $user->username,
+                'password'   => $origPassword,
+                'login_link' => 'http://' . $_SERVER['HTTP_HOST'] . BASE_URI . SYSTEM_URI . '/login'
+            );
+
+            $mail = new Mail($rcpts, 'Phire CMS: New User for ' . $_SERVER['HTTP_HOST']);
+            $mail->setHeaders(array(
+                'From'     => array(
+                	'name'  => 'No Reply',
+                	'email' => 'noreply@' . str_replace('www.', '', $_SERVER['HTTP_HOST'])
+                ),
+                'Reply-To' => array(
+                	'name' => 'No Reply',
+                	'email' => 'noreply@' . str_replace('www.', '', $_SERVER['HTTP_HOST'])
+                )
+            ));
+
+            $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/adduser.phtml'));
+            $mail->send();
+        }
     }
 
 }

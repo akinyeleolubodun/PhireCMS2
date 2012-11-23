@@ -102,7 +102,7 @@ class IndexController extends AbstractController
                         if ($form->isValid()) {
                             unset($this->sess->install);
                             $config->installUser($form);
-                            $config->set('form', '    <p>The initial user has been created.</p>' . PHP_EOL);
+                            $config->set('form', '    <p>The initial user has been created. You can <a href="http://' . $_SERVER['HTTP_HOST'] . BASE_URI . SYSTEM_URI . '/login">login in here</a>.</p>' . PHP_EOL);
                             $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                             $this->send();
                         } else {
