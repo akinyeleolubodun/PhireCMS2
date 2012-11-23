@@ -455,7 +455,7 @@ INSERT INTO [[{prefix}]sys_config] ([setting], [value]) VALUES
 ('pagination_limit', '25'),
 ('pagination_range', '10'),
 ('default_editor', 'Source'),
-('default_system_template', '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n<!-- Header //-->\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n\n<head>\n\n    <title>\n        [{page_title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="varchar(max)/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{page_sub_title}]</h1>\n[{page_content}]\n</body>\n\n</html>'),
+('default_system_template', '<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{page_title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="varchar(max)/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{page_sub_title}]</h1>\n[{page_content}]\n</body>\n\n</html>'),
 ('notification', ''),
 ('notification_email', ''),
 ('notification_filter', ''),

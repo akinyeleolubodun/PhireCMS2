@@ -1,5 +1,7 @@
-<?php echo '<?xml version="1.0" encoding="utf-8"?>' . PHP_EOL; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
 <head>
     <title>Phire CMS 2.0.0 &gt; System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -31,7 +33,7 @@
         var checkConfig = function(url) {
             if (url != location.href) {
                 if (JaxXmlHttp().getRequest(url) == "The config file is not properly configured. Please check the config file or install the system.") {
-                    alert('Please copy and paste the code into the \'config.php\' file.');
+                    alert('Please copy and paste the code into the \'config.php\' file to continue.');
                     return false;
                 } else {
                     return true;
