@@ -45,6 +45,7 @@ class Login extends Form
             array (
                 'type' => 'submit',
                 'name' => 'submit',
+                'label' => '&nbsp;',
                 'value' => 'LOGIN'
             )
         );

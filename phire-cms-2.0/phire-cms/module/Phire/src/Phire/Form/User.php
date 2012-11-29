@@ -4,10 +4,7 @@
  */
 namespace Phire\Form;
 
-use Phire\Table\Sites,
-    Phire\Table\SysAccess,
-    Phire\Table\SysConfig,
-    Phire\Table\Users,
+use Phire\Table,
     Pop\Form\Form,
     Pop\Form\Element,
     Pop\Validator\Validator;
@@ -27,7 +24,7 @@ class User extends Form
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
 
-        $access = SysAccess::findAll('level DESC', 'type', 'user');
+        $access = Table\SysAccess::findAll('level DESC', 'type', 'user');
         $accessAry = array();
 
         if (isset($access->rows[0])) {
@@ -83,7 +80,7 @@ class User extends Form
             )
         );
 
-        if (!SysConfig::findById('email_as_username')->value) {
+        if (!Table\SysConfig::findById('email_as_username')->value) {
             $this->initFieldsValues[] = array (
                 'type' => 'text',
                 'name' => 'username',
@@ -127,7 +124,7 @@ class User extends Form
             'name' => 'allowed_sites',
             'label' => 'Allowed Sites:',
             'required' => true,
-            'value' => Sites::getSites()
+            'value' => Table\Sites::getSites()
         );
         $this->initFieldsValues[] = array(
             'type' => 'select',
@@ -181,7 +178,7 @@ class User extends Form
                 $usernameField = 'email1';
             }
 
-            $user = Users::findBy('username', $username);
+            $user = Table\Users::findBy('username', $username);
             if (isset($user->id) && ($this->id != $user->id)) {
                 $this->getElement($usernameField)
                      ->addValidator(new Validator\NotEqual($username), 'That user already exists.');

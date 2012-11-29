@@ -5,9 +5,8 @@
 namespace Phire\Controller\Phire;
 
 use Phire\Controller\AbstractController,
-    Phire\Form\Install as InstallForm,
-    Phire\Form\User,
-    Phire\Model\Install,
+    Phire\Form,
+    Phire\Model,
     Pop\Http\Response,
     Pop\Http\Request,
     Pop\Mvc\View;
@@ -40,8 +39,26 @@ class IndexController extends AbstractController
         if ($this->isAuth('user_id')) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->view = View::factory($this->viewPath . '/login.phtml');
-            $this->send();
+            $form = new Form\Login($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
+            $user = new Model\User();
+            if ($this->request->isPost()) {
+                $form->setFieldValues(
+                    $this->request->getPost(),
+                    array('strip_tags', 'htmlentities'),
+                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                );
+                if ($form->isValid()) {
+                    echo 'Good!';
+                } else {
+                    $user->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/login.phtml', $user);
+                    $this->send();
+                }
+            } else {
+                $user->set('form', $form);
+                $this->view = View::factory($this->viewPath . '/login.phtml', $user);
+                $this->send();
+            }
         }
     }
 
@@ -81,7 +98,7 @@ class IndexController extends AbstractController
             throw new \Exception('The system is already installed.');
         } else {
             $this->sess->install = true;
-            $config = new Install();
+            $config = new Model\Install();
             if ((null != $this->request->getPath(1)) && ($this->request->getPath(1) == 'user')) {
                 if (!isset($this->sess->config)) {
                     Response::redirect(BASE_URI . SYSTEM_URI . '/install');
@@ -92,7 +109,7 @@ class IndexController extends AbstractController
                     $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                     $this->send();
                 } else {
-                    $form = new User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+                    $form = new Form\User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                     if ($this->request->isPost()) {
                         $form->setFieldValues(
                             $this->request->getPost(),
@@ -117,7 +134,7 @@ class IndexController extends AbstractController
                     }
                 }
             } else {
-                $form = new InstallForm($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+                $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),

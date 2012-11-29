@@ -4,8 +4,7 @@
  */
 namespace Phire\Model;
 
-use Phire\Table\SysConfig,
-    Phire\Table\Users,
+use Phire\Table,
     Pop\Db\Db,
     Pop\File\File,
     Pop\Mail\Mail,
@@ -151,7 +150,7 @@ class Install extends Model
         $password = html_entity_decode($form->password1, ENT_QUOTES, 'UTF-8');
         $origPassword = $password;
 
-        switch (SysConfig::findById('password_encryption')->value) {
+        switch (Table\SysConfig::findById('password_encryption')->value) {
             case 1:
                 $password = md5($password);
                 break;
@@ -159,7 +158,7 @@ class Install extends Model
                 $password = sha1($password);
         }
 
-        $user = new Users(array(
+        $user = new Table\Users(array(
             'username'        => html_entity_decode($form->username, ENT_QUOTES, 'UTF-8'),
             'password'        => $password,
             'fname'           => html_entity_decode($form->fname, ENT_QUOTES, 'UTF-8'),

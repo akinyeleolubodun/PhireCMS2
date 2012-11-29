@@ -10,7 +10,7 @@ if (isset($configWritable)) {
         echo $config . PHP_EOL;
         echo '</textarea>' . PHP_EOL;
     }
-    echo '    <p><a href="#" onclick="return false;">Copy</a> | <a href="' . $url . '" onclick="return checkConfig(this.href);">Continue</a></p>' . PHP_EOL;
+    echo '    <p><a href="' . $url . '" onclick="return checkConfig(this.href);">Continue</a></p>' . PHP_EOL;
 } else if (isset($form)) {
     echo $form;
 }
