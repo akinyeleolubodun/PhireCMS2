@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,22 +15,19 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\Generator,
-    Pop\Code\MethodGenerator,
-    Pop\Code\NamespaceGenerator,
-    Pop\Filter\String,
-    Pop\Locale\Locale,
-    Pop\Project\Install;
+use Pop\Code\Generator;
+use Pop\Code\Generator\MethodGenerator;
+use Pop\Code\Generator\NamespaceGenerator;
 
 /**
- * This is the Controllers class for the Project Install component.
+ * Controllers install class
  *
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Controllers
 {
@@ -47,13 +35,13 @@ class Controllers
     /**
      * Install the controller class files
      *
-     * @param Pop\Config $install
+     * @param \Pop\Config $install
      * @param string     $installDir
      * @return void
      */
     public static function install($install, $installDir)
     {
-        echo Locale::factory()->__('Creating controller class files...') . PHP_EOL;
+        echo \Pop\I18n\I18n::factory()->__('Creating controller class files...') . PHP_EOL;
 
         // Make the controller folder
         $module = (substr($install->project->base, -1) == '/') ? 'module/' : '/module/';
@@ -73,8 +61,8 @@ class Controllers
             $controllers = $install->controllers->asArray();
 
             self::createControllers($controllers, array(
-            	'src'        => realpath($ctrlDir),
-            	'view'       => realpath($viewDir),
+                'src'        => realpath($ctrlDir),
+                'view'       => realpath($viewDir),
                 'namespace'  => $install->project->name . '\Controller',
                 'installDir' => $installDir
             ));
@@ -84,10 +72,10 @@ class Controllers
     /**
      * Create the controller class files
      *
-     * @param array              $controllers
-     * @param array              $base
-     * @param string             $depth
-     * @param Pop\Code\Generator $controllerCls
+     * @param array               $controllers
+     * @param array               $base
+     * @param string              $depth
+     * @param \Pop\Code\Generator $controllerCls
      * @return void
      */
     public static function createControllers($controllers, $base = null, $depth = null, $controllerCls = null)
@@ -203,9 +191,7 @@ class Controllers
                 $method = new MethodGenerator($key);
                 $method->setDesc('The \'' . $key . '()\' method.');
 
-                if ($key == 'error') {
-                    $method->appendToBody("\$this->isError = true;");
-                }
+                $code = ($key == 'error') ? '404' : null;
 
                 if ($controllerCls->code()->getParent() != 'C') {
                     $vp = substr($depth, (strrpos($depth, '/') + 1)) . '/' . $value;
@@ -213,7 +199,7 @@ class Controllers
                     $vp = $value;
                 }
                 $method->appendToBody("\$this->view = View::factory(\$this->viewPath . '/{$vp}');");
-                $method->appendToBody("\$this->send();", false);
+                $method->appendToBody("\$this->send(" . $code . ");", false);
                 $method->getDocblock()->setReturn('void');
 
                 $controllerCls->code()->addMethod($method);

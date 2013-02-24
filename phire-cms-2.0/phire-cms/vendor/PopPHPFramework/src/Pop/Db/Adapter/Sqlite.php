@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Db
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Db\Adapter;
 
 /**
- * This is the Sqlite adapter class for the Db component.
+ * SQLite Db adapter class
  *
  * @category   Pop
  * @package    Pop_Db
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Sqlite extends AbstractAdapter
 {
@@ -41,17 +32,17 @@ class Sqlite extends AbstractAdapter
      * Last result
      * @var resource
      */
-    public $last_result;
+    protected $lastResult;
 
     /**
      * Last SQL query
      * @var string
      */
-    public $last_sql = null;
+    protected $lastSql = null;
 
     /**
      * Prepared statement
-     * @var SQLite3Stmt
+     * @var \SQLite3Stmt
      */
     protected $statement = null;
 
@@ -61,8 +52,8 @@ class Sqlite extends AbstractAdapter
      * Instantiate the SQLite database connection object.
      *
      * @param  array $options
-     * @throws Exception
-     * @return void
+     * @throws \Pop\Db\Adapter\Exception
+     * @return \Pop\Db\Adapter\Sqlite
      */
     public function __construct(array $options)
     {
@@ -79,7 +70,7 @@ class Sqlite extends AbstractAdapter
     /**
      * Throw an exception upon a database error.
      *
-     * @throws Exception
+     * @throws \Pop\Db\Adapter\Exception
      * @return void
      */
     public function showError()
@@ -91,7 +82,7 @@ class Sqlite extends AbstractAdapter
      * Prepare a SQL query.
      *
      * @param  string $sql
-     * @return Pop\Db\Adapter\Sqlite
+     * @return \Pop\Db\Adapter\Sqlite
      */
     public function prepare($sql)
     {
@@ -103,7 +94,7 @@ class Sqlite extends AbstractAdapter
      * Bind parameters to for a prepared SQL query.
      *
      * @param  array  $params
-     * @return Pop\Db\Adapter\Sqlite
+     * @return \Pop\Db\Adapter\Sqlite
      */
     public function bindParams($params)
     {
@@ -134,7 +125,7 @@ class Sqlite extends AbstractAdapter
     /**
      * Execute the prepared SQL query.
      *
-     * @throws Exception
+     * @throws \Pop\Db\Adapter\Exception
      * @return void
      */
     public function execute()
@@ -155,9 +146,9 @@ class Sqlite extends AbstractAdapter
     public function query($sql)
     {
         if (stripos($sql, 'select') !== false) {
-            $this->last_sql = $sql;
+            $this->lastSql = $sql;
         } else {
-            $this->last_sql = null;
+            $this->lastSql = null;
         }
 
         if (!($this->result = $this->connection->query($sql))) {
@@ -168,7 +159,7 @@ class Sqlite extends AbstractAdapter
     /**
      * Return the results array from the results resource.
      *
-     * @throws Exception
+     * @throws \Pop\Db\Adapter\Exception
      * @return array
      */
     public function fetch()
@@ -208,14 +199,14 @@ class Sqlite extends AbstractAdapter
      */
     public function numRows()
     {
-        if (null === $this->last_sql) {
+        if (null === $this->lastSql) {
             return $this->connection->changes();
         } else {
-            if (!($this->last_result = $this->connection->query($this->last_sql))) {
+            if (!($this->lastResult = $this->connection->query($this->lastSql))) {
                 $this->showError();
             } else {
                 $num = 0;
-                while (($row = $this->last_result->fetcharray(SQLITE3_ASSOC)) != false) {
+                while (($row = $this->lastResult->fetcharray(SQLITE3_ASSOC)) != false) {
                     $num++;
                 }
                 return $num;
@@ -226,7 +217,7 @@ class Sqlite extends AbstractAdapter
     /**
      * Return the number of fields in the result.
      *
-     * @throws Exception
+     * @throws \Pop\Db\Adapter\Exception
      * @return int
      */
     public function numFields()
@@ -257,7 +248,6 @@ class Sqlite extends AbstractAdapter
     protected function loadTables()
     {
         $tables = array();
-
         $sql = "SELECT name FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%' UNION ALL SELECT name FROM sqlite_temp_master WHERE type IN ('table', 'view') ORDER BY 1";
 
         $this->query($sql);

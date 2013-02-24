@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Feed
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,21 +15,33 @@
  */
 namespace Pop\Feed;
 
-use Pop\Dom\Dom,
-    Pop\Dom\Child;
+use Pop\Dom\Dom;
+use Pop\Dom\Child;
 
 /**
- * This is the Writer class for the Feed component.
+ * Feed writer class
  *
  * @category   Pop
  * @package    Pop_Feed
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Writer extends Dom
 {
+
+    /**
+     * Constant to use JSON
+     * @var int
+     */
+    const JSON = 11;
+
+    /**
+     * Constant to use PHP
+     * @var int
+     */
+    const PHP = 12;
 
     /**
      * Feed headers
@@ -62,28 +65,49 @@ class Writer extends Dom
      * Feed date format
      * @var string
      */
-    protected $date = null;
+    protected $dateFormat = null;
+
+    /**
+     * Feed data for JSON and PHP formats
+     * @var array
+     */
+    protected $data = array();
 
     /**
      * Constructor
      *
      * Instantiate the feed object.
      *
-     * @param  array  $hdrs
-     * @param  array  $itms
-     * @param  string $type
-     * @param  string $dt
-     * @return void
+     * @param  array  $headers
+     * @param  array  $items
+     * @param  mixed  $type
+     * @param  string $date
+     * @return \Pop\Feed\Writer
      */
-    public function __construct($hdrs, $itms, $type = Dom::RSS, $dt = 'D, j M Y H:i:s O')
+    public function __construct($headers, $items, $type = Writer::RSS, $date = 'D, j M Y H:i:s O')
     {
-        $this->headers = $hdrs;
-        $this->items = $itms;
+        $this->headers = $headers;
+        $this->items = $items;
         $this->feedType = $type;
-        $this->date = $dt;
+        $this->dateFormat = $date;
 
         parent::__construct($this->feedType, 'utf-8');
         $this->init();
+    }
+
+    /**
+     * Static method to instantiate the feed writer object and return itself
+     * to facilitate chaining methods together.
+     *
+     * @param  array  $headers
+     * @param  array  $items
+     * @param  mixed  $type
+     * @param  string $date
+     * @return \Pop\Feed\Writer
+     */
+    public static function factory($headers, $items, $type = Writer::RSS, $date = 'D, j M Y H:i:s O')
+    {
+        return new self($headers, $items, $type, $date);
     }
 
     /**
@@ -94,7 +118,7 @@ class Writer extends Dom
      */
     protected function init()
     {
-        if ($this->feedType == Dom::RSS) {
+        if ($this->feedType == Writer::RSS) {
             // Set up the RSS child node.
             $rss = new Child('rss');
             $rss->setAttributes('version', '2.0');
@@ -119,7 +143,7 @@ class Writer extends Dom
             // Add the Channel child node to the RSS child node, add the RSS child node to the DOM.
             $rss->addChild($channel);
             $this->addChild($rss);
-        } else if ($this->feedType == Dom::ATOM) {
+        } else if ($this->feedType == Writer::ATOM) {
             // Set up the Feed child node.
             $feed = new Child('feed');
             $feed->setAttributes('xmlns', 'http://www.w3.org/2005/Atom');
@@ -139,7 +163,8 @@ class Writer extends Dom
                     $link->setAttributes('href', $value);
                     $feed->addChild($link);
                 } else if ($key != 'language') {
-                    $val = (stripos($key, 'date') !== false) ? date($this->date, strtotime($value)) : $value;
+                    $val = ((stripos($key, 'date') !== false) || (stripos($key, 'published') !== false)) ?
+                        date($this->dateFormat, strtotime($value)) : $value;
                     $feed->addChild(new Child($key, $val));
                 }
             }
@@ -153,7 +178,7 @@ class Writer extends Dom
                         $link->setAttributes('href', $value);
                         $item->addChild($link);
                     } else {
-                        $val = (stripos($key, 'date') !== false) ? date($this->date, strtotime($value)) : $value;
+                        $val = ((stripos($key, 'date') !== false) || (stripos($key, 'published') !== false)) ? date($this->dateFormat, strtotime($value)) : $value;
                         $item->addChild(new Child($key, $val));
                     }
                 }
@@ -162,8 +187,57 @@ class Writer extends Dom
 
             // Add the Feed child node to the DOM.
             $this->addChild($feed);
+        } else if (($this->feedType == Writer::JSON) || ($this->feedType == Writer::PHP)) {
+            // Set up the header data.
+            foreach ($this->headers as $key => $value) {
+                $val = ((stripos($key, 'date') !== false) || (stripos($key, 'published') !== false)) ?
+                    date($this->dateFormat, strtotime($value)) : $value;
+                $this->data[$key] = $val;
+            }
+
+            // Set up the items data
+            $this->data['items'] = array();
+            foreach ($this->items as $itm) {
+                foreach ($itm as $key => $value) {
+                    $val = ((stripos($key, 'date') !== false) || (stripos($key, 'published') !== false)) ? date($this->dateFormat, strtotime($value)) : $value;
+                    $itm[$key] = $val;
+                }
+                $this->data['items'][] = $itm;
+            }
+
+            // Set the content type
+            $this->contentType = ($this->feedType == Writer::JSON) ? 'application/json' : 'text/plain';
         } else {
-            throw new Exception('Error: The feed type must be only RSS or ATOM.');
+            throw new Exception('Error: The feed type must be only RSS, ATOM, JSON or PHP.');
+        }
+    }
+
+    /**
+     * Method to render the feed and its items
+     *
+     * @param  boolean $ret
+     * @return mixed
+     */
+    public function render($ret = false)
+    {
+        if (($this->feedType == Writer::JSON) || ($this->feedType == Writer::PHP)) {
+            $this->output = null;
+            if ($this->feedType == Writer::JSON) {
+                $this->output = json_encode($this->data);
+            } else if ($this->feedType == Writer::PHP) {
+                $this->output = serialize($this->data);
+            }
+            if ($ret) {
+                return $this->output;
+            } else {
+                if (!headers_sent()) {
+                    header("HTTP/1.1 200 OK");
+                    header("Content-type: " . $this->contentType);
+                }
+                echo $this->output;
+            }
+        } else {
+            return parent::render($ret);
         }
     }
 

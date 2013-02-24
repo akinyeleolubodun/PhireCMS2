@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,29 +15,27 @@
  */
 namespace Pop\Archive\Adapter;
 
-use Pop\Archive\ArchiveInterface,
-    Pop\Compress\Bzip2,
-    Pop\Compress\Gzip,
-    Pop\File\Dir;
+use Pop\Compress;
+use Pop\File\Dir;
 
 /**
- * This is the Tar class for the Archive component.
+ * Tar archive adapter class
  *
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Tar implements ArchiveInterface
 {
 
     /**
      * Archive_Tar object
-     * @var Archive_Tar
+     * @var \Archive_Tar
      */
-    public $archive = null;
+    protected $archive = null;
 
     /**
      * Archive path
@@ -63,10 +52,10 @@ class Tar implements ArchiveInterface
     /**
      * Method to instantiate an archive adapter object
      *
-     * @param  Pop\Archive\Archive $archive
-     * @return void
+     * @param  \Pop\Archive\Archive $archive
+     * @return \Pop\Archive\Adapter\Tar
      */
-    public function __construct($archive)
+    public function __construct(\Pop\Archive\Archive $archive)
     {
         if (stripos($archive->getExt(), 'bz') !== false) {
             $this->compression = 'bz';
@@ -78,6 +67,16 @@ class Tar implements ArchiveInterface
     }
 
     /**
+     * Method to return the archive object
+     *
+     * @return mixed
+     */
+    public function archive()
+    {
+        return $this->archive;
+    }
+
+    /**
      * Method to extract an archived and/or compressed file
      *
      * @param  string $to
@@ -86,10 +85,10 @@ class Tar implements ArchiveInterface
     public function extract($to = null)
     {
         if ($this->compression == 'bz') {
-            $this->path = Bzip2::decompress($this->path);
+            $this->path = Compress\Bzip2::decompress($this->path);
             $this->archive = new \Archive_Tar($this->path);
         } else if ($this->compression == 'gz') {
-            $this->path = Gzip::decompress($this->path);
+            $this->path = Compress\Gzip::decompress($this->path);
             $this->archive = new \Archive_Tar($this->path);
         }
         $this->archive->extract((null !== $to) ? $to : './');
@@ -110,10 +109,12 @@ class Tar implements ArchiveInterface
         foreach ($files as $file) {
             // If file is a directory, loop through and add the files.
             if (file_exists($file) && is_dir($file)) {
+                $realpath = realpath($file);
                 $dir = new Dir($file, true, true);
                 $dirFiles = $dir->getFiles();
                 foreach ($dirFiles as $fle) {
                     if (file_exists($fle) && !is_dir($fle)) {
+                        $fle = $file . DIRECTORY_SEPARATOR . str_replace($realpath . DIRECTORY_SEPARATOR, '', $fle);
                         $this->archive->add($fle);
                     }
                 }

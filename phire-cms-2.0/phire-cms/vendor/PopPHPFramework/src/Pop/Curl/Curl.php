@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Curl
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Curl;
 
 /**
- * This is the Curl class for the Curl component.
+ * Curl class
  *
  * @category   Pop
  * @package    Pop_Curl
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Curl
 {
@@ -60,9 +51,9 @@ class Curl
      *
      * Instantiate the cURL object.
      *
-     * @param  array|const $opts
-     * @param  string $val
-     * @return void
+     * @param  array|int $opts
+     * @param  string    $val
+     * @return \Pop\Curl\Curl
      */
     public function __construct($opts, $val = null)
     {
@@ -73,9 +64,9 @@ class Curl
     /**
      * Set cURL session option(s).
      *
-     * @param  array|const $opt
-     * @param  mixed $vl
-     * @return Pop\Curl\Curl
+     * @param  array|int $opt
+     * @param  string    $vl
+     * @return \Pop\Curl\Curl
      */
     public function setOption($opt, $vl = null)
     {
@@ -114,7 +105,7 @@ class Curl
     /**
      * Get a cURL session option.
      *
-     * @param  const $opt
+     * @param  int $opt
      * @return string
      */
     public function getOption($opt)

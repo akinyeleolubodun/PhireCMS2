@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Paginator
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Paginator;
 
 /**
- * This is the Paginator class to paginate result sets.
+ * Paginator class
  *
  * @category   Pop
  * @package    Pop_Paginator
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Paginator
 {
@@ -114,10 +105,10 @@ class Paginator
      * @var array
      */
     protected $bookends = array(
-        array('prev' => '&lt;', 'next' => '&gt;'),
+        array('prev' => '&lt;',     'next' => '&gt;'),
         array('prev' => '&lt;&lt;', 'next' => '&gt;&gt;'),
-        array('prev' => 'Prev', 'next' => 'Next'),
-        array('prev' => '...', 'next' => '...')
+        array('prev' => 'Prev',     'next' => 'Next'),
+        array('prev' => '...',      'next' => '...')
     );
 
     /**
@@ -189,7 +180,7 @@ class Paginator
      * @param  int $perPage
      * @param  int $range
      * @param  int $total
-     * @return void
+     * @return \Pop\Paginator\Paginator
      */
     public function __construct(array $items, $perPage = 10, $range = 10, $total = null)
     {
@@ -200,10 +191,25 @@ class Paginator
     }
 
     /**
+     * Static method to instantiate the paginator object and return itself
+     * to facilitate chaining methods together.
+     *
+     * @param  array $items
+     * @param  int $perPage
+     * @param  int $range
+     * @param  int $total
+     * @return \Pop\Paginator\Paginator
+     */
+    public static function factory(array $items, $perPage = 10, $range = 10, $total = null)
+    {
+        return new self($items, $perPage, $range, $total);
+    }
+
+    /**
      * Method to set the content items.
      *
      * @param  array $items
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setItems($items)
     {
@@ -215,7 +221,7 @@ class Paginator
      * Method to set the page range.
      *
      * @param  int $perPage
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setPerPage($perPage = 10)
     {
@@ -227,7 +233,7 @@ class Paginator
      * Method to set the page range.
      *
      * @param  int $range
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setRange($range = 10)
     {
@@ -239,7 +245,7 @@ class Paginator
      * Method to set the content items total
      *
      * @param  int $total
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setTotal($total = null)
     {
@@ -251,7 +257,7 @@ class Paginator
      * Method to set the bookend key.
      *
      * @param  int $key
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setBookend($key = Paginator::SINGLE_ARROWS)
     {
@@ -263,7 +269,7 @@ class Paginator
      * Method to set the bookend separator.
      *
      * @param  string $sep
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setSeparator($sep = ' | ')
     {
@@ -275,7 +281,7 @@ class Paginator
      * Method to set the date format.
      *
      * @param  string $date
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setDateFormat($date = null)
     {
@@ -287,7 +293,7 @@ class Paginator
      * Method to set the class 'on' name.
      *
      * @param  string $cls
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setClassOn($cls)
     {
@@ -299,7 +305,7 @@ class Paginator
      * Method to set the class 'off' name.
      *
      * @param  string $cls
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setClassOff($cls)
     {
@@ -311,7 +317,7 @@ class Paginator
      * Method to set the header template.
      *
      * @param  string $hdr
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setHeader($hdr)
     {
@@ -323,7 +329,7 @@ class Paginator
      * Method to set the row template.
      *
      * @param  string $tmpl
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setRowTemplate($tmpl)
     {
@@ -335,7 +341,7 @@ class Paginator
      * Method to set the footer template.
      *
      * @param  string $ftr
-     * @return Pop\Paginator\Paginator
+     * @return \Pop\Paginator\Paginator
      */
     public function setFooter($ftr)
     {

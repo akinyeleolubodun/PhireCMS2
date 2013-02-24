@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Loader
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Loader;
 
 /**
- * This is the Autoloader class for the Loader component.
+ * Autoloader class
  *
  * @category   Pop
  * @package    Pop_Loader
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Autoloader
 {
@@ -50,12 +41,24 @@ class Autoloader
     protected $classmap = array();
 
     /**
+     * Flag to make the autoloader the fallback autoloader or not
+     * @var boolean
+     */
+    protected $fallback = false;
+
+    /**
+     * Flag to suppress warnings
+     * @var boolean
+     */
+    protected $suppress = true;
+
+    /**
      * Constructor
      *
      * Instantiate the archive object
      *
      * @param  boolean $self
-     * @return void
+     * @return \Pop\Loader\Autoloader
      */
     public function __construct($self = true)
     {
@@ -68,7 +71,7 @@ class Autoloader
      * Static method to instantiate the autoloader object
      *
      * @param  boolean $self
-     * @return Pop\Loader\Autoloader
+     * @return \Pop\Loader\Autoloader
      */
     public static function factory($self = true)
     {
@@ -80,7 +83,7 @@ class Autoloader
      *
      * @param  string $classmap
      * @throws Exception
-     * @return Pop\Loader\Autoloader
+     * @return \Pop\Loader\Autoloader
      */
     public function loadClassMap($classmap)
     {
@@ -104,7 +107,7 @@ class Autoloader
      *
      * @param  string $namespace
      * @param  string $directory
-     * @return Pop\Loader\Autoloader
+     * @return \Pop\Loader\Autoloader
      */
     public function register($namespace, $directory)
     {
@@ -115,11 +118,21 @@ class Autoloader
     /**
      * Register the autoloader instance with the SPL
      *
-     * @return Pop\Loader\Autoloader
+     * @param  boolean $suppress
+     * @param  boolean $fallback
+     * @return \Pop\Loader\Autoloader
      */
-    public function splAutoloadRegister()
+    public function splAutoloadRegister($suppress = true, $fallback = false)
     {
-        spl_autoload_register($this);
+        $this->suppress = $suppress;
+        $this->fallback = $fallback;
+
+        if ($this->fallback) {
+            spl_autoload_register($this, true, false);
+        } else {
+            spl_autoload_register($this, true, true);
+        }
+
         return $this;
     }
 
@@ -148,11 +161,22 @@ class Autoloader
                 }
             }
 
-            // If not, then return, else get the file.
-            if ((null === $prefix) || !isset($this->prefixes[$prefix])) {
-                return;
+            // If the prefix was found, append the correct directory
+            if (null !== $prefix) {
+                $classFile = $this->prefixes[$prefix] . DIRECTORY_SEPARATOR . $classFile;
+            }
+
+            // Try to include the file, else return
+            // Without error suppression
+            if (!$this->suppress) {
+                if (!include_once($classFile)) {
+                    return;
+                }
+            // With error suppression
             } else {
-                require_once $this->prefixes[$prefix] . DIRECTORY_SEPARATOR . $classFile;
+                if (!@include_once($classFile)) {
+                    return;
+                }
             }
         }
     }

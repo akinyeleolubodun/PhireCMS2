@@ -101,11 +101,11 @@ class IndexController extends AbstractController
             $config = new Model\Install();
             if ((null != $this->request->getPath(1)) && ($this->request->getPath(1) == 'user')) {
                 if (!isset($this->sess->config)) {
-                    Response::redirect(BASE_URI . SYSTEM_URI . '/install');
+                    Response::redirect(BASE_PATH . APP_URI . '/install');
                 } else if ((DB_INTERFACE == '') || (DB_NAME == '')) {
                     $config->set('configWritable', false);
                     $config->set('config', unserialize($this->sess->config));
-                    $config->set('url', BASE_URI . $this->sess->system_uri . '/install/user');
+                    $config->set('url', BASE_PATH . $this->sess->system_uri . '/install/user');
                     $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                     $this->send();
                 } else {
@@ -119,7 +119,7 @@ class IndexController extends AbstractController
                         if ($form->isValid()) {
                             unset($this->sess->install);
                             $config->installUser($form);
-                            $config->set('form', '    <p>The initial user has been created. You can <a href="http://' . $_SERVER['HTTP_HOST'] . BASE_URI . SYSTEM_URI . '/login">login in here</a>.</p>' . PHP_EOL);
+                            $config->set('form', '    <p>The initial user has been created. You can <a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/login">login in here</a>.</p>' . PHP_EOL);
                             $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                             $this->send();
                         } else {
@@ -143,7 +143,7 @@ class IndexController extends AbstractController
                     );
                     if ($form->isValid()) {
                         $config->install($form);
-                        $url = ($config->configWritable) ? BASE_URI . $form->system_uri . '/install/user' : BASE_URI . SYSTEM_URI . '/install/user';
+                        $url = ($config->configWritable) ? BASE_PATH . $form->system_uri . '/install/user' : BASE_PATH . APP_URI . '/install/user';
                         Response::redirect($url);
                     } else {
                         $config->set('form', $form);

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Dom
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Dom;
 
 /**
- * This is the Child class for the Dom component.
+ * Dom child class
  *
  * @category   Pop
  * @package    Pop_Dom
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Child extends AbstractDom
 {
@@ -68,10 +59,10 @@ class Child extends AbstractDom
      *
      * @param  string $name
      * @param  string $value
-     * @param  array|Pop\Dom\Child $childNode
+     * @param  mixed  $childNode
      * @param  boolean $first
      * @param  string $indent
-     * @return void
+     * @return \Pop\Dom\Child
      */
     public function __construct($name, $value = null, $childNode = null, $first = false, $indent = null)
     {
@@ -90,7 +81,7 @@ class Child extends AbstractDom
      * Static factory method to create child objects
      *
      * @param  array $c
-     * @return Pop\Dom\Child
+     * @return \Pop\Dom\Child
      */
     public static function factory(array $c)
     {
@@ -135,7 +126,7 @@ class Child extends AbstractDom
      * Method to set the child node name.
      *
      * @param  string $name
-     * @return Pop\Dom\Child
+     * @return \Pop\Dom\Child
      */
     public function setNodeName($name)
     {
@@ -147,7 +138,7 @@ class Child extends AbstractDom
      * Method to set the child node value.
      *
      * @param  string $value
-     * @return Pop\Dom\Child
+     * @return \Pop\Dom\Child
      */
     public function setNodeValue($value)
     {
@@ -160,7 +151,7 @@ class Child extends AbstractDom
      *
      * @param  array|string $a
      * @param  string $v
-     * @return Pop\Dom\Child
+     * @return \Pop\Dom\Child
      */
     public function setAttributes($a, $v = null)
     {

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,20 +15,18 @@
  */
 namespace Pop\Form;
 
-use Pop\Dom\Child,
-    Pop\Locale\Locale,
-    Pop\Validator\Validator,
-    Pop\Validator\Validator\ValidatorInterface;
+use Pop\Dom\Child;
+use Pop\Validator;
 
 /**
- * This is the Element class for the Form component.
+ * Form element class
  *
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Element extends Child
 {
@@ -114,7 +103,7 @@ class Element extends Child
      * @param  string|array $marked
      * @param  string $indent
      * @throws Exception
-     * @return void
+     * @return \Pop\Form\Element
      */
     public function __construct($type, $name, $value = null, $marked = null, $indent = null)
     {
@@ -146,8 +135,14 @@ class Element extends Child
                     $opt->setAttributes('value', $k);
 
                     // Determine if the current option element is selected.
-                    if ($v == $this->marked) {
-                        $opt->setAttributes('selected', 'selected');
+                    if (is_array($this->marked)) {
+                        if (in_array($v, $this->marked)) {
+                            $opt->setAttributes('selected', 'selected');
+                        }
+                    } else {
+                        if ($v == $this->marked) {
+                            $opt->setAttributes('selected', 'selected');
+                        }
                     }
 
                     $opt->setNodeValue($v);
@@ -241,7 +236,7 @@ class Element extends Child
      * Set the label of the form element object.
      *
      * @param  string $label
-     * @return Pop\Form\Element
+     * @return \Pop\Form\Element
      */
     public function setLabel($label)
     {
@@ -254,7 +249,7 @@ class Element extends Child
      *
      * @param  boolean $required
      * @throws Exception
-     * @return Pop\Form\Element
+     * @return \Pop\Form\Element
      */
     public function setRequired($required)
     {
@@ -265,13 +260,12 @@ class Element extends Child
     /**
      * Add a validator the form element object.
      *
-     * @param  ValidatorInterface $validator
-     * @param  string $msg
-     * @return Pop\Form\Element
+     * @param  \Pop\Validator\ValidatorInterface $validator
+     * @return \Pop\Form\Element
      */
-    public function addValidator(ValidatorInterface $validator, $msg = null)
+    public function addValidator(Validator\ValidatorInterface $validator)
     {
-        $this->validators[] = new Validator($validator, $msg);
+        $this->validators[] = $validator;
         return $this;
     }
 
@@ -294,8 +288,8 @@ class Element extends Child
                 $curElemValue = $this->value;
             }
 
-            if (empty($curElemValue)) {
-                $this->errors[] = Locale::factory()->__('This field is required.');
+            if (empty($curElemValue) && ($curElemValue != '0')) {
+                $this->errors[] = \Pop\I18n\I18n::factory()->__('This field is required.');
             }
         }
 
@@ -311,7 +305,7 @@ class Element extends Child
                     $curElemValue = $this->value;
                 }
 
-                if ('Pop\Validator\Validator\NotEmpty' == get_class($validator->getValidator())) {
+                if ('Pop\Validator\NotEmpty' == get_class($validator)) {
                     if (!$validator->evaluate($curElemValue)) {
                         $this->errors[] = $validator->getMessage();
                     }

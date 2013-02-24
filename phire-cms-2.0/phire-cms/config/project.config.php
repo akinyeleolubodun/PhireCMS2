@@ -1,7 +1,7 @@
 <?php
 
 $config = array(
-    'base'    => realpath($_SERVER['DOCUMENT_ROOT'] . SYSTEM_DIR),
+    'base'    => realpath($_SERVER['DOCUMENT_ROOT'] . APP_PATH),
     'docroot' => realpath($_SERVER['DOCUMENT_ROOT'])
 );
 

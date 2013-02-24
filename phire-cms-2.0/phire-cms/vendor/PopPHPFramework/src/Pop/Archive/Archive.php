@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,21 +15,19 @@
  */
 namespace Pop\Archive;
 
-use Pop\Compress\Bzip2,
-    Pop\Compress\Gzip,
-    Pop\File\File;
+use Pop\Compress;
 
 /**
- * This is the Archive class for the Archive component.
+ * Archive class
  *
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Archive extends File implements ArchiveInterface
+class Archive extends \Pop\File\File
 {
 
     /**
@@ -70,9 +59,10 @@ class Archive extends File implements ArchiveInterface
      *
      * @param  string $archive
      * @param  string $password
-     * @return void
+     * @param  string $prefix
+     * @return \Pop\Archive\Archive
      */
-    public function __construct($archive, $password = null)
+    public function __construct($archive, $password = null, $prefix = 'Pop\\Archive\\Adapter\\')
     {
         // Check if Bzip2 is available.
         if (!function_exists('bzcompress')) {
@@ -103,7 +93,7 @@ class Archive extends File implements ArchiveInterface
 
         parent::__construct($archive);
 
-        $this->setAdapter($password);
+        $this->setAdapter($password, $prefix);
     }
 
     /**
@@ -111,15 +101,16 @@ class Archive extends File implements ArchiveInterface
      * to facilitate chaining methods together.
      *
      * @param  string $archive
-     * @return Pop\Archive\Archive
+     * @param  string $password
+     * @return \Pop\Archive\Archive
      */
-    public static function factory($archive)
+    public static function factory($archive, $password = null)
     {
-        return new self($archive);
+        return new self($archive, $password);
     }
 
     /**
-     * Method to return the archive adapter object
+     * Method to return the adapter object
      *
      * @return mixed
      */
@@ -129,20 +120,20 @@ class Archive extends File implements ArchiveInterface
     }
 
     /**
-     * Method to return the archive adapter object
+     * Method to return the archive object within the adapter object
      *
      * @return mixed
      */
     public function archive()
     {
-        return $this->adapter->archive;
+        return $this->adapter->archive();
     }
 
     /**
      * Method to extract an archived and/or compressed file
      *
      * @param  string $to
-     * @return Pop\Archive\Archive
+     * @return \Pop\Archive\Archive
      */
     public function extract($to = null)
     {
@@ -154,7 +145,7 @@ class Archive extends File implements ArchiveInterface
      * Method to create an archive file
      *
      * @param  string|array $files
-     * @return Pop\Archive\Archive
+     * @return \Pop\Archive\Archive
      */
     public function addFiles($files)
     {
@@ -178,7 +169,7 @@ class Archive extends File implements ArchiveInterface
      * Method to compress an archive file with Gzip or Bzip2
      *
      * @param  string $ext
-     * @return Pop\Archive\Archive
+     * @return \Pop\Archive\Archive
      */
     public function compress($ext = 'gz')
     {
@@ -187,26 +178,28 @@ class Archive extends File implements ArchiveInterface
         }
         switch ($ext) {
             case 'gz':
-                $newArchive = Gzip::compress($this->fullpath);
+                $newArchive = Compress\Gzip::compress($this->fullpath);
                 break;
             case 'tgz':
-                $tmpArchive = Gzip::compress($this->fullpath);
+                $tmpArchive = Compress\Gzip::compress($this->fullpath);
                 $newArchive = str_replace('.tar.gz', '.tgz', $tmpArchive);
                 rename($tmpArchive, $newArchive);
                 break;
             case 'bz2':
-                $newArchive = Bzip2::compress($this->fullpath);
+                $newArchive = Compress\Bzip2::compress($this->fullpath);
                 break;
             case 'tbz':
-                $tmpArchive = Bzip2::compress($this->fullpath);
+                $tmpArchive = Compress\Bzip2::compress($this->fullpath);
                 $newArchive = str_replace('.tar.bz2', '.tbz', $tmpArchive);
                 rename($tmpArchive, $newArchive);
                 break;
             case 'tbz2':
-                $tmpArchive = Bzip2::compress($this->fullpath);
+                $tmpArchive = Compress\Bzip2::compress($this->fullpath);
                 $newArchive = str_replace('.tar.bz2', '.tbz2', $tmpArchive);
                 rename($tmpArchive, $newArchive);
                 break;
+            default:
+                $newArchive = $this->fullpath;
         }
 
         if (file_exists($this->fullpath)) {
@@ -221,21 +214,20 @@ class Archive extends File implements ArchiveInterface
      * Method to set the adapter based on the file name
      *
      * @param  string $password
+     * @param  string $prefix
      * @return void
      */
-    protected function setAdapter($password = null)
+    protected function setAdapter($password = null, $prefix)
     {
         $ext = strtolower($this->ext);
 
-        if ($ext == 'phar') {
-            $this->adapter = new Adapter\Phar($this);
-        } else if ($ext == 'rar') {
-            $this->adapter = new Adapter\Rar($this, $password);
-        } else if (($ext == 'tar') || (stripos($ext, 'bz') !== false) || (stripos($ext, 'gz') !== false)) {
-            $this->adapter = new Adapter\Tar($this);
-        } else if ($ext == 'zip') {
-            $this->adapter = new Adapter\Zip($this);
+        if (($ext == 'tar') || (stripos($ext, 'bz') !== false) || (stripos($ext, 'gz') !== false)) {
+            $class = $prefix . 'Tar';
+        } else {
+            $class = $prefix . ucfirst($ext);
         }
+
+        $this->adapter = (null !== $password) ? new $class($this, $password) : new $class($this);
     }
 
 }

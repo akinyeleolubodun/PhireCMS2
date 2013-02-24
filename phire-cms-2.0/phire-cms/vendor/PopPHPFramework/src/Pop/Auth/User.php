@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Auth;
 
 /**
- * This is the User class for the Auth component.
+ * Auth user class
  *
  * @category   Pop
  * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class User
 {
@@ -51,7 +42,7 @@ class User
 
     /**
      * User role
-     * @var Pop\Auth\Role
+     * @var \Pop\Auth\Role
      */
     protected $role = null;
 
@@ -69,7 +60,7 @@ class User
      * @param  string $username
      * @param  string $password
      * @param  Role   $role
-     * @return void
+     * @return \Pop\Auth\User
      */
     public function __construct($username = null, $password = null, Role $role = null)
     {
@@ -87,7 +78,7 @@ class User
      * @param  string $username
      * @param  string $password
      * @param  Role   $role
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public static function factory($username = null, $password = null, Role $role = null)
     {
@@ -117,7 +108,7 @@ class User
     /**
      * Method to get the role
      *
-     * @return Pop\Auth\Role
+     * @return \Pop\Auth\Role
      */
     public function getRole()
     {
@@ -128,7 +119,7 @@ class User
      * Method to set the username
      *
      * @param  string $username
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public function setUsername($username)
     {
@@ -140,7 +131,7 @@ class User
      * Method to set the password
      *
      * @param  string $password
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public function setPassword($password)
     {
@@ -152,7 +143,7 @@ class User
      * Method to set the role
      *
      * @param  Role $role
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public function setRole(Role $role)
     {
@@ -164,7 +155,7 @@ class User
      * Method to set the user fields
      *
      * @param  array $fields
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public function setFields(array $fields)
     {

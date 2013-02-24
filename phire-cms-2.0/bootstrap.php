@@ -24,14 +24,14 @@
 require_once 'config.php';
 
 // Check the path and URI constants
-if (!defined('BASE_URI') || !defined('SYSTEM_URI') || !defined('SYSTEM_DIR') ||
-    !defined('CONTENT_DIR') || !defined('DB_INTERFACE') || !defined('DB_NAME')) {
-    echo 'The config file is not properly configured. Please check the config file or install the system.';
-    exit(0);
+if (!defined('BASE_PATH') || !defined('APP_URI') || !defined('APP_PATH') ||
+    !defined('CONTENT_PATH') || !defined('DB_INTERFACE') || !defined('DB_NAME')) {
+    throw \Exception('Error: The config file is not properly configured. Please check the config file or install the system.');
+    //exit(0);
 }
 
 // Require the Autoloader class file
-require_once __DIR__ . SYSTEM_DIR . '/vendor/PopPHPFramework/src/Pop/Loader/Autoloader.php';
+require_once __DIR__ . APP_PATH . '/vendor/PopPHPFramework/src/Pop/Loader/Autoloader.php';
 
 // Instantiate the autoloader object
 $autoloader = new Pop\Loader\Autoloader();
@@ -50,15 +50,15 @@ $autoloader->splAutoloadRegister();
 // $autoloader->register('YourLib', __DIR__ . '/../vendor/YourLib/src');
 // $autoloader->loadClassMap('../vendor/YourLib/classmap.php');
 
-$autoloader->register('Phire', __DIR__ . SYSTEM_DIR . '/module/Phire/src');
+$autoloader->register('Phire', __DIR__ . APP_PATH . '/module/Phire/src');
 
 // Create a project object
 $project = Phire\Project::factory(
-    include __DIR__ . SYSTEM_DIR . '/config/project.config.php',
-    include __DIR__ . SYSTEM_DIR . '/module/Phire/config/module.config.php',
+    include __DIR__ . APP_PATH . '/config/project.config.php',
+    include __DIR__ . APP_PATH . '/module/Phire/config/module.config.php',
     new Pop\Mvc\Router(array(
         '/'        => 'Phire\Controller\IndexController',
-        SYSTEM_URI => array(
+        APP_URI => array(
             '/'     => 'Phire\Controller\Phire\IndexController',
             '/user' => 'Phire\Controller\Phire\UserController'
         )

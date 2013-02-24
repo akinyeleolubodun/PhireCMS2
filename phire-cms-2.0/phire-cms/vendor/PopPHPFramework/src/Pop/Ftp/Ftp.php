@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Ftp
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Ftp;
 
 /**
- * This is the Ftp class for the Ftp component.
+ * FTP class
  *
  * @category   Pop
  * @package    Pop_Ftp
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Ftp
 {
@@ -52,8 +43,8 @@ class Ftp
      * @param  string  $user
      * @param  string  $pass
      * @param  boolean $ssl
-     * @return void
      * @throws Exception
+     * @return \Pop\Ftp\Ftp
      */
     public function __construct($ftp, $user, $pass, $ssl = false)
     {
@@ -89,7 +80,7 @@ class Ftp
      *
      * @param  string $dir
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function chdir($dir)
     {
@@ -104,7 +95,7 @@ class Ftp
      *
      * @param  string $dir
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function mkdir($dir)
     {
@@ -119,7 +110,7 @@ class Ftp
      *
      * @param  string $dir
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function rmdir($dir)
     {
@@ -134,9 +125,9 @@ class Ftp
      *
      * @param  string $local
      * @param  string $remote
-     * @param  string $mode
+     * @param  int|string $mode
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function get($local, $remote, $mode = FTP_BINARY)
     {
@@ -151,9 +142,9 @@ class Ftp
      *
      * @param  string $remote
      * @param  string $local
-     * @param  string $mode
+     * @param  int|string $mode
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function put($remote, $local, $mode = FTP_BINARY)
     {
@@ -168,7 +159,7 @@ class Ftp
      * @param  string $old
      * @param  string $new
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function rename($old, $new)
     {
@@ -184,7 +175,7 @@ class Ftp
      * @param  string $file
      * @param  string $mode
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function chmod($file, $mode)
     {
@@ -199,7 +190,7 @@ class Ftp
      *
      * @param  string $file
      * @throws Exception
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function delete($file)
     {
@@ -213,7 +204,7 @@ class Ftp
      * Switch the passive mode.
      *
      * @param  boolean $flag
-     * @return Pop\Ftp\Ftp
+     * @return \Pop\Ftp\Ftp
      */
     public function pasv($flag = true)
     {

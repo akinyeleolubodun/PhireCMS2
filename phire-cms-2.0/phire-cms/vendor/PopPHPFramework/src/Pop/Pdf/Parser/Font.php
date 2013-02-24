@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,21 +15,17 @@
  */
 namespace Pop\Pdf\Parser;
 
-use Pop\Compress\Zlib,
-    Pop\Font\TrueType,
-    Pop\Font\TrueType\OpenType,
-    Pop\Font\Type1,
-    Pop\Pdf\Object;
+use Pop\Pdf\Object\Object;
 
 /**
- * This is the Font Parser class for the Pdf component.
+ * Font parser class
  *
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Font
 {
@@ -95,7 +82,7 @@ class Font
      * @param  int     $oi
      * @param  boolean $comp
      * @throws Exception
-     * @return void
+     * @return \Pop\Pdf\Parser\Font
      */
     public function __construct($fle, $fi, $oi, $comp = false)
     {
@@ -108,13 +95,13 @@ class Font
         $ext = strtolower(substr($fle, -4));
         switch ($ext) {
             case '.ttf':
-                $this->font = new TrueType($fle);
+                $this->font = new \Pop\Font\TrueType($fle);
                 break;
             case '.otf':
-                $this->font = new OpenType($fle);
+                $this->font = new \Pop\Font\TrueType\OpenType($fle);
                 break;
             case '.pfb':
-                $this->font = new Type1($fle);
+                $this->font = new \Pop\Font\Type1($fle);
                 if (null === $this->font->afmPath) {
                     throw new Exception('The AFM font file was not found.');
                 }
@@ -139,7 +126,7 @@ class Font
     /**
      * Method to get the font reference.
      *
-     * @return array
+     * @return string
      */
     public function getFontRef()
     {
@@ -149,11 +136,11 @@ class Font
     /**
      * Method to get the font name.
      *
-     * @return array
+     * @return string
      */
     public function getFontName()
     {
-        $fontName = ($this->font instanceof Type1) ? $this->font->info->postscriptName : $this->font->tables['name']->postscriptName;
+        $fontName = ($this->font instanceof \Pop\Font\Type1) ? $this->font->info->postscriptName : $this->font->tables['name']->postscriptName;
         return $fontName;
     }
 
@@ -174,7 +161,7 @@ class Font
      */
     protected function createFontObjects()
     {
-        if ($this->font instanceof Type1) {
+        if ($this->font instanceof \Pop\Font\Type1) {
             $fontType = 'Type1';
             $fontName = $this->font->info->postscriptName;
             $fontFile = 'FontFile';
@@ -195,7 +182,7 @@ class Font
         $this->objects[$this->objectIndex] = new Object("{$this->objectIndex} 0 obj\n<<\n    /Type /Font\n    /Subtype /{$fontType}\n    /FontDescriptor {$this->fontDescIndex} 0 R\n    /Name /TT{$this->fontIndex}\n    /BaseFont /" . $fontName . "\n    /FirstChar 32\n    /LastChar 255\n    /Widths [" . implode(' ', $glyphWidths['widths']) . "]\n    /Encoding /" . $glyphWidths['encoding'] . "\n>>\nendobj\n\n");
         $bBox = '[' . $this->font->bBox->xMin . ' ' . $this->font->bBox->yMin . ' ' . $this->font->bBox->xMax . ' ' . $this->font->bBox->yMax . ']';
 
-        $compStream = (function_exists('gzcompress')) ? Zlib::compress($unCompStream) : null;
+        $compStream = (function_exists('gzcompress')) ? gzcompress($unCompStream, 9) : null;
         if ($this->compress) {
             $fontFileObj = "{$this->fontFileIndex} 0 obj\n<</Length " . strlen($compStream) . " /Filter /FlateDecode /Length1 " . $length1 . $length2 . ">>\nstream\n" . $compStream . "\nendstream\nendobj\n\n";
         } else {
@@ -209,10 +196,10 @@ class Font
     /**
      * Method to to get the glyph widths
      *
-     * @param  Pop\Font\TrueType\Table\Cmap $cmap
+     * @param  \Pop\Font\TrueType\Table\Cmap $cmap
      * @return array
      */
-    protected function getGlyphWidths($cmap)
+    protected function getGlyphWidths(\Pop\Font\TrueType\Table\Cmap $cmap)
     {
         $gw = array('encoding' => null, 'widths' => array());
         $uniTable = null;

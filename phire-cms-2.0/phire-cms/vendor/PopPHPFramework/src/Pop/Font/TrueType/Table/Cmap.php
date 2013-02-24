@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Font
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,27 +16,27 @@
 namespace Pop\Font\TrueType\Table;
 
 /**
- * This is the Cmap class for the Font component.
+ * CMAP table class
  *
  * @category   Pop
  * @package    Pop_Font
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Cmap
 {
 
     /**
      * Cmap header
-     * @var ArrayObject
+     * @var \ArrayObject
      */
     public $header = null;
 
     /**
      * Cmap subtables
-     * @var ArrayObject
+     * @var \ArrayObject
      */
     public $subTables = array();
 
@@ -54,10 +45,10 @@ class Cmap
      *
      * Instantiate a TTF 'cmap table object.
      *
-     * @param  AbstractFont $font
-     * @return void
+     * @param  \Pop\Font\AbstractFont $font
+     * @return \Pop\Font\TrueType\Table\Cmap
      */
-    public function __construct($font)
+    public function __construct(\Pop\Font\AbstractFont $font)
     {
         $bytePos = $font->tableInfo['cmap']->offset;
 
@@ -74,7 +65,7 @@ class Cmap
     /**
      * Method to parse the CMAP subtables.
      *
-     * @param  AbstractFont $font
+     * @param  \Pop\Font\AbstractFont $font
      * @return void
      */
     protected function parseSubTables($font)

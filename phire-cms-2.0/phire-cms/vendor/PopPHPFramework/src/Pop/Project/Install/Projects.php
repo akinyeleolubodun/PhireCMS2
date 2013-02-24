@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,20 +15,19 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\Generator,
-    Pop\Code\MethodGenerator,
-    Pop\Code\NamespaceGenerator,
-    Pop\Locale\Locale;
+use Pop\Code\Generator;
+use Pop\Code\Generator\MethodGenerator;
+use Pop\Code\Generator\NamespaceGenerator;
 
 /**
- * This is the Projects class for the Project Install component.
+ * Project install class
  *
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Projects
 {
@@ -45,7 +35,7 @@ class Projects
     /**
      * Install the project class files
      *
-     * @param Pop\Config $install
+     * @param \Pop\Config $install
      * @param string     $installDir
      * @return void
      */
@@ -64,16 +54,7 @@ class Projects
         // Create 'run' method
         $run = new MethodGenerator('run');
         $run->setDesc('Add any project specific code to this method for run-time use here.');
-
-        $run->appendToBody('parent::run();' . PHP_EOL)
-            ->appendToBody("if (\$this->router()->controller()->getRequest()->getRequestUri() == '/') {")
-            ->appendToBody("    \$this->router()->controller()->dispatch();")
-            ->appendToBody("} else if (method_exists(\$this->router()->controller(), \$this->router()->getAction())) {")
-            ->appendToBody("    \$this->router()->controller()->dispatch(\$this->router()->getAction());")
-            ->appendToBody("} else if (method_exists(\$this->router()->controller(), 'error')) {")
-            ->appendToBody("    \$this->router()->controller()->dispatch('error');")
-            ->appendToBody("}", false);
-
+        $run->appendToBody('parent::run();', false);
         $run->getDocblock()->setReturn('void');
 
         // Finalize the project config file and save it
@@ -90,7 +71,11 @@ class Projects
                 $index = new Generator(__DIR__ . '/Web/index.php');
                 $contents = $index->read() .
                     '// Run the project' . PHP_EOL .
-                    '$project->run();' . PHP_EOL;
+                    'try {' . PHP_EOL .
+                    '    $project->run();' . PHP_EOL .
+                    '} catch (\Exception $e) {' . PHP_EOL .
+                    '    echo $e->getMessage();' . PHP_EOL .
+                    '}' . PHP_EOL;
                 file_put_contents($install->project->docroot . '/index.php', $contents);
             }
             if ($input == 'a') {
@@ -102,7 +87,7 @@ class Projects
                     copy(__DIR__ . '/Web/web.config', $install->project->docroot . '/web.config');
                 }
             } else {
-                echo Locale::factory()->__('You will have to install your web server rewrite configuration manually.') . PHP_EOL;
+                echo \Pop\I18n\I18n::factory()->__('You will have to install your web server rewrite configuration manually.') . PHP_EOL;
             }
         }
     }
@@ -114,7 +99,7 @@ class Projects
      */
     public static function installWeb()
     {
-        $msg = Locale::factory()->__('Install index controller and web configuration files?') . ' ([A]pache/[I]IS/[O]ther/[N]o) ';
+        $msg = \Pop\I18n\I18n::factory()->__('Install index controller and web configuration files?') . ' ([A]pache/[I]IS/[O]ther/[N]o) ';
         echo $msg;
         $input = null;
 

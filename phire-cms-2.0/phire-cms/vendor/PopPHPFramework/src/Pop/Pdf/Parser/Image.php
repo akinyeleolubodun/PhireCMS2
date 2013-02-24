@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,20 +15,19 @@
  */
 namespace Pop\Pdf\Parser;
 
-use Pop\File\Dir,
-    Pop\Image\Gd,
-    Pop\Image\Imagick,
-    Pop\Pdf\Object;
+use Pop\Image\Gd;
+use Pop\Image\Imagick;
+use Pop\Pdf\Object\Object;
 
 /**
- * This is the Image Parser class for the Pdf component.
+ * Image parser class
  *
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Image
 {
@@ -131,7 +121,8 @@ class Image
      * @param  int     $i
      * @param  mixed   $scl
      * @param  boolean $preserveRes
-     * @return void
+     * @throws Exception
+     * @return \Pop\Pdf\Parser\Image
      */
     public function __construct($img, $x, $y, $i, $scl = null, $preserveRes = false)
     {
@@ -147,7 +138,7 @@ class Image
             'png'  => 'image/png'
         );
 
-        $this->img = (Imagick::isImagickInstalled()) ? new Imagick($img, null, null, null, $allowed) : new Gd($img);
+        $this->img = (Imagick::isInstalled()) ? new Imagick($img, null, null, null, $allowed) : new Gd($img);
 
         // If a scale value is passed, scale the image.
         if (null !== $scl) {
@@ -298,7 +289,7 @@ class Image
     protected function scaleImage($scl)
     {
         // Define the temp scaled image.
-        $this->scaledImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.' . $this->img->getExt();
+        $this->scaledImage = \Pop\File\Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.' . $this->img->getExt();
 
         // Scale or resize the image
         if (is_array($scl) && (isset($scl['w']) || isset($scl['h']))) {
@@ -322,7 +313,7 @@ class Image
         $this->img->save($this->scaledImage);
 
         // Re-instantiate the newly scaled image object.
-        $this->img = (Imagick::isImagickInstalled()) ? new Imagick($this->scaledImage) : new Gd($this->scaledImage);
+        $this->img = (Imagick::isInstalled()) ? new Imagick($this->scaledImage) : new Gd($this->scaledImage);
     }
 
     /**
@@ -333,13 +324,13 @@ class Image
     protected function convertImage()
     {
         // Define the temp converted image.
-        $this->convertedImage = Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.png';
+        $this->convertedImage = \Pop\File\Dir::getUploadTemp() . DIRECTORY_SEPARATOR . $this->img->getFilename() . '_' . time() . '.png';
 
         // Convert the GIF to PNG, save and clear the output buffer.
         $this->img->convert('png')->save($this->convertedImage);
 
         // Re-instantiate the newly converted image object and re-read the image data.
-        $this->img = (Imagick::isImagickInstalled()) ? new Imagick($this->convertedImage) : new Gd($this->convertedImage);
+        $this->img = (Imagick::isInstalled()) ? new Imagick($this->convertedImage) : new Gd($this->convertedImage);
         $this->imageData = $this->img->read();
     }
 

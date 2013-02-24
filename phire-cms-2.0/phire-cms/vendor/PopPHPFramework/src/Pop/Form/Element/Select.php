@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,20 +15,17 @@
  */
 namespace Pop\Form\Element;
 
-use Pop\Form\Element,
-    Pop\Locale\Locale;
-
 /**
- * This is the Select Element class for the Form component.
+ * Select form element class
  *
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Select extends Element
+class Select extends \Pop\Form\Element
 {
 
     /**
@@ -127,17 +115,16 @@ class Select extends Element
      * @param  string|array $value
      * @param  string|array $marked
      * @param  string $indent
-     * @return void
+     * @return \Pop\Form\Element\Select
      */
     public function __construct($name, $value = null, $marked = null, $indent = null)
     {
         $val = null;
-        $lang = new Locale();
+        $lang = new \Pop\I18n\I18n();
 
         // If the value flag is YEAR-based, calculate the year range for the select drop-down menu.
         if (is_string($value) && (strpos($value, 'YEAR') !== false)) {
             $years = array('----' => '----');
-            $yearAry = array();
             $yearAry = explode('_', $value);
             // YEAR_1111_2222 (from year 1111 to 2222)
             if (isset($yearAry[1]) && isset($yearAry[2])) {
@@ -259,8 +246,16 @@ class Select extends Element
     {
         $this->marked = null;
 
-        if (array_key_exists($val, $this->values) !==  false) {
-            $this->marked = $this->values[$val];
+        if (is_array($val)) {
+            foreach ($val as $v) {
+                if (array_key_exists($v, $this->values) !==  false) {
+                    $this->marked[] = $this->values[$v];
+                }
+            }
+        } else {
+            if (array_key_exists($val, $this->values) !==  false) {
+                $this->marked[] = $this->values[$val];
+            }
         }
     }
 
@@ -269,7 +264,7 @@ class Select extends Element
      *
      * @param  string $xmlFile
      * @param  string $value
-     * @return void
+     * @return array
      */
     public static function parseXml($xmlFile, $value)
     {
@@ -288,6 +283,29 @@ class Select extends Element
         }
 
         return $val;
+    }
+
+    /**
+     * Set an attribute or attributes for the child element object.
+     *
+     * @param  array|string $a
+     * @param  string $v
+     * @return \Pop\Dom\Child
+     */
+    public function setAttributes($a, $v = null)
+    {
+        parent::setAttributes($a, $v);
+
+        if (array_key_exists('multiple', $this->attributes)) {
+            if (strpos($this->name, '[]') === false) {
+                $this->name .= '[]';
+            }
+            if (array_key_exists('name', $this->attributes)) {
+                if (strpos($this->attributes['name'], '[]') === false) {
+                    $this->attributes['name'] .= '[]';
+                }
+            }
+        }
     }
 
 }

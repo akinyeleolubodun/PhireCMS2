@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Code
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,19 +15,17 @@
  */
 namespace Pop\Code;
 
-use Pop\File\File;
-
 /**
- * This is the Generator class of the Code component.
+ * Generator code class
  *
  * @category   Pop
  * @package    Pop_Code
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Generator extends File
+class Generator extends \Pop\File\File
 {
 
     /**
@@ -59,19 +48,19 @@ class Generator extends File
 
     /**
      * Code object
-     * @var Pop\Code\ClassGenerator|Pop\Code\InterfaceGenerator
+     * @var \Pop\Code\Generator\ClassGenerator|\Pop\Code\Generator\InterfaceGenerator
      */
     protected $code = null;
 
     /**
      * Docblock generator object
-     * @var Pop\Code\DocblockGenerator
+     * @var \Pop\Code\Generator\DocblockGenerator
      */
     protected $docblock = null;
 
     /**
      * Namespace generator object
-     * @var Pop\Code\NamespaceGenerator
+     * @var \Pop\Code\Generator\NamespaceGenerator
      */
     protected $namespace = null;
 
@@ -110,7 +99,7 @@ class Generator extends File
      *
      * @param  string $file
      * @param  int    $type
-     * @return void
+     * @return \Pop\Code\Generator
      */
     public function __construct($file, $type = Generator::CREATE_NONE)
     {
@@ -128,27 +117,29 @@ class Generator extends File
     /**
      * Create a class generator object
      *
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function createInterface()
     {
-        $this->code = new InterfaceGenerator($this->filename);
+        $this->code = new Generator\InterfaceGenerator($this->filename);
+        return $this;
     }
 
     /**
      * Create a class generator object
      *
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function createClass()
     {
-        $this->code = new ClassGenerator($this->filename);
+        $this->code = new Generator\ClassGenerator($this->filename);
+        return $this;
     }
 
     /**
      * Access the code generator object
      *
-     * @return Pop\Code\ClassGenerator|Pop\Code\InterfaceGenerator
+     * @return \Pop\Code\Generator\ClassGenerator|\Pop\Code\Generator\InterfaceGenerator
      */
     public function code()
     {
@@ -159,7 +150,7 @@ class Generator extends File
      * Set the code close flag
      *
      * @param  boolean $close
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function setClose($close = false)
     {
@@ -171,7 +162,7 @@ class Generator extends File
      * Set the code indent
      *
      * @param  string $indent
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function setIndent($indent = null)
     {
@@ -192,10 +183,10 @@ class Generator extends File
     /**
      * Set the namespace generator object
      *
-     * @param  NamespaceGenerator $namespace
-     * @return Pop\Code\Generator
+     * @param  Generator\NamespaceGenerator $namespace
+     * @return \Pop\Code\Generator
      */
-    public function setNamespace(NamespaceGenerator $namespace)
+    public function setNamespace(Generator\NamespaceGenerator $namespace)
     {
         $this->namespace = $namespace;
         return $this;
@@ -204,7 +195,7 @@ class Generator extends File
     /**
      * Access the namespace generator object
      *
-     * @return Pop\Code\NamespaceGenerator
+     * @return \Pop\Code\Generator\NamespaceGenerator
      */
     public function getNamespace()
     {
@@ -214,10 +205,10 @@ class Generator extends File
     /**
      * Set the docblock generator object
      *
-     * @param  DocblockGenerator $docblock
-     * @return Pop\Code\Generator
+     * @param  Generator\DocblockGenerator $docblock
+     * @return \Pop\Code\Generator
      */
-    public function setDocblock(DocblockGenerator $docblock)
+    public function setDocblock(Generator\DocblockGenerator $docblock)
     {
         $this->docblock = $docblock;
         return $this;
@@ -226,7 +217,7 @@ class Generator extends File
     /**
      * Access the docblock generator object
      *
-     * @return Pop\Code\DocblockGenerator
+     * @return \Pop\Code\Generator\DocblockGenerator
      */
     public function getDocblock()
     {
@@ -238,7 +229,7 @@ class Generator extends File
      *
      * @param  string $body
      * @param  boolean $newline
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function setBody($body, $newline = true)
     {
@@ -254,7 +245,7 @@ class Generator extends File
      *
      * @param  string $body
      * @param  boolean $newline
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function appendToBody($body, $newline = true)
     {
@@ -314,7 +305,7 @@ class Generator extends File
      * Output the code object directly.
      *
      * @param  boolean $download
-     * @return Pop\Code\Generator
+     * @return \Pop\Code\Generator
      */
     public function output($download = false)
     {

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,25 +15,24 @@
  */
 namespace Pop\Form;
 
-use Pop\Dom\Dom,
-    Pop\Dom\Child;
+use Pop\Dom\Child;
 
 /**
- * This is the Form class for the Form component.
+ * Form class
  *
  * @category   Pop
  * @package    Pop_Form
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT   T  New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Form extends Dom
+class Form extends \Pop\Dom\Dom
 {
 
     /**
      * Form element node
-     * @var Child
+     * @var \Pop\Dom\Child
      */
     protected $form = null;
 
@@ -65,7 +55,7 @@ class Form extends Dom
     protected $template = null;
 
     /**
-     * Field names of the database table
+     * Form field values
      * @var array
      */
     protected $fields = array();
@@ -85,7 +75,7 @@ class Form extends Dom
      * @param  string $method
      * @param  array  $fields
      * @param  string $indent
-     * @return void
+     * @return \Pop\Form\Form
      */
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
@@ -105,50 +95,67 @@ class Form extends Dom
     }
 
     /**
+     * Static method to instantiate the form object and return itself
+     * to facilitate chaining methods together.
+     *
+     * @param  string $action
+     * @param  string $method
+     * @param  array  $fields
+     * @param  string $indent
+     * @return \Pop\Form\Form
+     */
+    public static function factory($action, $method, array $fields = null, $indent = null)
+    {
+        return new self($action, $method, $fields, $indent);
+    }
+
+    /**
      * Set the fields of the form object.
      *
      * @param  array $fields
-     * @throws Exception
-     * @return Pop\Form\Form
+     * @return \Pop\Form\Form
      */
     public function setFields(array $fields)
     {
-        $isValid = true;
-        foreach ($fields as $key => $value) {
+        $isArray = true;
+        foreach ($fields as $value) {
             if (!is_array($value)) {
-                $isValid = false;
+                $isArray = false;
             }
         }
 
-        if (!$isValid) {
-            throw new Exception('The array parameter passed must contain an array of field values.');
+        if (!$isArray) {
+            $fields = array($fields);
         }
 
-        foreach ($fields as $key => $value) {
+        foreach ($fields as $value) {
             $this->fields[$value['name']] = (isset($value['value'])) ? $value['value'] : null;
         }
 
-        $this->initFieldsValues = $fields;
+        $this->initFieldsValues = (count($this->initFieldsValues) > 0) ? array_merge($this->initFieldsValues, $fields) : $fields;
+
         return $this;
     }
 
     /**
-     * Get the form fields
+     * Alias for setFields()
      *
-     * @return array
+     * @param  array $fields
+     * @return \Pop\Form\Form
      */
-    public function getFields()
+    public function addFields(array $fields)
     {
-        return $this->fields;
+        $this->setFields($fields);
     }
 
     /**
-     * Set the field values
+     * Set the field values. Optionally, you can apply filters
+     * to the passed values via callbacks and their parameters
      *
      * @param  array $values
      * @param  mixed $filters
      * @param  mixed $params
-     * @return Pop\Form\Form
+     * @return \Pop\Form\Form
      */
     public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
@@ -168,6 +175,8 @@ class Form extends Dom
                     $required = (isset($field['required'])) ? $field['required'] : null;
                     $attributes = (isset($field['attributes'])) ? $field['attributes'] : null;
                     $validators = (isset($field['validators'])) ? $field['validators'] : null;
+                    $expire = (isset($field['expire'])) ? $field['expire'] : 300;
+                    $captcha = (isset($field['captcha'])) ? $field['captcha'] : null;
 
                     if ((null !== $values) && array_key_exists($name, $values)) {
                         if (($type == 'checkbox') || ($type == 'radio') || ($type == 'select')) {
@@ -182,7 +191,7 @@ class Form extends Dom
                         $marked = (isset($field['marked'])) ? $field['marked'] : null;
                     }
                     // Initialize the form element.
-                    switch ($type) {
+                    switch (strtolower($type)) {
                         case 'checkbox':
                             $elem = new Element\Checkbox($name, $value, $marked);
                             break;
@@ -194,6 +203,12 @@ class Form extends Dom
                             break;
                         case 'textarea':
                             $elem = new Element\Textarea($name, $value, $marked);
+                            break;
+                        case 'csrf':
+                            $elem = new Element\Csrf($name, $value, $expire);
+                            break;
+                        case 'captcha':
+                            $elem = new Element\Captcha($name, $value, $expire, $captcha);
                             break;
                         default:
                             $elem = new Element($type, $name, $value, $marked);
@@ -243,12 +258,15 @@ class Form extends Dom
         } else {
             $fields = $this->getElements();
             if ((null !== $values) && (count($fields) > 0)) {
+                //print_r($values);
                 foreach ($fields as $field) {
+                    //echo $field->getNodeName() . ' : ' . $field->name . '<br />' . PHP_EOL;
                     // If a multi-value form element
-                    if (isset($values[$field->name])) {
+                    $fieldName = str_replace('[]', '', $field->name);
+                    if (isset($values[$fieldName])) {
                         if (isset($field->values)) {
-                            $field->marked = $values[$field->name];
-                            $this->fields[$field->name] = $values[$field->name];
+                            $field->marked = $values[$fieldName];
+                            $this->fields[$fieldName] = $values[$fieldName];
                             // Loop through the field's children
                             if ($field->hasChildren()) {
                                 $children = $field->getChildren();
@@ -262,7 +280,9 @@ class Form extends Dom
                                         }
                                     // If select option
                                     } else if ($child->getNodeName() == 'option') {
-                                        if ($child->getAttribute('value') == $field->marked) {
+                                        if (is_array($field->marked) && in_array($child->getAttribute('value'), $field->marked)) {
+                                            $field->getChild($key)->setAttributes('selected', 'selected');
+                                        } else if ($child->getAttribute('value') == $field->marked) {
                                             $field->getChild($key)->setAttributes('selected', 'selected');
                                         }
                                     }
@@ -270,12 +290,12 @@ class Form extends Dom
                             }
                         // Else, if a single-value form element
                         } else {
-                            $field->value = $values[$field->name];
-                            $this->fields[$field->name] = $values[$field->name];
+                            $field->value = $values[$fieldName];
+                            $this->fields[$fieldName] = $values[$fieldName];
                             if ($field->getNodeName() == 'textarea') {
-                                $field->setNodeValue($values[$field->name]);
+                                $field->setNodeValue($values[$fieldName]);
                             } else {
-                                $field->setAttributes('value', $values[$field->name]);
+                                $field->setAttributes('value', $values[$fieldName]);
                             }
                         }
                     }
@@ -290,7 +310,7 @@ class Form extends Dom
      * Set a form template for the render method to utilize.
      *
      * @param  string $tmpl
-     * @return Pop\Form\Form
+     * @return \Pop\Form\Form
      */
     public function setTemplate($tmpl)
     {
@@ -299,6 +319,30 @@ class Form extends Dom
         } else {
             $this->template = $tmpl;
         }
+        return $this;
+    }
+
+    /**
+     * Set the form action.
+     *
+     * @param  string $action
+     * @return \Pop\Form\Form
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * Set the form method.
+     *
+     * @param  string $method
+     * @return \Pop\Form\Form
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
         return $this;
     }
 
@@ -317,7 +361,7 @@ class Form extends Dom
      *
      * @param  array|string $a
      * @param  string $v
-     * @return Pop\Form\Form
+     * @return \Pop\Form\Form
      */
     public function setAttributes($a, $v = null)
     {
@@ -326,20 +370,10 @@ class Form extends Dom
     }
 
     /**
-     * Get the attributes of the form object.
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->form->getAttributes();
-    }
-
-    /**
      * Add a form element or elements to the form object.
      *
      * @param  array|string $e
-     * @return Pop\Form\Form
+     * @return \Pop\Form\Form
      */
     public function addElements($e)
     {
@@ -395,6 +429,36 @@ class Form extends Dom
     }
 
     /**
+     * Get the attributes of the form object.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->form->getAttributes();
+    }
+
+    /**
+     * Get the form action.
+     *
+     * @return array
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * Get the form method.
+     *
+     * @return array
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
      * Get the elements of the form object.
      *
      * @return array
@@ -405,10 +469,20 @@ class Form extends Dom
     }
 
     /**
+     * Get the form fields
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
      * Get an element object of the form by name.
      *
      * @param string $elementName
-     * @return Pop\Form\Element
+     * @return \Pop\Form\Element
      */
     public function getElement($elementName)
     {
@@ -509,14 +583,53 @@ class Form extends Dom
     }
 
     /**
-     * Method to filter the values
+     * Method to clear any session data used with the form for
+     * security tokens, captchas, etc.
+     *
+     * @return \Pop\Form\Form
+     */
+    public function clear()
+    {
+        // Start a session.
+        if (session_id() == '') {
+            session_start();
+        }
+
+        if (isset($_SESSION['pop_csrf'])) {
+            unset($_SESSION['pop_csrf']);
+        }
+
+        if (isset($_SESSION['pop_captcha'])) {
+            unset($_SESSION['pop_captcha']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Method to filter current form values with the
+     * applied callbacks and their parameters
+     *
+     * @param  mixed $filters
+     * @param  mixed $params
+     * @return \Pop\Form\Form
+     */
+    public function filter($filters, $params = null)
+    {
+        $this->setFieldValues($this->fields, $filters, $params);
+        return $this;
+    }
+
+    /**
+     * Method to filter the values with the applied
+     * callbacks and their parameters
      *
      * @param  array $values
      * @param  mixed $filters
      * @param  mixed $params
      * @return array
      */
-    protected function filterValues($values, $filters, $params)
+    protected function filterValues($values, $filters, $params = null)
     {
         $filteredValues = array();
 

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Http
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Http;
 
 /**
- * This is the Response class for the Http component.
+ * HTTP response class
  *
  * @category   Pop
  * @package    Pop_Http
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Response
 {
@@ -135,9 +126,9 @@ class Response
      * @param  string $message
      * @param  string $version
      * @throws Exception
-     * @return void
+     * @return \Pop\Http\Response
      */
-    public function __construct($code, array $headers, $body = null, $message = null, $version = '1.1')
+    public function __construct($code = 200, array $headers = null, $body = null, $message = null, $version = '1.1')
     {
         if (!array_key_exists($code, self::$responseCodes)) {
             throw new Exception('The header code '. $code . ' is not allowed.');
@@ -147,6 +138,10 @@ class Response
         $this->message = (null !== $message) ? $message : self::$responseCodes[$code];
         $this->body = $body;
         $this->version = $version;
+
+        if (null === $headers) {
+            $headers = array('Content-Type' => 'text/html');
+        }
 
         foreach ($headers as $name => $value) {
             $this->headers[$name] = $value;
@@ -158,11 +153,12 @@ class Response
      * either from a URL or a full response string
      *
      * @param  string $response
-     * @param  resource $context
+     * @param  array  $context
+     * @param  string $mode
      * @throws Exception
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
-    public static function parse($response, $context = null)
+    public static function parse($response, array $context = null, $mode = 'r')
     {
         $headers = array();
 
@@ -171,9 +167,9 @@ class Response
             $http_response_header = null;
 
             if (null !== $context) {
-                $stream = @fopen($response, 'r', false, $context);
+                $stream = @fopen($response, $mode, false, stream_context_create(array('http' => $context)));
             } else {
-                $stream = @fopen($response, 'r');
+                $stream = @fopen($response, $mode);
             }
 
             if ($stream != false) {
@@ -256,7 +252,7 @@ class Response
     /**
      * Get response message from code
      *
-     * @param  array $code
+     * @param  int $code
      * @throws Exception
      * @return string
      */
@@ -490,7 +486,7 @@ class Response
      *
      * @param  int $code
      * @throws Exception
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setCode($code)
     {
@@ -508,7 +504,7 @@ class Response
      * Set the response message
      *
      * @param  string $message
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setMessage($message)
     {
@@ -520,7 +516,7 @@ class Response
      * Set the response body
      *
      * @param  string $body
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setBody($body = null)
     {
@@ -534,7 +530,7 @@ class Response
      * @param  string $name
      * @param  string $value
      * @throws Exception
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setHeader($name, $value)
     {
@@ -547,7 +543,7 @@ class Response
      *
      * @param  array $headers
      * @throws Exception
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setHeaders(array $headers)
     {
@@ -561,7 +557,7 @@ class Response
     /**
      * Set IE SSL headers to fix file cache issues in IE over SSL.
      *
-     * @return Pop\Http\Response
+     * @return \Pop\Http\Response
      */
     public function setSslHeaders()
     {

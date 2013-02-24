@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Version
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop;
 
 /**
- * This is the Version class of the Pop PHP Framework.
+ * Version class
  *
  * @category   Pop
  * @package    Pop_Version
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Version
 {
@@ -40,12 +31,12 @@ class Version
     /**
      * Current version
      */
-    const VERSION = '1.0.2';
+    const VERSION = '1.2.1';
 
     /**
      * Current URL
      */
-    const URL = 'http://www.popphp.org/version.txt';
+    const URL = 'http://www.popphp.org/version';
 
     /**
      * Return plain text string
@@ -116,6 +107,9 @@ class Version
         $versionCompare = version_compare($php['Installed PHP'], $php['Required PHP']);
         $check = array();
 
+        // APC
+        $check['Apc'] = (!function_exists('apc_add')) ? 'No' : 'Yes';
+
         // Archive
         $check['Archive Tar'] = 'No';
         foreach ($includePath as $path) {
@@ -160,6 +154,7 @@ class Version
         $check['FTP'] = (function_exists('ftp_connect'))  ? 'Yes' : 'No';
 
         // GeoIP
+        $check['GeoIP'] = 'No';
         if (function_exists('geoip_db_get_all_info')) {
             $yes = 'Yes';
             $databases = geoip_db_get_all_info();
@@ -170,8 +165,6 @@ class Version
                 }
             }
             $check['GeoIP'] = $yes . ' (' . $count . '/' . count($databases) . ' GeoIP DBs Available)';
-        } else {
-            $check['GeoIP'] = 'No';
         }
 
         // Image
@@ -242,12 +235,8 @@ class Version
             case self::DATA:
                 $data = array();
                 foreach ($php as $key => $value) {
-                    if (strpos($key, ' ') !== false) {
-                        $k = str_replace(' ', '', $key);
-                        $k = strtolower(substr($k, 0, 1)) . substr($k, 1);
-                    } else {
-                        $k = strtolower($key);
-                    }
+                    $k = str_replace(' ', '', $key);
+                    $k = strtolower(substr($k, 0, 1)) . substr($k, 1);
                     $data[$k] = $value;
                 }
                 foreach ($check as $key => $value) {

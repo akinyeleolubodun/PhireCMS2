@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,25 +15,18 @@
  */
 namespace Pop\Auth;
 
-use Pop\Validator\Validator,
-    Pop\Validator\Validator\Excluded,
-    Pop\Validator\Validator\Included,
-    Pop\Validator\Validator\Ipv4,
-    Pop\Validator\Validator\Ipv6,
-    Pop\Validator\Validator\IsSubnetOf,
-    Pop\Validator\Validator\LessThan,
-    Pop\Validator\Validator\Subnet,
-    Pop\Locale\Locale;
+use Pop\Validator;
+use Pop\I18n\I18n;
 
 /**
- * This is the Auth class for the Auth component.
+ * Auth class
  *
  * @category   Pop
  * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Auth
 {
@@ -121,7 +105,7 @@ class Auth
 
     /**
      * Auth user object
-     * @var Pop\Auth\User
+     * @var \Pop\Auth\User
      */
     protected $user = null;
 
@@ -133,7 +117,7 @@ class Auth
 
     /**
      * Required role for authorization
-     * @var Pop\Auth\Role
+     * @var \Pop\Auth\Role
      */
     protected $requiredRole = null;
 
@@ -217,7 +201,7 @@ class Auth
      * @param Adapter\AdapterInterface $adapter
      * @param int                      $encryption
      * @param string                   $salt
-     * @return void
+     * @return \Pop\Auth\Auth
      */
     public function __construct(Adapter\AdapterInterface $adapter, $encryption = 0, $salt = null)
     {
@@ -228,10 +212,24 @@ class Auth
     }
 
     /**
+     * Static method to instantiate the auth object and return itself
+     * to facilitate chaining methods together.
+     *
+     * @param Adapter\AdapterInterface $adapter
+     * @param int                      $encryption
+     * @param string                   $salt
+     * @return \Pop\Auth\Auth
+     */
+    public static function factory(Adapter\AdapterInterface $adapter, $encryption = 0, $salt = null)
+    {
+        return new self($adapter, $encryption, $salt);
+    }
+
+    /**
      * Method to add a role
      *
      * @param  mixed $role
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function addRoles($role)
     {
@@ -251,7 +249,7 @@ class Auth
      * Method to remove a role
      *
      * @param  mixed $role
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function removeRole($role)
     {
@@ -346,31 +344,31 @@ class Auth
 
         switch ($this->result) {
             case self::USER_IS_VALID:
-                $msg = Locale::factory()->__('The user is valid.');
+                $msg = I18n::factory()->__('The user is valid.');
                 break;
             case self::USER_NOT_FOUND:
-                $msg = Locale::factory()->__('The user was not found.');
+                $msg = I18n::factory()->__('The user was not found.');
                 break;
             case self::USER_IS_BLOCKED:
-                $msg = Locale::factory()->__('The user is blocked.');
+                $msg = I18n::factory()->__('The user is blocked.');
                 break;
             case self::PASSWORD_INCORRECT:
-                $msg = Locale::factory()->__('The password was incorrect.');
+                $msg = I18n::factory()->__('The password was incorrect.');
                 break;
             case self::LOGIN_ATTEMPTS_EXCEEDED:
-                $msg = Locale::factory()->__(
+                $msg = I18n::factory()->__(
                     'The allowed login attempts (%1) have been exceeded.',
-                    $this->validators['attempts']->getValidator()->getValue()
+                    $this->validators['attempts']->getValue()
                 );
                 break;
             case self::IP_BLOCKED:
-                $msg = Locale::factory()->__('That IP address is blocked.');
+                $msg = I18n::factory()->__('That IP address is blocked.');
                 break;
             case self::IP_NOT_ALLOWED:
-                $msg = Locale::factory()->__('That IP address is not allowed.');
+                $msg = I18n::factory()->__('That IP address is not allowed.');
                 break;
             case self::SESSION_EXPIRED:
-                $msg = Locale::factory()->__('The session has expired.');
+                $msg = I18n::factory()->__('The session has expired.');
                 break;
         }
 
@@ -380,7 +378,7 @@ class Auth
     /**
      * Method to get the required role
      *
-     * @return Pop\Auth\Role
+     * @return \Pop\Auth\Role
      */
     public function getRequiredRole()
     {
@@ -390,7 +388,7 @@ class Auth
     /**
      * Method to get the user
      *
-     * @return Pop\Auth\User
+     * @return \Pop\Auth\User
      */
     public function getUser()
     {
@@ -401,7 +399,7 @@ class Auth
      * Method to set the expiration
      *
      * @param  int $expiration
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setExpiration($expiration = 0)
     {
@@ -410,7 +408,7 @@ class Auth
             $this->validators['expiration'] = null;
         } else {
             $exp = time() + ($this->expiration * 60);
-            $this->validators['expiration'] = Validator::factory(new LessThan($exp));
+            $this->validators['expiration'] = new Validator\LessThan($exp);
         }
         return $this;
     }
@@ -419,7 +417,7 @@ class Auth
      * Method to set the encryption
      *
      * @param  int $encryption
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setEncryption($encryption = 0)
     {
@@ -435,7 +433,7 @@ class Auth
      * Method to set the encryption
      *
      * @param  string $salt
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setSalt($salt = null)
     {
@@ -448,7 +446,7 @@ class Auth
      *
      * @param  mixed $role
      * @param  int   $level
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setRequiredRole($role = null, $level = 0)
     {
@@ -475,14 +473,14 @@ class Auth
      * Method to set the number of login attempts allowed
      *
      * @param  int $attempts
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setAttemptLimit($attempts = 0)
     {
         if ($attempts == 0) {
             $this->validators['attempts'] = null;
         } else {
-            $this->validators['attempts'] = Validator::factory(new LessThan($attempts));
+            $this->validators['attempts'] = new Validator\LessThan($attempts);
         }
         return $this;
     }
@@ -491,7 +489,7 @@ class Auth
      * Method to set the number of login attempts allowed
      *
      * @param  int $attempts
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setAttempts($attempts = 0)
     {
@@ -503,7 +501,7 @@ class Auth
      * Method to set the block IP addresses
      *
      * @param  string|array $ips
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setBlockedIps($ips = null)
     {
@@ -512,7 +510,7 @@ class Auth
         } else {
             $validIps = $this->filterIps($ips);
             if (count($validIps) > 0) {
-                $this->validators['blockedIps'] = Validator::factory(new Excluded($validIps));
+                $this->validators['blockedIps'] = new Validator\Excluded($validIps);
             }
         }
         return $this;
@@ -522,7 +520,7 @@ class Auth
      * Method to set the block subnets
      *
      * @param  string|array $subnets
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setBlockedSubnets($subnets = null)
     {
@@ -531,7 +529,7 @@ class Auth
         } else {
             $validSubnets = $this->filterSubnets($subnets);
             if (count($validSubnets) > 0) {
-                $this->validators['blockedSubnets'] = Validator::factory(new Excluded($validSubnets));
+                $this->validators['blockedSubnets'] = new Validator\Excluded($validSubnets);
             }
         }
         return $this;
@@ -541,7 +539,7 @@ class Auth
      * Method to set the allowed IP addresses
      *
      * @param  string|array $ips
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setAllowedIps($ips = null)
     {
@@ -550,7 +548,7 @@ class Auth
         } else {
             $validIps = $this->filterIps($ips);
             if (count($validIps) > 0) {
-                $this->validators['allowedIps'] = Validator::factory(new Included($validIps));
+                $this->validators['allowedIps'] = new Validator\Included($validIps);
             }
         }
         return $this;
@@ -560,7 +558,7 @@ class Auth
      * Method to set the allowed subnets
      *
      * @param  string|array $subnets
-     * @return Pop\Auth\Auth
+     * @return \Pop\Auth\Auth
      */
     public function setAllowedSubnets($subnets = null)
     {
@@ -569,7 +567,7 @@ class Auth
         } else {
             $validSubnets = $this->filterSubnets($subnets);
             if (count($validSubnets) > 0) {
-                $this->validators['allowedSubnets'] = Validator::factory(new Included($validSubnets));
+                $this->validators['allowedSubnets'] = new Validator\Included($validSubnets);
             }
         }
         return $this;
@@ -658,8 +656,6 @@ class Auth
      */
     public function isAuthorized()
     {
-        $result = false;
-
         if (null === $this->requiredRole) {
             $result = true;
         } else {
@@ -684,8 +680,8 @@ class Auth
         }
 
         foreach ($ips as $ip) {
-            if ((Validator::factory(new Ipv4())->evaluate($ip)) ||
-                (Validator::factory(new Ipv6())->evaluate($ip))) {
+            if ((Validator\Ipv4::factory()->evaluate($ip)) ||
+                (Validator\Ipv6::factory()->evaluate($ip))) {
                 $validIps[] = $ip;
             }
         }
@@ -708,7 +704,7 @@ class Auth
         }
 
         foreach ($subnets as $subnet) {
-            if (Validator::factory(new Subnet())->evaluate($subnet)) {
+            if (Validator\Subnet::factory()->evaluate($subnet)) {
                 $validSubnets[] = $subnet;
             }
         }

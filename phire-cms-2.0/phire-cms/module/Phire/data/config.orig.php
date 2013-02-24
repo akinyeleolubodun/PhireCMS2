@@ -1,19 +1,19 @@
 <?php
 /**
- * URI and Path Configuration Settings
+ * Path and URI Configuration Settings
  */
 
-// Define the base URI
-define('BASE_URI', str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__)));
+// Define the base path, the folder in which the application is located
+define('BASE_PATH', str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__)));
 
-// Define the system URI
-define('SYSTEM_URI', '/phire');
+// Define the content path, where the application assets are stored
+define('CONTENT_PATH', '/phire-content');
 
-// Define the system directory
-define('SYSTEM_DIR', '/phire-cms');
+// Define the application directory, where the application files are located
+define('APP_PATH', '/phire-cms');
 
-// Define the content directory
-define('CONTENT_DIR', '/phire-content');
+// Define the application URI, how you access the application
+define('APP_URI', '/phire');
 
 /**
  * Database Configuration Settings
@@ -34,7 +34,7 @@ define('DB_NAME', '');
 define('DB_USER', '');
 
 // Define the database password
-define('DB_PASSWORD', '');
+define('DB_PASS', '');
 
 // Define the database host
 define('DB_HOST', '');
@@ -46,5 +46,5 @@ define('DB_PREFIX', '');
  * Language Settings
  */
 
-// Define the default language
-define('POP_DEFAULT_LANG', 'en');
+// Define the default language and locale
+define('POP_LANG', 'en_US');

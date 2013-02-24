@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,18 +15,15 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\Generator,
-    Pop\Locale\Locale;
-
 /**
- * This is the Base class for the Project Install component.
+ * Base install class
  *
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Base
 {
@@ -43,12 +31,12 @@ class Base
     /**
      * Install the base folder and file structure
      *
-     * @param Pop\Config $install
+     * @param \Pop\Config $install
      * @return void
      */
     public static function install($install)
     {
-        echo Locale::factory()->__('Creating base folder and file structure...') . PHP_EOL;
+        echo \Pop\I18n\I18n::factory()->__('Creating base folder and file structure...') . PHP_EOL;
 
         // Define folders to create
         $folders = array(
@@ -74,11 +62,39 @@ class Base
         // Make the '/data' folder writable
         chmod($install->project->base . '/module/' . $install->project->name . '/data', 0777);
 
+        // Figure out the relative base and docroot
+        $base = str_replace("\\", '/', realpath($install->project->base));
+        $docroot = str_replace("\\", '/', realpath($install->project->docroot));
+        $base = (substr($base, -1) == '/') ? substr($base, 0, -1) : $base;
+        $docroot = (substr($docroot, -1) == '/') ? substr($docroot, 0, -1) : $docroot;
+
+        // If the base and docroot are the same
+        if (strlen($base) == strlen($docroot)) {
+            $base = "__DIR__ . '/../'";
+            $docroot = "__DIR__ . '/../'";
+        // If the docroot is under the base
+        } else if (strlen($base) < strlen($docroot)) {
+            $relDocroot = str_replace($base, '', $docroot);
+            $base = "__DIR__ . '/../'";
+            $docroot = "__DIR__ . '/.." . $relDocroot . "'";
+        // If the base is under the docroot
+        } else if (strlen($base) > strlen($docroot)) {
+            // Calculate how many levels up the docroot is from the base
+            $diff = str_replace($docroot, '/', $base);
+            $levels = substr_count($diff, '/');
+            $dirs = null;
+            for ($i = 0; $i < $levels; $i++) {
+                $dirs .= '../';
+            }
+            $base = "__DIR__ . '/../'";
+            $docroot = "__DIR__ . '/" . $dirs . "'";
+        }
+
         // Create project.config.php file
-        $projectCfg = new Generator($install->project->base . '/config/project.config.php');
+        $projectCfg = new \Pop\Code\Generator($install->project->base . '/config/project.config.php');
         $projectCfg->appendToBody('return new Pop\Config(array(', true)
-                   ->appendToBody("    'base'      => '" . addslashes(realpath($install->project->base)) . "',")
-                   ->appendToBody("    'docroot'   => '" . addslashes(realpath($install->project->docroot)) . "'", false);
+                   ->appendToBody("    'base'      => " . $base . ",")
+                   ->appendToBody("    'docroot'   => " . $docroot, false);
 
         // Add the database config to it
         if (isset($install->databases)) {
@@ -109,9 +125,8 @@ class Base
                 foreach ($dbCreds as $key => $value) {
                     $j++;
                     if ($isSqlite) {
-                        $dbFile = $install->project->base . '/module/' . $install->project->name . '/data/' . basename($value);
-                        $dbFile = addslashes(realpath($dbFile));
-                        $ary = "            '{$key}' => '{$dbFile}'";
+                        $dbFile = "__DIR__ . '/../module/" . $install->project->name . "/data/" . basename($value) . "'";
+                        $ary = "            '{$key}' => {$dbFile}";
                     } else {
                         $ary = "            '{$key}' => '{$value}'";
                     }
@@ -139,15 +154,16 @@ class Base
         $projectCfg->save();
 
         // Create the module config file
-        $moduleCfg = new Generator($install->project->base . '/module/' . $install->project->name . '/config/module.config.php');
-        $moduleCfg->appendToBody('return new Pop\Config(array(')
-                  ->appendToBody("    'name'   => '{$install->project->name}',")
-                  ->appendToBody("    'base'   => '" . addslashes(realpath($install->project->base . '/module/' . $install->project->name)) . "',")
-                  ->appendToBody("    'config' => '" . addslashes(realpath($install->project->base . '/module/' . $install->project->name . '/config')) . "',")
-                  ->appendToBody("    'data'   => '" . addslashes(realpath($install->project->base . '/module/' . $install->project->name . '/data')) . "',")
-                  ->appendToBody("    'src'    => '" . addslashes(realpath($install->project->base . '/module/' . $install->project->name . '/src')) . "',")
-                  ->appendToBody("    'view'   => '" . addslashes(realpath($install->project->base . '/module/' . $install->project->name . '/view')) . "'")
-                  ->appendToBody("));", false)
+        $moduleCfg = new \Pop\Code\Generator($install->project->base . '/module/' . $install->project->name . '/config/module.config.php');
+        $moduleCfg->appendToBody('return array(')
+                  ->appendToBody("    '{$install->project->name}' => new Pop\Config(array(")
+                  ->appendToBody("        'base'   => __DIR__ . '/../',")
+                  ->appendToBody("        'config' => __DIR__ . '/../config',")
+                  ->appendToBody("        'data'   => __DIR__ . '/../data',")
+                  ->appendToBody("        'src'    => __DIR__ . '/../src',")
+                  ->appendToBody("        'view'   => __DIR__ . '/../view'")
+                  ->appendToBody("    ))")
+                  ->appendToBody(");", false)
                   ->save();
     }
 

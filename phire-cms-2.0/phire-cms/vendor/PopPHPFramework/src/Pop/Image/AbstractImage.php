@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Image
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,20 +15,19 @@
  */
 namespace Pop\Image;
 
-use Pop\Color\ColorInterface,
-    Pop\File\File;
+use Pop\Color\Space\ColorInterface;
 
 /**
- * This is the abstract class for the Image component.
+ * Image abstract class
  *
  * @category   Pop
  * @package    Pop_Image
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-abstract class AbstractImage extends File
+abstract class AbstractImage extends \Pop\File\File
 {
 
     /**
@@ -63,6 +53,18 @@ abstract class AbstractImage extends File
      * @var int
      */
     const GAUSSIAN_BLUR = 4;
+
+    /**
+     * Constant for HEX format
+     * @var int
+     */
+    const HEX = 1;
+
+    /**
+     * Image extension info
+     * @var \ArrayObject
+     */
+    protected  $info = null;
 
     /**
      * Image width
@@ -132,7 +134,7 @@ abstract class AbstractImage extends File
 
     /**
      * Image resource
-     * @var image
+     * @var resource
      */
     protected $resource = null;
 
@@ -142,17 +144,26 @@ abstract class AbstractImage extends File
      * Instantiate an image file object based on either a pre-existing
      * image file on disk, or a new image file.
      *
-     * @param  string         $img
-     * @param  int|string     $w
-     * @param  int|string     $h
-     * @param  ColorInterface $color
-     * @param  array          $types
-     * @throws Exception
-     * @return void
+     * @param  string                          $img
+     * @param  int|string                      $w
+     * @param  int|string                      $h
+     * @param  \Pop\Color\Space\ColorInterface $color
+     * @param  array                           $types
+     * @return \Pop\Image\AbstractImage
      */
     public function __construct($img, $w = null, $h = null, ColorInterface $color = null, $types = null)
     {
         parent::__construct($img, $types);
+    }
+
+    /**
+     * Get the image resource info
+     *
+     * @return \ArrayObject
+     */
+    public function info()
+    {
+        return $this->info;
     }
 
     /**
@@ -226,7 +237,7 @@ abstract class AbstractImage extends File
     /**
      * Set the fill color.
      *
-     * @param  ColorInterface $color
+     * @param  \Pop\Color\Space\ColorInterface $color
      * @return mixed
      */
     public function setFillColor(ColorInterface $color = null)
@@ -238,7 +249,7 @@ abstract class AbstractImage extends File
     /**
      * Set the background color.
      *
-     * @param  ColorInterface $color
+     * @param  \Pop\Color\Space\ColorInterface $color
      * @return mixed
      */
     public function setBackgroundColor(ColorInterface $color = null)
@@ -250,7 +261,7 @@ abstract class AbstractImage extends File
     /**
      * Set the stroke color.
      *
-     * @param  ColorInterface $color
+     * @param  \Pop\Color\Space\ColorInterface $color
      * @return mixed
      */
     public function setStrokeColor(ColorInterface $color = null)
@@ -356,11 +367,8 @@ abstract class AbstractImage extends File
     abstract public function rotate($deg);
 
     /**
-     * Create text within the an image object and output it. A true-type font
-     * file is required for the font argument. The size, rotation and position
-     * can be set by those respective arguments. This is a useful method for
-     * creating CAPTCHA images or rendering sensitive information to the user
-     * that cannot or should not be rendered by HTML (i.e. email addresses.)
+     * Create text within the an image object. A font file can be used for the
+     * font argument. The size, rotation and position can be set by those arguments.
      *
      * @param  string     $str
      * @param  int|string $size
@@ -382,7 +390,7 @@ abstract class AbstractImage extends File
      * @param  int $y2
      * @return void
      */
-    abstract public function addLine($x1, $y1, $x2, $y2);
+    abstract public function drawLine($x1, $y1, $x2, $y2);
 
     /**
      * Method to add a rectangle to the image.
@@ -393,7 +401,7 @@ abstract class AbstractImage extends File
      * @param  int $h
      * @return void
      */
-    abstract public function addRectangle($x, $y, $w, $h = null);
+    abstract public function drawRectangle($x, $y, $w, $h = null);
 
     /**
      * Method to add a square to the image.
@@ -403,7 +411,7 @@ abstract class AbstractImage extends File
      * @param  int $w
      * @return void
      */
-    abstract public function addSquare($x, $y, $w);
+    abstract public function drawSquare($x, $y, $w);
 
     /**
      * Method to add an ellipse to the image.
@@ -414,7 +422,7 @@ abstract class AbstractImage extends File
      * @param  int $h
      * @return void
      */
-    abstract public function addEllipse($x, $y, $w, $h = null);
+    abstract public function drawEllipse($x, $y, $w, $h = null);
 
     /**
      * Method to add a circle to the image.
@@ -424,7 +432,7 @@ abstract class AbstractImage extends File
      * @param  int $w
      * @return void
      */
-    abstract public function addCircle($x, $y, $w);
+    abstract public function drawCircle($x, $y, $w);
 
     /**
      * Method to add an arc to the image.
@@ -437,7 +445,7 @@ abstract class AbstractImage extends File
      * @param  int $h
      * @return void
      */
-    abstract public function addArc($x, $y, $start, $end, $w, $h = null);
+    abstract public function drawArc($x, $y, $start, $end, $w, $h = null);
 
     /**
      * Method to add a polygon to the image.
@@ -445,7 +453,7 @@ abstract class AbstractImage extends File
      * @param  array $points
      * @return void
      */
-    abstract public function addPolygon($points);
+    abstract public function drawPolygon($points);
 
     /**
      * Method to adjust the brightness of the image.
@@ -476,7 +484,7 @@ abstract class AbstractImage extends File
     /**
      * Method to colorize the image with the color passed.
      *
-     * @param  ColorInterface $color
+     * @param  \Pop\Color\Space\ColorInterface $color
      * @return mixed
      */
     abstract public function colorize(ColorInterface $color);
@@ -540,7 +548,7 @@ abstract class AbstractImage extends File
     /**
      * Set and return a color identifier.
      *
-     * @param  ColorInterface $color
+     * @param  \Pop\Color\Space\ColorInterface $color
      * @throws Exception
      * @return mixed
      */

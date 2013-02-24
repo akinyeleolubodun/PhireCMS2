@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,26 +16,24 @@
 namespace Pop\Project;
 
 use Pop\Config,
-    Pop\Db\Db,
-    Pop\Mvc\Router,
-    Pop\Record\Record;
+    Pop\Mvc\Router;
 
 /**
- * This is the Project class for the Project component.
+ * Project class
  *
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Project
 {
 
     /**
      * Project config
-     * @var Pop\Config
+     * @var \Pop\Config
      */
     protected $config = null;
 
@@ -56,33 +45,52 @@ class Project
 
     /**
      * Project router
-     * @var Pop\Mvc\Router
+     * @var \Pop\Mvc\Router
      */
     protected $router = null;
+
+    /**
+     * Project events
+     * @var \Pop\Event\Manager
+     */
+    protected $events = null;
+
+    /**
+     * Project services
+     * @var \Pop\Service\Locator
+     */
+    protected $services = null;
 
     /**
      * Constructor
      *
      * Instantiate a project object
      *
-     * @param  Config $config
-     * @param  Config $module
-     * @param  Router $router
-     * @return void
+     * @param  mixed           $config
+     * @param  array           $module
+     * @param  \Pop\Mvc\Router $router
+     * @return \Pop\Project\Project
      */
-    public function __construct(Config $config, Config $module = null, Router $router = null)
+    public function __construct($config = null, array $module = null, Router $router = null)
     {
-        $this->config = $config;
+        if (null !== $config) {
+            $this->loadConfig($config);
+        }
+
         if (null !== $module) {
             $this->loadModule($module);
         }
+
         if (null !== $router) {
             $this->loadRouter($router);
         }
 
+        $this->events = new \Pop\Event\Manager();
+        $this->services = new \Pop\Service\Locator();
+
         if (isset($this->config->defaultDb)) {
             $default = $this->config->defaultDb;
-            Record::setDb($this->config->databases->$default);
+            \Pop\Db\Record::setDb($this->config->databases->$default);
         }
     }
 
@@ -90,12 +98,12 @@ class Project
      * Static method to instantiate the project object and return itself
      * to facilitate chaining methods together.
      *
-     * @param  Config $config
-     * @param  Config $module
-     * @param  Router $router
-     * @return Pop\Project\Project
+     * @param  mixed           $config
+     * @param  array           $module
+     * @param  \Pop\Mvc\Router $router
+     * @return \Pop\Project\Project
      */
-    public static function factory(Config $config, Config $module = null, Router $router = null)
+    public static function factory($config = null, array $module = null, Router $router = null)
     {
         return new static($config, $module, $router);
     }
@@ -103,7 +111,7 @@ class Project
     /**
      * Access the project config
      *
-     * @return Pop\Config
+     * @return \Pop\Config
      */
     public function config()
     {
@@ -114,13 +122,13 @@ class Project
      * Access a project database
      *
      * @param  string $dbname
-     * @return Pop\Db\Db
+     * @return \Pop\Db\Db
      */
     public function database($dbname)
     {
         if (isset($this->config->databases) &&
             isset($this->config->databases->$dbname) &&
-            ($this->config->databases->$dbname instanceof Db)) {
+            ($this->config->databases->$dbname instanceof \Pop\Db\Db)) {
             return $this->config->databases->$dbname;
         } else {
             return null;
@@ -131,7 +139,7 @@ class Project
      * Access a project module config
      *
      * @param  string $name
-     * @return Pop\Config
+     * @return \Pop\Config
      */
     public function module($name)
     {
@@ -145,7 +153,7 @@ class Project
     /**
      * Access the project router
      *
-     * @return Pop\Mvc\Router
+     * @return \Pop\Mvc\Router
      */
     public function router()
     {
@@ -153,26 +161,58 @@ class Project
     }
 
     /**
+     * Load a project config
+     *
+     * @param  mixed $config
+     * @throws Exception
+     * @return \Pop\Project\Project
+     */
+    public function loadConfig($config)
+    {
+        // Test to see if the config is already set and changes are allowed.
+        if ((null !== $this->config) && (!$this->config->changesAllowed())) {
+            throw new Exception('Real-time configuration changes are not allowed.');
+        }
+
+        // Else, set the new config
+        if (is_array($config)) {
+            $this->config = new Config($config);
+        } else if ($config instanceof Config) {
+            $this->config = $config;
+        } else {
+            throw new Exception('The project config must be either an array or an instance of Pop\\Config.');
+        }
+
+        return $this;
+    }
+
+    /**
      * Load a module config
      *
-     * @param  Config $module
+     * @param  array $module
      * @throws Exception
-     * @return Pop\Project\Project
+     * @return \Pop\Project\Project
      */
-    public function loadModule(Config $module)
+    public function loadModule(array $module)
     {
-        if (!isset($module->name)) {
-            throw new Exception('The module name must be set in the module config.');
+        foreach ($module as $key => $value) {
+            if (is_array($value)) {
+                $this->modules[$key] = new Config($value);
+            } else if ($value instanceof Config) {
+                $this->modules[$key] = $value;
+            } else {
+                throw new Exception('The module config must be either an array or an instance of Pop\\Config.');
+            }
         }
-        $this->modules[$module->name] = $module;
+
         return $this;
     }
 
     /**
      * Load a router
      *
-     * @param Router $router
-     * @return Pop\Project\Project
+     * @param  \Pop\Mvc\Router $router
+     * @return \Pop\Project\Project
      */
     public function loadRouter(Router $router)
     {
@@ -181,14 +221,131 @@ class Project
     }
 
     /**
-     * Run the project
+     * Attach an event. Default project event name hook-points are:
+     *
+     *   route.pre
+     *   route
+     *   route.error
+     *   route.post
+     *
+     *   dispatch.pre
+     *   dispatch
+     *   dispatch.error
+     *   dispatch.post
+     *
+     * @param  string $name
+     * @param  mixed  $action
+     * @param  int    $priority
+     * @return \Pop\Project\Project
+     */
+    public function attachEvent($name, $action, $priority = 0)
+    {
+        $this->events->attach($name, $action, $priority);
+        return $this;
+    }
+
+    /**
+     * Detach an event. Default project event name hook-points are:
+     *
+     *   route.pre
+     *   route
+     *   route.error
+     *   route.post
+     *
+     *   dispatch.pre
+     *   dispatch
+     *   dispatch.error
+     *   dispatch.post
+     *
+     * @param  string $name
+     * @param  mixed  $action
+     * @return \Pop\Project\Project
+     */
+    public function detachEvent($name, $action)
+    {
+        $this->events->detach($name, $action);
+        return $this;
+    }
+
+    /**
+     * Get the event Manager
+     *
+     * @return \Pop\Event\Manager
+     */
+    public function getEventManager()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Set a service
+     *
+     * @param  string $name
+     * @param  mixed  $call
+     * @param  mixed  $params
+     * @return \Pop\Project\Project
+     */
+    public function setService($name, $call, $params = null)
+    {
+        $this->services->set($name, $call, $params);
+        return $this;
+    }
+
+    /**
+     * Get a service
+     *
+     * @param  string $name
+     * @return mixed
+     */
+    public function getService($name)
+    {
+        return $this->services->get($name);
+    }
+
+    /**
+     * Get the service Locator
+     *
+     * @return \Pop\Service\Locator
+     */
+    public function getServiceLocator()
+    {
+        return $this->services;
+    }
+
+    /**
+     * Run the project.
      *
      * @return void
      */
     public function run()
     {
+        // If router exists, then route the project to the appropriate controller
         if (null !== $this->router) {
+            // Trigger any pre-route events, route, then trigger any post-route events
+            $this->events->trigger('route.pre', array('router' => $this->router));
             $this->router->route($this);
+            $this->events->trigger('route.post', array('router' => $this->router));
+
+            // If a controller was properly routed and created, then dispatch it
+            if (null !== $this->router()->controller()) {
+                // Trigger any pre-dispatch events
+                $this->events->trigger('dispatch.pre', array('router' => $this->router));
+
+                // Define the action and dispatch it
+                $action = ($this->router()->controller()->getRequest()->getRequestUri() == '/') ? 'index' : $this->router()->getAction();
+
+                // Dispatch the found action, the error action or trigger the dispatch error events
+                if ((null !== $action) && method_exists($this->router()->controller(), $action)) {
+                    $this->router()->controller()->dispatch($action);
+                } else if (method_exists($this->router()->controller(), 'error')) {
+                    $this->router()->controller()->dispatch('error');
+                } else {
+                    $this->events->trigger('dispatch.error', array('router' => $this->router));
+                }
+
+                // Trigger any post-dispatch events
+                $this->events->trigger('dispatch.post', array('router' => $this->router));
+            }
         }
     }
 

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Mail
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,62 +15,42 @@
  */
 namespace Pop\Mail;
 
-use Pop\File\File;
-
 /**
- * This is the Mail class for the Mail component.
+ * Mail class
  *
  * @category   Pop
  * @package    Pop_Mail
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Mail
 {
 
     /**
-     * Constant for text-only email
-     * @var int
+     * CRLF EOL constant
+     * @var string
      */
-    const TEXT = 1;
+    const CRLF = "\r\n";
 
     /**
-     * Constant for HTML-only email
-     * @var int
+     * LF EOL constant
+     * @var string
      */
-    const HTML = 2;
-
-    /**
-     * Constant for text and HTML email
-     * @var int
-     */
-    const TEXT_HTML = 3;
-
-    /**
-     * Constant for text and file attachment email
-     * @var int
-     */
-    const TEXT_FILE = 4;
-
-    /**
-     * Constant for HTML and file attachment email
-     * @var int
-     */
-    const HTML_FILE = 5;
-
-    /**
-     * Constant for HTML and file attachment email
-     * @var int
-     */
-    const TEXT_HTML_FILE = 6;
+    const LF = "\n";
 
     /**
      * Sending queue
+     * @var \Pop\Mail\Queue
+     */
+    protected $queue = null;
+
+    /**
+     * Mail headers
      * @var array
      */
-    protected $queue = array();
+    protected $headers = array();
 
     /**
      * Subject
@@ -89,27 +60,9 @@ class Mail
 
     /**
      * Message body
-     * @var string
+     * @var \Pop\Mail\Message
      */
     protected $message = null;
-
-    /**
-     * Text part of the message body
-     * @var string
-     */
-    protected $text = null;
-
-    /**
-     * HTML part of the message body
-     * @var string
-     */
-    protected $html = null;
-
-    /**
-     * Mail headers
-     * @var array
-     */
-    protected $headers = array();
 
     /**
      * Mail parameters
@@ -118,35 +71,31 @@ class Mail
     protected $params = null;
 
     /**
-     * Character set
-     * @var string
-     */
-    protected $charset = 'utf-8';
-
-    /**
-     * MIME boundary
-     * @var string
-     */
-    protected $mimeBoundary = null;
-
-    /**
      * File attachments
      * @var array
      */
     protected $attachments = array();
 
     /**
+     * Send as group flag
+     * @var boolean
+     */
+    protected $group = false;
+
+    /**
      * Constructor
      *
      * Instantiate the mail object.
      *
-     * @param  array  $rcpts
      * @param  string $subj
-     * @return void
+     * @param  mixed  $rcpts
+     * @return \Pop\Mail\Mail
      */
-    public function __construct(array $rcpts = null, $subj = null)
+    public function __construct($subj = null, $rcpts = null)
     {
         $this->subject = $subj;
+        $this->queue = new Queue();
+        $this->message = new Message($this);
 
         if (null !== $rcpts) {
             $this->addRecipients($rcpts);
@@ -154,53 +103,23 @@ class Mail
     }
 
     /**
-     * Get the subject
+     * Get the mail queue
      *
-     * @return string
+     * @return \Pop\Mail\Queue
      */
-    public function getSubject()
+    public function getQueue()
     {
-        return $this->subject;
+        return $this->queue;
     }
 
     /**
-     * Get MIME boundary
+     * Get the mail message
      *
-     * @return string
+     * @return \Pop\Mail\Message
      */
-    public function getBoundary()
+    public function getMessage()
     {
-        return $this->mimeBoundary;
-    }
-
-    /**
-     * Get character set
-     *
-     * @return string
-     */
-    public function getCharset()
-    {
-        return $this->charset;
-    }
-
-    /**
-     * Get text part of the message.
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Get HTML part of the message.
-     *
-     * @return string
-     */
-    public function getHtml()
-    {
-        return $this->html;
+        return $this->message;
     }
 
     /**
@@ -225,87 +144,189 @@ class Mail
     }
 
     /**
-     * Add recipients
+     * Get the subject
      *
-     * @param  array $rcpts
-     * @return Pop\Mail\Mail
+     * @return string
      */
-    public function addRecipients(array $rcpts)
+    public function getSubject()
     {
-        if (isset($rcpts[0]) && (is_array($rcpts[0]))) {
-            foreach ($rcpts as $rcpt) {
-                if (!array_key_exists('email', $rcpt)) {
-                    throw new Exception("Error: At least one of the array keys must be 'email'.");
-                }
-                $this->queue[] = $rcpt;
-            }
-        } else {
-            if (!array_key_exists('email', $rcpts)) {
-                throw new Exception("Error: At least one of the array keys must be 'email'.");
-            }
-            $this->queue[] = $rcpts;
+        return $this->subject;
+    }
+
+    /**
+     * Get MIME boundary
+     *
+     * @return string
+     */
+    public function getBoundary()
+    {
+        return $this->message->getBoundary();
+    }
+
+    /**
+     * Get EOL
+     *
+     * @return string
+     */
+    public function getEol()
+    {
+        return $this->message->getEol();
+    }
+
+    /**
+     * Get character set
+     *
+     * @return string
+     */
+    public function getCharset()
+    {
+        return $this->message->getCharset();
+    }
+
+    /**
+     * Get text part of the message.
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->message->getText();
+    }
+
+    /**
+     * Get HTML part of the message.
+     *
+     * @return string
+     */
+    public function getHtml()
+    {
+        return $this->message->getHtml();
+    }
+
+    /**
+     * Get attachments
+     *
+     * @return array
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * Alias to add a recipient to the queue
+     *
+     * @param  string $email
+     * @param  string $name
+     * @return \Pop\Mail\Mail
+     */
+    public function to($email, $name = null)
+    {
+        $this->queue->add($email, $name);
+        return $this;
+    }
+
+    /**
+     * Add a recipient to the queue
+     *
+     * @param  string $email
+     * @param  string $name
+     * @return \Pop\Mail\Mail
+     */
+    public function add($email, $name = null)
+    {
+        $this->queue->add($email, $name);
+        return $this;
+    }
+
+    /**
+     * Add recipients to the queue
+     *
+     * @param  mixed $rcpts
+     * @throws Exception
+     * @return \Pop\Mail\Mail
+     */
+    public function addRecipients($rcpts)
+    {
+        $this->queue->addRecipients($rcpts);
+        return $this;
+    }
+
+    /**
+     * Alias to set the from and reply-to headers
+     *
+     * @param  string  $email
+     * @param  string  $name
+     * @param  boolean $replyTo
+     * @return \Pop\Mail\Mail
+     */
+    public function from($email, $name = null, $replyTo = true)
+    {
+        $header = (null !== $name) ? $name . ' <' . $email . '>' : $email;
+        $this->setHeader('From', $header);
+        if ($replyTo) {
+            $this->setHeader('Reply-To', $header);
         }
 
         return $this;
     }
 
     /**
-     * Set the subject
+     * Alias to set the reply-to and from headers
      *
-     * @param  string $subj
-     * @return Pop\Mail\Mail
+     * @param  string  $email
+     * @param  string  $name
+     * @param  boolean $from
+     * @return \Pop\Mail\Mail
      */
-    public function setSubject($subj)
+    public function replyTo($email, $name = null, $from = true)
     {
-        $this->subject = $subj;
+        $header = (null !== $name) ? $name . ' <' . $email . '>' : $email;
+        $this->setHeader('Reply-To', $header);
+        if ($from) {
+            $this->setHeader('From', $header);
+        }
+
         return $this;
     }
 
     /**
-     * Set MIME boundary
+     * Alias to set the cc headers
      *
-     * @param  string $bnd
-     * @return Pop\Mail\Mail
+     * @param  string  $email
+     * @param  string  $name
+     * @return \Pop\Mail\Mail
      */
-    public function setBoundary($bnd = null)
+    public function cc($email, $name = null)
     {
-        $this->mimeBoundary = (null !== $bnd) ? $bnd : sha1(time());
+        if (is_array($email)) {
+            $ccQueue = new Queue($email);
+            $header = (string)$ccQueue;
+        } else {
+            $header = (null !== $name) ? $name . ' <' . $email . '>' : $email;
+        }
+        $this->setHeader('Cc', $header);
+
         return $this;
     }
 
     /**
-     * Set character set
+     * Alias to set the bcc headers
      *
-     * @param  string $chr
-     * @return Pop\Mail\Mail
+     * @param  string  $email
+     * @param  string  $name
+     * @return \Pop\Mail\Mail
      */
-    public function setCharset($chr)
+    public function bcc($email, $name = null)
     {
-        $this->charset = $chr;
-        return $this;
-    }
+        if (is_array($email)) {
+            $bccQueue = new Queue($email);
+            $header = (string)$bccQueue;
+        } else {
+            $header = (null !== $name) ? $name . ' <' . $email . '>' : $email;
+        }
+        $this->setHeader('Bcc', $header);
 
-    /**
-     * Set text part of the message.
-     *
-     * @param  string $txt
-     * @return Pop\Mail\Mail
-     */
-    public function setText($txt)
-    {
-        $this->text = $txt;
-        return $this;
-    }
-
-    /**
-     * Set HTML part of the message.
-     *
-     * @param  string $html
-     * @return Pop\Mail\Mail
-     */
-    public function setHtml($html)
-    {
-        $this->html = $html;
         return $this;
     }
 
@@ -315,20 +336,11 @@ class Mail
      * @param  string $name
      * @param  string $value
      * @throws Exception
-     * @return Pop\Mail\Mail
+     * @return \Pop\Mail\Mail
      */
     public function setHeader($name, $value)
     {
-        if (is_array($value)) {
-            if (isset($value['name']) && isset($value['email'])) {
-                $this->headers[$name] = $value['name'] . ' <' . $value['email'] . '>';
-            } else if (isset($value[0]) && isset($value[1])) {
-                $this->headers[$name] = $value[0] . ' <' . $value[1] . '>';
-            }
-        } else {
-            $this->headers[$name] = $value;
-        }
-
+        $this->headers[$name] = $value;
         return $this;
     }
 
@@ -337,7 +349,7 @@ class Mail
      *
      * @param  array $headers
      * @throws Exception
-     * @return Pop\Mail\Mail
+     * @return \Pop\Mail\Mail
      */
     public function setHeaders(array $headers)
     {
@@ -349,33 +361,107 @@ class Mail
     }
 
     /**
+     * Set the subject
+     *
+     * @param  string $subj
+     * @return \Pop\Mail\Mail
+     */
+    public function setSubject($subj)
+    {
+        $this->subject = $subj;
+        return $this;
+    }
+
+    /**
+     * Set MIME boundary
+     *
+     * @param  string $bnd
+     * @return \Pop\Mail\Mail
+     */
+    public function setBoundary($bnd = null)
+    {
+        $this->message->setBoundary($bnd);
+        return $this;
+    }
+
+    /**
+     * Set EOL
+     *
+     * @param  string $eol
+     * @return \Pop\Mail\Mail
+     */
+    public function setEol($eol = Mail::CRLF)
+    {
+        $this->message->setEol($eol);
+        return $this;
+    }
+
+    /**
+     * Set character set
+     *
+     * @param  string $chr
+     * @return \Pop\Mail\Mail
+     */
+    public function setCharset($chr)
+    {
+        $this->message->setCharset($chr);
+        return $this;
+    }
+
+    /**
+     * Set text part of the message.
+     *
+     * @param  string $text
+     * @return \Pop\Mail\Mail
+     */
+    public function setText($text)
+    {
+        $this->message->setText($text);
+        return $this;
+    }
+
+    /**
+     * Set HTML part of the message.
+     *
+     * @param  string $html
+     * @return \Pop\Mail\Mail
+     */
+    public function setHtml($html)
+    {
+        $this->message->setHtml($html);
+        return $this;
+    }
+
+    /**
+     * Set the send as group flag
+     *
+     * @param  boolean $group
+     * @return \Pop\Mail\Mail
+     */
+    public function sendAsGroup($group)
+    {
+        $this->group = $group;
+        return $this;
+    }
+
+    /**
      * Attach a file to the mail object.
      *
-     * @param  string|Pop\File\File $file
+     * @param  string $file
      * @throws Exception
-     * @return Pop\Mail\Mail
+     * @return \Pop\Mail\Mail
      */
     public function attachFile($file)
     {
-        // Determine if the file is valid.
-        if (!($file instanceof File) && !file_exists($file)) {
-            throw new Exception('Error: The parameter passed must either be a valid file or an instance of Pop\File\File.');
-        }
-
-        $fle = (!($file instanceof File)) ? new File($file) : $file;
-
-        // Encode the file contents and set the file into the attachments array property.
-        $contents = chunk_split(base64_encode($fle->read()));
-        $this->attachments[] = array('file' => $fle, 'contents' => $contents);
-
+        $this->attachments[] = new Attachment($file);
         return $this;
     }
 
     /**
      * Set parameters
      *
-     * @param  string|array $params
-     * @return Pop\Mail\Mail
+     * @param mixed $params
+     * @return \Pop\Mail\Mail
      */
     public function setParams($params = null)
     {
@@ -393,142 +479,6 @@ class Mail
     }
 
     /**
-     * Initialize the email message.
-     *
-     * @throws Exception
-     * @return void
-     */
-    public function init()
-    {
-        $msgType = $this->getMessageType();
-
-        if (null === $msgType) {
-            throw new Exception('Error: The message body elements are not set.');
-        }
-
-        $this->message = null;
-        $this->setBoundary();
-
-        switch ($msgType) {
-            // If the message contains files, HTML and text.
-            case self::TEXT_HTML_FILE:
-                $this->setHeaders(array(
-                    'MIME-Version' => '1.0',
-                    'Content-Type' => 'multipart/mixed; boundary="' . $this->getBoundary() . '"' . PHP_EOL . "This is a multi-part message in MIME format.",
-                ));
-
-                foreach ($this->attachments as $file) {
-                    $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
-                }
-
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/html; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->html . PHP_EOL . PHP_EOL;
-
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/plain; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->text . PHP_EOL . PHP_EOL . '--' .
-                    $this->getBoundary() . '--' . PHP_EOL . PHP_EOL;
-
-                break;
-
-            // If the message contains files and HTML.
-            case self::HTML_FILE:
-                $this->setHeaders(array(
-                    'MIME-Version' => '1.0',
-                    'Content-Type' => 'multipart/mixed; boundary="' . $this->getBoundary() . '"' . PHP_EOL . "This is a multi-part message in MIME format.",
-                ));
-
-                foreach ($this->attachments as $file) {
-                    $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
-                }
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/html; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->html . PHP_EOL . PHP_EOL . '--' .
-                    $this->getBoundary() . '--' . PHP_EOL . PHP_EOL;
-
-                break;
-
-            // If the message contains files and text.
-            case self::TEXT_FILE:
-                $this->setHeaders(array(
-                    'MIME-Version' => '1.0',
-                    'Content-Type' => 'multipart/mixed; boundary="' . $this->getBoundary() . '"' . PHP_EOL . "This is a multi-part message in MIME format.",
-                ));
-
-                foreach ($this->attachments as $file) {
-                    $this->message .= PHP_EOL . '--' . $this->getBoundary() .
-                        PHP_EOL . 'Content-Type: file; name="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . 'Content-Transfer-Encoding: base64' . PHP_EOL .
-                        'Content-Description: ' . $file['file']->getBasename() . PHP_EOL .
-                        'Content-Disposition: attachment; filename="' . $file['file']->getBasename() .
-                        '"' . PHP_EOL . PHP_EOL . $file['contents'] . PHP_EOL . PHP_EOL;
-                }
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/plain; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->text . PHP_EOL . PHP_EOL . '--' .
-                    $this->getBoundary() . '--' . PHP_EOL . PHP_EOL;
-
-                break;
-
-            // If the message contains HTML and text.
-            case self::TEXT_HTML:
-                $this->setHeaders(array(
-                    'MIME-Version' => '1.0',
-                    'Content-Type' => 'multipart/alternative; boundary="' . $this->getBoundary() . '"' . PHP_EOL . "This is a multi-part message in MIME format.",
-                ));
-
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/plain; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->text . PHP_EOL . PHP_EOL;
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/html; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->html . PHP_EOL . PHP_EOL .
-                    '--' . $this->getBoundary() . '--' . PHP_EOL . PHP_EOL;
-
-                break;
-
-            // If the message contains HTML.
-            case self::HTML:
-                $this->setHeaders(array(
-                    'MIME-Version' => '1.0',
-                    'Content-Type' => 'multipart/alternative; boundary="' . $this->getBoundary() . '"' . PHP_EOL . "This is a multi-part message in MIME format.",
-                ));
-
-                $this->message .= '--' . $this->getBoundary() . PHP_EOL .
-                    'Content-type: text/html; charset=' . $this->getCharset() .
-                    PHP_EOL . PHP_EOL . $this->html . PHP_EOL . PHP_EOL . '--' .
-                    $this->getBoundary() . '--' . PHP_EOL . PHP_EOL;
-
-                break;
-
-            // If the message contains text.
-            case self::TEXT:
-                $this->setHeaders(array(
-                    'Content-Type' => 'text/plain; charset=' . $this->getCharset()
-                ));
-
-                $this->message = $this->text . PHP_EOL;
-
-                break;
-
-            // Else if nothing has been set yet
-            default:
-                $this->message = null;
-        }
-    }
-
-    /**
      * Send mail message or messages.
      *
      * This method depends on the server being set up correctly as an SMTP server
@@ -538,55 +488,142 @@ class Mail
      */
     public function send()
     {
-        if (null === $this->message) {
-            $this->init();
+        if (null === $this->message->getMessage()) {
+            $this->message->init();
         }
 
-        $headers = $this->buildHeaders() . PHP_EOL . PHP_EOL;
+        $messageBody = $this->message->getMessage();
 
-        // Iterate through the queue and send the mail messages.
-        foreach ($this->queue as $rcpt) {
-            $subject = $this->subject;
-            $message = $this->message;
+        $headers = $this->buildHeaders() . $this->message->getEol() . $this->message->getEol();
 
-            // Set the recipient parameter.
-            $to = (isset($rcpt['name'])) ? $rcpt['name'] . " <" . $rcpt['email'] . ">" : $rcpt['email'];
+        // Send as group message
+        if ($this->group) {
+            mail((string)$this->queue, $this->subject, $messageBody, $headers, $this->params);
+        // Else, Iterate through the queue and send the mail messages.
+        } else {
+            foreach ($this->queue as $rcpt) {
+                $subject = $this->subject;
+                $message = $messageBody;
 
-            // Replace any set placeholder content within the subject or message.
-            foreach ($rcpt as $key => $value) {
-                $subject =  str_replace('[{' . $key . '}]', $value, $subject);
-                $message =  str_replace('[{' . $key . '}]', $value, $message);
+                // Set the recipient parameter.
+                $to = (isset($rcpt['name'])) ? $rcpt['name'] . " <" . $rcpt['email'] . ">" : $rcpt['email'];
+
+                // Replace any set placeholder content within the subject or message.
+                foreach ($rcpt as $key => $value) {
+                    $subject =  str_replace('[{' . $key . '}]', $value, $subject);
+                    $message =  str_replace('[{' . $key . '}]', $value, $message);
+                }
+
+                // Send the email message.
+                mail($to, $subject, $message, $headers, $this->params);
             }
-
-            // Send the email message.
-            mail($to, $subject, $message, $headers, $this->params);
         }
     }
 
     /**
-     * Get message type.
+     * Save mail message or messages in a folder to be sent at a later date.
      *
-     * @return string
+     * @param string $to
+     * @param string $format
+     * @return \Pop\Mail\Mail
      */
-    protected function getMessageType()
+    public function saveTo($to = null, $format = null)
     {
-        if ((count($this->attachments) > 0) && (null === $this->html) && (null === $this->text)) {
-            $type = null;
-        } else if ((count($this->attachments) > 0) && (null !== $this->html) && (null !== $this->text)) {
-            $type = self::TEXT_HTML_FILE;
-        } else if ((count($this->attachments) > 0) && (null !== $this->html)) {
-            $type = self::HTML_FILE;
-        } else if ((count($this->attachments) > 0) && (null !== $this->text)) {
-            $type = self::TEXT_FILE;
-        } else if ((null !== $this->html) && (null !== $this->text)) {
-            $type = self::TEXT_HTML;
-        } else if (null !== $this->html) {
-            $type = self::HTML;
-        } else if (null !== $this->text) {
-            $type = self::TEXT;
+        $dir = (null !== $to) ? $to : getcwd();
+
+        if (null === $this->message->getMessage()) {
+            $this->message->init();
         }
 
-        return $type;
+        $messageBody = $this->message->getMessage();
+
+        $headers = $this->buildHeaders();
+
+        // Send as group message
+        if ($this->group) {
+            $email = 'To: ' . (string)$this->queue . $this->message->getEol() .
+                'Subject: ' . $this->subject . $this->message->getEol() .
+                $headers . $this->message->getEol() . $this->message->getEol() . $messageBody;
+
+            $emailFileName = (null !== $format) ? $format : $emailFileName = '0000000001-' . time() . '-popphpmail';
+
+            // Save the email message.
+            file_put_contents($dir . DIRECTORY_SEPARATOR . $emailFileName, array(), $email);
+        } else {
+            // Iterate through the queue and send the mail messages.
+            $i = 1;
+            foreach ($this->queue as $rcpt) {
+                $fileFormat = null;
+                $subject = $this->subject;
+                $message = $messageBody;
+
+                // Set the recipient parameter.
+                $to = (isset($rcpt['name'])) ? $rcpt['name'] . " <" . $rcpt['email'] . ">" : $rcpt['email'];
+
+                // Replace any set placeholder content within the subject or message.
+                foreach ($rcpt as $key => $value) {
+                    $subject =  str_replace('[{' . $key . '}]', $value, $subject);
+                    $message =  str_replace('[{' . $key . '}]', $value, $message);
+                    if (null !== $format) {
+                        if (null !== $fileFormat) {
+                            $fileFormat = str_replace('[{' . $key . '}]', $value, $fileFormat);
+                        } else {
+                            $fileFormat = str_replace('[{' . $key . '}]', $value, $format);
+                        }
+                    }
+                }
+
+                $email = 'To: ' . $to . $this->message->getEol() .
+                         'Subject: ' . $subject . $this->message->getEol() .
+                         $headers . $this->message->getEol() . $this->message->getEol() . $message;
+
+                if (null !== $fileFormat) {
+                    $emailFileName = sprintf('%09d', $i) . '-' . time() . '-' . $fileFormat;
+                } else {
+                    $emailFileName = sprintf('%09d', $i) . '-' . time() . '-popphpmail';
+                }
+
+                // Save the email message.
+                file_put_contents($dir . DIRECTORY_SEPARATOR . $emailFileName, $email);
+                $i++;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Send mail message or messages that are saved in a folder.
+     *
+     * This method depends on the server being set up correctly as an SMTP server
+     * and sendmail being correctly defined in the php.ini file.
+     *
+     * @param string  $from
+     * @param boolean $delete
+     * @return \Pop\Mail\Mail
+     */
+    public function sendFrom($from = null, $delete = false)
+    {
+        $dir = (null !== $from) ? $from : getcwd();
+        $emailDir = new \Pop\File\Dir($dir, true);
+        $emailFiles = $emailDir->getFiles();
+        if (isset($emailFiles[0])) {
+            foreach ($emailFiles as $email) {
+                if (file_exists($email)) {
+                    // Get the email data from the contents
+                    $emailData = $this->getEmailFromFile($email);
+
+                    // Send the email message.
+                    mail($emailData['to'], $emailData['subject'], $emailData['message'], $emailData['headers'], $this->params);
+
+                    // Delete the email file is the flag is passed
+                    if ($delete) {
+                        unlink($email);
+                    }
+                }
+            }
+        }
+        return $this;
     }
 
     /**
@@ -598,10 +635,59 @@ class Mail
     {
         $headers = null;
         foreach ($this->headers as $key => $value) {
-            $headers .= (is_array($value)) ? $key . ": " . $value[0] . " <" . $value[1] . ">" . PHP_EOL : $key . ": " . $value . PHP_EOL;
+            $headers .= (is_array($value)) ? $key . ": " . $value[0] . " <" . $value[1] . ">" . $this->message->getEol() : $key . ": " . $value . $this->message->getEol();
         }
 
         return $headers;
+    }
+
+    /**
+     * Get email data from file
+     *
+     * @param  string $filename
+     * @throws Exception
+     * @return array
+     */
+    protected function getEmailFromFile($filename)
+    {
+        $contents = file_get_contents($filename);
+        $email = array(
+            'to'      => null,
+            'subject' => null,
+            'headers' => null,
+            'message' => null
+        );
+
+        $headers = substr($contents, 0, strpos($contents, $this->message->getEol() . $this->message->getEol()));
+        $email['message'] = trim(str_replace($headers, '', $contents));
+        $email['headers'] = trim($headers) . $this->message->getEol() . $this->message->getEol();
+
+        if (strpos($email['headers'], 'Subject:') === false) {
+            throw new Exception("Error: There is no subject in the email file '" . $filename . "'.");
+        }
+
+        if (strpos($email['headers'], 'To:') === false) {
+            throw new Exception("Error: There is no recipient in the email file '" . $filename . "'.");
+        }
+
+        $subject = substr($contents, strpos($contents, 'Subject:'));
+        $subject = substr($subject, 0, strpos($subject, $this->message->getEol()));
+        $email['headers'] = str_replace($subject . $this->message->getEol(), '', $email['headers']);
+        $email['subject'] = trim(substr($subject . $this->message->getEol(), (strpos($subject, ':') + 1)));
+
+        $to = substr($contents, strpos($contents, 'To:'));
+        $to = substr($to, 0, strpos($to, $this->message->getEol()));
+        $email['headers'] = str_replace($to . $this->message->getEol(), '', $email['headers']);
+
+        preg_match('/[a-zA-Z0-9\.\-\_+%]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z]{2,4}/', $to, $result);
+
+        if (!isset($result[0])) {
+            throw new Exception("Error: An valid email could not be parsed from the email file '" . $filename . "'.");
+        } else {
+            $email['to'] = $result[0];
+        }
+
+        return $email;
     }
 
 }

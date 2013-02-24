@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,27 +15,26 @@
  */
 namespace Pop\Archive\Adapter;
 
-use Pop\Archive\ArchiveInterface,
-    Pop\File\Dir;
+use Pop\File\Dir;
 
 /**
- * This is the Phar class for the Archive component.
+ * Phar archive adapter class
  *
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Phar implements ArchiveInterface
 {
 
     /**
      * ZipArchive object
-     * @var ZipArchive
+     * @var \ZipArchive
      */
-    public $archive = null;
+    protected $archive = null;
 
     /**
      * Archive path
@@ -55,13 +45,23 @@ class Phar implements ArchiveInterface
     /**
      * Method to instantiate an archive adapter object
      *
-     * @param  Pop\Archive\Archive $archive
-     * @return void
+     * @param  \Pop\Archive\Archive $archive
+     * @return \Pop\Archive\Adapter\Phar
      */
-    public function __construct($archive)
+    public function __construct(\Pop\Archive\Archive $archive)
     {
         $this->path = $archive->getFullpath();
         $this->archive = new \Phar($this->path);
+    }
+
+    /**
+     * Method to return the archive object
+     *
+     * @return mixed
+     */
+    public function archive()
+    {
+        return $this->archive;
     }
 
     /**
@@ -140,14 +140,14 @@ class Phar implements ArchiveInterface
                     }
                 }
             } else {
+                $f = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFilename();
                 if (!$full) {
                     $list[] = substr($f, (stripos($f, '.phar') + 6));
                 } else {
-                    $f = $fileInfo->getPath() . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
                     $list[] = array(
                         'name'  => substr($f, (stripos($f, '.phar') + 6)),
-                        'mtime' => $fileInfo->getMTime(),
-                        'size'  => $fileInfo->getSize()
+                        'mtime' => $file->getMTime(),
+                        'size'  => $file->getSize()
                     );
                 }
             }

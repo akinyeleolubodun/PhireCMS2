@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Payment
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -27,14 +18,14 @@ namespace Pop\Payment\Adapter;
 use Pop\Curl\Curl;
 
 /**
- * This is the TrustCommerce adapter for the Payment component.
+ * TrustCommerce payment adapter class
  *
  * @category   Pop
  * @package    Pop_Payment
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class TrustCommerce extends AbstractAdapter
 {
@@ -72,7 +63,6 @@ class TrustCommerce extends AbstractAdapter
         'checkcvv'         => 'n',
         'avs'              => 'n',
         'transid'          => null,
-        'avs'              => null,
         'fname'            => null,
         'lname'            => null,
         'address1'         => null,
@@ -145,7 +135,7 @@ class TrustCommerce extends AbstractAdapter
      * @param  string  $custId
      * @param  string  $password
      * @param  boolean $test
-     * @return void
+     * @return \Pop\Payment\Adapter\TrustCommerce
      */
     public function __construct($custId, $password, $test = false)
     {
@@ -160,7 +150,7 @@ class TrustCommerce extends AbstractAdapter
      *
      * @param  boolean $verifyPeer
      * @throws Exception
-     * @return Pop\Payment\Adapter\Authorize
+     * @return void
      */
     public function send($verifyPeer = true)
     {

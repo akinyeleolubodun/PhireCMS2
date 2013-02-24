@@ -114,7 +114,7 @@ class Install extends Form
                 'label' => 'System URI:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
                 'required' => true,
                 'attributes' => array('size', 25),
-                'value' => SYSTEM_URI
+                'value' => APP_URI
             ),
             array (
                 'type' => 'text',
@@ -122,7 +122,7 @@ class Install extends Form
                 'label' => 'Content Directory:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(Where the content files are located)</em>',
                 'required' => true,
                 'attributes' => array('size', 25),
-                'value' => CONTENT_DIR
+                'value' => CONTENT_PATH
             ),
             array (
                 'type' => 'select',
@@ -159,10 +159,10 @@ class Install extends Form
 
         if ($_POST) {
             // Check the content directory
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir)) {
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_dir)) {
                 $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory does not exist.');
             } else {
-                $checkDirs = PhireProject::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $this->content_dir, true);
+                $checkDirs = PhireProject::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_dir, true);
                 if (count($checkDirs) > 0) {
                     $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory (or subdirectories) are not writable.');
                 }

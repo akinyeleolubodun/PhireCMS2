@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Http
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Http;
 
 /**
- * This is the Request class for the Http component.
+ * HTTP request class
  *
  * @category   Pop
  * @package    Pop_Http
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Request
 {
@@ -98,6 +89,24 @@ class Request
     protected $post = array();
 
     /**
+     * PUT method vars
+     * @var array
+     */
+    protected $put = array();
+
+    /**
+     * PATCH method vars
+     * @var array
+     */
+    protected $patch = array();
+
+    /**
+     * DELETE method vars
+     * @var array
+     */
+    protected $delete = array();
+
+    /**
      * $_COOKIE vars
      * @var array
      */
@@ -116,13 +125,19 @@ class Request
     protected $env = array();
 
     /**
+     * Headers
+     * @var array
+     */
+    protected $headers = array();
+
+    /**
      * Constructor
      *
      * Instantiate the request object.
      *
      * @param  string $uri
      * @param  string $basePath
-     * @return void
+     * @return \Pop\Http\Request
      */
     public function __construct($uri = null, $basePath = null)
     {
@@ -133,6 +148,31 @@ class Request
         $this->cookie = (isset($_COOKIE)) ? $_COOKIE : array();
         $this->server = (isset($_SERVER)) ? $_SERVER : array();
         $this->env = (isset($_ENV)) ? $_ENV : array();
+
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            if ($this->isPut() || $this->isPatch() || $this->isDelete()) {
+                $this->parseData();
+            }
+        }
+
+        // Get any possible request headers
+        if (function_exists('getallheaders')) {
+            $this->headers = getallheaders();
+        } else {
+            foreach ($_SERVER as $key => $value) {
+                if (substr($key, 0, 5) == 'HTTP_') {
+                    $key = ucfirst(strtolower(str_replace('HTTP_', '', $key)));
+                    if (strpos($key, '_') !== false) {
+                        $ary = explode('_', $key);
+                        foreach ($ary as $k => $v){
+                            $ary[$k] = ucfirst(strtolower($v));
+                        }
+                        $key = implode('-', $ary);
+                    }
+                    $this->headers[$key] = $value;
+                }
+            }
+        }
     }
 
     /**
@@ -146,16 +186,6 @@ class Request
     }
 
     /**
-     * Return whether or not the method is POST
-     *
-     * @return boolean
-     */
-    public function isPost()
-    {
-        return ($this->server['REQUEST_METHOD'] == 'POST');
-    }
-
-    /**
      * Return whether or not the method is GET
      *
      * @return boolean
@@ -163,6 +193,26 @@ class Request
     public function isGet()
     {
         return ($this->server['REQUEST_METHOD'] == 'GET');
+    }
+
+    /**
+     * Return whether or not the method is HEAD
+     *
+     * @return boolean
+     */
+    public function isHead()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'HEAD');
+    }
+
+    /**
+     * Return whether or not the method is POST
+     *
+     * @return boolean
+     */
+    public function isPost()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'POST');
     }
 
     /**
@@ -186,6 +236,46 @@ class Request
     }
 
     /**
+     * Return whether or not the method is TRACE
+     *
+     * @return boolean
+     */
+    public function isTrace()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'TRACE');
+    }
+
+    /**
+     * Return whether or not the method is OPTIONS
+     *
+     * @return boolean
+     */
+    public function isOptions()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'OPTIONS');
+    }
+
+    /**
+     * Return whether or not the method is CONNECT
+     *
+     * @return boolean
+     */
+    public function isConnect()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'CONNECT');
+    }
+
+    /**
+     * Return whether or not the method is PATCH
+     *
+     * @return boolean
+     */
+    public function isPatch()
+    {
+        return ($this->server['REQUEST_METHOD'] == 'PATCH');
+    }
+
+    /**
      * Return whether or not the request is secure
      *
      * @return boolean
@@ -196,13 +286,33 @@ class Request
     }
 
     /**
-     * Get the full request URI
+     * Get the base path
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * Get the request URI
      *
      * @return string
      */
     public function getRequestUri()
     {
         return $this->requestUri;
+    }
+
+    /**
+     * Get the full request URI
+     *
+     * @return string
+     */
+    public function getFullUri()
+    {
+        return $this->basePath . $this->requestUri;
     }
 
     /**
@@ -233,16 +343,6 @@ class Request
     }
 
     /**
-     * Get the base path
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return $this->basePath;
-    }
-
-    /**
      * Get the doc root
      *
      * @return string
@@ -265,10 +365,9 @@ class Request
     /**
      * Get the method
      *
-     * @param  string $key
      * @return string
      */
-    public function getMethod($key = null)
+    public function getMethod()
     {
         return $this->server['REQUEST_METHOD'];
     }
@@ -364,6 +463,51 @@ class Request
     }
 
     /**
+     * Get a value from PUT query data, or the whole array
+     *
+     * @param  string $key
+     * @return string|array
+     */
+    public function getPut($key = null)
+    {
+        if (null === $key) {
+            return $this->put;
+        } else {
+            return (isset($this->put[$key])) ? $this->put[$key] : null;
+        }
+    }
+
+    /**
+     * Get a value from PATCH query data, or the whole array
+     *
+     * @param  string $key
+     * @return string|array
+     */
+    public function getPatch($key = null)
+    {
+        if (null === $key) {
+            return $this->patch;
+        } else {
+            return (isset($this->patch[$key])) ? $this->patch[$key] : null;
+        }
+    }
+
+    /**
+     * Get a value from DELETE query data, or the whole array
+     *
+     * @param  string $key
+     * @return string|array
+     */
+    public function getDelete($key = null)
+    {
+        if (null === $key) {
+            return $this->delete;
+        } else {
+            return (isset($this->delete[$key])) ? $this->delete[$key] : null;
+        }
+    }
+
+    /**
      * Get a value from $_COOKIE, or the whole array
      *
      * @param  string $key
@@ -409,11 +553,32 @@ class Request
     }
 
     /**
+     * Get a value from the request headers
+     *
+     * @param  string $key
+     * @return string
+     */
+    public function getHeader($key)
+    {
+        return (isset($this->headers[$key])) ? $this->headers[$key] : null;
+    }
+
+    /**
+     * Get the request headers
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
      * Set the request URI
      *
      * @param  string $uri
      * @param  string $basePath
-     * @return Pop\Http\Request
+     * @return \Pop\Http\Request
      */
     public function setRequestUri($uri = null, $basePath = null)
     {
@@ -468,7 +633,7 @@ class Request
      * Set the base path
      *
      * @param  string $path
-     * @return Pop\Http\Request
+     * @return \Pop\Http\Request
      */
     public function setBasePath($path = null)
     {
@@ -481,7 +646,7 @@ class Request
      *
      * @param  string $key
      * @param  string $value
-     * @return Pop\Http\Request
+     * @return \Pop\Http\Request
      */
     public function setQuery($key, $value)
     {
@@ -495,13 +660,66 @@ class Request
      *
      * @param  string $key
      * @param  string $value
-     * @return Pop\Http\Request
+     * @return \Pop\Http\Request
      */
     public function setPost($key, $value)
     {
         $this->post[$key] = $value;
         $_POST[$key] = $value;
         return $this;
+    }
+
+    /**
+     * Parse query data
+     *
+     * @return void
+     */
+    protected function parseData()
+    {
+        $input = fopen('php://input', 'r');
+
+        $paramData = array();
+        $pData = null;
+
+        while ($data = fread($input, 1024)) {
+            $pData .= $data;
+        }
+
+        // If the content-type is JSON
+        if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'json') !== false)) {
+            $paramData = json_decode($pData, true);
+        // Else, if the content-type is XML
+        } else if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'xml') !== false)) {
+            $matches = array();
+            preg_match_all('/<!\[cdata\[(.*?)\]\]>/is', $pData, $matches);
+
+            foreach ($matches[0] as $match) {
+                $strip = str_replace(
+                    array('<![CDATA[', ']]>', '<', '>'),
+                    array('', '', '&lt;', '&gt;'),
+                    $match
+                );
+                $pData = str_replace($match, $strip, $pData);
+            }
+            $paramData = json_decode(json_encode((array) simplexml_load_string($pData)), true);
+        // Else, default to a regular URL-encoded string
+        } else {
+            parse_str($pData, $paramData);
+        }
+
+        switch (strtoupper($this->getMethod())) {
+            case 'PUT':
+                $this->put = $paramData;
+                break;
+
+            case 'PATCH':
+                $this->patch = $paramData;
+                break;
+
+            case 'DELETE':
+                $this->delete = $paramData;
+                break;
+        }
     }
 
 }

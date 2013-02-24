@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Dom
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Dom;
 
 /**
- * This is the Dom class for the Dom component.
+ * Dom class
  *
  * @category   Pop
  * @package    Pop_Dom
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Dom extends AbstractDom
 {
@@ -146,9 +137,9 @@ class Dom extends AbstractDom
      *
      * @param  string $doctype
      * @param  string $charset
-     * @param  array|Pop\Dom\Child $childNode
+     * @param  mixed  $childNode
      * @param  string $indent
-     * @return void
+     * @return \Pop\Dom\Dom
      */
     public function __construct($doctype = null, $charset = 'utf-8', $childNode = null, $indent = null)
     {
@@ -195,7 +186,7 @@ class Dom extends AbstractDom
      * Method to set the document type.
      *
      * @param  string $doctype
-     * @return Pop\Dom\Dom
+     * @return \Pop\Dom\Dom
      */
     public function setDoctype($doctype = null)
     {
@@ -229,7 +220,7 @@ class Dom extends AbstractDom
      * Method to set the document charset.
      *
      * @param  string $chr
-     * @return Pop\Dom\Dom
+     * @return \Pop\Dom\Dom
      */
     public function setCharset($chr)
     {
@@ -241,7 +232,7 @@ class Dom extends AbstractDom
      * Method to set the document charset.
      *
      * @param  string $content
-     * @return Pop\Dom\Dom
+     * @return \Pop\Dom\Dom
      */
     public function setContentType($content)
     {
@@ -253,19 +244,22 @@ class Dom extends AbstractDom
      * Method to render the document and its child elements.
      *
      * @param  boolean $ret
-     * @return void
+     * @return mixed
      */
     public function render($ret = false)
     {
+        $this->output = null;
+
+        if (null !== $this->doctype) {
+            $this->output .= str_replace('[{charset}]', $this->charset, Dom::$doctypes[$this->doctype]);
+        }
+
+        foreach ($this->childNodes as $child) {
+            $this->output .= $child->render(true, 0, $this->indent);
+        }
+
         // If the return flag is passed, return output.
         if ($ret) {
-            $this->output = '';
-            if (null !== $this->doctype) {
-                $this->output .= str_replace('[{charset}]', $this->charset, Dom::$doctypes[$this->doctype]);
-            }
-            foreach ($this->childNodes as $child) {
-                $this->output .= $child->render(true, 0, $this->indent);
-            }
             return $this->output;
         // Else, print output.
         } else {
@@ -274,13 +268,19 @@ class Dom extends AbstractDom
                     header("HTTP/1.1 200 OK");
                     header("Content-type: " . $this->contentType);
                 }
-                echo str_replace('[{charset}]', $this->charset, Dom::$doctypes[$this->doctype]);
             }
-
-            foreach ($this->childNodes as $child) {
-                $child->render(false, 0, $this->indent);
-            }
+            echo $this->output;
         }
+    }
+
+    /**
+     * Render Dom object to string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render(true);
     }
 
 }

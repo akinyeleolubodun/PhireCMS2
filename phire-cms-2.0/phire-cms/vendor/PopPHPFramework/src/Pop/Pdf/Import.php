@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Pdf;
 
 /**
- * This is the Import class for the Pdf component.
+ * Pdf import class
  *
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Import
 {
@@ -74,7 +65,7 @@ class Import
      *
      * @param  string $pdf
      * @param  int|string|array $pgs
-     * @return void
+     * @return \Pop\Pdf\Import
      */
     public function __construct($pdf, $pgs = null)
     {
@@ -223,85 +214,85 @@ class Import
      */
     protected function getObjects($data)
     {
-        $matches = array();
-        $obj_start = array();
-
         // Grab object start points.
         preg_match_all('/\d*\s\d*\sobj/', $data, $matches, PREG_OFFSET_CAPTURE);
-        $obj_start = $matches[0];
 
-        // Start parsing through the object data.
-        for ($i = 0; $i < count($obj_start); $i++) {
-            $type = '';
-            $j = $i + 1;
-            $index = substr($obj_start[$i][0], 0, strpos($obj_start[$i][0], ' '));
+        if (isset($matches[0])) {
+            $obj_start = $matches[0];
 
-            if (array_key_exists($j, $obj_start)) {
-                $obj_data = substr($data, $obj_start[$i][1], ($obj_start[$j][1] - $obj_start[$i][1]));
-            } else {
-                $obj_data = substr($data, $obj_start[$i][1], (strrpos($data, 'endobj') - $obj_start[$i][1] + 6));
-            }
+            // Start parsing through the object data.
+            for ($i = 0; $i < count($obj_start); $i++) {
+                $type = '';
+                $j = $i + 1;
+                $index = substr($obj_start[$i][0], 0, strpos($obj_start[$i][0], ' '));
 
-            // Add all relevant objects, striping away any linearized code, hint codes or metadata, as the order and size of the PDF and its objects may change.
-            if ((strpos($obj_data, '/Linearized') === false) && (strpos($obj_data, '/Type/Metadata') === false)) {
-                if ((strpos($obj_data, '/Catalog') !== false) && (strpos($obj_data, '/Pages') !== false)) {
-                    // Strip away any metadata references.
-                    $metadata = substr($obj_data, strpos($obj_data, 'Metadata'));
-                    $metadata = '/' . substr($metadata, 0, strpos($metadata, '/'));
-                    $obj_data = str_replace($metadata, '', $obj_data);
-                    $type = 'root';
-                } else if ((strpos($obj_data, '/Creator') !== false) || (strpos($obj_data, '/Producer') !== false)) {
-                    $type = 'info';
-                } else if ((strpos($obj_data, '/Count') !== false) && (strpos($obj_data, '/Kids') !== false)) {
-                    $kids = substr($obj_data, strpos($obj_data, 'Kids'));
-                    $kids = substr($kids, 0, strpos($kids, ']'));
-                    $kids = str_replace('Kids', '', $kids);
-                    $kids = str_replace('[', '', $kids);
-                    $kids = str_replace(' 0 R', '|', $kids);
-                    $kids = str_replace(' ', '', $kids);
-                    $kids = substr($kids, 0, -1);
-                    $kids_objs = explode('|', $kids);
-                    $this->kids = $kids_objs;
-                    $type = 'parent';
-                } else if ((strpos($obj_data, '/MediaBox') !== false) || (strpos($obj_data, '/Contents') !== false)) {
-                    if (strpos($obj_data, '/Thumb') !== false) {
-                        // Strip away any thumbnail references.
-                        $thumbdata = substr($obj_data, strpos($obj_data, 'Thumb'));
-                        $thumbdata = '/' . substr($thumbdata, 0, strpos($thumbdata, '/'));
-
-                        $thumbindex = substr($thumbdata, strpos($thumbdata, ' '));
-                        $thumbindex = str_replace(' 0 R', '', $thumbindex);
-                        $thumbindex = str_replace(' ', '', $thumbindex);
-                        $this->thumbs[] = $thumbindex;
-
-                        $obj_data = str_replace($thumbdata, '', $obj_data);
-                    }
-                    $type = 'page';
+                if (array_key_exists($j, $obj_start)) {
+                    $obj_data = substr($data, $obj_start[$i][1], ($obj_start[$j][1] - $obj_start[$i][1]));
                 } else {
-                    $type = 'content';
+                    $obj_data = substr($data, $obj_start[$i][1], (strrpos($data, 'endobj') - $obj_start[$i][1] + 6));
                 }
-                $this->objects[$index] = array('type' => $type, 'data' => $obj_data, 'refs' => $this->getRefs($obj_data));
+
+                // Add all relevant objects, striping away any linearized code, hint codes or metadata, as the order and size of the PDF and its objects may change.
+                if ((strpos($obj_data, '/Linearized') === false) && (strpos($obj_data, '/Type/Metadata') === false)) {
+                    if ((strpos($obj_data, '/Catalog') !== false) && (strpos($obj_data, '/Pages') !== false)) {
+                        // Strip away any metadata references.
+                        $metadata = substr($obj_data, strpos($obj_data, 'Metadata'));
+                        $metadata = '/' . substr($metadata, 0, strpos($metadata, '/'));
+                        $obj_data = str_replace($metadata, '', $obj_data);
+                        $type = 'root';
+                    } else if ((strpos($obj_data, '/Creator') !== false) || (strpos($obj_data, '/Producer') !== false)) {
+                        $type = 'info';
+                    } else if ((strpos($obj_data, '/Count') !== false) && (strpos($obj_data, '/Kids') !== false)) {
+                        $kids = substr($obj_data, strpos($obj_data, 'Kids'));
+                        $kids = substr($kids, 0, strpos($kids, ']'));
+                        $kids = str_replace('Kids', '', $kids);
+                        $kids = str_replace('[', '', $kids);
+                        $kids = str_replace(' 0 R', '|', $kids);
+                        $kids = str_replace(' ', '', $kids);
+                        $kids = substr($kids, 0, -1);
+                        $kids_objs = explode('|', $kids);
+                        $this->kids = $kids_objs;
+                        $type = 'parent';
+                    } else if ((strpos($obj_data, '/MediaBox') !== false) || (strpos($obj_data, '/Contents') !== false)) {
+                        if (strpos($obj_data, '/Thumb') !== false) {
+                            // Strip away any thumbnail references.
+                            $thumbdata = substr($obj_data, strpos($obj_data, 'Thumb'));
+                            $thumbdata = '/' . substr($thumbdata, 0, strpos($thumbdata, '/'));
+
+                            $thumbindex = substr($thumbdata, strpos($thumbdata, ' '));
+                            $thumbindex = str_replace(' 0 R', '', $thumbindex);
+                            $thumbindex = str_replace(' ', '', $thumbindex);
+                            $this->thumbs[] = $thumbindex;
+
+                            $obj_data = str_replace($thumbdata, '', $obj_data);
+                        }
+                        $type = 'page';
+                    } else {
+                        $type = 'content';
+                    }
+                    $this->objects[$index] = array('type' => $type, 'data' => $obj_data, 'refs' => $this->getRefs($obj_data));
+                }
             }
-        }
 
-        // Order the page objects correctly.
-        $pageOrder = array();
+            // Order the page objects correctly.
+            $pageOrder = array();
 
-        foreach ($this->objects as $key => $value) {
-            if ($value['type'] == 'page') {
-                $pageOrder[$key] = $value;
-                unset($this->objects[$key]);
+            foreach ($this->objects as $key => $value) {
+                if ($value['type'] == 'page') {
+                    $pageOrder[$key] = $value;
+                    unset($this->objects[$key]);
+                }
             }
-        }
 
-        foreach ($this->kids as $value) {
-            $this->objects[$value] = $pageOrder[$value];
-        }
+            foreach ($this->kids as $value) {
+                $this->objects[$value] = $pageOrder[$value];
+            }
 
-        // Remove any thumbnail objects.
-        if (count($this->thumbs) != 0) {
-            foreach ($this->thumbs as $value) {
-                unset($this->objects[$value]);
+            // Remove any thumbnail objects.
+            if (count($this->thumbs) != 0) {
+                foreach ($this->thumbs as $value) {
+                    unset($this->objects[$value]);
+                }
             }
         }
     }
@@ -340,6 +331,7 @@ class Import
     {
         $objs = array_keys($arr);
         sort($objs);
+        $last = null;
 
         foreach ($objs as $value) {
             $last = $value;
@@ -358,6 +350,7 @@ class Import
     {
         $objs = array_keys($arr);
         rsort($objs);
+        $first = null;
 
         foreach ($objs as $value) {
             $first = $value;

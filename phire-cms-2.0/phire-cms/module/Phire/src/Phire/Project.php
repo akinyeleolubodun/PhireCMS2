@@ -18,14 +18,6 @@ class Project extends P
     public function run()
     {
         parent::run();
-
-        if ($this->router()->controller()->getRequest()->getRequestUri() == '/') {
-            $this->router()->controller()->dispatch();
-        } else if (method_exists($this->router()->controller(), $this->router()->getAction())) {
-            $this->router()->controller()->dispatch($this->router()->getAction());
-        } else if (method_exists($this->router()->controller(), 'error')) {
-            $this->router()->controller()->dispatch('error');
-        }
     }
 
     /**
@@ -36,8 +28,8 @@ class Project extends P
      */
     public static function isInstalled()
     {
-        if (($_SERVER['REQUEST_URI'] != BASE_URI . SYSTEM_URI . '/install') &&
-            ($_SERVER['REQUEST_URI'] != BASE_URI . SYSTEM_URI . '/install/user') &&
+        if (($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install') &&
+            ($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install/user') &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
             throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
         }

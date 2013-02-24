@@ -35,7 +35,7 @@ class Install extends Model
      */
     public function install($form)
     {
-        $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
+        $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
         $config = $cfgFile->read();
 
         $systemUri = html_entity_decode($form->system_uri, ENT_QUOTES, 'UTF-8');
@@ -50,8 +50,8 @@ class Install extends Model
         }
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            touch($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.htphire.sqlite');
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_URI . $contentDir . '/.htphire.sqlite');
+            touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentDir . '/.htphire.sqlite');
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentDir . '/.htphire.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
@@ -67,14 +67,14 @@ class Install extends Model
 
         $dbPrefix = html_entity_decode($form->db_prefix, ENT_QUOTES, 'UTF-8');
 
-        $config = str_replace("define('SYSTEM_URI', '/phire');", "define('SYSTEM_URI', '" . $systemUri . "');", $config);
-        $config = str_replace("define('CONTENT_DIR', '/phire-content');", "define('CONTENT_DIR', '" . $contentDir . "');", $config);
+        $config = str_replace("define('APP_URI', '/phire');", "define('APP_URI', '" . $systemUri . "');", $config);
+        $config = str_replace("define('CONTENT_PATH', '/phire-content');", "define('CONTENT_PATH', '" . $contentDir . "');", $config);
 
         $config = str_replace("define('DB_INTERFACE', '');", "define('DB_INTERFACE', '" . $dbInterface . "');", $config);
         $config = str_replace("define('DB_TYPE', '');", "define('DB_TYPE', '" . $dbType . "');", $config);
         $config = str_replace("define('DB_NAME', '');", "define('DB_NAME', '" . $dbName . "');", $config);
         $config = str_replace("define('DB_USER', '');", "define('DB_USER', '" . $dbUser . "');", $config);
-        $config = str_replace("define('DB_PASSWORD', '');", "define('DB_PASSWORD', '" . $dbPassword . "');", $config);
+        $config = str_replace("define('DB_PASS', '');", "define('DB_PASS', '" . $dbPassword . "');", $config);
         $config = str_replace("define('DB_HOST', '');", "define('DB_HOST', '" . $dbHost . "');", $config);
         $config = str_replace("define('DB_PREFIX', '');", "define('DB_PREFIX', '" . $dbPrefix . "');", $config);
 
@@ -84,7 +84,7 @@ class Install extends Model
         $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
         $sess->system_uri = $systemUri;
 
-        $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_URI . '/config.php');
+        $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
 
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();
@@ -180,7 +180,7 @@ class Install extends Model
                 'email'      => $user->email,
                 'username'   => $user->username,
                 'password'   => $origPassword,
-                'login_link' => 'http://' . $_SERVER['HTTP_HOST'] . BASE_URI . SYSTEM_URI . '/login'
+                'login_link' => 'http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/login'
             );
 
             $mail = new Mail($rcpts, 'Phire CMS: New User for ' . $_SERVER['HTTP_HOST']);

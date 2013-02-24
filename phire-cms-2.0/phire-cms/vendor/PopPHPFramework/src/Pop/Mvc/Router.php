@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Mvc
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,31 +15,40 @@
  */
 namespace Pop\Mvc;
 
-use Pop\Http\Request,
-    Pop\Project\Project;
-
 /**
- * This is the Router class for the Mvc component.
+ * Mvc router class
  *
  * @category   Pop
  * @package    Pop_Mvc
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Router
 {
 
     /**
+     * Project object
+     * @var \Pop\Project\Project
+     */
+    protected $project = null;
+
+    /**
      * Request object
-     * @var Pop\Http\Request
+     * @var \Pop\Http\Request
      */
     protected $request = null;
 
     /**
+     * Current controller class name string
+     * @var string
+     */
+    protected $controllerClass = null;
+
+    /**
      * Current controller object
-     * @var Pop\Mvc\Controller
+     * @var \Pop\Mvc\Controller
      */
     protected $controller = null;
 
@@ -63,24 +63,24 @@ class Router
      *
      * Instantiate the router object
      *
-     * @param array            $controllers
-     * @param Pop\Http\Request $request
-     * @return void
+     * @param  array             $controllers
+     * @param  \Pop\Http\Request $request
+     * @return \Pop\Mvc\Router
      */
-    public function __construct(array $controllers, $request = null)
+    public function __construct(array $controllers, \Pop\Http\Request $request = null)
     {
-        $this->request = (null !== $request) ? $request : new Request();
+        $this->request = (null !== $request) ? $request : new \Pop\Http\Request();
         $this->controllers = $controllers;
     }
 
     /**
      * Create a Pop\Mvc\Router object
      *
-     * @param array            $controllers
-     * @param Pop\Http\Request $request
-     * @return Pop\Mvc\Router
+     * @param  array             $controllers
+     * @param  \Pop\Http\Request $request
+     * @return \Pop\Mvc\Router
      */
-    public static function factory(array $controllers, $request = null)
+    public static function factory(array $controllers, \Pop\Http\Request $request = null)
     {
         return new self($controllers, $request);
     }
@@ -88,8 +88,8 @@ class Router
     /**
      * Add controllers
      *
-     * @param array $controller
-     * @return Pop\Mvc\Router
+     * @param  array $controller
+     * @return \Pop\Mvc\Router
      */
     public function addControllers(array $controller)
     {
@@ -100,9 +100,39 @@ class Router
     }
 
     /**
-     * Get the controller object
+     * Get the project object
      *
-     * @return Pop\Mvc\Controller
+     * @return \Pop\Project\Project
+     */
+    public function project()
+    {
+        return $this->project;
+    }
+
+    /**
+     * Get the request object
+     *
+     * @return \Pop\Http\Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Get the controller class name string
+     *
+     * @return string
+     */
+    public function getControllerClass()
+    {
+        return $this->controllerClass;
+    }
+
+    /**
+     * Get the current controller object
+     *
+     * @return \Pop\Mvc\Controller
      */
     public function controller()
     {
@@ -138,7 +168,7 @@ class Router
     public function getAction()
     {
         $action = null;
-        if (null !== $this->controller) {
+        if ((null !== $this->controller) && (null !== $this->controller->getRequest())) {
             $action = $this->controller->getRequest()->getPath(0);
         }
         return $action;
@@ -147,12 +177,12 @@ class Router
     /**
      * Route to the controller
      *
-     * @param  Project $project
+     * @param  \Pop\Project\Project $project
      * @return void
      */
-    public function route(Project $project)
+    public function route(\Pop\Project\Project $project = null)
     {
-        $ctrlCls = null;
+        $this->project = $project;
 
         // If a non-default route exists
         if (($this->request->getPath(0) != '') && (array_key_exists('/' . $this->request->getPath(0), $this->controllers))) {
@@ -161,22 +191,26 @@ class Router
             // If the route has multiple options
             if (is_array($this->controllers[$route])) {
                 if (($this->request->getPath(1) != '') && (array_key_exists('/' . $this->request->getPath(1), $this->controllers[$route]))) {
-                    $ctrlCls = $this->controllers[$route]['/' . $this->request->getPath(1)];
+                    $this->controllerClass = $this->controllers[$route]['/' . $this->request->getPath(1)];
                 } else if (isset($this->controllers[$route]['/'])){
-                    $ctrlCls = $this->controllers[$route]['/'];
+                    $this->controllerClass = $this->controllers[$route]['/'];
                 }
             // Else, use the defined route
             } else {
-                $ctrlCls = $this->controllers[$route];
+                $this->controllerClass = $this->controllers[$route];
             }
         // Else, use the default route
         } else if (array_key_exists('/', $this->controllers)) {
-            $ctrlCls = $this->controllers['/'];
+            $this->controllerClass = $this->controllers['/'];
         }
 
-        // Create the controller
-        if ((null !== $ctrlCls) && class_exists($ctrlCls)) {
-            $this->controller = new $ctrlCls(null, null, $project);
+        // If found, create the controller object
+        if ((null !== $this->controllerClass) && class_exists($this->controllerClass)) {
+            $this->controller = new $this->controllerClass(null, null, $project);
+            $this->project->getEventManager()->trigger('route', array('router' => $this));
+        // Else, trigger any route error events
+        } else {
+            $this->project->getEventManager()->trigger('route.error', array('router' => $this));
         }
     }
 

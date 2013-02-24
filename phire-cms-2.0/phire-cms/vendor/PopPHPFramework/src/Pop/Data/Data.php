@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Data
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,17 +15,15 @@
  */
 namespace Pop\Data;
 
-use Pop\File\File;
-
 /**
- * This is the Data class for the Data component.
+ * Data class
  *
  * @category   Pop
  * @package    Pop_Data
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Data
 {
@@ -81,7 +70,7 @@ class Data
      * Instantiate the data object.
      *
      * @param  string $data
-     * @return void
+     * @return \Pop\Data\Data
      */
     public function __construct($data)
     {
@@ -93,9 +82,9 @@ class Data
              (stripos($data, '.yml') !== false) ||
              (stripos($data, '.yaml') !== false)) && file_exists($data)) {
 
-            $file = new File($data);
+            $file = new \Pop\File\File($data);
             $this->file = $file->read();
-            $this->type = ($file->getExt() == 'yml') ? 'Yaml' : ucfirst(strtolower($file->getExt()));
+            $this->type = (strtolower($file->getExt()) == 'yml') ? 'Yaml' : ucfirst(strtolower($file->getExt()));
         } else {
             $this->data = $data;
         }
@@ -106,7 +95,7 @@ class Data
      * to facilitate chaining methods together.
      *
      * @param  string $data
-     * @return Pop\Data\Data
+     * @return \Pop\Data\Data
      */
     public static function factory($data)
     {
@@ -167,7 +156,7 @@ class Data
      * Set the table name
      *
      * @param  string $table
-     * @return Pop\Data\Data
+     * @return \Pop\Data\Data
      */
     public function setTable($table)
     {
@@ -179,7 +168,7 @@ class Data
      * Set the identifier quote
      *
      * @param  string $quote
-     * @return Pop\Data\Data
+     * @return \Pop\Data\Data
      */
     public function setIdQuote($quote)
     {
@@ -191,7 +180,7 @@ class Data
      * Set the PMA compatible XML flag
      *
      * @param  boolean $comp
-     * @return Pop\Data\Data
+     * @return \Pop\Data\Data
      */
     public function setPma($comp)
     {
@@ -206,7 +195,7 @@ class Data
      */
     public function parseFile()
     {
-        $class = 'Pop\\Data\\' . $this->type;
+        $class = 'Pop\\Data\\Type\\' . $this->type;
         $this->data = $class::decode($this->file);
         return $this->data;
     }
@@ -227,7 +216,7 @@ class Data
             throw new Exception('That data type is not supported.');
         }
 
-        $class = 'Pop\\Data\\' . ucfirst($to);
+        $class = 'Pop\\Data\\Type\\' . ucfirst($to);
 
         if ($to == 'sql') {
             $this->file = $class::encode($this->data, $this->table, $this->idQuote);
@@ -241,24 +230,26 @@ class Data
     }
 
     /**
-     * Write the data stream to a file
+     * Write the data stream to a file and either save or output it
      *
-     * @param  string $toFile
+     * @param  string  $toFile
+     * @param  boolean $output
+     * @param  boolean $download
      * @throws Exception
-     * @return Pop\Data\Data
+     * @return \Pop\Data\Data
      */
-    public function writeData($toFile)
+    public function writeData($toFile, $output = false, $download = false)
     {
-        $file = new File($toFile);
+        $file = new \Pop\File\File($toFile);
 
-        $to = strtolower($file->getExt());
+        $to = (strtolower($file->getExt()) == 'yml') ? 'yaml' : strtolower($file->getExt());
         $types = array('csv', 'json', 'sql', 'xml', 'yaml');
 
         if (!in_array($to, $types)) {
             throw new Exception('That data type is not supported.');
         }
 
-        $class = 'Pop\\Data\\' . ucfirst($to);
+        $class = 'Pop\\Data\\Type\\' . ucfirst($to);
 
         if ($to == 'sql') {
             $this->file = $class::encode($this->data, $this->table, $this->idQuote);
@@ -268,8 +259,14 @@ class Data
             $this->file = $class::encode($this->data);
         }
 
-        $file->write($this->file)
-             ->save();
+        $file->write($this->file);
+
+        // Output or save file
+        if ($output) {
+            $file->output($download);
+        } else {
+            $file->save();
+        }
 
         return $this;
     }

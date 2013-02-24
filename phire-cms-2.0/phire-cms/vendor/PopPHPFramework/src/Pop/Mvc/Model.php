@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Mvc
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Mvc;
 
 /**
- * This is the Model class for the Mvc component.
+ * Mvc model class
  *
  * @category   Pop
  * @package    Pop_Mvc
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Model
 {
@@ -56,13 +47,25 @@ class Model
      *
      * @param  mixed $data
      * @param  string $name
-     * @return void
+     * @return \Pop\Mvc\Model
      */
     public function __construct($data = null, $name = null)
     {
         if (null !== $data) {
             $this->setModelData($data, $name);
         }
+    }
+
+    /**
+     * Create a Pop\Mvc\Model object
+     *
+     * @param  mixed $data
+     * @param  string $name
+     * @return \Pop\Mvc\Model
+     */
+    public static function factory($data = null, $name = null)
+    {
+        return new self($data, $name);
     }
 
     /**
@@ -126,7 +129,7 @@ class Model
      *
      * @param  string $name
      * @param  mixed $value
-     * @return void
+     * @return mixed
      */
     public function set($name, $value)
     {
@@ -149,7 +152,7 @@ class Model
      *
      * @param  string $name
      * @param  mixed $value
-     * @return void
+     * @return mixed
      */
     public function __set($name, $value)
     {

@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,22 +15,19 @@
  */
 namespace Pop\Project\Install;
 
-use Pop\Code\Generator,
-    Pop\Code\MethodGenerator,
-    Pop\Code\NamespaceGenerator,
-    Pop\Code\PropertyGenerator,
-    Pop\Filter\String,
-    Pop\Locale\Locale;
+use Pop\Code\Generator;
+use Pop\Code\Generator\MethodGenerator;
+use Pop\Code\Generator\NamespaceGenerator;
 
 /**
- * This is the Forms class for the Project Install component.
+ * Form install class
  *
  * @category   Pop
  * @package    Pop_Project
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Forms
 {
@@ -47,12 +35,12 @@ class Forms
     /**
      * Install the form class files
      *
-     * @param Pop\Config $install
+     * @param \Pop\Config $install
      * @return void
      */
     public static function install($install)
     {
-        echo Locale::factory()->__('Creating form class files...') . PHP_EOL;
+        echo \Pop\I18n\I18n::factory()->__('Creating form class files...') . PHP_EOL;
 
         // Create form class folder
         $formDir = $install->project->base . '/module/' . $install->project->name . '/src/' . $install->project->name . '/Form';
@@ -62,13 +50,13 @@ class Forms
 
         $forms = $install->forms->asArray();
         foreach ($forms as $name => $form) {
-            $formName = ucfirst(String::underscoreToCamelcase($name));
+            $formName = ucfirst(\Pop\Filter\String::underscoreToCamelcase($name));
 
             // Define namespace
             $ns = new NamespaceGenerator($install->project->name . '\Form');
             $ns->setUse('Pop\Form\Form')
                ->setUse('Pop\Form\Element')
-               ->setUse('Pop\Validator\Validator');
+               ->setUse('Pop\Validator');
 
             // Create the constructor
             $construct = new MethodGenerator('__construct');

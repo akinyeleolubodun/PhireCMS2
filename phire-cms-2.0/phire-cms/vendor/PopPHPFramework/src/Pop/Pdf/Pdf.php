@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,22 +15,21 @@
  */
 namespace Pop\Pdf;
 
-use Pop\Color\Color,
-    Pop\Color\ColorInterface,
-    Pop\Color\Rgb,
-    Pop\File\File;
+use Pop\Color\Color;
+use Pop\Color\Space\ColorInterface;
+use Pop\Pdf\Object;
 
 /**
- * This is the Pdf class for the Pdf component.
+ * Pdf class
  *
  * @category   Pop
  * @package    Pop_Pdf
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Pdf extends File
+class Pdf extends \Pop\File\File
 {
 
     /**
@@ -206,22 +196,22 @@ class Pdf extends File
      * @param  string $sz
      * @param  int    $w
      * @param  int    $h
-     * @return void
+     * @return \Pop\Pdf\Pdf
      */
     public function __construct($pdf, $sz = null, $w = null, $h = null)
     {
-        $this->fillColor = new Rgb(0, 0, 0);
-        $this->backgroundColor = new Rgb(255, 255, 255);
+        $this->fillColor = new \Pop\Color\Space\Rgb(0, 0, 0);
+        $this->backgroundColor = new \Pop\Color\Space\Rgb(255, 255, 255);
 
         parent::__construct($pdf);
 
-        $this->objects[1] = new Root();
-        $this->objects[2] = new PdfParent();
-        $this->objects[3] = new Info();
+        $this->objects[1] = new Object\Root();
+        $this->objects[2] = new Object\ParentObject();
+        $this->objects[3] = new Object\Info();
 
         // If the PDF file already exists, import it.
         if ($this->size != 0) {
-            $this->importPdf($this->fullpath);
+            $this->import($this->fullpath);
         }
 
         // If page parameters were passed, add a new page.
@@ -235,9 +225,9 @@ class Pdf extends File
      *
      * @param  string           $pdf
      * @param  int|string|array $pg
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function importPdf($pdf, $pg = null)
+    public function import($pdf, $pg = null)
     {
         // Create a new PDF Import object.
         $pdfi = new Import($pdf, $pg);
@@ -252,7 +242,7 @@ class Pdf extends File
         foreach($importedObjs as $key => $value) {
             if ($value['type'] == 'page') {
                 // Add the page object.
-                $this->objects[$key] = new Page($value['data']);
+                $this->objects[$key] = new Object\Page($value['data']);
 
                 // Finalize related page variables and objects.
                 $this->curPage = (null === $this->curPage) ? 0 : ($this->lastIndex($this->pages) + 1);
@@ -260,7 +250,7 @@ class Pdf extends File
                 $this->objects[$this->parent]->count += 1;
             } else {
                 // Else, add the content object.
-                $this->objects[$key] = new Object($value['data']);
+                $this->objects[$key] = new Object\Object($value['data']);
             }
         }
 
@@ -276,8 +266,8 @@ class Pdf extends File
      *
      * @param  string $sz
      * @param  int    $w
-     * @param  int    h
-     * @return Pop\Pdf\Pdf
+     * @param  int    $h
+     * @return \Pop\Pdf\Pdf
      */
     public function addPage($sz = null, $w = null, $h = null)
     {
@@ -286,13 +276,13 @@ class Pdf extends File
         $ci = $this->lastIndex($this->objects) + 2;
 
         // Create the page object.
-        $this->objects[$pi] = new Page(null, $sz, $w, $h, $pi);
+        $this->objects[$pi] = new Object\Page(null, $sz, $w, $h, $pi);
         $this->objects[$pi]->content[] = $ci;
         $this->objects[$pi]->curContent = $ci;
         $this->objects[$pi]->parent = $this->parent;
 
         // Create the content object.
-        $this->objects[$ci] = new Object($ci);
+        $this->objects[$ci] = new Object\Object($ci);
 
         // Finalize related page variables and objects.
         $this->curPage = (null === $this->curPage) ? 0 : ($this->lastIndex($this->pages) + 1);
@@ -308,7 +298,7 @@ class Pdf extends File
      *
      * @param  int $pg
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function copyPage($pg)
     {
@@ -321,14 +311,14 @@ class Pdf extends File
 
         $pi = $this->lastIndex($this->objects) + 1;
         $ci = $this->lastIndex($this->objects) + 2;
-        $this->objects[$pi] = new Page($this->objects[$this->pages[$key]]);
+        $this->objects[$pi] = new Object\Page($this->objects[$this->pages[$key]]);
         $this->objects[$pi]->index = $pi;
 
         // Duplicate the page's content objects.
         $oldContent = $this->objects[$pi]->content;
         unset($this->objects[$pi]->content);
         foreach ($oldContent as $key => $value) {
-            $this->objects[$ci] = new Object((string)$this->objects[$value]);
+            $this->objects[$ci] = new Object\Object((string)$this->objects[$value]);
             $this->objects[$ci]->index = $ci;
             $this->objects[$pi]->content[] = $ci;
             $ci += 1;
@@ -349,7 +339,7 @@ class Pdf extends File
      *
      * @param  int $pg
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function deletePage($pg)
     {
@@ -402,7 +392,7 @@ class Pdf extends File
      *
      * @param  array $pgs
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function orderPages($pgs)
     {
@@ -479,7 +469,7 @@ class Pdf extends File
      * Method to set the compression of the PDF.
      *
      * @param  boolean $comp
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setCompression($comp = false)
     {
@@ -492,7 +482,7 @@ class Pdf extends File
      *
      * @param  int $pg
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setPage($pg)
     {
@@ -511,7 +501,7 @@ class Pdf extends File
      * Method to set the PDF version.
      *
      * @param  string $ver
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setVersion($ver)
     {
@@ -523,7 +513,7 @@ class Pdf extends File
      * Method to set the PDF info title.
      *
      * @param  string $tle
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setTitle($tle)
     {
@@ -535,7 +525,7 @@ class Pdf extends File
      * Method to set the PDF info author.
      *
      * @param  string $auth
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setAuthor($auth)
     {
@@ -547,7 +537,7 @@ class Pdf extends File
      * Method to set the PDF info subject.
      *
      * @param  string $subj
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setSubject($subj)
     {
@@ -559,7 +549,7 @@ class Pdf extends File
      * Method to set the PDF info creation date.
      *
      * @param  string $dt
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setCreateDate($dt)
     {
@@ -571,7 +561,7 @@ class Pdf extends File
      * Method to set the PDF info modification date.
      *
      * @param  string $dt
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setModDate($dt)
     {
@@ -582,8 +572,8 @@ class Pdf extends File
     /**
      * Method to set the background of the document.
      *
-     * @param  ColorInterface $color
-     * @return Pop\Pdf\Pdf
+     * @param  \Pop\Color\Space\ColorInterface $color
+     * @return \Pop\Pdf\Pdf
      */
     public function setBackgroundColor(ColorInterface $color)
     {
@@ -594,8 +584,8 @@ class Pdf extends File
     /**
      * Method to set the fill color of objects and text in the PDF.
      *
-     * @param  ColorInterface $color
-     * @return Pop\Pdf\Pdf
+     * @param  \Pop\Color\Space\ColorInterface $color
+     * @return \Pop\Pdf\Pdf
      */
     public function setFillColor(ColorInterface $color)
     {
@@ -610,8 +600,8 @@ class Pdf extends File
     /**
      * Method to set the stroke color of paths in the PDF.
      *
-     * @param  ColorInterface $color
-     * @return Pop\Pdf\Pdf
+     * @param  \Pop\Color\Space\ColorInterface $color
+     * @return \Pop\Pdf\Pdf
      */
     public function setStrokeColor(ColorInterface $color)
     {
@@ -629,7 +619,7 @@ class Pdf extends File
      * @param  int $w
      * @param  int $dash_len
      * @param  int $dash_gap
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setStrokeWidth($w = null, $dash_len = null, $dash_gap = null)
     {
@@ -667,7 +657,7 @@ class Pdf extends File
      * @param  int $rot  (rotation)
      * @param  int $rend (render flag, 0 - 7)
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function setTextParams($c = 0, $w = 0, $h = 100, $v = 100, $rot = 0, $rend = 0)
     {
@@ -698,7 +688,7 @@ class Pdf extends File
      * @param  string  $font
      * @param  boolean $embedOverride
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function addFont($font, $embedOverride = false)
     {
@@ -736,7 +726,7 @@ class Pdf extends File
 
             // Add the font to the current page's fonts and add the font to _objects array.
             $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->fonts[$font] = "/{$f} {$i} 0 R";
-            $this->objects[$i] = new Object("{$i} 0 obj\n<<\n    /Type /Font\n    /Subtype /Type1\n    /Name /{$f}\n    /BaseFont /{$font}\n    /Encoding /StandardEncoding\n>>\nendobj\n\n");
+            $this->objects[$i] = new Object\Object("{$i} 0 obj\n<<\n    /Type /Font\n    /Subtype /Type1\n    /Name /{$f}\n    /BaseFont /{$font}\n    /Encoding /StandardEncoding\n>>\nendobj\n\n");
 
             $this->lastFontName = $font;
         }
@@ -753,7 +743,7 @@ class Pdf extends File
      * @param  string $str
      * @param  string $font
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function addText($x, $y, $size, $str, $font)
     {
@@ -820,9 +810,9 @@ class Pdf extends File
      * @param  int $y1
      * @param  int $x2
      * @param  int $y2
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addLine($x1, $y1, $x2, $y2)
+    public function drawLine($x1, $y1, $x2, $y2)
     {
         $co_index = $this->getContentObject();
         $this->objects[$co_index]->setStream("\n{$x1} {$y1} m\n{$x2} {$y2} l\nS\n");
@@ -838,9 +828,9 @@ class Pdf extends File
      * @param  int $w
      * @param  int $h
      * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addRectangle($x, $y, $w, $h = null, $fill = true)
+    public function drawRectangle($x, $y, $w, $h = null, $fill = true)
     {
         if (null === $h) {
             $h = $w;
@@ -859,11 +849,11 @@ class Pdf extends File
      * @param  int     $y
      * @param  int     $w
      * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addSquare($x, $y, $w, $fill = true)
+    public function drawSquare($x, $y, $w, $fill = true)
     {
-        $this->addRectangle($x, $y, $w, $w, $fill);
+        $this->drawRectangle($x, $y, $w, $w, $fill);
         return $this;
     }
 
@@ -875,9 +865,9 @@ class Pdf extends File
      * @param  int     $w
      * @param  int     $h
      * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addEllipse($x, $y, $w, $h = null, $fill = true)
+    public function drawEllipse($x, $y, $w, $h = null, $fill = true)
     {
         if (null === $h) {
             $h = $w;
@@ -932,39 +922,11 @@ class Pdf extends File
      * @param  int     $y
      * @param  int     $w
      * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addCircle($x, $y, $w, $fill = true)
+    public function drawCircle($x, $y, $w, $fill = true)
     {
-        $this->addEllipse($x, $y, $w, $w, $fill);
-        return $this;
-    }
-
-    /**
-     * Method to add a polygon to the image.
-     *
-     * @param  array $points
-     * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
-     */
-    public function addPolygon($points, $fill = true)
-    {
-        $i = 1;
-        $polygon = null;
-
-        foreach ($points as $coord) {
-            if ($i == 1) {
-                $polygon .= $coord['x'] . " " . $coord['y'] . " m\n";
-            } else if ($i <= count($points)) {
-                $polygon .= $coord['x'] . " " . $coord['y'] . " l\n";
-            }
-            $i++;
-        }
-        $polygon .= "h\n";
-
-        $co_index = $this->getContentObject();
-        $this->objects[$co_index]->setStream("\n{$polygon}\n" . $this->setStyle($fill) . "\n");
-
+        $this->drawEllipse($x, $y, $w, $w, $fill);
         return $this;
     }
 
@@ -978,9 +940,9 @@ class Pdf extends File
      * @param  int $w
      * @param  int $h
      * @param  boolean $fill
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addArc($x, $y, $start, $end, $w, $h = null, $fill = true)
+    public function drawArc($x, $y, $start, $end, $w, $h = null, $fill = true)
     {
         if (null === $h) {
             $h = $w;
@@ -1086,8 +1048,36 @@ class Pdf extends File
 
         $polyPoints[] = $endPoint;
 
-        $this->addEllipse($x, $y, $w, $h, $fill);
-        $this->addClippingPolygon($polyPoints, true);
+        $this->drawEllipse($x, $y, $w, $h, $fill);
+        $this->drawClippingPolygon($polyPoints, true);
+
+        return $this;
+    }
+
+    /**
+     * Method to add a polygon to the image.
+     *
+     * @param  array $points
+     * @param  boolean $fill
+     * @return \Pop\Pdf\Pdf
+     */
+    public function drawPolygon($points, $fill = true)
+    {
+        $i = 1;
+        $polygon = null;
+
+        foreach ($points as $coord) {
+            if ($i == 1) {
+                $polygon .= $coord['x'] . " " . $coord['y'] . " m\n";
+            } else if ($i <= count($points)) {
+                $polygon .= $coord['x'] . " " . $coord['y'] . " l\n";
+            }
+            $i++;
+        }
+        $polygon .= "h\n";
+
+        $co_index = $this->getContentObject();
+        $this->objects[$co_index]->setStream("\n{$polygon}\n" . $this->setStyle($fill) . "\n");
 
         return $this;
     }
@@ -1096,7 +1086,7 @@ class Pdf extends File
      * Method to open a new graphics state layer within the PDF.
      * Must be used in conjunction with the closeLayer() method.
      *
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function openLayer()
     {
@@ -1110,7 +1100,7 @@ class Pdf extends File
      * Method to close a new graphics state layer within the PDF.
      * Must be used in conjunction with the openLayer() method.
      *
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function closeLayer()
     {
@@ -1127,9 +1117,9 @@ class Pdf extends File
      * @param  int $y
      * @param  int $w
      * @param  int $h
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addClippingRectangle($x, $y, $w, $h = null)
+    public function drawClippingRectangle($x, $y, $w, $h = null)
     {
         $oldFillColor = $this->fillColor;
         $oldStrokeColor = $this->strokeColor;
@@ -1159,11 +1149,11 @@ class Pdf extends File
      * @param  int     $x
      * @param  int     $y
      * @param  int     $w
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addClippingSquare($x, $y, $w)
+    public function drawClippingSquare($x, $y, $w)
     {
-        $this->addClippingRectangle($x, $y, $w, $w);
+        $this->drawClippingRectangle($x, $y, $w, $w);
         return $this;
     }
 
@@ -1174,9 +1164,9 @@ class Pdf extends File
      * @param  int     $y
      * @param  int     $w
      * @param  int     $h
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addClippingEllipse($x, $y, $w, $h = null)
+    public function drawClippingEllipse($x, $y, $w, $h = null)
     {
         $oldFillColor = $this->fillColor;
         $oldStrokeColor = $this->strokeColor;
@@ -1245,11 +1235,11 @@ class Pdf extends File
      * @param  int     $x
      * @param  int     $y
      * @param  int     $w
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addClippingCircle($x, $y, $w)
+    public function drawClippingCircle($x, $y, $w)
     {
-        $this->addClippingEllipse($x, $y, $w, $w);
+        $this->drawClippingEllipse($x, $y, $w, $w);
         return $this;
     }
 
@@ -1257,9 +1247,9 @@ class Pdf extends File
      * Method to add a clipping polygon to the PDF.
      *
      * @param  array $points
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
-    public function addClippingPolygon($points)
+    public function drawClippingPolygon($points)
     {
         $oldFillColor = $this->fillColor;
         $oldStrokeColor = $this->strokeColor;
@@ -1304,7 +1294,7 @@ class Pdf extends File
      * @param  int    $w
      * @param  int    $h
      * @param  string $url
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function addUrl($x, $y, $w, $h, $url)
     {
@@ -1315,7 +1305,7 @@ class Pdf extends File
 
         // Add the annotation index to the current page's annotations and add the annotation to _objects array.
         $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->annots[] = $i;
-        $this->objects[$i] = new Object("{$i} 0 obj\n<<\n    /Type /Annot\n    /Subtype /Link\n    /Rect [{$x} {$y} {$x2} {$y2}]\n    /Border [0 0 0]\n    /A <</S /URI /URI ({$url})>>\n>>\nendobj\n\n");
+        $this->objects[$i] = new Object\Object("{$i} 0 obj\n<<\n    /Type /Annot\n    /Subtype /Link\n    /Rect [{$x} {$y} {$x2} {$y2}]\n    /Border [0 0 0]\n    /A <</S /URI /URI ({$url})>>\n>>\nendobj\n\n");
 
         return $this;
     }
@@ -1332,7 +1322,7 @@ class Pdf extends File
      * @param  int $Z
      * @param  int $dest
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function addLink($x, $y, $w, $h, $X, $Y, $Z, $dest = null)
     {
@@ -1354,7 +1344,7 @@ class Pdf extends File
 
         // Add the annotation index to the current page's annotations and add the annotation to _objects array.
         $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->annots[] = $i;
-        $this->objects[$i] = new Object("{$i} 0 obj\n<<\n    /Type /Annot\n    /Subtype /Link\n    /Rect [{$x} {$y} {$x2} {$y2}]\n    /Border [0 0 0]\n    /Dest [{$d} 0 R /XYZ {$X} {$Y} {$Z}]\n>>\nendobj\n\n");
+        $this->objects[$i] = new Object\Object("{$i} 0 obj\n<<\n    /Type /Annot\n    /Subtype /Link\n    /Rect [{$x} {$y} {$x2} {$y2}]\n    /Border [0 0 0]\n    /Dest [{$d} 0 R /XYZ {$X} {$Y} {$Z}]\n>>\nendobj\n\n");
 
         return $this;
     }
@@ -1368,7 +1358,7 @@ class Pdf extends File
      * @param  mixed   $scl
      * @param  boolean $preserveRes
      * @throws Exception
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function addImage($image, $x, $y, $scl = null, $preserveRes = true)
     {
@@ -1383,7 +1373,7 @@ class Pdf extends File
                 $imgWidth = $this->images[$image]['origW'];
                 $imgHeight = $this->images[$image]['origH'];
             }
-            $this->objects[$i] = new Object($i);
+            $this->objects[$i] = new Object\Object($i);
             $this->objects[$i]->setStream("\nq\n" . $imgWidth . " 0 0 " . $imgHeight. " {$x} {$y} cm\n/I{$co_index} Do\nQ\n");
             $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->content[] = $i;
         } else {
@@ -1433,7 +1423,7 @@ class Pdf extends File
      * @param  string  $to
      * @param  boolean $append
      * @throws Exception
-     * @return void
+     * @return \Pop\Pdf\Pdf
      */
     public function save($to = null, $append = false)
     {
@@ -1447,7 +1437,7 @@ class Pdf extends File
     /**
      * Method to finalize the PDF.
      *
-     * @return Pop\Pdf\Pdf
+     * @return \Pop\Pdf\Pdf
      */
     public function finalize()
     {
@@ -1466,7 +1456,7 @@ class Pdf extends File
         // Loop through the rest of the objects, calculate their size and length for the xref table and add their data to the output.
         foreach ($this->objects as $obj) {
             if ($obj->index != $this->root) {
-                if (($obj instanceof Object) && ($this->compress) && (!$obj->isPalette()) && (!$obj->isCompressed())) {
+                if (($obj instanceof Object\Object) && ($this->compress) && (!$obj->isPalette()) && (!$obj->isCompressed())) {
                     $obj->compress();
                 }
                 $byteLength = $this->calcByteLength($obj);
@@ -1500,7 +1490,7 @@ class Pdf extends File
             $coi = $this->lastIndex($this->objects) + 1;
             $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->content[] = $coi;
             $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->curContent = $coi;
-            $this->objects[$coi] = new Object($coi);
+            $this->objects[$coi] = new Object\Object($coi);
         // Else, set and return the page's current content object index.
         } else {
             $coi = $this->objects[$this->objects[$this->pages[$this->curPage]]->index]->curContent;
@@ -1660,6 +1650,7 @@ class Pdf extends File
      */
     protected function lastIndex(array $arr)
     {
+        $last = null;
         $objs = array_keys($arr);
         sort($objs);
 

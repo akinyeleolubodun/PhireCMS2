@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Cache
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,16 +16,16 @@
 namespace Pop\Cache;
 
 /**
- * This is the Cache class for the Cache component.
+ * Cache class
  *
  * @category   Pop
  * @package    Pop_Cache
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
-class Cache implements CacheInterface
+class Cache
 {
 
     /**
@@ -54,11 +45,11 @@ class Cache implements CacheInterface
      *
      * Instantiate the cache object
      *
-     * @param  CacheInterface $adapter
-     * @param  int            $lifetime
-     * @return void
+     * @param  Adapter\AdapterInterface $adapter
+     * @param  int                      $lifetime
+     * @return \Pop\Cache\Cache
      */
-    public function __construct(CacheInterface $adapter, $lifetime = 0)
+    public function __construct(Adapter\AdapterInterface $adapter, $lifetime = 0)
     {
         $this->lifetime = $lifetime;
         $this->adapter = $adapter;
@@ -68,11 +59,11 @@ class Cache implements CacheInterface
      * Static method to instantiate the cache object and return itself
      * to facilitate chaining methods together.
      *
-     * @param  CacheInterface $adapter
-     * @param  int            $lifetime
-     * @return Pop\Cache\Cache
+     * @param  Adapter\AdapterInterface $adapter
+     * @param  int                      $lifetime
+     * @return \Pop\Cache\Cache
      */
-    public static function factory(CacheInterface $adapter, $lifetime = 0)
+    public static function factory(Adapter\AdapterInterface $adapter, $lifetime = 0)
     {
         return new self($adapter, $lifetime);
     }
@@ -91,7 +82,7 @@ class Cache implements CacheInterface
      * Method to set the cache lifetime.
      *
      * @param  int $time
-     * @return Pop\Cache\Cache
+     * @return \Pop\Cache\Cache
      */
     public function setLifetime($time = 0)
     {
@@ -119,7 +110,7 @@ class Cache implements CacheInterface
      */
     public function save($id, $value, $time = null)
     {
-        if ($this->adapter instanceof Memcached) {
+        if ($this->adapter instanceof Adapter\Memcached) {
             $this->adapter->save($id, $value, $this->lifetime);
         } else {
             $this->adapter->save($id, $value, $time);

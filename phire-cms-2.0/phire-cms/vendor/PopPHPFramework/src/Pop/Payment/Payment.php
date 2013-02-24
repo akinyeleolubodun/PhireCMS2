@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Payment
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -25,14 +16,14 @@
 namespace Pop\Payment;
 
 /**
- * This is the Payment class to normalize different payment transaction APIs.
+ * Payment class
  *
  * @category   Pop
  * @package    Pop_Payment
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Payment
 {
@@ -96,8 +87,8 @@ class Payment
      *
      * Instantiate the payment object
      *
-     * @param Adapter\AbstractAdapter $adapter
-     * @return void
+     * @param  Adapter\AbstractAdapter $adapter
+     * @return \Pop\Payment\Payment
      */
     public function __construct(Adapter\AbstractAdapter $adapter)
     {
@@ -107,7 +98,7 @@ class Payment
     /**
      * Access the adapter
      *
-     * @return Pop\Payment\Adapter\AbstractAdapter
+     * @return \Pop\Payment\Adapter\AbstractAdapter
      */
     public function adapter()
     {
@@ -118,12 +109,12 @@ class Payment
      * Send transaction data
      *
      * @param  boolean $verifyPeer
-     * @return Pop\Payment\Payment
+     * @return \Pop\Payment\Payment
      */
     public function send($verifyPeer = true)
     {
         $this->adapter->set($this->fields);
-        $this->adapter->send();
+        $this->adapter->send($verifyPeer);
     }
 
     /**
@@ -230,7 +221,7 @@ class Payment
     /**
      * Set the shipping data fields to the same as billing data fields
      *
-     * @return Pop\Payment\Payment
+     * @return \Pop\Payment\Payment
      */
     public function shippingSameAsBilling()
     {

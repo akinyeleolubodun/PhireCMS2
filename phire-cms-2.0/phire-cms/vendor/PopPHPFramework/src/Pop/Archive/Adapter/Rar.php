@@ -1,22 +1,13 @@
 <?php
 /**
- * Pop PHP Framework
+ * Pop PHP Framework (http://www.popphp.org/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.TXT.
- * It is also available through the world-wide-web at this URL:
- * http://www.popphp.org/LICENSE.TXT
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to info@popphp.org so we can send you a copy immediately.
- *
+ * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
  */
 
 /**
@@ -24,26 +15,24 @@
  */
 namespace Pop\Archive\Adapter;
 
-use Pop\Archive\ArchiveInterface;
-
 /**
- * This is the Rar class for the Archive component.
+ * Rar archive adapter class
  *
  * @category   Pop
  * @package    Pop_Archive
  * @author     Nick Sagona, III <nick@popphp.org>
- * @copyright  Copyright (c) 2009-2012 Moc 10 Media, LLC. (http://www.moc10media.com)
- * @license    http://www.popphp.org/LICENSE.TXT     New BSD License
- * @version    1.0.2
+ * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
+ * @license    http://www.popphp.org/license     New BSD License
+ * @version    1.2.1
  */
 class Rar implements ArchiveInterface
 {
 
     /**
      * RarArchive object
-     * @var RarArchive
+     * @var \RarArchive
      */
-    public $archive = null;
+    protected $archive = null;
 
     /**
      * Archive path
@@ -60,12 +49,12 @@ class Rar implements ArchiveInterface
     /**
      * Method to instantiate an archive adapter object
      *
-     * @param  Pop\Archive\Archive $archive
-     * @param  string              $password
+     * @param  \Pop\Archive\Archive $archive
+     * @param  string               $password
      * @throws Exception
-     * @return void
+     * @return \Pop\Archive\Adapter\Rar
      */
-    public function __construct($archive, $password = null)
+    public function __construct(\Pop\Archive\Archive $archive, $password = null)
     {
         $this->path = $archive->getFullpath();
         $this->password = $password;
@@ -75,6 +64,16 @@ class Rar implements ArchiveInterface
         } else {
             throw new Exception('Due to licensing restrictions, RAR files cannot be created and can only be decompressed.');
         }
+    }
+
+    /**
+     * Method to return the archive object
+     *
+     * @return mixed
+     */
+    public function archive()
+    {
+        return $this->archive;
     }
 
     /**
