@@ -114,16 +114,16 @@ class Install extends Form
             ),
             array (
                 'type' => 'text',
-                'name' => 'system_uri',
-                'label' => 'System URI:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
+                'name' => 'app_uri',
+                'label' => 'Application URI:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
                 'required' => true,
                 'attributes' => array('size', 25),
                 'value' => APP_URI
             ),
             array (
                 'type' => 'text',
-                'name' => 'content_dir',
-                'label' => 'Content Directory:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(Where the content files are located)</em>',
+                'name' => 'content_path',
+                'label' => 'Content Path:<br /><em style="font-size: 0.75em; color: #666; font-weight: normal;">(Where assets will be located)</em>',
                 'required' => true,
                 'attributes' => array('size', 25),
                 'value' => CONTENT_PATH
@@ -193,7 +193,7 @@ class Install extends Form
                 ));
 
                 if (null != $dbCheck) {
-                    $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter), $dbCheck);
+                    $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, wordwrap($dbCheck, 50, '<br />')));
                 } else {
                     // Check the database version
                     if (strpos($this->db_adapter, 'Sqlite') === false) {

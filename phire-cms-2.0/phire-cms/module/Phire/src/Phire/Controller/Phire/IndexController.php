@@ -105,7 +105,7 @@ class IndexController extends AbstractController
                 } else if ((DB_INTERFACE == '') || (DB_NAME == '')) {
                     $config->set('configWritable', false);
                     $config->set('config', unserialize($this->sess->config));
-                    $config->set('url', BASE_PATH . $this->sess->system_uri . '/install/user');
+                    $config->set('url', BASE_PATH . $this->sess->app_uri . '/install/user');
                     $this->view = View::factory($this->viewPath . '/install.phtml', $config);
                     $this->send();
                 } else {
@@ -143,7 +143,7 @@ class IndexController extends AbstractController
                     );
                     if ($form->isValid()) {
                         $config->install($form);
-                        $url = ($config->configWritable) ? BASE_PATH . $form->system_uri . '/install/user' : BASE_PATH . APP_URI . '/install/user';
+                        $url = ($config->configWritable) ? BASE_PATH . $form->app_uri . '/install/user' : BASE_PATH . APP_URI . '/install/user';
                         Response::redirect($url);
                     } else {
                         $config->set('form', $form);

@@ -38,8 +38,8 @@ class Install extends Model
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
         $config = $cfgFile->read();
 
-        $systemUri = html_entity_decode($form->system_uri, ENT_QUOTES, 'UTF-8');
-        $contentDir = html_entity_decode($form->content_dir, ENT_QUOTES, 'UTF-8');
+        $appUri = html_entity_decode($form->app_uri, ENT_QUOTES, 'UTF-8');
+        $contentPath = html_entity_decode($form->content_path, ENT_QUOTES, 'UTF-8');
 
         if (strpos($form->db_adapter, 'Pdo') !== false) {
             $dbInterface = 'Pdo';
@@ -50,8 +50,8 @@ class Install extends Model
         }
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentDir . '/.htphire.sqlite');
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentDir . '/.htphire.sqlite');
+            touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentPath . '/.htphire.sqlite');
+            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentPath . '/.htphire.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
@@ -67,8 +67,8 @@ class Install extends Model
 
         $dbPrefix = html_entity_decode($form->db_prefix, ENT_QUOTES, 'UTF-8');
 
-        $config = str_replace("define('APP_URI', '/phire');", "define('APP_URI', '" . $systemUri . "');", $config);
-        $config = str_replace("define('CONTENT_PATH', '/phire-content');", "define('CONTENT_PATH', '" . $contentDir . "');", $config);
+        $config = str_replace("define('APP_URI', '/phire');", "define('APP_URI', '" . $appUri . "');", $config);
+        $config = str_replace("define('CONTENT_PATH', '/phire-content');", "define('CONTENT_PATH', '" . $contentPath . "');", $config);
 
         $config = str_replace("define('DB_INTERFACE', '');", "define('DB_INTERFACE', '" . $dbInterface . "');", $config);
         $config = str_replace("define('DB_TYPE', '');", "define('DB_TYPE', '" . $dbType . "');", $config);
@@ -78,11 +78,11 @@ class Install extends Model
         $config = str_replace("define('DB_HOST', '');", "define('DB_HOST', '" . $dbHost . "');", $config);
         $config = str_replace("define('DB_PREFIX', '');", "define('DB_PREFIX', '" . $dbPrefix . "');", $config);
 
-        $config = str_replace("define('POP_DEFAULT_LANG', 'en');", "define('POP_DEFAULT_LANG', '" . $form->language . "');", $config);
+        $config = str_replace("define('POP_LANG', 'en_US');", "define('POP_LANG', '" . $form->language . "');", $config);
 
         $sess = Session::getInstance();
         $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
-        $sess->system_uri = $systemUri;
+        $sess->app_uri = $appUri;
 
         $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
 

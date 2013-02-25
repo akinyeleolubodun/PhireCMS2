@@ -24,7 +24,7 @@ class User extends Form
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
 
-        $access = Table\SysAccess::findAll('level DESC', 'type', 'user');
+        $access = Table\SysAccess::findAll('level DESC', array('type' => 'user'));
         $accessAry = array();
 
         if (isset($access->rows[0])) {
@@ -181,13 +181,13 @@ class User extends Form
             $user = Table\Users::findBy('username', $username);
             if (isset($user->id) && ($this->id != $user->id)) {
                 $this->getElement($usernameField)
-                     ->addValidator(new Validator\NotEqual($username), 'That user already exists.');
+                     ->addValidator(new Validator\NotEqual($username, 'That user already exists.'));
             }
 
             $this->getElement('email2')
-                 ->addValidator(new Validator\Equal($this->email1), 'The emails do not match.');
+                 ->addValidator(new Validator\Equal($this->email1, 'The emails do not match.'));
             $this->getElement('password2')
-                 ->addValidator(new Validator\Equal($this->password1), 'The passwords do not match.');
+                 ->addValidator(new Validator\Equal($this->password1, 'The passwords do not match.'));
         }
 
         return $this;
