@@ -14,7 +14,7 @@ class Feed extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Feed
      */
     public function __construct($data = null, $name = null)
     {

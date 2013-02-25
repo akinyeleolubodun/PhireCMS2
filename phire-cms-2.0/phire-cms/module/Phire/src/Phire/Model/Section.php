@@ -14,7 +14,7 @@ class Section extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Section
      */
     public function __construct($data = null, $name = null)
     {

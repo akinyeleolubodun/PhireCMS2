@@ -14,7 +14,7 @@ class Plugin extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Plugin
      */
     public function __construct($data = null, $name = null)
     {

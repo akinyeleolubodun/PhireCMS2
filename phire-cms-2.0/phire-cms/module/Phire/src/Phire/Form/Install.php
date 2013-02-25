@@ -4,14 +4,13 @@
  */
 namespace Phire\Form;
 
-use Phire\Project as PhireProject,
-    Pop\Db\Db,
-    Pop\Form\Form,
-    Pop\Form\Element,
-    Pop\Locale\Locale,
-    Pop\Project\Install\Dbs,
-    Pop\Validator\Validator,
-    Pop\Version;
+use Pop\Db\Db;
+use Pop\Form\Form;
+use Pop\Form\Element;
+use Pop\I18n\I18n;
+use Pop\Project\Install\Dbs;
+use Pop\Validator;
+use Pop\Version;
 
 class Install extends Form
 {
@@ -39,7 +38,7 @@ class Install extends Form
      * @param  string $method
      * @param  array  $fields
      * @param  string $indent
-     * @return void
+     * @return \Phire\Form\Install
      */
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
@@ -66,7 +65,7 @@ class Install extends Form
                 'name' => 'language',
                 'label' => 'Language:',
                 'required' => true,
-                'value' => Locale::factory()->getLanguages(__DIR__ . '/../../../data/locale'),
+                'value' => I18n::getLanguages(__DIR__ . '/../../../data/i18n'),
                 'marked' => 'en'
             ),
             array (
@@ -151,7 +150,7 @@ class Install extends Form
      * @param array $values
      * @param mixed $filters
      * @param mixed $params
-     * @return Pop\Form\Form
+     * @return \Phire\Form\Install
      */
     public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
@@ -162,7 +161,7 @@ class Install extends Form
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_dir)) {
                 $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory does not exist.');
             } else {
-                $checkDirs = PhireProject::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_dir, true);
+                $checkDirs = \Phire\Project::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_dir, true);
                 if (count($checkDirs) > 0) {
                     $this->getElement('content_dir')->addValidator(new Validator\NotEqual($this->content_dir), 'The content directory (or subdirectories) are not writable.');
                 }
@@ -225,6 +224,8 @@ class Install extends Form
                 error_reporting($oldError);
             }
         }
+
+        return $this;
     }
 
 }

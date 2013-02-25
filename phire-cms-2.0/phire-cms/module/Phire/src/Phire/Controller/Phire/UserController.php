@@ -4,10 +4,9 @@
  */
 namespace Phire\Controller\Phire;
 
-use Phire\Controller\AbstractController,
-    Pop\Http\Response,
-    Pop\Http\Request,
-    Pop\Mvc\View;
+use Phire\Controller\AbstractController;
+use Pop\Http\Response;
+use Pop\Mvc\View;
 
 class UserController extends AbstractController
 {

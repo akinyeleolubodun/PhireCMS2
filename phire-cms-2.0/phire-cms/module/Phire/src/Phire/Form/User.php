@@ -4,10 +4,10 @@
  */
 namespace Phire\Form;
 
-use Phire\Table,
-    Pop\Form\Form,
-    Pop\Form\Element,
-    Pop\Validator\Validator;
+use Phire\Table;
+use Pop\Form\Form;
+use Pop\Form\Element;
+use Pop\Validator;
 
 class User extends Form
 {
@@ -19,7 +19,7 @@ class User extends Form
      * @param  string $method
      * @param  array  $fields
      * @param  string $indent
-     * @return void
+     * @return \Phire\Form\User
      */
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
@@ -38,7 +38,7 @@ class User extends Form
         $this->initFieldsValues = array (
             array (
                 'type' => 'text',
-                'name' => 'fname',
+                'name' => 'first_name',
                 'label' => 'First Name:',
                 'required' => true,
                 'attributes' => array (
@@ -48,7 +48,7 @@ class User extends Form
             ),
             array (
                 'type' => 'text',
-                'name' => 'lname',
+                'name' => 'last_name',
                 'label' => 'Last Name:',
                 'required' => true,
                 'attributes' => array (
@@ -161,7 +161,7 @@ class User extends Form
      * @param array $values
      * @param mixed $filters
      * @param mixed $params
-     * @return Pop\Form\Form
+     * @return \Phire\Form\User
      */
     public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
@@ -189,6 +189,8 @@ class User extends Form
             $this->getElement('password2')
                  ->addValidator(new Validator\Equal($this->password1), 'The passwords do not match.');
         }
+
+        return $this;
     }
 
 }

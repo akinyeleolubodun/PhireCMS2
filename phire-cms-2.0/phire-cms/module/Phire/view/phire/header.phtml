@@ -32,7 +32,7 @@
     <script type="text/javascript">
         var checkConfig = function(url) {
             if (url != location.href) {
-                if (JaxXmlHttp().getRequest(url) == "The config file is not properly configured. Please check the config file or install the system.") {
+                if (JaxXmlHttp().getRequest(url) == "Error: The config file is not properly configured. Please check the config file or install the application.") {
                     alert('Please copy and paste the code into the \'config.php\' file to continue.');
                     return false;
                 } else {

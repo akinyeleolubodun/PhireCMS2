@@ -26,8 +26,7 @@ require_once 'config.php';
 // Check the path and URI constants
 if (!defined('BASE_PATH') || !defined('APP_URI') || !defined('APP_PATH') ||
     !defined('CONTENT_PATH') || !defined('DB_INTERFACE') || !defined('DB_NAME')) {
-    throw \Exception('Error: The config file is not properly configured. Please check the config file or install the system.');
-    //exit(0);
+    throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the application.');
 }
 
 // Require the Autoloader class file

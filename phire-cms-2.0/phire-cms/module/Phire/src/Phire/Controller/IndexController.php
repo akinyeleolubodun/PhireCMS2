@@ -4,9 +4,7 @@
  */
 namespace Phire\Controller;
 
-use Pop\Http\Response,
-    Pop\Http\Request,
-    Pop\Mvc\View;
+use Pop\Mvc\View;
 
 class IndexController extends AbstractController
 {

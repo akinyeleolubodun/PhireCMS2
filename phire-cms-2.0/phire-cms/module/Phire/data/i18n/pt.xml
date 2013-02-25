@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE language [
+        <!ELEMENT language ANY>
+        <!ELEMENT locale ANY>
+        <!ELEMENT text (source,output)>
+        <!ELEMENT source ANY>
+        <!ELEMENT output ANY>
+        <!ATTLIST language
+                src       CDATA    #REQUIRED
+                output    CDATA    #REQUIRED
+                name      CDATA    #REQUIRED
+                native    CDATA    #REQUIRED
+                >
+        <!ATTLIST locale
+                region    CDATA    #REQUIRED
+                name      CDATA    #REQUIRED
+                native    CDATA    #REQUIRED
+                >
+        ]>
+<language src="en" output="pt" name="Portuguese" native="Português">
+    <locale region="PT" name="Portugal" native="Portugal">
+        <text>
+            <source>This field is required.</source>
+            <output>Este campo é obrigatório.</output>
+        </text>
+    </locale>
+</language>

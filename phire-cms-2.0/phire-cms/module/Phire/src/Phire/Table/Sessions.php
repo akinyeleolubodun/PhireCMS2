@@ -4,7 +4,7 @@
  */
 namespace Phire\Table;
 
-use Pop\Record\Record;
+use Pop\Db\Record;
 
 class Sessions extends Record
 {

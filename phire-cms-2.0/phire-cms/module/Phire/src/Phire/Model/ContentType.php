@@ -14,7 +14,7 @@ class ContentType extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\ContentType
      */
     public function __construct($data = null, $name = null)
     {

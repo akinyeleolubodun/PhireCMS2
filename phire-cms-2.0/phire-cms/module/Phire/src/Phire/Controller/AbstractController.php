@@ -4,14 +4,13 @@
  */
 namespace Phire\Controller;
 
-use Phire\Project as PhireProject,
-    Pop\Http\Response,
-    Pop\Http\Request,
-    Pop\Mvc\Controller as C,
-    Pop\Mvc\Model,
-    Pop\Mvc\View,
-    Pop\Project\Project,
-    Pop\Web\Session;
+use Pop\Http\Response;
+use Pop\Http\Request;
+use Pop\Mvc\Controller as C;
+use Pop\Mvc\Model;
+use Pop\Mvc\View;
+use Pop\Project\Project;
+use Pop\Web\Session;
 
 abstract class AbstractController extends C
 {
@@ -33,7 +32,7 @@ abstract class AbstractController extends C
      * @param  Response $response
      * @param  Project  $project
      * @param  string   $viewPath
-     * @return void
+     * @return \Phire\Controller\AbstractController
      */
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
@@ -47,10 +46,8 @@ abstract class AbstractController extends C
                 break;
 
             default:
-                $basePath = BASE_PATH . APP_URI;
-
                 if ($this->calledClass != 'Phire\Controller\Phire\IndexController') {
-                    $uri = str_replace('Phire\\Controller\\Phire\\', '', $this->calledClass);
+                    $uri = str_replace('Phire\Controller\Phire\\', '', $this->calledClass);
                     $uri = '/' . strtolower(str_replace('Controller', '', $uri));
                 } else {
                     $uri = null;
@@ -70,7 +67,7 @@ abstract class AbstractController extends C
             $request = new Request(null, $basePath);
         }
 
-        if (PhireProject::isInstalled()) {
+        if (\Phire\Project::isInstalled()) {
             parent::__construct($request, $response, $project, $viewPath);
             $this->sess = Session::getInstance();
         }
@@ -83,9 +80,8 @@ abstract class AbstractController extends C
      */
     public function error()
     {
-        $this->isError = true;
         $this->view = View::factory($this->viewPath . '/error.phtml');
-        $this->send();
+        $this->send(404);
     }
 
     /**

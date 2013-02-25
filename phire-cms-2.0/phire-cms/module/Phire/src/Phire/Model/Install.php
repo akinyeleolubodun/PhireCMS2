@@ -4,13 +4,13 @@
  */
 namespace Phire\Model;
 
-use Phire\Table,
-    Pop\Db\Db,
-    Pop\File\File,
-    Pop\Mail\Mail,
-    Pop\Mvc\Model,
-    Pop\Project\Install\Dbs,
-    Pop\Web\Session;
+use Phire\Table;
+use Pop\Db\Db;
+use Pop\File\File;
+use Pop\Mail\Mail;
+use Pop\Mvc\Model;
+use Pop\Project\Install\Dbs;
+use Pop\Web\Session;
 
 class Install extends Model
 {
@@ -20,7 +20,7 @@ class Install extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Install
      */
     public function __construct($data = null, $name = null)
     {
@@ -30,7 +30,7 @@ class Install extends Model
     /**
      * Install system
      *
-     * @param Pop\Form\Form $form
+     * @param \Pop\Form\Form $form
      * @return void
      */
     public function install($form)
@@ -142,7 +142,7 @@ class Install extends Model
     /**
      * Install initial user
      *
-     * @param Pop\Form\Form $form
+     * @param \Pop\Form\Form $form
      * @return void
      */
     public function installUser($form)
@@ -161,8 +161,8 @@ class Install extends Model
         $user = new Table\Users(array(
             'username'        => html_entity_decode($form->username, ENT_QUOTES, 'UTF-8'),
             'password'        => $password,
-            'fname'           => html_entity_decode($form->fname, ENT_QUOTES, 'UTF-8'),
-            'lname'           => html_entity_decode($form->lname, ENT_QUOTES, 'UTF-8'),
+            'first_name'      => html_entity_decode($form->first_name, ENT_QUOTES, 'UTF-8'),
+            'last_name'       => html_entity_decode($form->last_name, ENT_QUOTES, 'UTF-8'),
             'email'           => html_entity_decode($form->email1, ENT_QUOTES, 'UTF-8'),
             'allowed_sites'   => implode('|', $form->allowed_sites),
             'access_id'       => $form->access_id,
@@ -176,14 +176,14 @@ class Install extends Model
 
         if (null !== $form->send_creds) {
             $rcpts = array(
-                'name'       => $user->fname . ' ' . $user->lname,
+                'name'       => $user->first_name . ' ' . $user->last_name,
                 'email'      => $user->email,
                 'username'   => $user->username,
                 'password'   => $origPassword,
                 'login_link' => 'http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/login'
             );
 
-            $mail = new Mail($rcpts, 'Phire CMS: New User for ' . $_SERVER['HTTP_HOST']);
+            $mail = new Mail('Phire CMS: New User for ' . $_SERVER['HTTP_HOST'], $rcpts);
             $mail->setHeaders(array(
                 'From'     => array(
                 	'name'  => 'No Reply',

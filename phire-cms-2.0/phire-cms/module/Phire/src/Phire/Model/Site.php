@@ -14,7 +14,7 @@ class Site extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Site
      */
     public function __construct($data = null, $name = null)
     {

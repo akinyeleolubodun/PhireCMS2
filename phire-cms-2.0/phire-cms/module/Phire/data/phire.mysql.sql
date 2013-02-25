@@ -151,8 +151,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]members` (
     `site_id` int(16) NOT NULL,
     `username` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
-    `fname` varchar(255) NOT NULL,
-    `lname` varchar(255) NOT NULL,
+    `first_name` varchar(255) NOT NULL,
+    `last_name` varchar(255) NOT NULL,
     `email` varchar(255) NOT NULL,
     `address` varchar(255) NOT NULL,
     `city` varchar(255) NOT NULL,
@@ -176,8 +176,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]members` (
   INDEX (`site_id`),
   INDEX (`username`),
   INDEX (`email`),
-  INDEX (`fname`),
-  INDEX (`lname`),
+  INDEX (`first_name`),
+  INDEX (`last_name`),
   INDEX (`site_id`, `id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
 
@@ -506,8 +506,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]users` (
   `id` int(16) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `fname` varchar(255) NOT NULL,
-  `lname` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `allowed_sites` varchar(255) NOT NULL,
   `access_id` int(16) NOT NULL,

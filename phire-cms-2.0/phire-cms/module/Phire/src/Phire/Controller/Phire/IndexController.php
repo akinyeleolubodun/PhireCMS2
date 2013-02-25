@@ -4,12 +4,11 @@
  */
 namespace Phire\Controller\Phire;
 
-use Phire\Controller\AbstractController,
-    Phire\Form,
-    Phire\Model,
-    Pop\Http\Response,
-    Pop\Http\Request,
-    Pop\Mvc\View;
+use Phire\Controller\AbstractController;
+use Phire\Form;
+use Phire\Model;
+use Pop\Http\Response;
+use Pop\Mvc\View;
 
 class IndexController extends AbstractController
 {
@@ -90,6 +89,7 @@ class IndexController extends AbstractController
     /**
      * Install method
      *
+     * @throws \Exception
      * @return void
      */
     public function install()

@@ -4,8 +4,8 @@
  */
 namespace Phire;
 
-use Pop\File\Dir,
-    Pop\Project\Project as P;
+use Pop\File\Dir;
+use Pop\Project\Project as P;
 
 class Project extends P
 {
@@ -23,7 +23,7 @@ class Project extends P
     /**
      * Method to check if the system is installed
      *
-     * @throws Exception
+     * @throws \Exception
      * @return boolean
      */
     public static function isInstalled()
@@ -31,7 +31,7 @@ class Project extends P
         if (($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install') &&
             ($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install/user') &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
-            throw new \Exception('The config file is not properly configured. Please check the config file or install the system.');
+            throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the application.');
         }
 
         return true;
@@ -40,6 +40,7 @@ class Project extends P
     /**
      * Determine whether or not the necessary system directories are writable or not.
      *
+     * @param  string $contentDir
      * @param  boolean $msgs
      * @return boolean|array
      */

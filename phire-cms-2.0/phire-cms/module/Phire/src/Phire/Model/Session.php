@@ -14,7 +14,7 @@ class Session extends Model
      *
      * @param  mixed  $data
      * @param  string $name
-     * @return void
+     * @return \Phire\Model\Session
      */
     public function __construct($data = null, $name = null)
     {
