@@ -59,14 +59,19 @@ class Install extends Form
             }
         }
 
+        $langs = I18n::getLanguages(__DIR__ . '/../../../data/i18n');
+        foreach ($langs as $key => $value) {
+            $langs[$key] = substr($value, 0, strpos($value, ' ('));
+        }
+
         $this->initFieldsValues = array (
             array (
                 'type' => 'select',
                 'name' => 'language',
                 'label' => 'Language:',
                 'required' => true,
-                'value' => I18n::getLanguages(__DIR__ . '/../../../data/i18n'),
-                'marked' => 'en'
+                'value' => $langs,
+                'marked' => 'en_US'
             ),
             array (
                 'type' => 'select',
