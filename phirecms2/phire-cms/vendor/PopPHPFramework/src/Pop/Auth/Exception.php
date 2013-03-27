@@ -4,7 +4,7 @@
  *
  * @link       https://github.com/nicksagona/PopPHP
  * @category   Pop
- * @package    Pop_Db
+ * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
@@ -13,13 +13,13 @@
 /**
  * @namespace
  */
-namespace Pop\Db\Sql;
+namespace Pop\Auth;
 
 /**
- * Db SQL exception class
+ * Auth adapter exception class
  *
  * @category   Pop
- * @package    Pop_Db
+ * @package    Pop_Auth
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License

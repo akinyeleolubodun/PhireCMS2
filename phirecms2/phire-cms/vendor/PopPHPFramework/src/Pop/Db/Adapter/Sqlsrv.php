@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Sqlsrv extends AbstractAdapter
 {
@@ -33,6 +33,12 @@ class Sqlsrv extends AbstractAdapter
      * @var string
      */
     protected $database = null;
+
+    /**
+     * SQL statement to prepare
+     * @var string
+     */
+    protected $sql = null;
 
     /**
      * Prepared statement
@@ -55,7 +61,15 @@ class Sqlsrv extends AbstractAdapter
             throw new Exception('Error: The proper database credentials were not passed.');
         }
 
-        $this->connection = sqlsrv_connect($options['host'], array('Database' => $options['database'], 'UID' => $options['username'], 'PWD' => $options['password']));
+        $this->connection = sqlsrv_connect(
+            $options['host'],
+            array(
+                'Database'             => $options['database'],
+                'UID'                  => $options['username'],
+                'PWD'                  => $options['password'],
+                'ReturnDatesAsStrings' => (isset($options['ReturnDatesAsStrings'])) ? $options['ReturnDatesAsStrings'] : true
+            )
+        );
 
         if ($this->connection == false) {
             throw new Exception('Error: Could not connect to database. ' . PHP_EOL . $this->getErrors());
@@ -93,23 +107,41 @@ class Sqlsrv extends AbstractAdapter
     }
 
     /**
+     * Bind parameters to a prepared SQL query.
+     *
+     * @param  array  $params
+     * @param  mixed  $options
+     * @return \Pop\Db\Adapter\Sqlsrv
+     */
+    public function bindParams($params, $options = null)
+    {
+        $bindParams = array();
+        foreach ($params as $dbColumnName => $dbColumnValue) {
+            ${$dbColumnName} = $dbColumnValue;
+            $bindParams[] = &${$dbColumnName};
+        }
+
+        if ((count($bindParams) > 0) && (null !== $options)) {
+            $this->statement = sqlsrv_prepare($this->connection, $this->sql, $bindParams, $options);
+        } else if (count($bindParams) > 0) {
+            $this->statement = sqlsrv_prepare($this->connection, $this->sql, $bindParams);
+        }
+
+        return $this;
+    }
+
+    /**
      * Prepare a SQL query.
      *
      * @param  string $sql
-     * @param  mixed  @params
-     * @param  mixed  @options
      * @return \Pop\Db\Adapter\Sqlsrv
      */
-    public function prepare($sql, $params = null, $options = null)
+    public function prepare($sql)
     {
-        if ((null !== $params) && (null !== $options)) {
-            $this->statement = sqlsrv_prepare($this->connection, $sql, $params, $options);
-        } else if (null !== $params) {
-            $this->statement = sqlsrv_prepare($this->connection, $sql, $params);
-        } else {
+        $this->sql = $sql;
+        if (strpos($this->sql, '?') === false) {
             $this->statement = sqlsrv_prepare($this->connection, $sql);
         }
-
         return $this;
     }
 

@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Pdo extends AbstractAdapter
 {
@@ -276,7 +276,26 @@ class Pdo extends AbstractAdapter
      */
     public function lastId()
     {
-        return $this->connection->lastInsertId();
+        $id = null;
+
+        // If the DB type is PostgreSQL
+        if ($this->dbtype == 'pgsql') {
+            $this->query("SELECT lastval();");
+            if (isset($this->result)) {
+                $insert_row = $this->result->fetch();
+                $id = $insert_row[0];
+            }
+        // Else, if th eDB type is SQLSrv
+        } else if ($this->dbtype == 'sqlsrv') {
+            $this->query('SELECT SCOPE_IDENTITY() as Current_Identity');
+            $row = $this->fetch();
+            $id = (isset($row['Current_Identity'])) ? $row['Current_Identity'] : null;
+        // Else, just
+        } else {
+            $id = $this->connection->lastInsertId();
+        }
+
+        return $id;
     }
 
     /**

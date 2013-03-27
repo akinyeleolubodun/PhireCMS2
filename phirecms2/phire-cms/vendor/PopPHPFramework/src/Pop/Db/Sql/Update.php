@@ -23,7 +23,7 @@ namespace Pop\Db\Sql;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Update extends AbstractSql
 {
@@ -60,7 +60,8 @@ class Update extends AbstractSql
         $set = array();
 
         foreach ($this->columns as $column => $value) {
-            $set[] = $this->sql->quoteId($column) .' = ' . $this->sql->quote($value);
+            $val = (null === $value) ? 'NULL' : $this->sql->quote($value);
+            $set[] = $this->sql->quoteId($column) .' = ' . $val;
         }
 
         $sql .= implode(', ', $set);

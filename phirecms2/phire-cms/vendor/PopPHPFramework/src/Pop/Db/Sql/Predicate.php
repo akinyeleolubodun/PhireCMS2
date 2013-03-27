@@ -23,7 +23,7 @@ namespace Pop\Db\Sql;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Predicate
 {
@@ -355,13 +355,16 @@ class Predicate
                         if (is_array($predicate['values'][$i])) {
                             $vals = $predicate['values'][$i];
                             foreach ($vals as $k => $v) {
-                                $vals[$k] = $this->sql->quote($v);
+                                $vals[$k] = (null === $v) ? 'NULL' : $this->sql->quote($v);
                             }
                             $format = str_replace('%' . ($i + 1), implode(', ', $vals), $format);
                         } else {
-                            $val = ($predicate['values'][$i] instanceof \Pop\Db\Sql) ?
-                                (string)$predicate['values'][$i] :
-                                $this->sql->quote($predicate['values'][$i]);
+                            if ($predicate['values'][$i] instanceof \Pop\Db\Sql) {
+                                $val = (string)$predicate['values'][$i];
+                            } else {
+                                $val = (null === $predicate['values'][$i]) ? 'NULL' :
+                                    $this->sql->quote($predicate['values'][$i]);
+                            }
                             $format = str_replace('%' . ($i + 1), $val, $format);
                         }
                     }

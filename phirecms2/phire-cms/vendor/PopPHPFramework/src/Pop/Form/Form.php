@@ -25,7 +25,7 @@ use Pop\Dom\Child;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Form extends \Pop\Dom\Dom
 {
@@ -522,6 +522,37 @@ class Form extends \Pop\Dom\Dom
         }
 
         return $index;
+    }
+
+    /**
+     * Remove a form element
+     *
+     * @param string $elementName
+     * @return $this
+     */
+    public function removeElement($elementName)
+    {
+        $i = $this->getElementIndex($elementName);
+
+        $newInitValues = array();
+        foreach ($this->initFieldsValues as $key => $field) {
+            if (isset($field['name']) && ($field['name'] == $elementName)) {
+                unset($this->initFieldsValues[$key]);
+            } else {
+                $newInitValues[] = $field;
+            }
+        }
+        $this->initFieldsValues = $newInitValues;
+
+        if (isset($this->fields[$elementName])) {
+            unset($this->fields[$elementName]);
+        }
+
+        if (null !== $i) {
+            $this->form->removeChild($i);
+        }
+
+        return $this;
     }
 
     /**

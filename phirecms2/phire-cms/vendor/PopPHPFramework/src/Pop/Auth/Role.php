@@ -23,7 +23,7 @@ namespace Pop\Auth;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Role
 {
@@ -35,10 +35,22 @@ class Role
     protected $name = null;
 
     /**
-     * Role level value
-     * @var int
+     * Role permissions
+     * @var array
      */
-    protected $level = 0;
+    protected $permissions = array();
+
+    /**
+     * Role children
+     * @var array
+     */
+    protected $children = array();
+
+    /**
+     * Role parent
+     * @var \Pop\Auth\Role
+     */
+    protected $parent = null;
 
     /**
      * Constructor
@@ -46,13 +58,11 @@ class Role
      * Instantiate the role object
      *
      * @param  string $name
-     * @param  int    $level
      * @return \Pop\Auth\Role
      */
-    public function __construct($name, $level)
+    public function __construct($name)
     {
         $this->name = $name;
-        $this->level = (int)$level;
     }
 
     /**
@@ -60,12 +70,11 @@ class Role
      * to facilitate chaining methods together.
      *
      * @param  string $name
-     * @param  int    $level
      * @return \Pop\Auth\Role
      */
-    public static function factory($name, $level)
+    public static function factory($name)
     {
-        return new self($name, $level);
+        return new self($name);
     }
 
     /**
@@ -79,76 +88,86 @@ class Role
     }
 
     /**
-     * Method to get the role level value
-     *
-     * @return int
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * Method to set the role name
+     * Method to add a permission to the role
      *
      * @param  string $name
      * @return \Pop\Auth\Role
      */
-    public function setName($name)
+    public function addPermission($name)
     {
-        $this->name = $name;
+        $this->permissions[$name] = true;
         return $this;
     }
 
     /**
-     * Method to get the role level value
-     *
-     * @param  int $level
-     * @return \Pop\Auth\Role
-     */
-    public function setLevel($level)
-    {
-        $this->level = (int)$level;
-        return $this;
-    }
-
-    /**
-     * Method to compare role object to another role object
-     *
-     * @param Role $role
-     * @return int
-     */
-    public function compare(Role $role)
-    {
-        $value = 0;
-
-        if ($this->level < $role->getLevel()) {
-            $value = -1;
-        } else if ($this->level > $role->getLevel()) {
-            $value = 1;
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get method to get the role value by name
+     * Method to check if a role has a permission
      *
      * @param  string $name
-     * @return int
+     * @return boolean
      */
-    public function __get($name)
+    public function hasPermission($name)
     {
-        $level = 0;
-        if ($name == $this->name) {
-            $level = $this->level;
+        $result = false;
+
+        if (isset($this->permissions[$name])) {
+            $result = true;
+        } else if (null !== $this->parent) {
+            $parent = $this->parent;
+            if ($parent->hasPermission($name)) {
+                $result = true;
+            }
         }
 
-        return $level;
+        return $result;
     }
 
     /**
-     * Method to return the string value of the name of the role..
+     * Method to add a child role
+     *
+     * @param  mixed $role
+     * @return \Pop\Auth\Role
+     */
+    public function addChild($role)
+    {
+        $child = ($role instanceof Role) ? $role : new Role($role);
+        $child->setParent($this);
+        $this->children[] = $child;
+        return $this;
+    }
+
+    /**
+     * Method to set the role parent
+     *
+     * @param  \Pop\Auth\Role $parent
+     * @return \Pop\Auth\Role
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Method to get the role parent
+     *
+     * @return \Pop\Auth\Role
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Method to see if the role has a parent
+     *
+     * @return \Pop\Auth\Role
+     */
+    public function hasParent()
+    {
+        return (null !== $this->parent);
+    }
+
+    /**
+     * Method to return the string value of the name of the role
      *
      * @return string
      */

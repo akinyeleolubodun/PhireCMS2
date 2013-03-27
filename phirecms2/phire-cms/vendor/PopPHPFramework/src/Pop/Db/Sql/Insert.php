@@ -23,7 +23,7 @@ namespace Pop\Db\Sql;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Insert extends AbstractSql
 {
@@ -42,7 +42,7 @@ class Insert extends AbstractSql
 
         foreach ($this->columns as $column => $value) {
             $columns[] = $this->sql->quoteId($column);
-            $values[] = $this->sql->quote($value);
+            $values[] = (null === $value) ? 'NULL' : $this->sql->quote($value);
         }
 
         $sql .= '(' . implode(', ', $columns) . ') VALUES ';

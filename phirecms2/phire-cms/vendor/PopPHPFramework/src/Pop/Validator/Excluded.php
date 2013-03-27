@@ -25,7 +25,7 @@ use Pop\I18n\I18n;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Excluded extends Validator
 {
@@ -66,13 +66,13 @@ class Excluded extends Validator
         // Else, if input check is a string
         } else {
             if (is_array($this->value)) {
-                $this->value = implode('', $this->value);
-            }
-
-            if ((strpos((string)$this->input, (string)$this->value) === false) == $this->condition) {
-                $this->result = true;
+                $this->result = ((!in_array($this->input, $this->value)) != $this->condition) ? false : true;
             } else {
-                $this->result = false;
+                if ((strpos((string)$this->input, (string)$this->value) === false) == $this->condition) {
+                    $this->result = true;
+                } else {
+                    $this->result = false;
+                }
             }
         }
 

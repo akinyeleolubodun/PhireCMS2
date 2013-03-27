@@ -23,7 +23,7 @@ namespace Pop\Auth\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class File implements AdapterInterface
 {
@@ -39,6 +39,12 @@ class File implements AdapterInterface
      * @var array
      */
     protected $users = array();
+
+    /**
+     * User data array
+     * @var array
+     */
+    protected $user = array();
 
     /**
      * Constructor
@@ -65,26 +71,34 @@ class File implements AdapterInterface
      *
      * @param  string $username
      * @param  string $password
-     * @return array
+     * @return int
      */
     public function authenticate($username, $password)
     {
-        $access = null;
-        $user = array('username' => $username);
-
         if (!array_key_exists($username, $this->users)) {
             $result = \Pop\Auth\Auth::USER_NOT_FOUND;
         } else if ($this->users[$username]['password'] != $password) {
             $result = \Pop\Auth\Auth::PASSWORD_INCORRECT;
-        } else if ((strtolower($this->users[$username]['access']) == 'blocked') || (is_numeric($this->users[$username]['access']) && ($this->users[$username]['access'] == 0))) {
+        } else if ((strtolower($this->users[$username]['access']) == 'blocked') ||
+            (null === $this->users[$username]['access']) ||
+            (is_numeric($this->users[$username]['access']) && ($this->users[$username]['access'] == 0))) {
             $result = \Pop\Auth\Auth::USER_IS_BLOCKED;
         } else {
-            $access = $this->users[$username]['access'];
+            $this->user = $this->users[$username];
             $result = \Pop\Auth\Auth::USER_IS_VALID;
-            $user = array_merge($user, $this->users[$username]);
         }
 
-        return array('result' => $result, 'access' => $access, 'user' => $user);
+        return $result;
+    }
+
+    /**
+     * Method to the user data array
+     *
+     * @return array
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
@@ -102,6 +116,7 @@ class File implements AdapterInterface
             $entAry = explode($this->delimiter , $ent);
             if (isset($entAry[0]) && isset($entAry[1])) {
                 $this->users[$entAry[0]] = array(
+                    'username' => $entAry[0],
                     'password' => $entAry[1],
                     'access'   => (isset($entAry[2]) ? $entAry[2] : null)
                 );

@@ -23,10 +23,22 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Pgsql extends AbstractAdapter
 {
+
+    /**
+     * Statement index
+     * @var int
+     */
+    protected static $statementIndex = 0;
+
+    /**
+     * Prepared statement name
+     * @var string
+     */
+    protected $statementName = null;
 
     /**
      * Prepared statement
@@ -89,7 +101,8 @@ class Pgsql extends AbstractAdapter
     public function prepare($sql)
     {
         $this->sql = $sql;
-        $this->statement = pg_prepare($this->connection, 'pop_db_adapter_pgsql_statement', $this->sql);
+        $this->statementName = 'pop_db_adapter_pgsql_statement_' . ++static::$statementIndex;
+        $this->statement = pg_prepare($this->connection, $this->statementName, $this->sql);
         return $this;
     }
 
@@ -139,7 +152,8 @@ class Pgsql extends AbstractAdapter
         }
 
         if ((null !== $this->parameters) && is_array($this->parameters))  {
-            $this->result = pg_execute($this->connection, 'pop_db_adapter_pgsql_statement', $this->parameters);
+            $this->result = pg_execute($this->connection, $this->statementName, $this->parameters);
+            $this->parameters = null;
         } else {
             $this->query($this->sql);
         }

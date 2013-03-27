@@ -23,7 +23,7 @@ namespace Pop\Auth\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Table implements AdapterInterface
 {
@@ -53,6 +53,12 @@ class Table implements AdapterInterface
     protected $accessField = null;
 
     /**
+     * User data array
+     * @var array
+     */
+    protected $user = array();
+
+    /**
      * Constructor
      *
      * Instantiate the DbTable object
@@ -76,7 +82,7 @@ class Table implements AdapterInterface
      *
      * @param  string $username
      * @param  string $password
-     * @return array
+     * @return int
      */
     public function authenticate($username, $password)
     {
@@ -93,16 +99,26 @@ class Table implements AdapterInterface
             $result = \Pop\Auth\Auth::USER_NOT_FOUND;
         } else if ($user->$passwordField != $password) {
             $result = \Pop\Auth\Auth::PASSWORD_INCORRECT;
-            } else if ((null !== $accessField) && ((strtolower($user->$accessField) == 'blocked') || (is_numeric($user->$accessField) && ($user->$accessField == 0)))) {
+            } else if ((null !== $accessField) && ((strtolower($user->$accessField) == 'blocked') ||
+            (null === $user->$accessField) ||
+            (is_numeric($user->$accessField) && ($user->$accessField == 0)))) {
             $result = \Pop\Auth\Auth::USER_IS_BLOCKED;
         } else {
-            if ((null !== $accessField) && (isset($user->$accessField))) {
-                $access = $user->$accessField;
-            }
+            $this->user = $user->getValues();
             $result = \Pop\Auth\Auth::USER_IS_VALID;
         }
 
-        return array('result' => $result, 'access' => $access, 'user' => $user);
+        return $result;
+    }
+
+    /**
+     * Method to the user data array
+     *
+     * @return array
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
 }

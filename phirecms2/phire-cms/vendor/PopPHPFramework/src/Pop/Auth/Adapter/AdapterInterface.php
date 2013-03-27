@@ -23,7 +23,7 @@ namespace Pop\Auth\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 interface AdapterInterface
 {
@@ -36,5 +36,12 @@ interface AdapterInterface
      * @return boolean
      */
     public function authenticate($username, $password);
+
+    /**
+     * Method to the user data array
+     *
+     * @return array
+     */
+    public function getUser();
 
 }

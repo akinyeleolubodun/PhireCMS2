@@ -26,7 +26,7 @@ use Pop\I18n\I18n;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.1
+ * @version    1.2.3
  */
 class Auth
 {
@@ -59,7 +59,7 @@ class Auth
      * Constant for login attempts exceeded result
      * @var int
      */
-    const LOGIN_ATTEMPTS_EXCEEDED = 5;
+    const ATTEMPTS_EXCEEDED = 5;
 
     /**
      * Constant for IP address blocked result
@@ -72,12 +72,6 @@ class Auth
      * @var int
      */
     const IP_NOT_ALLOWED = 7;
-
-    /**
-     * Constant for session expired result
-     * @var int
-     */
-    const SESSION_EXPIRED = 8;
 
     /**
      * Constant to trigger using no encryption
@@ -104,24 +98,6 @@ class Auth
     const ENCRYPT_CRYPT = 3;
 
     /**
-     * Auth user object
-     * @var \Pop\Auth\User
-     */
-    protected $user = null;
-
-    /**
-     * Allowed roles.
-     * @var array
-     */
-    protected $allowedRoles = array();
-
-    /**
-     * Required role for authorization
-     * @var \Pop\Auth\Role
-     */
-    protected $requiredRole = null;
-
-    /**
      * Array of validator objects
      * @var array
      */
@@ -130,8 +106,7 @@ class Auth
         'allowedSubnets' => null,
         'blockedIps'     => null,
         'blockedSubnets' => null,
-        'attempts'       => null,
-        'expiration'     => null
+        'attempts'       => null
     );
 
     /**
@@ -139,18 +114,6 @@ class Auth
      * @var mixed
      */
     protected $adapter = null;
-
-    /**
-     * Session start timestamp
-     * @var int
-     */
-    protected $start = 0;
-
-    /**
-     * Expiration time in minutes
-     * @var int
-     */
-    protected $expiration = 0;
 
     /**
      * Encryption method to use
@@ -198,6 +161,7 @@ class Auth
      * Constructor
      *
      * Instantiate the auth object
+     *
      * @param Adapter\AdapterInterface $adapter
      * @param int                      $encryption
      * @param string                   $salt
@@ -226,44 +190,7 @@ class Auth
     }
 
     /**
-     * Method to add a role
-     *
-     * @param  mixed $role
-     * @return \Pop\Auth\Auth
-     */
-    public function addRoles($role)
-    {
-        if (is_array($role)) {
-            foreach ($role as $r) {
-                if ($r instanceof Role) {
-                    $this->allowedRoles[$r->getName()] = $r;
-                }
-            }
-        } else if ($role instanceof Role) {
-            $this->allowedRoles[$role->getName()] = $role;
-        }
-        return $this;
-    }
-
-    /**
-     * Method to remove a role
-     *
-     * @param  mixed $role
-     * @return \Pop\Auth\Auth
-     */
-    public function removeRole($role)
-    {
-        $roleName = ($role instanceof Role) ? $role->getName() : $role;
-
-        if (array_key_exists($roleName, $this->allowedRoles)) {
-            unset($this->allowedRoles[$roleName]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Method to get the current number of login attempts
+     * Method to get a validator
      *
      * @param  string $name
      * @return mixed
@@ -281,26 +208,6 @@ class Auth
     public function getAttempts()
     {
         return $this->attempts;
-    }
-
-    /**
-     * Method to get the session start
-     *
-     * @return int
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * Method to get the expiration
-     *
-     * @return int
-     */
-    public function getExpiration()
-    {
-        return $this->expiration;
     }
 
     /**
@@ -355,7 +262,7 @@ class Auth
             case self::PASSWORD_INCORRECT:
                 $msg = I18n::factory()->__('The password was incorrect.');
                 break;
-            case self::LOGIN_ATTEMPTS_EXCEEDED:
+            case self::ATTEMPTS_EXCEEDED:
                 $msg = I18n::factory()->__(
                     'The allowed login attempts (%1) have been exceeded.',
                     $this->validators['attempts']->getValue()
@@ -367,50 +274,19 @@ class Auth
             case self::IP_NOT_ALLOWED:
                 $msg = I18n::factory()->__('That IP address is not allowed.');
                 break;
-            case self::SESSION_EXPIRED:
-                $msg = I18n::factory()->__('The session has expired.');
-                break;
         }
 
         return $msg;
     }
 
     /**
-     * Method to get the required role
+     * Method to get the user data array from the adapter
      *
-     * @return \Pop\Auth\Role
-     */
-    public function getRequiredRole()
-    {
-        return $this->requiredRole;
-    }
-
-    /**
-     * Method to get the user
-     *
-     * @return \Pop\Auth\User
+     * @return array
      */
     public function getUser()
     {
-        return $this->user;
-    }
-
-    /**
-     * Method to set the expiration
-     *
-     * @param  int $expiration
-     * @return \Pop\Auth\Auth
-     */
-    public function setExpiration($expiration = 0)
-    {
-        $this->expiration = (int)$expiration;
-        if ($this->expiration == 0) {
-            $this->validators['expiration'] = null;
-        } else {
-            $exp = time() + ($this->expiration * 60);
-            $this->validators['expiration'] = new Validator\LessThan($exp);
-        }
-        return $this;
+        return $this->adapter->getUser();
     }
 
     /**
@@ -442,35 +318,7 @@ class Auth
     }
 
     /**
-     * Method to set the required role
-     *
-     * @param  mixed $role
-     * @param  int   $level
-     * @return \Pop\Auth\Auth
-     */
-    public function setRequiredRole($role = null, $level = 0)
-    {
-        if (null === $role) {
-            $this->requiredRole = null;
-        } else {
-            if ($role instanceof Role) {
-                if (!array_key_exists($role->getName(), $this->allowedRoles)) {
-                    $this->allowedRoles[$role->getName()] = $role;
-                }
-                $this->requiredRole = $role;
-            } else {
-                if (!array_key_exists($role, $this->allowedRoles)) {
-                    $this->allowedRoles[$role] = Role::factory($role, $level);
-                }
-                $this->requiredRole = $this->allowedRoles[$role];
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Method to set the number of login attempts allowed
+     * Method to set the number of attempts allowed
      *
      * @param  int $attempts
      * @return \Pop\Auth\Auth
@@ -486,7 +334,7 @@ class Auth
     }
 
     /**
-     * Method to set the number of login attempts allowed
+     * Method to set the number of attempts allowed
      *
      * @param  int $attempts
      * @return \Pop\Auth\Auth
@@ -592,49 +440,10 @@ class Auth
         $this->processValidators();
 
         if ($this->result == 0) {
-            $this->user = new User($username, $this->encryptPassword($password));
-
-            $result = $this->adapter->authenticate($this->user->getUsername(), $this->user->getPassword());
-            $this->result = $result['result'];
-
-            if ((null !== $result['access']) && isset($this->allowedRoles[$result['access']])) {
-                $this->user->setRole($this->allowedRoles[$result['access']]);
-            }
-
-            if (!is_array($result['user'])) {
-                $this->user->setFields($result['user']->getValues());
-            } else {
-                $this->user->setFields($result['user']);
-            }
+            $this->result = $this->adapter->authenticate($username, $this->encryptPassword($password));
         }
 
         $this->isValid = ($this->result == 1) ? true : false;
-
-        return $this->result;
-    }
-
-    /**
-     * Method to reauthenticate a user
-     *
-     * @return int
-     */
-    public function validate()
-    {
-        $this->result = 0;
-
-        if (isset($_SERVER['REMOTE_ADDR'])) {
-            $this->ip = $_SERVER['REMOTE_ADDR'];
-            $this->subnet = substr($this->ip, 0, strrpos($this->ip, '.'));
-        }
-
-        $this->processValidators(false);
-
-        if (($this->result == 0) && ($this->isValid)) {
-            $this->setExpiration($this->expiration);
-            $this->result = 1;
-        } else {
-            $this->isValid = false;
-        }
 
         return $this->result;
     }
@@ -647,22 +456,6 @@ class Auth
     public function isValid()
     {
         return $this->isValid;
-    }
-
-    /**
-     * Method to determine if the user is authorized
-     *
-     * @return boolean
-     */
-    public function isAuthorized()
-    {
-        if (null === $this->requiredRole) {
-            $result = true;
-        } else {
-            $result = $this->user->isAuthorizedAs($this->requiredRole);
-        }
-
-        return $result;
     }
 
     /**
@@ -680,6 +473,7 @@ class Auth
         }
 
         foreach ($ips as $ip) {
+            $ip = trim($ip);
             if ((Validator\Ipv4::factory()->evaluate($ip)) ||
                 (Validator\Ipv6::factory()->evaluate($ip))) {
                 $validIps[] = $ip;
@@ -704,6 +498,7 @@ class Auth
         }
 
         foreach ($subnets as $subnet) {
+            $subnet = trim($subnet);
             if (Validator\Subnet::factory()->evaluate($subnet)) {
                 $validSubnets[] = $subnet;
             }
@@ -716,6 +511,7 @@ class Auth
      * Method to encrypt the password
      *
      * @param  string $pwd
+     * @throws Exception
      * @return string
      */
     protected function encryptPassword($pwd)
@@ -727,6 +523,9 @@ class Auth
         } else if ($this->encryption == self::ENCRYPT_SHA1) {
             $encrypted = sha1($pwd);
         } else if ($this->encryption == self::ENCRYPT_CRYPT) {
+            if (null === $this->salt) {
+                throw new \Pop\Auth\Exception('Error: The encryption salt was not set.');
+            }
             $encrypted = crypt($pwd, $this->salt);
         }
 
@@ -736,10 +535,9 @@ class Auth
     /**
      * Method to process the validators
      *
-     * @param  boolean $count
      * @return void
      */
-    protected function processValidators($count = true)
+    protected function processValidators()
     {
         foreach ($this->validators as $name => $validator) {
             if (null !== $validator) {
@@ -766,21 +564,14 @@ class Auth
                         break;
                     case 'attempts':
                         if (!$validator->evaluate($this->attempts)) {
-                            $this->result = self::LOGIN_ATTEMPTS_EXCEEDED;
-                        }
-                        break;
-                    case 'expiration':
-                        if (!$validator->evaluate(time())) {
-                            $this->result = self::SESSION_EXPIRED;
+                            $this->result = self::ATTEMPTS_EXCEEDED;
                         }
                         break;
                 }
             }
         }
 
-        if ($count) {
-            $this->attempts++;
-        }
+        $this->attempts++;
     }
 
 }
