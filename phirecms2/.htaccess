@@ -1,3 +1,7 @@
+#
+# Phire CMS 2.0 Apache Rewrite File
+#
+
 RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} -s [OR]

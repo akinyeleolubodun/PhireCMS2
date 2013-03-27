@@ -18,7 +18,7 @@ class Login extends Form
      * @param  string $method
      * @param  array  $fields
      * @param  string $indent
-     * @return \Phire\Form\Login
+     * @return self
      */
     public function __construct($action, $method, array $fields = null, $indent = null)
     {
@@ -28,20 +28,20 @@ class Login extends Form
                 'name' => 'username',
                 'label' => 'Username:',
                 'required' => true,
-                'attributes' => array('size', 40)
+                'attributes' => array ('size', 40)
             ),
             array (
                 'type' => 'password',
                 'name' => 'password',
                 'label' => 'Password:',
                 'required' => true,
-                'attributes' => array('size', 40)
+                'attributes' => array ('size', 40)
             ),
             array (
                 'type' => 'submit',
                 'name' => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'LOGIN'
+                'value' => 'Login'
             )
         );
 

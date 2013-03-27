@@ -1,6 +1,6 @@
 <?php
 /**
- * @namespace 
+ * @namespace
  */
 namespace Phire\Table;
 
