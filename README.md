@@ -18,6 +18,5 @@ The basic requirements for Phire CMS 2.0.0 are as follows:
 * Supported Databases:
     - MySQL 5.0+
     - PostgreSQL 9.0+
-    - Microsoft SQL Server 2008+
     - SQLite 3+
 

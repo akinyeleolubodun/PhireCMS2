@@ -2,6 +2,29 @@
 -- Phire CMS 2.0 MySQL Database
 --
 
+--comments
+--config
+--content
+--content_types
+--events
+--feeds
+--fields
+--field_values
+--pages
+--plugins
+--sections
+--site_404s
+--site_searches
+--sites
+--tags
+--templates
+--themes
+--user_types
+--user_roles
+--user_permissions
+--user_sessions
+--users
+
 --
 -- Table structure for table `comments`
 --
@@ -21,6 +44,37 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]comments` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
 
 --
+-- Table structure for table `config`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]config` (
+  `setting` varchar(255) NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY  (`setting`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+
+--
+-- Dumping data for table `config`
+--
+
+INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
+('system_version', ''),
+('system_docroot', ''),
+('server_os', ''),
+('server_software', ''),
+('db_version', ''),
+('php_version', ''),
+('installed_on', '0000-00-00 00:00:00'),
+('updated_on', '0000-00-00 00:00:00'),
+('table_optimization', '0'),
+('optimization_period', ''),
+('last_optimization', '0000-00-00 00:00:00'),
+('pagination_limit', '25'),
+('pagination_range', '10'),
+('default_editor', 'Source'),
+('default_system_template', '<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{page_title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{page_sub_title}]</h1>\n[{page_content}]\n</body>\n\n</html>');
+
+--
 -- Table structure for table `content_types`
 --
 
@@ -29,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_types` (
   `name` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4001 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4008 ;
 
 --
 -- Dumping data for table `content_types`
@@ -61,8 +115,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `comments` int(1) NOT NULL,
   `feed` int(1) NOT NULL,
   `force_ssl` int(1) NOT NULL,
-  `access_id` int(16) NOT NULL,
-  `content_order` int(16) NOT NULL,
+  `role_id` int(16) NOT NULL,
+  `order` int(16) NOT NULL,
   `live` int(1) NOT NULL,
   `created_on` datetime NOT NULL,
   `expire_on` datetime NOT NULL,
@@ -410,50 +464,6 @@ INSERT INTO `[{prefix}]sys_access` (`id`, `type`, `name`, `level`) VALUES
 (3003, 'user', 'Restricted', 1),
 (3004, 'member', 'Full', 2),
 (3005, 'member', 'Basic', 1);
-
---
--- Table structure for table `sys_config`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]sys_config` (
-  `setting` varchar(255) NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY  (`setting`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
-
---
--- Dumping data for table `sys_config`
---
-
-INSERT INTO `[{prefix}]sys_config` (`setting`, `value`) VALUES
-('system_version', ''),
-('system_docroot', ''),
-('server_os', ''),
-('server_software', ''),
-('db_version', ''),
-('php_version', ''),
-('installed_on', '0000-00-00 00:00:00'),
-('updated_on', '0000-00-00 00:00:00'),
-('force_ssl', '0'),
-('table_optimization', '0'),
-('optimization_period', ''),
-('last_optimization', '0000-00-00 00:00:00'),
-('pagination_limit', '25'),
-('pagination_range', '10'),
-('default_editor', 'Source'),
-('default_system_template', '<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{page_title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{page_sub_title}]</h1>\n[{page_content}]\n</body>\n\n</html>'),
-('notification', ''),
-('notification_email', ''),
-('notification_filter', ''),
-('multiple_sessions', '1'),
-('mobile_access', '1'),
-('email_as_username', '0'),
-('password_encryption', '0'),
-('ip_allowed', ''),
-('ip_blocked', ''),
-('default_access', '0'),
-('login_attempts', '0'),
-('session_expiration', '1800');
 
 --
 -- Table structure for table `tags`

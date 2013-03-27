@@ -3,8 +3,9 @@
  * Path and URI Configuration Settings
  */
 
-// Define the base path, the folder in which the application is located
-define('BASE_PATH', str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__)));
+// Define the base path
+$basePath = str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__));
+define('BASE_PATH', (($basePath != '') ? $basePath : null));
 
 // Define the content path, where the application assets are stored
 define('CONTENT_PATH', '/phire-content');
@@ -20,11 +21,11 @@ define('APP_URI', '/phire');
  */
 
 // Define the database interface
-// 'Mysql', 'Mysqli', 'Sqlsrv', 'Pgsql', 'Sqlite' or 'Pdo'
+// 'Mysql', 'Mysqli', 'Pgsql', 'Sqlite' or 'Pdo'
 define('DB_INTERFACE', '');
 
 // Define the database type (for Pdo only)
-// 'mysql', 'sqlsrv', 'pgsql' or 'sqlite'
+// 'mysql', 'pgsql' or 'sqlite'
 define('DB_TYPE', '');
 
 // Define the database name
