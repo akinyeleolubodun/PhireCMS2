@@ -47,54 +47,57 @@ class IndexController extends C
      */
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
-        // Get user type from called class
-        $class = get_called_class();
-        $class = substr($class, (strpos($class, 'Controller\\') + 11));
+        if (\Phire\Project::isInstalled()) {
+            // Get user type from called class
+            $class = get_called_class();
+            $class = substr($class, (strpos($class, 'Controller\\') + 11));
 
-        if (strpos($class, '\\') !== false) {
-            $type = substr($class, 0, strpos($class, '\\'));
-        } else if (strpos($class, 'Controller') !== false) {
-            $type = substr($class, 0, strpos($class, 'Controller'));
-        } else {
-            $type = 'User';
-        }
-
-        if (null === $viewPath) {
-            $view = ($type != 'User') ? strtolower($type) : 'user';
-            $viewPath = __DIR__ . '/../../../../view/' . $view;
-        }
-
-        if (null === $request) {
-            $basePath = ($type != 'User') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
-            $request = new Request(null, $basePath);
-        }
-
-        // Create the session object and type property
-        $this->sess = Session::getInstance();
-        $this->type = Table\UserTypes::findBy(array('type' => $type));
-
-        if (($this->type->force_ssl) && (!$request->isSecure())) {
-            Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $request->getFullUri());
-        } else {
-            parent::__construct($request, $response, $project, $viewPath);
-        }
-
-        // Set the roles for this user type in the Acl object
-        $perms = Table\UserRoles::getAllRoles($this->type->id);
-        if (count($perms['roles']) > 0) {
-            foreach ($perms['roles'] as $role) {
-                $this->project->getService('acl')->addRole($role);
+            if (strpos($class, '\\') !== false) {
+                $type = substr($class, 0, strpos($class, '\\'));
+            } else if (strpos($class, 'Controller') !== false) {
+                $type = substr($class, 0, strpos($class, 'Controller'));
+            } else {
+                $type = 'User';
             }
-        }
-        if (count($perms['resources']) > 0) {
-            foreach ($perms['resources'] as $role => $perm) {
-                if (count($perm) > 0) {
-                    foreach ($perm as $resource => $p) {
-                        $this->project->getService('acl')->addResource($resource);
-                        $this->project->getService('acl')->allow($role, $resource, ((count($p) > 0) ? $p : null));
+
+            if (null === $viewPath) {
+                $view = ($type != 'User') ? strtolower($type) : 'user';
+                $viewPath = __DIR__ . '/../../../../view/' . $view;
+            }
+
+            if (null === $request) {
+                $basePath = ($type != 'User') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
+                $request = new Request(null, $basePath);
+            }
+
+            // Create the session object and type property
+            $this->sess = Session::getInstance();
+            $this->type = Table\UserTypes::findBy(array('type' => $type));
+
+            if (($this->type->force_ssl) && (!$request->isSecure())) {
+                Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $request->getFullUri());
+            } else {
+                parent::__construct($request, $response, $project, $viewPath);
+            }
+
+            // Set the roles for this user type in the Acl object
+            $perms = Table\UserRoles::getAllRoles($this->type->id);
+            if (count($perms['roles']) > 0) {
+                foreach ($perms['roles'] as $role) {
+                    $this->project->getService('acl')->addRole($role);
+                }
+            }
+
+            if (count($perms['resources']) > 0) {
+                foreach ($perms['resources'] as $role => $perm) {
+                    if (count($perm) > 0) {
+                        foreach ($perm as $resource => $p) {
+                            $this->project->getService('acl')->addResource($resource);
+                            $this->project->getService('acl')->allow($role, $resource, ((count($p) > 0) ? $p : null));
+                        }
+                    } else {
+                        $this->project->getService('acl')->allow($role);
                     }
-                } else {
-                    $this->project->getService('acl')->allow($role);
                 }
             }
         }
@@ -612,7 +615,7 @@ class IndexController extends C
                 $auth = ($this->sess->user->global) ? true : false;
             // Else, authorize the user role
             } else if ($this->sess->user->role_id != 0) {
-                $role = Table\Roles::getRole($this->sess->user->role_id);
+                $role = Table\UserRoles::getRole($this->sess->user->role_id);
                 if ((null !== $resource) && (!$this->project->getService('acl')->hasResource($resource))) {
                     $this->project->getService('acl')->addResource($resource);
                 }

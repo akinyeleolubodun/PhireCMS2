@@ -23,6 +23,7 @@ class Project extends P
         $this->router->addControllers(array(
             APP_URI  => array(
                 '/'         => 'Phire\Controller\User\IndexController',
+                '/install'  => 'Phire\Controller\User\InstallController',
                 '/roles'    => 'Phire\Controller\User\RolesController',
                 '/sessions' => 'Phire\Controller\User\SessionsController',
                 '/types'    => 'Phire\Controller\User\TypesController',
@@ -30,14 +31,16 @@ class Project extends P
             )
         ));
 
-        // Get any other user types and declare their URI / Controller mapping
-        $types = \Phire\Table\UserTypes::findAll();
+        if ((DB_INTERFACE != '') || (DB_NAME != '')) {
+            // Get any other user types and declare their URI / Controller mapping
+            $types = \Phire\Table\UserTypes::findAll();
 
-        foreach ($types->rows as $type) {
-            if (($type->type != 'User')) {
-                $this->router->addControllers(array(
-                    '/' . strtolower($type->type) => 'Phire\Controller\\' . $type->type . '\IndexController'
-                ));
+            foreach ($types->rows as $type) {
+                if (($type->type != 'User')) {
+                    $this->router->addControllers(array(
+                        '/' . strtolower($type->type) => 'Phire\Controller\\' . $type->type . '\IndexController'
+                    ));
+                }
             }
         }
 
@@ -47,15 +50,19 @@ class Project extends P
     /**
      * Method to check if the system is installed
      *
+     * @param  boolean $suppress
      * @throws \Exception
      * @return boolean
      */
-    public static function isInstalled()
+    public static function isInstalled($suppress = false)
     {
-        if (($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install') &&
-            ($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/install/user') &&
+        if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
-            throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the application.');
+                if (!$suppress) {
+                    throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the application.');
+                } else {
+                    return false;
+                }
         }
 
         return true;

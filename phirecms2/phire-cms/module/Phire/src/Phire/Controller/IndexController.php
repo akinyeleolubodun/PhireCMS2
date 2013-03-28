@@ -33,7 +33,9 @@ class IndexController extends C
             $request = new Request(null, BASE_PATH);
         }
 
-        parent::__construct($request, $response, $project, $viewPath);
+        if (\Phire\Project::isInstalled()) {
+            parent::__construct($request, $response, $project, $viewPath);
+        }
     }
 
     /**
