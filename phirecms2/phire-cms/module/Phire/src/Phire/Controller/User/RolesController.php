@@ -176,7 +176,7 @@ class RolesController extends IndexController
                 $post = $this->request->getPost();
                 if (isset($post['remove_roles'])) {
                     foreach ($post['remove_roles'] as $id) {
-                        $role = Table\Roles::findById($id);
+                        $role = Table\UserRoles::findById($id);
                         if (isset($role->id)) {
                             $role->delete();
                         }

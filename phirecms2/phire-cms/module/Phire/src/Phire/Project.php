@@ -31,7 +31,7 @@ class Project extends P
         ));
 
         // Get any other user types and declare their URI / Controller mapping
-        $types = \Phire\Table\Types::findAll();
+        $types = \Phire\Table\UserTypes::findAll();
 
         foreach ($types->rows as $type) {
             if (($type->type != 'User')) {

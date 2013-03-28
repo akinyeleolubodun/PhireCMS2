@@ -15,11 +15,11 @@ class Profile extends Form
     /**
      * Constructor method to instantiate the form object
      *
-     * @param  string               $action
-     * @param  string               $method
-     * @param  array                $fields
-     * @param  string               $indent
-     * @param  \Phire\Table\Types $type
+     * @param  string                 $action
+     * @param  string                 $method
+     * @param  array                  $fields
+     * @param  string                 $indent
+     * @param  \Phire\Table\UserTypes $type
      * @return self
      */
     public function __construct($action, $method, array $fields = null, $indent = null, $type = null)

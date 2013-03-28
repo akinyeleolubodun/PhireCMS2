@@ -26,7 +26,7 @@ class User extends Form
     {
         if ($tid == 0) {
             $typesAry = array();
-            $types = Table\Types::findAll('id ASC');
+            $types = Table\UserTypes::findAll('id ASC');
             foreach ($types->rows as $type) {
                 $typesAry[$type->id] = $type->type;
             }
@@ -47,11 +47,11 @@ class User extends Form
             );
         } else {
             $yesNo = array('1' => 'Yes', '0' => 'No');
-            $type = Table\Types::findById($tid);
+            $type = Table\UserTypes::findById($tid);
             $rolesAry = array('0' => '(Blocked)');
 
             if ($tid != 0) {
-                $roles = Table\Roles::findBy(array('type_id' => $tid), 'id ASC');
+                $roles = Table\UserRoles::findBy(array('type_id' => $tid), 'id ASC');
                 foreach ($roles->rows as $role) {
                     $rolesAry[$role->id] = $role->name;
                 }

@@ -5,8 +5,8 @@
 namespace Phire\Model;
 
 use Pop\Filter\String;
-use Phire\Table\Roles;
-use Phire\Table\Types;
+use Phire\Table\UserRoles;
+use Phire\Table\UserTypes;
 use Phire\Table\Users;
 
 class Type extends \Pop\Mvc\Model
@@ -27,7 +27,7 @@ class Type extends \Pop\Mvc\Model
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;
-            $this->data['role'] = Roles::getRole($sess->user->role_id);
+            $this->data['role'] = UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
         }
     }
@@ -39,7 +39,7 @@ class Type extends \Pop\Mvc\Model
      */
     public function getAll()
     {
-        $types = Types::findAll('id ASC');
+        $types = UserTypes::findAll('id ASC');
         $this->data['types'] = $types->rows;
     }
 
@@ -51,7 +51,7 @@ class Type extends \Pop\Mvc\Model
      */
     public function getById($id)
     {
-        $type = Types::findById($id);
+        $type = UserTypes::findById($id);
         $this->data = array_merge($this->data, $type->getValues());
     }
 
@@ -72,7 +72,7 @@ class Type extends \Pop\Mvc\Model
         unset($fields['id']);
         unset($fields['submit']);
 
-        $type = new Types($fields);
+        $type = new UserTypes($fields);
         $type->save();
     }
 
@@ -92,7 +92,7 @@ class Type extends \Pop\Mvc\Model
 
         unset($fields['submit']);
 
-        $type = Types::findById($form->id);
+        $type = UserTypes::findById($form->id);
 
         // If the password encryption changed
         if ($type->password_encryption != $fields['password_encryption']) {

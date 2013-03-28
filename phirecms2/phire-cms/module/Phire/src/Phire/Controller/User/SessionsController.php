@@ -73,7 +73,7 @@ class SessionsController extends IndexController
                 $post = $this->request->getPost();
                 if (isset($post['remove_sessions'])) {
                     foreach ($post['remove_sessions'] as $id) {
-                        $session = Table\Sessions::findById($id);
+                        $session = Table\UserSessions::findById($id);
                         if (isset($session->id)) {
                             $session->delete();
                         }

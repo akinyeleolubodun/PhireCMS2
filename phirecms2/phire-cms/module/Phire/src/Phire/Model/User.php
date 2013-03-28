@@ -29,7 +29,7 @@ class User extends \Pop\Mvc\Model
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;
-            $this->data['role'] = Table\Roles::getRole($sess->user->role_id);
+            $this->data['role'] = Table\UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
         }
     }
@@ -37,9 +37,9 @@ class User extends \Pop\Mvc\Model
     /**
      * Login method
      *
-     * @param string               $username
-     * @param \Phire\Table\Types $type
-     * @param boolean              $success
+     * @param string                 $username
+     * @param \Phire\Table\UserTypes $type
+     * @param boolean                $success
      * @return void
      */
     public function login($username, $type, $success = true)
@@ -51,7 +51,7 @@ class User extends \Pop\Mvc\Model
         if (($success) && isset($user->id)) {
             // Create and save new session database entry
             if ($type->track_sessions) {
-                $session = new Table\Sessions(array(
+                $session = new Table\UserSessions(array(
                     'user_id' => $user->id,
                     'ip'      => $_SERVER['REMOTE_ADDR'],
                     'ua'      => $_SERVER['HTTP_USER_AGENT'],
@@ -64,8 +64,8 @@ class User extends \Pop\Mvc\Model
                 $sessionId = null;
             }
 
-            $type = Table\Types::findById($user->type_id);
-            $role = Table\Roles::findById($user->role_id);
+            $type = Table\UserTypes::findById($user->type_id);
+            $role = Table\UserRoles::findById($user->role_id);
 
             // Create new session object
             $sess->user = new \ArrayObject(
@@ -126,10 +126,10 @@ class User extends \Pop\Mvc\Model
             DB_PREFIX . 'users.username',
             DB_PREFIX . 'users.last_login',
             DB_PREFIX . 'users.last_ip',
-            DB_PREFIX . 'types.type',
-            DB_PREFIX . 'roles.name'
-        ))->join(DB_PREFIX . 'types', array('type_id', 'id'), 'LEFT JOIN')
-          ->join(DB_PREFIX . 'roles', array('role_id', 'id'), 'LEFT JOIN')
+            DB_PREFIX . 'user_types.type',
+            DB_PREFIX . 'user_roles.name'
+        ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
+          ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
           ->orderBy(DB_PREFIX . 'users.id', 'ASC');
 
         $users = Table\Users::execute($sql->render(true));
@@ -175,7 +175,7 @@ class User extends \Pop\Mvc\Model
 
         $password = $fields['password1'];
 
-        $type = Table\Types::findById($fields['type_id']);
+        $type = Table\UserTypes::findById($fields['type_id']);
         if (isset($type->id)) {
             switch ($type->password_encryption) {
                 case 3:
@@ -203,7 +203,7 @@ class User extends \Pop\Mvc\Model
             if ($type->approval) {
                 $fields['role_id'] = null;
             } else {
-                $roles = Table\Roles::findBy(array('type_id' => $fields['type_id']), 'value ASC');
+                $roles = Table\UserRoles::findBy(array('type_id' => $fields['type_id']), 'value ASC');
                 $fields['role_id'] = (isset($roles->rows[0])) ? $roles->rows[0]->id : null;
             }
         }
@@ -262,7 +262,7 @@ class User extends \Pop\Mvc\Model
         if ($fields['password1'] != '') {
             $password = $fields['password1'];
 
-            $type = Table\Types::findById($fields['type_id']);
+            $type = Table\UserTypes::findById($fields['type_id']);
             if (isset($type->id)) {
                 switch ($type->password_encryption) {
                     case 3:
@@ -340,7 +340,7 @@ class User extends \Pop\Mvc\Model
 
         if ($this->type_id != $form->type_id) {
             $user = Table\Users::findById($this->id);
-            $type = Table\Types::findById($form->type_id);
+            $type = Table\UserTypes::findById($form->type_id);
 
             if (isset($user->id) && isset($type->id)) {
                 if ($type->email_as_username) {
@@ -372,8 +372,8 @@ class User extends \Pop\Mvc\Model
     /**
      * Send verification email to a user
      *
-     * @param \Phire\Table\Users $user
-     * @param \Phire\Table\Types $type
+     * @param \Phire\Table\Users     $user
+     * @param \Phire\Table\UserTypes $type
      * @return void
      */
     public function sendVerification(\Phire\Table\Users $user, $type)
@@ -421,7 +421,7 @@ class User extends \Pop\Mvc\Model
         $user = Table\Users::findBy(array('email' => $form->email));
 
         if (isset($user->id)) {
-            $type = Table\Types::findById($user->type_id);
+            $type = Table\UserTypes::findById($user->type_id);
             switch ($type->password_encryption) {
                 case 0:
                     $newPassword = $this->password;
@@ -488,8 +488,8 @@ class User extends \Pop\Mvc\Model
     /**
      * Log a user login
      *
-     * @param \Phire\Table\Types $type
-     * @param \Phire\Table\Users $user
+     * @param \Phire\Table\UserTypes $type
+     * @param \Phire\Table\Users     $user
      * @return void
      */
     protected function log($type, $user)

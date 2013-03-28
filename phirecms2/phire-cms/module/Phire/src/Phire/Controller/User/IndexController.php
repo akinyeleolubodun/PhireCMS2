@@ -26,7 +26,7 @@ class IndexController extends C
 
     /**
      * Types property
-     * @var \Phire\Table\Types
+     * @var \Phire\Table\UserTypes
      */
     protected $type = null;
 
@@ -71,7 +71,7 @@ class IndexController extends C
 
         // Create the session object and type property
         $this->sess = Session::getInstance();
-        $this->type = Table\Types::findBy(array('type' => $type));
+        $this->type = Table\UserTypes::findBy(array('type' => $type));
 
         if (($this->type->force_ssl) && (!$request->isSecure())) {
             Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $request->getFullUri());
@@ -80,7 +80,7 @@ class IndexController extends C
         }
 
         // Set the roles for this user type in the Acl object
-        $perms = Table\Roles::getAllRoles($this->type->id);
+        $perms = Table\UserRoles::getAllRoles($this->type->id);
         if (count($perms['roles']) > 0) {
             foreach ($perms['roles'] as $role) {
                 $this->project->getService('acl')->addRole($role);
@@ -457,7 +457,7 @@ class IndexController extends C
     {
         // Destroy the session database entry
         if (null !== $this->sess->user->sess_id) {
-            $session = Table\Sessions::findById($this->sess->user->sess_id);
+            $session = Table\UserSessions::findById($this->sess->user->sess_id);
             if (isset($session->id)) {
                 $session->delete();
             }
@@ -542,7 +542,7 @@ class IndexController extends C
             $result = $this->auth->getResultMessage();
         } else {
             $user = $this->auth->getUser();
-            $session = Table\Sessions::findBy(array('user_id' => $user['id']));
+            $session = Table\UserSessions::findBy(array('user_id' => $user['id']));
             if ((!$this->type->multiple_sessions) && (isset($session->id))) {
                 $result = 'Multiple sessions are not allowed. Someone is already logged on from ' . $session->ip . '.';
             } else if ((!$this->type->mobile_access) && (\Pop\Web\Mobile::isMobileDevice())) {
@@ -568,7 +568,7 @@ class IndexController extends C
 
         // If tracking sessions is on
         if (($this->type->track_sessions) && ((isset($this->sess->user->sess_id) && null !== $this->sess->user->sess_id))) {
-            $session = Table\Sessions::findById($this->sess->user->sess_id);
+            $session = Table\UserSessions::findById($this->sess->user->sess_id);
             if (!isset($session->id) || (($this->type->session_expiration != 0) && $session->hasExpired($this->type->session_expiration))) {
                 $this->sess->lastUrl = $this->request->getBasePath() . $this->request->getRequestUri();
                 $this->sess->expired = true;
@@ -587,7 +587,7 @@ class IndexController extends C
                     }
                 // Else, authorize the user role
                 } else if ($this->sess->user->role_id != 0) {
-                    $role = Table\Roles::getRole($this->sess->user->role_id);
+                    $role = Table\UserRoles::getRole($this->sess->user->role_id);
                     if ((null !== $resource) && (!$this->project->getService('acl')->hasResource($resource))) {
                         $this->project->getService('acl')->addResource($resource);
                     }

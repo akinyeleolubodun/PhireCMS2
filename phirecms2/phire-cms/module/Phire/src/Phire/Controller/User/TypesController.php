@@ -176,7 +176,7 @@ class TypesController extends IndexController
                 $post = $this->request->getPost();
                 if (isset($post['remove_types'])) {
                     foreach ($post['remove_types'] as $id) {
-                        $type = Table\Types::findById($id);
+                        $type = Table\UserTypes::findById($id);
                         if (isset($type->id)) {
                             $type->delete();
                         }

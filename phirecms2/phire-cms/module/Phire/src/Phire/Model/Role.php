@@ -4,8 +4,8 @@
  */
 namespace Phire\Model;
 
-use Phire\Table\Permissions;
-use Phire\Table\Roles;
+use Phire\Table\UserPermissions;
+use Phire\Table\UserRoles;
 
 class Role extends \Pop\Mvc\Model
 {
@@ -25,7 +25,7 @@ class Role extends \Pop\Mvc\Model
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;
-            $this->data['role'] = Roles::getRole($sess->user->role_id);
+            $this->data['role'] = UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
         }
     }
@@ -37,17 +37,17 @@ class Role extends \Pop\Mvc\Model
      */
     public function getAll()
     {
-        $sql = Roles::getSql();
+        $sql = UserRoles::getSql();
         $sql->select(array(
-            DB_PREFIX . 'roles.id',
-            DB_PREFIX . 'roles.type_id',
-            DB_PREFIX . 'roles.name',
-            DB_PREFIX . 'types.type'
+            DB_PREFIX . 'user_roles.id',
+            DB_PREFIX . 'user_roles.type_id',
+            DB_PREFIX . 'user_roles.name',
+            DB_PREFIX . 'user_types.type'
             ))
-            ->join(DB_PREFIX . 'types', array('type_id', 'id'), 'LEFT JOIN')
-            ->orderBy(DB_PREFIX . 'roles.id', 'ASC');
+            ->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
+            ->orderBy(DB_PREFIX . 'user_roles.id', 'ASC');
 
-        $roles = Roles::execute($sql->render(true));
+        $roles = UserRoles::execute($sql->render(true));
         $this->data['roles'] = $roles->rows;
     }
 
@@ -59,7 +59,7 @@ class Role extends \Pop\Mvc\Model
      */
     public function getById($id)
     {
-        $role = Roles::findById($id);
+        $role = UserRoles::findById($id);
         $this->data = array_merge($this->data, $role->getValues());
     }
 
@@ -87,12 +87,12 @@ class Role extends \Pop\Mvc\Model
         unset($fields['id']);
         unset($fields['submit']);
 
-        $role = new Roles($fields);
+        $role = new UserRoles($fields);
         $role->save();
 
         // Add new permissions if any
         if (null !== $resource) {
-            $permission = new Permissions(array(
+            $permission = new UserPermissions(array(
                 'role_id'     => $role->id,
                 'resource'    => $resource,
                 'permissions' => $permissions
@@ -116,7 +116,7 @@ class Role extends \Pop\Mvc\Model
         foreach ($fields as $key => $value) {
             $id = substr($key, (strrpos($key, '_') + 1));
             if ($id != 'new') {
-                $permission = Permissions::findById($id);
+                $permission = UserPermissions::findById($id);
                 if (isset($permission->id) && ($permission->role_id == $fields['id'])) {
                     $permission->resource = $fields['resource_' . $id];
                     $permission->permissions = $fields['permissions_' . $id];
@@ -128,7 +128,7 @@ class Role extends \Pop\Mvc\Model
         // Remove permissions
         foreach ($fields as $key => $value) {
             if ((substr($key, 0, 3) == 'rm_') && isset($value[0])) {
-                $permission = Permissions::findById($value[0]);
+                $permission = UserPermissions::findById($value[0]);
                 if (isset($permission->id) && ($permission->role_id == $fields['id'])) {
                     $permission->delete();
                 }
@@ -145,7 +145,7 @@ class Role extends \Pop\Mvc\Model
             unset($fields['permissions_new']);
         }
 
-        $role = Roles::findById($form->id);
+        $role = UserRoles::findById($form->id);
         $role->setValues(array(
             'id'      => $fields['id'],
             'type_id' => $fields['type_id'],
@@ -155,7 +155,7 @@ class Role extends \Pop\Mvc\Model
 
         // Add new permissions if any
         if (null !== $resource) {
-            $permission = new Permissions(array(
+            $permission = new UserPermissions(array(
                 'role_id'     => $role->id,
                 'resource'    => $resource,
                 'permissions' => $permissions

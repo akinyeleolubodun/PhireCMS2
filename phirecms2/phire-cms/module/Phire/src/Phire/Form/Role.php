@@ -7,8 +7,8 @@ namespace Phire\Form;
 use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
-use Phire\Table\Permissions;
-use Phire\Table\Types;
+use Phire\Table\UserPermissions;
+use Phire\Table\UserTypes;
 
 class Role extends Form
 {
@@ -27,13 +27,13 @@ class Role extends Form
     {
         $fields2 = array();
         $typesAry = array();
-        $types = Types::findAll('id ASC');
+        $types = UserTypes::findAll('id ASC');
         foreach ($types->rows as $type) {
             $typesAry[$type->id] = $type->type;
         }
 
         if ($rid != 0) {
-            $permissions = Permissions::findAll('id ASC', array('role_id' => $rid));
+            $permissions = UserPermissions::findAll('id ASC', array('role_id' => $rid));
             foreach ($permissions->rows as $permission) {
                 $fields2[] = array (
                     'type' => 'text',

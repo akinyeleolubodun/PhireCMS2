@@ -6,7 +6,7 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class Sessions extends Record
+class UserSessions extends Record
 {
 
     /**

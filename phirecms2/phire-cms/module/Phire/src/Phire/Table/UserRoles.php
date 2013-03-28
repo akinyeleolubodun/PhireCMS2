@@ -6,7 +6,7 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class Roles extends Record
+class UserRoles extends Record
 {
 
     /**
@@ -36,7 +36,7 @@ class Roles extends Record
             $role = self::findById($roleId);
             $r = \Pop\Auth\Role::factory($role->name);
 
-            $permissions = \Phire\Table\Permissions::findAll('id ASC', array('role_id' => $role->id));
+            $permissions = \Phire\Table\UserPermissions::findAll('id ASC', array('role_id' => $role->id));
 
             foreach ($permissions->rows as $permission) {
                 $perms = explode(',', $permission->permissions);
@@ -69,7 +69,7 @@ class Roles extends Record
             foreach ($roles->rows as $role) {
                 $r = \Pop\Auth\Role::factory($role->name);
                 $results['resources'][$role->name] = array();
-                $permissions = \Phire\Table\Permissions::findAll('id ASC', array('role_id' => $role->id));
+                $permissions = \Phire\Table\UserPermissions::findAll('id ASC', array('role_id' => $role->id));
                 if (isset($permissions->rows[0])) {
                     foreach ($permissions->rows as $permission) {
                         $results['resources'][$role->name][$permission->resource] = array();

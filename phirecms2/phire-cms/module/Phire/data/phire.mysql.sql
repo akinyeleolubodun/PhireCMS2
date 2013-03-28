@@ -2,25 +2,13 @@
 -- Phire CMS 2.0 MySQL Database
 --
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `phirecms`
---
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ph_types`
+-- Table structure for table `ph_user_types`
 --
 
-CREATE TABLE IF NOT EXISTS `ph_types` (
+CREATE TABLE IF NOT EXISTS `ph_user_types` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) NOT NULL,
   `login` int(1),
@@ -46,32 +34,32 @@ CREATE TABLE IF NOT EXISTS `ph_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2003 ;
 
 --
--- Dumping data for table `ph_types`
+-- Dumping data for table `ph_user_types`
 --
 
-INSERT INTO `ph_types` (`id`, `type`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`) VALUES
+INSERT INTO `ph_user_types` (`id`, `type`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`) VALUES
 (2001, 'User', 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', ''),
 (2002, 'Member', 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ph_roles`
+-- Table structure for table `ph_user_roles`
 --
 
-CREATE TABLE IF NOT EXISTS `ph_roles` (
+CREATE TABLE IF NOT EXISTS `ph_user_roles` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `type_id` int(16) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_role_type` FOREIGN KEY (`type_id`) REFERENCES `ph_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_role_type` FOREIGN KEY (`type_id`) REFERENCES `ph_user_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3005 ;
 
 --
--- Dumping data for table `ph_roles`
+-- Dumping data for table `ph_user_roles`
 --
 
-INSERT INTO `ph_roles` (`id`, `type_id`, `name`) VALUES
+INSERT INTO `ph_user_roles` (`id`, `type_id`, `name`) VALUES
 (3001, 2001, 'Admin'),
 (3002, 2001, 'Restricted'),
 (3003, 2002, 'Full'),
@@ -80,24 +68,24 @@ INSERT INTO `ph_roles` (`id`, `type_id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ph_permissions`
+-- Table structure for table `ph_user_permissions`
 --
 
-CREATE TABLE IF NOT EXISTS `ph_permissions` (
+CREATE TABLE IF NOT EXISTS `ph_user_permissions` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `role_id` int(16) NOT NULL,
   `resource` varchar(255),
   `permissions` varchar(255),
   UNIQUE (`role_id`, `resource`),
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_permission_role` FOREIGN KEY (`role_id`) REFERENCES `ph_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_permission_role` FOREIGN KEY (`role_id`) REFERENCES `ph_user_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4003 ;
 
 --
--- Dumping data for table `ph_permissions`
+-- Dumping data for table `ph_user_permissions`
 --
 
-INSERT INTO `ph_permissions` (`id`, `role_id`, `resource`, `permissions`) VALUES
+INSERT INTO `ph_user_permissions` (`id`, `role_id`, `resource`, `permissions`) VALUES
 (4001, 3002, 'users', 'read,add,edit'),
 (4002, 3004, 'profile', 'read');
 
@@ -134,8 +122,8 @@ CREATE TABLE IF NOT EXISTS `ph_users` (
   `last_ip` varchar(255),
   `failed_attempts` int(16),
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_user_type` FOREIGN KEY (`type_id`) REFERENCES `ph_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `ph_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `fk_user_type` FOREIGN KEY (`type_id`) REFERENCES `ph_user_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `ph_user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1004 ;
 
 --
@@ -150,10 +138,10 @@ INSERT INTO `ph_users` (`id`, `type_id`, `role_id`, `first_name`, `last_name`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ph_sessions`
+-- Table structure for table `ph_user_sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `ph_sessions` (
+CREATE TABLE IF NOT EXISTS `ph_user_sessions` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `user_id` int(16),
   `ip` varchar(255) NOT NULL,
@@ -163,7 +151,3 @@ CREATE TABLE IF NOT EXISTS `ph_sessions` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_session_user` FOREIGN KEY (`user_id`) REFERENCES `ph_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5001 ;
-
---
--- Dumping data for table `ph_sessions`
---

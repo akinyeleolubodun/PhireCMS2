@@ -101,7 +101,7 @@ class UsersController extends IndexController
                 }
             // Else, add user
             } else {
-                $type = Table\Types::findById($this->request->getPath(1));
+                $type = Table\UserTypes::findById($this->request->getPath(1));
 
                 // If user type is valid
                 if (isset($type->id)) {
