@@ -8,8 +8,7 @@
  */
 
 // Calculate and define the base path
-$basePath = str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__));
-define('BASE_PATH', (($basePath != '') ? $basePath : ''));
+define('BASE_PATH', str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__)));
 
 // Define the content path, where the application assets are stored
 define('CONTENT_PATH', '/phire-content');
