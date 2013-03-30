@@ -66,6 +66,7 @@ class Type extends \Pop\Mvc\Model
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
+        $fields['type'] = substr(String::slug($fields['type']), 1);
         $fields['log_emails'] = str_replace(', ', ',', $fields['log_emails']);
         $fields['log_exclude'] = str_replace(', ', ',', $fields['log_exclude']);
 
@@ -87,6 +88,7 @@ class Type extends \Pop\Mvc\Model
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
+        $fields['type'] = substr(String::slug($fields['type']), 1);
         $fields['log_emails'] = str_replace(', ', ',', $fields['log_emails']);
         $fields['log_exclude'] = str_replace(', ', ',', $fields['log_exclude']);
 

@@ -48,25 +48,26 @@ class IndexController extends C
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (\Phire\Project::isInstalled()) {
-            // Get user type from called class
-            $class = get_called_class();
-            $class = substr($class, (strpos($class, 'Controller\\') + 11));
+                // Get the user type from the URI
+            $type = str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
 
-            if (strpos($class, '\\') !== false) {
-                $type = substr($class, 0, strpos($class, '\\'));
-            } else if (strpos($class, 'Controller') !== false) {
-                $type = substr($class, 0, strpos($class, 'Controller'));
+            // If the URI matches the system user URI
+            if (substr($type, 0, strlen(APP_URI)) == APP_URI) {
+                $type = 'user';
+            // Else, set user type
             } else {
-                $type = 'User';
+                $type = substr($type, 1);
+                if (strpos($type, '/') !== false) {
+                    $type = substr($type, 0, strpos($type, '/'));
+                }
             }
 
             if (null === $viewPath) {
-                $view = ($type != 'User') ? strtolower($type) : 'user';
-                $viewPath = __DIR__ . '/../../../../view/' . $view;
+                $viewPath = __DIR__ . '/../../../../view/' . $type;
             }
 
             if (null === $request) {
-                $basePath = ($type != 'User') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
+                $basePath = ($type != 'user') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
                 $request = new Request(null, $basePath);
             }
 
@@ -74,6 +75,7 @@ class IndexController extends C
             $this->sess = Session::getInstance();
             $this->type = Table\UserTypes::findBy(array('type' => $type));
 
+            // If the user type requires SSL, redirect
             if (($this->type->force_ssl) && (!$request->isSecure())) {
                 Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $request->getFullUri());
             } else {
@@ -87,7 +89,6 @@ class IndexController extends C
                     $this->project->getService('acl')->addRole($role);
                 }
             }
-
             if (count($perms['resources']) > 0) {
                 foreach ($perms['resources'] as $role => $perm) {
                     if (count($perm) > 0) {

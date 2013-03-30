@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS "ph_user_types" (
   "ip_blocked" text,
   "log_emails" text,
   "log_exclude" text,
+  "controller" text,
+  "sub_controllers" text,
   PRIMARY KEY ("id")
 ) ;
 
@@ -41,9 +43,9 @@ ALTER SEQUENCE type_id_seq OWNED BY "ph_user_types"."id";
 -- Dumping data for table "ph_user_types"
 --
 
-INSERT INTO "ph_user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude") VALUES
-(2001, 'User', 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 30, 2, '', '', '', '', ''),
-(2002, 'Member', 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 30, 2, '', '', '', '', '');
+INSERT INTO "ph_user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
+(2001, 'user', 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', '', '', ''),
+(2002, 'member', 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 

@@ -165,6 +165,18 @@ class Type extends Form
                 'label' => 'Log Exclude:',
                 'attributes' => array ('size', 40)
             ),
+            array (
+                'type' => 'text',
+                'name' => 'controller',
+                'label' => 'Controller:',
+                'attributes' => array ('size', 40)
+            ),
+            array (
+                'type' => 'text',
+                'name' => 'sub_controllers',
+                'label' => 'Sub Controllers:',
+                'attributes' => array ('size', 40)
+            ),
             array(
                 'type' => 'hidden',
                 'name' => 'id',
@@ -196,7 +208,7 @@ class Type extends Form
         if ($_POST) {
             if ($this->id == 2001) {
                 $this->getElement('type')
-                    ->addValidator(new Validator\Equal('User', "The type name for this user type cannot change and must be 'User'."));
+                     ->addValidator(new Validator\Equal('User', "The type name for this user type cannot change and must be 'user'."));
             }
             if ($this->password_encryption == 3) {
                 $this->getElement('password_salt')

@@ -31,14 +31,33 @@ class Project extends P
             )
         ));
 
+        // Get any other user types and declare their URI / Controller mapping
         if ((DB_INTERFACE != '') || (DB_NAME != '')) {
-            // Get any other user types and declare their URI / Controller mapping
-            $types = \Phire\Table\UserTypes::findAll();
+            $types = \PopUser\Table\Types::findAll();
 
             foreach ($types->rows as $type) {
-                if (($type->type != 'User')) {
+                if (($type->type != 'user')) {
+                    // If the user type has a defined controller
+                    if ($type->controller != '') {
+                        // If the user type has defined sub-controllers
+                        if ($type->sub_controllers != '') {
+                            $controller = array('/' => $type->controller);
+                            $namespace = substr($type->controller, 0, (strrpos($type->controller, '\\') + 1));
+                            $subs = explode(',', $type->sub_controllers);
+                            foreach ($subs as $sub) {
+                                $sub = trim($sub);
+                                $controller['/' . $sub] = $namespace . ucfirst($sub) . 'Controller';
+                            }
+                        } else {
+                            $controller = $type->controller;
+                        }
+                    // Else, just map to the base User controller
+                    } else {
+                        $controller = 'Phire\Controller\User\IndexController';
+                    }
+
                     $this->router->addControllers(array(
-                        '/' . strtolower($type->type) => 'Phire\Controller\\' . $type->type . '\IndexController'
+                        '/' . $type->type => $controller
                     ));
                 }
             }
