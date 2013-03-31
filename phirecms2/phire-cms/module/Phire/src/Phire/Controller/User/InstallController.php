@@ -9,10 +9,10 @@ use Pop\Http\Response;
 use Pop\Http\Request;
 use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
-use Pop\Mvc\Model;
 use Pop\Project\Project;
 use Pop\Web\Session;
 use Phire\Form\Install;
+use Phire\Model;
 
 class InstallController extends C
 {
@@ -61,7 +61,7 @@ class InstallController extends C
         if ((DB_INTERFACE != '') && (DB_NAME != '') && (!isset($this->sess->install))) {
             throw new \Exception('The system is already installed.');
         } else {
-            $install = new Model(array('title' => 'Install'));
+            $install = new Model\Install(array('title' => 'Install'));
             $form = new Install($this->request->getFullUri(), 'post');
             if ($this->request->isPost()) {
                 $form->setFieldValues(
@@ -71,6 +71,7 @@ class InstallController extends C
                 );
                 if ($form->isValid()) {
                     $install->config($form);
+                    echo 'Installed!';
                 } else {
                     $install->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/index.phtml', $install);

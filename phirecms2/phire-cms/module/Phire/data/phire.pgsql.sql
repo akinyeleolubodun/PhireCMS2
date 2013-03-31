@@ -5,12 +5,12 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_types"
+-- Table structure for table "user_types"
 --
 
 CREATE SEQUENCE type_id_seq START 2001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_types" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "id" integer NOT NULL DEFAULT nextval('type_id_seq'),
   "type" varchar(255) NOT NULL,
   "login" integer,
@@ -37,71 +37,71 @@ CREATE TABLE IF NOT EXISTS "ph_user_types" (
   PRIMARY KEY ("id")
 ) ;
 
-ALTER SEQUENCE type_id_seq OWNED BY "ph_user_types"."id";
+ALTER SEQUENCE type_id_seq OWNED BY "[{prefix}]user_types"."id";
 
 --
--- Dumping data for table "ph_user_types"
+-- Dumping data for table "user_types"
 --
 
-INSERT INTO "ph_user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
+INSERT INTO "[{prefix}]user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
 (2001, 'user', 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', '', '', ''),
 (2002, 'member', 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_roles"
+-- Table structure for table "user_roles"
 --
 
 CREATE SEQUENCE role_id_seq START 3001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_roles" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
   "id" integer NOT NULL DEFAULT nextval('role_id_seq'),
   "type_id" integer NOT NULL,
   "name" varchar(255) NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "ph_user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE role_id_seq OWNED BY "ph_user_roles"."id";
+ALTER SEQUENCE role_id_seq OWNED BY "[{prefix}]user_roles"."id";
 
 --
--- Dumping data for table "ph_user_roles"
+-- Dumping data for table "user_roles"
 --
 
-INSERT INTO "ph_user_roles" ("id", "type_id", "name") VALUES
+INSERT INTO "[{prefix}]user_roles" ("id", "type_id", "name") VALUES
 (3001, 2001, 'Admin'),
-(3003, 2002, 'Full');
+(3002, 2002, 'Full');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_permissions"
+-- Table structure for table "user_permissions"
 --
 
 CREATE SEQUENCE permission_id_seq START 4001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_permissions" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_permissions" (
   "id" integer NOT NULL DEFAULT nextval('permission_id_seq'),
   "role_id" integer NOT NULL,
   "resource" varchar(255),
   "permissions" varchar(255),
   UNIQUE ("role_id", "resource"),
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "ph_user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE permission_id_seq OWNED BY "ph_user_permissions"."id";
+ALTER SEQUENCE permission_id_seq OWNED BY "[{prefix}]user_permissions"."id";
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_users"
+-- Table structure for table "users"
 --
 
 CREATE SEQUENCE user_id_seq START 1001;
 
-CREATE TABLE IF NOT EXISTS "ph_users" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
   "id" integer NOT NULL DEFAULT nextval('user_id_seq'),
   "type_id" integer,
   "role_id" integer,
@@ -127,21 +127,21 @@ CREATE TABLE IF NOT EXISTS "ph_users" (
   "last_ip" varchar(255),
   "failed_attempts" integer,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "ph_user_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "ph_user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE user_id_seq OWNED BY "ph_users"."id";
+ALTER SEQUENCE user_id_seq OWNED BY "[{prefix}]users"."id";
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_sessions"
+-- Table structure for table "user_sessions"
 --
 
 CREATE SEQUENCE session_id_seq START 4001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_sessions" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "id" integer NOT NULL DEFAULT nextval('session_id_seq'),
   "user_id" integer,
   "ip" varchar(255) NOT NULL,
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS "ph_user_sessions" (
   "start" timestamp NOT NULL,
   "last" timestamp NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "ph_users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE session_id_seq OWNED BY "ph_user_sessions"."id";
+ALTER SEQUENCE session_id_seq OWNED BY "[{prefix}]user_sessions"."id";

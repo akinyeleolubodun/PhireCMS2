@@ -136,7 +136,8 @@ class Install extends Form
                     '2' => 'SHA1',
                     '3' => 'Crypt',
                     '0' => 'None'
-                )
+                ),
+                'marked' => 2
             ),
             array (
                 'type' => 'text',
