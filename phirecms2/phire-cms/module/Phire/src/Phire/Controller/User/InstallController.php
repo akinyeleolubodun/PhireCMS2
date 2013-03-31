@@ -70,7 +70,7 @@ class InstallController extends C
                     array(null, array(ENT_QUOTES, 'UTF-8'))
                 );
                 if ($form->isValid()) {
-                    echo 'Good!';
+                    $install->config($form);
                 } else {
                     $install->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/index.phtml', $install);

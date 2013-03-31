@@ -25,9 +25,10 @@ class Install extends \Pop\Mvc\Model
     /**
      * Install config method
      *
+     * @param \Pop\Form\Form $form
      * @return void
      */
-    public function config()
+    public function config($form)
     {
 
     }

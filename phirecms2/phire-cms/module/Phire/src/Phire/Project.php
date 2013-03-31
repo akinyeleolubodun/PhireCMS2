@@ -33,7 +33,7 @@ class Project extends P
 
         // Get any other user types and declare their URI / Controller mapping
         if ((DB_INTERFACE != '') || (DB_NAME != '')) {
-            $types = \PopUser\Table\Types::findAll();
+            $types = \Phire\Table\UserTypes::findAll();
 
             foreach ($types->rows as $type) {
                 if (($type->type != 'user')) {
