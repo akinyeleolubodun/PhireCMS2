@@ -48,7 +48,7 @@ class IndexController extends C
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (\Phire\Project::isInstalled()) {
-                // Get the user type from the URI
+            // Get the user type from the URI
             $type = str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
 
             // If the URI matches the system user URI
