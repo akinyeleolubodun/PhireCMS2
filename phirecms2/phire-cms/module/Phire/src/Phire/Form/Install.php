@@ -45,12 +45,12 @@ class Install extends Form
 
         foreach ($check as $key => $value) {
             if (strpos($key, 'db') !== false) {
-                if ($value == 'Yes') {
+                if (($value == 'Yes') && (stripos($key, 'sqlsrv') === false) && (stripos($key, 'oracle') === false)) {
                     $db = str_replace('db', '', $key);
-                    if ((strpos($db, 'Pdo') !== false) && ($db != 'Pdo') && (strpos($db, 'SQLSrv') === false)) {
+                    if ((strpos($db, 'Pdo') !== false) && ($db != 'Pdo')) {
                         $db = 'Pdo\\' . ucfirst(strtolower(str_replace('Pdo', '', $db)));
                         $this->dbAdapters[$db] = $db;
-                    } else if (($db != 'Pdo') && ($db != 'Oracle') && ($db != 'SQLSrv')) {
+                    } else if ($db != 'Pdo') {
                         $db = ucfirst(strtolower($db));
                         $this->dbAdapters[$db] = $db;
                     }
