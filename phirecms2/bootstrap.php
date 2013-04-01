@@ -24,7 +24,5 @@ $autoloader->register('Phire', __DIR__ . APP_PATH . '/module/Phire/src');
 $project = \Phire\Project::factory(
     include __DIR__ . APP_PATH . '/config/project.config.php',
     include __DIR__ . APP_PATH . '/module/Phire/config/module.config.php',
-    new \Pop\Mvc\Router(array(
-        '/' => 'Phire\Controller\IndexController'
-    ), new \Pop\Http\Request(null, BASE_PATH))
+    new \Pop\Mvc\Router(array('/' => 'Phire\Controller\IndexController'))
 );
