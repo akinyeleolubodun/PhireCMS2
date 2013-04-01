@@ -6,18 +6,18 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class UserPermissions extends Record
+class FieldValues extends Record
 {
 
     /**
      * @var   string
      */
-    protected $primaryId = 'id';
+    protected $primaryId = array('content_id', 'field_id');
 
     /**
      * @var   boolean
      */
-    protected $auto = true;
+    protected $auto = false;
 
     /**
      * @var   string

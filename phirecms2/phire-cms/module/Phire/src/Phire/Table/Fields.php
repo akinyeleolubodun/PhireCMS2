@@ -6,7 +6,7 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class UserPermissions extends Record
+class Fields extends Record
 {
 
     /**

@@ -6,18 +6,18 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class UserPermissions extends Record
+class SiteRelationships extends Record
 {
 
     /**
      * @var   string
      */
-    protected $primaryId = 'id';
+    protected $primaryId = array('id', 'site_id', 'relationship');
 
     /**
      * @var   boolean
      */
-    protected $auto = true;
+    protected $auto = false;
 
     /**
      * @var   string

@@ -208,13 +208,13 @@ class Install extends Form
                 } else {
                     // Check the database version
                     if (strpos($this->db_adapter, 'Sqlite') === false) {
-                        $adapter = (stripos($this->db_adapter, 'Pdo_') !== false) ? str_replace('Pdo_', '', $this->db_adapter) : $this->db_adapter;
+                        $adapter = (stripos($this->db_adapter, 'Pdo\\') !== false) ? str_replace('Pdo\\', '', $this->db_adapter) : $this->db_adapter;
                         $db = Db::factory($adapter, array(
                             'database' => $this->db_name,
                             'username' => $this->db_username,
                             'password' => $this->db_password,
                             'host'     => $this->db_host,
-                            'type'     => strtolower(str_replace('Pdo_', '', $this->db_adapter))
+                            'type'     => strtolower(str_replace('Pdo\\', '', $this->db_adapter))
                         ));
 
                         $version = $db->adapter()->version();

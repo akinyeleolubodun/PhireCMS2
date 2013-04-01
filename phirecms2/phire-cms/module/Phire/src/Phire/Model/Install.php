@@ -7,7 +7,6 @@ namespace Phire\Model;
 use Phire\Table;
 use Pop\Db\Db;
 use Pop\File\File;
-use Pop\Mail\Mail;
 use Pop\Project\Install\Dbs;
 use Pop\Web\Session;
 
@@ -52,6 +51,7 @@ class Install extends \Pop\Mvc\Model
 
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
             touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentPath . '/.htphire.sqlite');
+            $relativeDbName = "__DIR__ . '" . $contentPath . '/.htphire.sqlite';
             $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $contentPath . '/.htphire.sqlite');
             $dbUser = null;
             $dbPassword = null;
@@ -59,6 +59,7 @@ class Install extends \Pop\Mvc\Model
             $installFile = $dbName;
             chmod($dbName, 0777);
         } else {
+            $relativeDbName = null;
             $dbName = $form->db_name;
             $dbUser = $form->db_username;
             $dbPassword = $form->db_password;
@@ -73,7 +74,7 @@ class Install extends \Pop\Mvc\Model
 
         $config = str_replace("define('DB_INTERFACE', '');", "define('DB_INTERFACE', '" . $dbInterface . "');", $config);
         $config = str_replace("define('DB_TYPE', '');", "define('DB_TYPE', '" . $dbType . "');", $config);
-        $config = str_replace("define('DB_NAME', '');", "define('DB_NAME', '" . $dbName . "');", $config);
+        $config = str_replace("define('DB_NAME', '');", "define('DB_NAME', " . ((null !== $relativeDbName) ? $relativeDbName : "'" . $dbName) . "');", $config);
         $config = str_replace("define('DB_USER', '');", "define('DB_USER', '" . $dbUser . "');", $config);
         $config = str_replace("define('DB_PASS', '');", "define('DB_PASS', '" . $dbPassword . "');", $config);
         $config = str_replace("define('DB_HOST', '');", "define('DB_HOST', '" . $dbHost . "');", $config);
@@ -92,7 +93,7 @@ class Install extends \Pop\Mvc\Model
         }
 
         // Install the database
-        $sqlFile = __DIR__ . '/../../../data/phire.' . str_replace(array('mysqli', 'Pdo_\\'), array('mysql', ''), strtolower($form->db_adapter)) . '.sql';
+        $sqlFile = __DIR__ . '/../../../data/phire.' . str_replace(array('pdo\\', 'mysqli' ), array('', 'mysql'), strtolower($form->db_adapter)) . '.sql';
 
         $db = array(
             'database' => $dbName,
@@ -112,16 +113,31 @@ class Install extends \Pop\Mvc\Model
             $adapter = $form->db_adapter;
             $type = null;
         }
-    }
 
-    /**
-     * Install user method
-     *
-     * @return void
-     */
-    public function user()
-    {
+        // Set the default system config
+        $db = Db::factory($adapter, array(
+            'database' => $dbName,
+            'username' => $dbUser,
+            'password' => $dbPassword,
+            'host'     => $dbHost,
+            'type'     => $type
+        ));
 
+        $db->adapter()->query(
+            "UPDATE " . $db->adapter()->escape($dbPrefix) .
+                "sites SET domain = '" . $db->adapter()->escape($_SERVER['HTTP_HOST']) .
+                "', docroot = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) .
+                "' WHERE id = 6001"
+        );
+
+        // Set the system configuration
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '2.0.0' WHERE setting = 'system_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_docroot'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . PHP_OS . "' WHERE setting = 'server_os'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($_SERVER['SERVER_SOFTWARE']) . "' WHERE setting = 'server_software'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->version() . "' WHERE setting = 'db_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
     }
 
 }

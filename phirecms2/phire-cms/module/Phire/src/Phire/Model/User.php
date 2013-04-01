@@ -241,6 +241,8 @@ class User extends \Pop\Mvc\Model
         $user = new Table\Users($fields);
         $user->save();
 
+        $this->data['id'] = $user->id;
+
         if (($type->verification) && !($user->verified)) {
             $this->sendVerification($user, $type);
         }
@@ -378,7 +380,7 @@ class User extends \Pop\Mvc\Model
      */
     public function sendVerification(\Phire\Table\Users $user, $type)
     {
-        $basePath = ($type->type != 'User') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+        $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
         $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
 
         $rcpt = array(
@@ -448,7 +450,7 @@ class User extends \Pop\Mvc\Model
             $user->password = $newEncPassword;
             $user->save();
 
-            $basePath = ($type->type != 'User') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+            $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
             $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
 
             $rcpt = array(

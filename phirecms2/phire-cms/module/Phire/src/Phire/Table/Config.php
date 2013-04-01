@@ -6,13 +6,13 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class UserPermissions extends Record
+class Config extends Record
 {
 
     /**
      * @var   string
      */
-    protected $primaryId = 'id';
+    protected $primaryId = 'setting';
 
     /**
      * @var   boolean

@@ -12,7 +12,9 @@ use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
 use Phire\Form\Install;
+use Phire\Form\User;
 use Phire\Model;
+use Phire\Table;
 
 class InstallController extends C
 {
@@ -71,7 +73,10 @@ class InstallController extends C
                 );
                 if ($form->isValid()) {
                     $install->config($form);
-                    echo 'Installed!';
+                    $url = ($install->configWritable) ?
+                        BASE_PATH . $form->app_uri . '/install/user' :
+                        BASE_PATH . APP_URI . '/install/config';
+                    Response::redirect($url);
                 } else {
                     $install->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/index.phtml', $install);
@@ -86,14 +91,60 @@ class InstallController extends C
     }
 
     /**
-     * User method
+     * Install user method
      *
      * @return void
      */
     public function user()
     {
-        $this->view = View::factory($this->viewPath . '/user.phtml', new Model(array('title' => 'Install User')));
-        $this->send();
+        $user = new Model\User(array('title' => 'Install User'));
+        $form = new User($this->request->getFullUri(), 'post', null, null, 2001);
+        if ($this->request->isPost()) {
+            $form->setFieldValues(
+                $this->request->getPost(),
+                array('strip_tags', 'htmlentities'),
+                array(null, array(ENT_QUOTES, 'UTF-8'))
+            );
+            if ($form->isValid()) {
+                $user->save($form);
+                $site = new Table\SiteRelationships(array(
+                    'id'           => $user->id,
+                    'site_id'      => 6001,
+                    'relationship' => 'user'
+                ));
+                $site->save();
+                $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a>.</p>');
+                $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                $this->send();
+            } else {
+                $user->set('form', $form);
+                $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                $this->send();
+            }
+        } else {
+            $user->set('form', $form);
+            $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+            $this->send();
+        }
+    }
+
+    /**
+     * Install config method
+     *
+     * @return void
+     */
+    public function config()
+    {
+        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
+            Response::redirect(BASE_PATH . $this->sess->app_uri . '/install/user');
+        } else {
+            $config = new Model\Install(array(
+                'title'  => 'Install Config',
+                'config' => unserialize($this->sess->config)
+            ));
+            $this->view = View::factory($this->viewPath . '/config.phtml', $config);
+            $this->send();
+        }
     }
 
     /**
@@ -103,7 +154,7 @@ class InstallController extends C
      */
     public function error()
     {
-        $this->view = View::factory($this->viewPath . '/error.phtml', new Model(array('title' => '404 Error')));
+        $this->view = View::factory($this->viewPath . '/error.phtml', new Model\Install(array('title' => '404 Error')));
         $this->send(404);
     }
 
