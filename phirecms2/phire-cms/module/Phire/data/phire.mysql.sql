@@ -72,8 +72,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
   `separator` varchar(255),
   `media_formats` text,
   `media_filesize` int(16),
-  `media_actions` varchar(255),
-  `media_sizes` varchar(255),
+  `media_actions` text,
   `history_limit` int(16),
   `feed_limit` int(16),
   `pagination_limit` int(16),
@@ -89,8 +88,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
 -- Dumping data for table `sites`
 --
 
-INSERT INTO `[{prefix}]sites` (`id`, `domain`, `aliases`, `docroot`, `default_content_type`, `default_template_id`, `default_title`, `default_404`, `default_datetime_format`, `separator`, `media_formats`, `media_filesize`, `media_actions`, `media_sizes`, `history_limit`, `feed_limit`, `pagination_limit`, `pagination_range`, `force_ssl`, `cache_type`, `cache_limit`, `live`) VALUES
-(6001, '', '', '', 'text/html', 0, 'My Default Site', '<p>We''re sorry. That page was not found.</p>\n', 'M j Y g:i A', ' > ', 'a:24:{s:3:"bz2";s:17:"application/bzip2";s:3:"csv";s:8:"text/csv";s:3:"doc";s:18:"application/msword";s:4:"docx";s:18:"application/msword";s:3:"gif";s:9:"image/gif";s:2:"gz";s:18:"application/x-gzip";s:3:"jpe";s:10:"image/jpeg";s:3:"jpg";s:10:"image/jpeg";s:4:"jpeg";s:10:"image/jpeg";s:3:"pdf";s:15:"application/pdf";s:3:"png";s:9:"image/png";s:3:"ppt";s:18:"application/msword";s:4:"pptx";s:18:"application/msword";s:3:"svg";s:13:"image/svg+xml";s:3:"swf";s:29:"application/x-shockwave-flash";s:3:"tar";s:17:"application/x-tar";s:3:"tgz";s:18:"application/x-gzip";s:3:"tif";s:10:"image/tiff";s:4:"tiff";s:10:"image/tiff";s:3:"tsv";s:8:"text/tsv";s:3:"txt";s:10:"text/plain";s:3:"xls";s:18:"application/msword";s:4:"xlsx";s:18:"application/msword";s:3:"zip";s:17:"application/x-zip";}', 10000000, 'resize|resize|resize|cropThumb', '800|400|120|60', 5, 0, 25, 10, 0, '', 0, 1);
+INSERT INTO `[{prefix}]sites` (`id`, `domain`, `aliases`, `docroot`, `default_content_type`, `default_template_id`, `default_title`, `default_404`, `default_datetime_format`, `separator`, `media_formats`, `media_filesize`, `media_actions`, `history_limit`, `feed_limit`, `pagination_limit`, `pagination_range`, `force_ssl`, `cache_type`, `cache_limit`, `live`) VALUES
+(6001, '', '', '', 'text/html', 0, 'My Default Site', '<p>We''re sorry. That page was not found.</p>\n', 'M j Y g:i A', ' > ', 'a:24:{s:3:"bz2";s:17:"application/bzip2";s:3:"csv";s:8:"text/csv";s:3:"doc";s:18:"application/msword";s:4:"docx";s:18:"application/msword";s:3:"gif";s:9:"image/gif";s:2:"gz";s:18:"application/x-gzip";s:3:"jpe";s:10:"image/jpeg";s:3:"jpg";s:10:"image/jpeg";s:4:"jpeg";s:10:"image/jpeg";s:3:"pdf";s:15:"application/pdf";s:3:"png";s:9:"image/png";s:3:"ppt";s:18:"application/msword";s:4:"pptx";s:18:"application/msword";s:3:"svg";s:13:"image/svg+xml";s:3:"swf";s:29:"application/x-shockwave-flash";s:3:"tar";s:17:"application/x-tar";s:3:"tgz";s:18:"application/x-gzip";s:3:"tif";s:10:"image/tiff";s:4:"tiff";s:10:"image/tiff";s:3:"tsv";s:8:"text/tsv";s:3:"txt";s:10:"text/plain";s:3:"xls";s:18:"application/msword";s:4:"xlsx";s:18:"application/msword";s:3:"zip";s:17:"application/x-zip";}', 10000000, 'a:4:{s:5:"large";a:1:{s:6:"resize";i:800;}s:6:"medium";a:1:{s:6:"resize";i:400;}s:5:"small";a:1:{s:6:"resize";i:120;}s:5:"thumb";a:1:{s:9:"cropThumb";i:60;}}', 5, 0, 25, 10, 0, '', 0, 1);
 
 -- --------------------------------------------------------
 
