@@ -25,26 +25,26 @@ define('APP_URI', '/phire');
 
 // Define the database interface
 // 'Mysql', 'Mysqli', 'Pgsql', 'Sqlite' or 'Pdo'
-define('DB_INTERFACE', 'Mysqli');
+define('DB_INTERFACE', '');
 
 // Define the database DSN type (used with 'Pdo' interface only)
 // 'mysql', 'pgsql' or 'sqlite'
 define('DB_TYPE', '');
 
 // Define the database name
-define('DB_NAME', 'phirecms');
+define('DB_NAME', '');
 
 // Define the database user
-define('DB_USER', 'phire');
+define('DB_USER', '');
 
 // Define the database password
-define('DB_PASS', '12cms34');
+define('DB_PASS', '');
 
 // Define the database host
-define('DB_HOST', 'localhost');
+define('DB_HOST', '');
 
 // Define the database prefix
-define('DB_PREFIX', 'ph_');
+define('DB_PREFIX', '');
 
 /**
  * Language Settings
