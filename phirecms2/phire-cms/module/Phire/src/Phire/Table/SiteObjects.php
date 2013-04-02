@@ -6,18 +6,18 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class ContentTypes extends Record
+class SiteObjects extends Record
 {
 
     /**
      * @var   string
      */
-    protected $primaryId = 'id';
+    protected $primaryId = array('id', 'site_id', 'object');
 
     /**
      * @var   boolean
      */
-    protected $auto = true;
+    protected $auto = false;
 
     /**
      * @var   string

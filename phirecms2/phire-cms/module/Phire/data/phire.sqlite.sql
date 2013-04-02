@@ -43,34 +43,6 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_template', 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_types"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_types" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar NOT NULL,
-  "type" varchar NOT NULL,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_types', 7000);
-
---
--- Dumping data for table "content_types"
---
-
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7001, 'html', 'text/html');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7002, 'text', 'text/plain');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7003, 'css', 'text/css');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7004, 'javascript', 'text/javascript');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7005, 'xml, plain', 'text/xml');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7006, 'xml, application', 'application/xml');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7007, 'rss', 'application/rss+xml');
-INSERT INTO "[{prefix}]content_types" ("id", "name", "type") VALUES (7008, 'json', 'application/json');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "plugins"
 --
 
@@ -87,7 +59,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]plugins" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]plugins', 14000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]plugins', 10000);
 
 -- --------------------------------------------------------
 
@@ -100,7 +72,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
   "domain" varchar NOT NULL,
   "aliases" varchar,
   "docroot" varchar,
-  "default_content_type_id" integer,
+  "default_content_type" varchar,
   "default_template_id" integer,
   "default_title" text,
   "default_404" text,
@@ -108,13 +80,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
   "separator" varchar,
   "media_formats" text,
   "media_filesize" integer,
-  "media_actions" varchar,
-  "media_sizes" varchar,
-  "comments" integer,
-  "anonymous_comments" integer,
-  "comment_approval" integer,
-  "captcha_type" varchar,
-  "spam_filter" text,
+  "media_actions" text,
   "history_limit" integer,
   "feed_limit" integer,
   "pagination_limit" integer,
@@ -132,21 +98,21 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]sites', 6000);
 -- Dumping data for table "sites"
 --
 
-INSERT INTO "[{prefix}]sites" ("id", "domain", "aliases", "docroot", "default_content_type_id", "default_template_id", "default_title", "default_404", "default_datetime_format", "separator", "media_formats", "media_filesize", "media_actions", "media_sizes", "comments", "anonymous_comments", "captcha_type", "spam_filter", "feed_limit", "pagination_limit", "pagination_range", "force_ssl", "cache_type", "cache_limit", "live") VALUES
-(6001, '', '', '', 7001, 0, 'My Default Site', '<p>We''re sorry. That page was not found.</p>\n', 'M j Y g:i A', ' > ', 'jpg|jpe|jpeg|gif|png', 10000000, 'resize|resize|resize|cropThumb', '800|400|120|60', 0, 0, '', '', 0, 25, 10, 0, '', 0, 1);
+INSERT INTO "[{prefix}]sites" ("id", "domain", "aliases", "docroot", "default_content_type", "default_template_id", "default_title", "default_404", "default_datetime_format", "separator", "media_formats", "media_filesize", "media_actions", "history_limit", "feed_limit", "pagination_limit", "pagination_range", "force_ssl", "cache_type", "cache_limit", "live") VALUES
+(6001, '', '', '', 'text/html', 0, 'My Default Site', '<p>We''re sorry. That page was not found.</p>\n', 'M j Y g:i A', ' > ', 'a:24:{s:3:"bz2";s:17:"application/bzip2";s:3:"csv";s:8:"text/csv";s:3:"doc";s:18:"application/msword";s:4:"docx";s:18:"application/msword";s:3:"gif";s:9:"image/gif";s:2:"gz";s:18:"application/x-gzip";s:3:"jpe";s:10:"image/jpeg";s:3:"jpg";s:10:"image/jpeg";s:4:"jpeg";s:10:"image/jpeg";s:3:"pdf";s:15:"application/pdf";s:3:"png";s:9:"image/png";s:3:"ppt";s:18:"application/msword";s:4:"pptx";s:18:"application/msword";s:3:"svg";s:13:"image/svg+xml";s:3:"swf";s:29:"application/x-shockwave-flash";s:3:"tar";s:17:"application/x-tar";s:3:"tgz";s:18:"application/x-gzip";s:3:"tif";s:10:"image/tiff";s:4:"tiff";s:10:"image/tiff";s:3:"tsv";s:8:"text/tsv";s:3:"txt";s:10:"text/plain";s:3:"xls";s:18:"application/msword";s:4:"xlsx";s:18:"application/msword";s:3:"zip";s:17:"application/x-zip";}', 10000000, 'a:4:{s:5:"large";a:1:{s:6:"resize";i:800;}s:6:"medium";a:1:{s:6:"resize";i:400;}s:5:"small";a:1:{s:6:"resize";i:120;}s:5:"thumb";a:1:{s:9:"cropThumb";i:60;}}', 5, 0, 25, 10, 0, '', 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "site_relationships"
+-- Table structure for table "site_objects"
 
 --
-CREATE TABLE IF NOT EXISTS "[{prefix}]site_relationships" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]site_objects" (
   "id" integer NOT NULL,
   "site_id" integer NOT NULL,
-  "relationship" varchar NOT NULL,  -- content, plugin, section, template, theme, user, user_type, etc.
-  UNIQUE ("id", "site_id", "relationship"),
-  CONSTRAINT "fk_site_relationship" FOREIGN KEY ("site_id") REFERENCES "[{prefix}]sites" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  "object" varchar NOT NULL,  -- content, plugin, section, template, theme, user, user_type, etc.
+  UNIQUE ("id", "site_id", "object"),
+  CONSTRAINT "fk_site_object" FOREIGN KEY ("site_id") REFERENCES "[{prefix}]sites" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 -- --------------------------------------------------------
@@ -158,15 +124,14 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]site_relationships" (
 CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
-  "content_type_id" integer,
+  "content_type" varchar,
   "device" varchar,
   "name" varchar,
   "template" text,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_template_content_type" FOREIGN KEY ("content_type_id") REFERENCES "[{prefix}]content_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 10000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 8000);
 
 -- --------------------------------------------------------
 
@@ -186,7 +151,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]themes" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]themes', 13000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]themes', 9000);
 
 -- --------------------------------------------------------
 
@@ -335,31 +300,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_sessions', 4
 -- --------------------------------------------------------
 
 --
--- Table structure for table "sections"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]sections" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "uri" varchar NOT NULL,
-  "title" varchar NOT NULL,
-  "parent_id" integer,
-  "short_template_id" integer,
-  "long_template_id" integer,
-  "short_limit" integer,
-  "long_limit" integer,
-  "sort_order" varchar,
-  "paginate" integer,
-  "requests" integer,
-  "role_id" integer,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_section_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]sections', 11000);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "content"
 --
 
@@ -367,9 +307,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
   "template_id" integer,
-  "section_id" integer,
   "media_id" integer,
-  "content_type_id" integer,
+  "content_type" varchar,
   "uri" text NOT NULL,
   "title" text NOT NULL,
   "description" text,
@@ -388,124 +327,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "created_by" integer,
   "updated_by" integer,
   UNIQUE ("id"),
-  CONSTRAINT "fk_content_template" FOREIGN KEY ("template_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_section" FOREIGN KEY ("section_id") REFERENCES "[{prefix}]sections" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_content_type" FOREIGN KEY ("content_type_id") REFERENCES "[{prefix}]content_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_template" FOREIGN KEY ("template_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE
   CONSTRAINT "fk_content_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 8000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "comments"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]comments" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "content_id" integer NOT NULL,
-  "parent_id" integer,
-  "user_id" integer,
-  "name" varchar,
-  "email" varchar,
-  "content" text NOT NULL,
-  "ip" varchar NOT NULL,
-  "ua" varchar NOT NULL,
-  "posted" datetime NOT NULL,
-  "approved" integer NOT NULL,
-  "spam" integer NOT NULL,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_comment_content" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_comment_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]comments', 12000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "fields"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar NOT NULL,
-  "type" varchar NOT NULL, -- input (text, file, etc), checkbox, radio, select, textarea, etc
-  "attributes" varchar,    -- field attributes, i.e., size="40", rows="5", etc
-  "values" varchar,        -- values for a selectable field type
-  "default" varchar,       -- default value or values
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]fields', 15000);
-
---
--- Dumping data for table "fields"
---
-
-INSERT INTO "[{prefix}]fields" ("id", "name", "type", "attributes") VALUES (15001, 'keywords', 'text', 'size="80"');
-INSERT INTO "[{prefix}]fields" ("id", "name", "type", "attributes") VALUES (15002, 'description', 'text', 'size="80"');
-
--- --------------------------------------------------------
-
---
--- Table structure for table "field_values"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
-  "content_id" integer NOT NULL,
-  "field_id" integer NOT NULL,
-  "value" text NOT NULL,
-  UNIQUE ("content_id", "field_id"),
-  CONSTRAINT "fk_field_content" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table "feeds"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]feeds" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "uri" varchar NOT NULL,
-  "title" varchar NOT NULL,
-  "template_id" integer,
-  "feed_limit" integer,
-  "cache_type" varchar,
-  "cache_limit" integer,
-  "role_id" integer,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_feed_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]feeds', 16000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "tags"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]tags" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "tag" varchar NOT NULL,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]tags', 17000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "tagged_content"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]tagged_content" (
-  "tag_id" integer NOT NULL,
-  "content_id" integer NOT NULL,
-  UNIQUE ("tag_id", "content_id"),
-  CONSTRAINT "fk_tag_id" FOREIGN KEY ("tag_id") REFERENCES "[{prefix}]tags" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_tag_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 7000);

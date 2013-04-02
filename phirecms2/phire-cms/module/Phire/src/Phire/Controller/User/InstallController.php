@@ -60,8 +60,10 @@ class InstallController extends C
      */
     public function index()
     {
-        if ((DB_INTERFACE != '') && (DB_NAME != '') && (!isset($this->sess->install))) {
-            throw new \Exception('The system is already installed.');
+        // If the system is installed
+        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
+            Response::redirect(BASE_PATH . APP_URI);
+        // Else, begin the install process
         } else {
             $install = new Model\Install(array('title' => 'Install'));
             $form = new Install($this->request->getFullUri(), 'post');
@@ -97,34 +99,53 @@ class InstallController extends C
      */
     public function user()
     {
-        $user = new Model\User(array('title' => 'Install User'));
-        $form = new User($this->request->getFullUri(), 'post', null, null, 2001);
-        if ($this->request->isPost()) {
-            $form->setFieldValues(
-                $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
-            );
-            if ($form->isValid()) {
-                $user->save($form);
-                $site = new Table\SiteRelationships(array(
-                    'id'           => $user->id,
-                    'site_id'      => 6001,
-                    'relationship' => 'user'
-                ));
-                $site->save();
-                $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a>.</p>');
-                $this->view = View::factory($this->viewPath . '/user.phtml', $user);
-                $this->send();
+        // If the system is installed
+        if ((DB_INTERFACE != '') && (DB_NAME != '') && !isset($this->sess->config)) {
+            Response::redirect(BASE_PATH . APP_URI);
+        // Else, if the initial install screen or config isn't complete
+        } else if ((DB_INTERFACE == '') && (DB_NAME == '')) {
+            if (isset($this->sess->config)) {
+                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/config');
+            } else {
+                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install');
+            }
+        // Else, install the first system user
+        } else {
+            $user = new Model\User(array('title' => 'Install User'));
+            $form = new User($this->request->getFullUri(), 'post', null, null, 2001);
+            if ($this->request->isPost()) {
+                $form->setFieldValues(
+                    $this->request->getPost(),
+                    array('strip_tags', 'htmlentities'),
+                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                );
+                if ($form->isValid()) {
+                    $user->save($form);
+
+                    // Link first initial system user to the initial site
+                    $site = new Table\SiteObjects(array(
+                        'id'      => $user->id,
+                        'site_id' => 6001,
+                        'object'  => 'user'
+                    ));
+                    $site->save();
+
+                    // Clear the session
+                    $this->sess->kill();
+
+                    $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a>.</p>');
+                    $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                    $this->send();
+                } else {
+                    $user->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                    $this->send();
+                }
             } else {
                 $user->set('form', $form);
                 $this->view = View::factory($this->viewPath . '/user.phtml', $user);
                 $this->send();
             }
-        } else {
-            $user->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/user.phtml', $user);
-            $this->send();
         }
     }
 
@@ -135,8 +156,13 @@ class InstallController extends C
      */
     public function config()
     {
+        // If the config was already written, redirect to the initial user screen
         if ((DB_INTERFACE != '') && (DB_NAME != '')) {
-            Response::redirect(BASE_PATH . $this->sess->app_uri . '/install/user');
+            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user');
+        // Else, if the initial install screen isn't complete
+        } else if (!isset($this->sess->config)) {
+            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install');
+        // Else, display config to be copied and pasted
         } else {
             $config = new Model\Install(array(
                 'title'  => 'Install Config',
