@@ -194,8 +194,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_types', 2000
 
 INSERT INTO "[{prefix}]user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
 (2001, 'user', 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', '', '', '');
-INSERT INTO "[{prefix}]user_types" ("id", "type", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-(2002, 'member', 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -219,8 +217,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_roles', 3000
 
 INSERT INTO "[{prefix}]user_roles" ("id", "type_id", "name") VALUES
 (3001, 2001, 'Admin');
-INSERT INTO "[{prefix}]user_roles" ("id", "type_id", "name") VALUES
-(3002, 2002, 'Full');
 
 -- --------------------------------------------------------
 
