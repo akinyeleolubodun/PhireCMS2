@@ -78,7 +78,7 @@ class Project extends P
         if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
                 if (!$suppress) {
-                    throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the application.');
+                    throw new \Exception('Error: The application is not properly configured. Please check the config file or install the application.');
                 } else {
                     return false;
                 }

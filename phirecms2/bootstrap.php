@@ -9,7 +9,7 @@ require_once 'config.php';
 // Check the path and URI constants
 if (!defined('BASE_PATH') || !defined('APP_PATH') || !defined('APP_URI') ||
     !defined('DB_INTERFACE') || !defined('DB_NAME')) {
-    throw new \Exception('Error: The config file is not properly configured. Please check the config file or install the system.');
+    throw new \Exception('Error: The application is not properly configured. Please check the config file or install the system.');
 }
 
 // Require the Pop Autoloader class file
