@@ -138,6 +138,11 @@ class Install extends \Pop\Mvc\Model
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->version() . "' WHERE setting = 'db_version'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . PHP_VERSION . "' WHERE setting = 'php_version'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . date('Y-m-d H:i:s') . "' WHERE setting = 'installed_on'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "user_types SET password_encryption = '" . $db->adapter()->escape($form->password_encryption) . "' WHERE id = 2001");
+
+        if ($form->password_salt != '') {
+            $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "user_types SET password_salt = '" . $db->adapter()->escape($form->password_salt) . "' WHERE id = 2001");
+        }
     }
 
 }

@@ -53,7 +53,7 @@ class InstallController extends C
     }
 
     /**
-     * Index method
+     * Index method to install initial system config
      *
      * @throws \Exception
      * @return void
@@ -93,7 +93,31 @@ class InstallController extends C
     }
 
     /**
-     * Install user method
+     * Manual install config method, if config file is not writable
+     *
+     * @return void
+     */
+    public function config()
+    {
+        // If the config was already written, redirect to the initial user screen
+        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
+            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user');
+        // Else, if the initial install screen isn't complete
+        } else if (!isset($this->sess->config)) {
+            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install');
+        // Else, display config to be copied and pasted
+        } else {
+            $config = new Model\Install(array(
+                'title'  => 'Install Config',
+                'config' => unserialize($this->sess->config)
+            ));
+            $this->view = View::factory($this->viewPath . '/config.phtml', $config);
+            $this->send();
+        }
+    }
+
+    /**
+     * Install initial user method
      *
      * @return void
      */
@@ -146,30 +170,6 @@ class InstallController extends C
                 $this->view = View::factory($this->viewPath . '/user.phtml', $user);
                 $this->send();
             }
-        }
-    }
-
-    /**
-     * Install config method
-     *
-     * @return void
-     */
-    public function config()
-    {
-        // If the config was already written, redirect to the initial user screen
-        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
-            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user');
-        // Else, if the initial install screen isn't complete
-        } else if (!isset($this->sess->config)) {
-            Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install');
-        // Else, display config to be copied and pasted
-        } else {
-            $config = new Model\Install(array(
-                'title'  => 'Install Config',
-                'config' => unserialize($this->sess->config)
-            ));
-            $this->view = View::factory($this->viewPath . '/config.phtml', $config);
-            $this->send();
         }
     }
 

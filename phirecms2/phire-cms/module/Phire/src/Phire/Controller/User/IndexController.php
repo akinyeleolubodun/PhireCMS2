@@ -47,7 +47,7 @@ class IndexController extends C
      */
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
-        if (\Phire\Project::isInstalled()) {
+        if (\Phire\Project::isInstalled(true)) {
             // Get the user type from the URI
             $type = str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
 
@@ -101,6 +101,8 @@ class IndexController extends C
                     }
                 }
             }
+        } else {
+            Response::redirect(BASE_PATH . APP_URI . '/install');
         }
     }
 

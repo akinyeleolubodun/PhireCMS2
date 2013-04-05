@@ -33,8 +33,10 @@ class IndexController extends C
             $request = new Request(null, BASE_PATH);
         }
 
-        if (\Phire\Project::isInstalled()) {
+        if (\Phire\Project::isInstalled(true)) {
             parent::__construct($request, $response, $project, $viewPath);
+        } else {
+            Response::redirect(BASE_PATH . APP_URI . '/install');
         }
     }
 
