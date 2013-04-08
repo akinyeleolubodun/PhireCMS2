@@ -316,6 +316,7 @@ CREATE SEQUENCE content_id_seq START 7001;
 CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL,
   "parent_id" integer,
+  "sibling_id" integer,
   "template_id" integer,
   "content_type" varchar(255),
   "uri" text NOT NULL,
@@ -327,7 +328,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "feed" integer,
   "force_ssl" integer,
   "order" integer,
-  "siblings" text,
   "role_id" integer,
   "live" integer,
   "created" timestamp,

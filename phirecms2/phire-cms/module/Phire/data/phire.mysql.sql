@@ -278,6 +278,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
 CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `parent_id` int(16),
+  `sibling_id` int(16),
   `template_id` int(16),
   `content_type` varchar(255),
   `uri` text NOT NULL,
@@ -288,7 +289,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `feed` int(1),
   `force_ssl` int(1),
   `order` int(16),
-  `siblings` text,
   `role_id` int(16),
   `live` int(1),
   `created` datetime,
