@@ -42,13 +42,7 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 
 CREATE TABLE IF NOT EXISTS `[{prefix}]plugins` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `author` varchar(255),
-  `version` varchar(255),
-  `description` varchar(255),
-  `file` varchar(255) NOT NULL,
   `folder` varchar(255) NOT NULL,
-  `tables` text NOT NULL,
   `active` int(1),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
@@ -108,36 +102,34 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]site_objects` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `templates`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
-  `id` int(16) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(16),
-  `content_type` varchar(255),
-  `device` varchar(255),
-  `name` varchar(255),
-  `template` mediumtext,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `themes`
 --
 
 CREATE TABLE IF NOT EXISTS `[{prefix}]themes` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `author` varchar(255),
-  `version` varchar(255),
-  `description` varchar(255),
-  `file` varchar(255) NOT NULL,
   `folder` varchar(255) NOT NULL,
   `active` int(1),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `templates`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `theme_id` int(16),
+  `file` varchar(255),
+  `parent_id` int(16),
+  `content_type` varchar(255),
+  `device` varchar(255),
+  `name` varchar(255),
+  `template` mediumtext,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_theme_template` FOREIGN KEY (`theme_id`) REFERENCES `[{prefix}]themes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
 
 -- --------------------------------------------------------
 
@@ -299,6 +291,5 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `created_by` int(16),
   `updated_by` int(16),
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_content_template` FOREIGN KEY (`template_id`) REFERENCES `[{prefix}]templates` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk_content_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `fk_content_template` FOREIGN KEY (`template_id`) REFERENCES `[{prefix}]templates` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;

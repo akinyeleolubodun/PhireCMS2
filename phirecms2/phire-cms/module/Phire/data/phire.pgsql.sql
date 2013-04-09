@@ -44,13 +44,7 @@ CREATE SEQUENCE plugin_id_seq START 10001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]plugins" (
   "id" integer NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "author" varchar(255),
-  "version" varchar(255),
-  "description" varchar(255),
-  "file" varchar(255) NOT NULL,
   "folder" varchar(255) NOT NULL,
-  "tables" text NOT NULL,
   "active" integer,
   PRIMARY KEY ("id")
 ) ;
@@ -116,26 +110,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]site_objects" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "templates"
---
-
-CREATE SEQUENCE template_id_seq START 8001;
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
-  "id" integer NOT NULL,
-  "parent_id" integer,
-  "content_type" varchar(255),
-  "device" varchar(255),
-  "name" varchar(255),
-  "template" text,
-  PRIMARY KEY ("id")
-) ;
-
-ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]templates"."id";
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "themes"
 --
 
@@ -143,17 +117,35 @@ CREATE SEQUENCE theme_id_seq START 9001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]themes" (
   "id" integer NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "author" varchar(255),
-  "version" varchar(255),
-  "description" varchar(255),
-  "file" varchar(255) NOT NULL,
   "folder" varchar(255) NOT NULL,
   "active" integer,
   PRIMARY KEY ("id")
 ) ;
 
 ALTER SEQUENCE theme_id_seq OWNED BY "[{prefix}]themes"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "templates"
+--
+
+CREATE SEQUENCE template_id_seq START 8001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
+  "id" integer NOT NULL,
+  "theme_id" integer,
+  "file" varchar(255),
+  "parent_id" integer,
+  "content_type" varchar(255),
+  "device" varchar(255),
+  "name" varchar(255),
+  "template" text,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "fk_theme_template" FOREIGN KEY ("theme_id") REFERENCES "[{prefix}]themes" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]templates"."id";
 
 -- --------------------------------------------------------
 
@@ -338,8 +330,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "created_by" integer,
   "updated_by" integer,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_content_template" FOREIGN KEY ("template_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "fk_content_template" FOREIGN KEY ("template_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
 ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";

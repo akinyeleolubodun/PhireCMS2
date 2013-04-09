@@ -48,13 +48,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_template', 
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]plugins" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar NOT NULL,
-  "author" varchar,
-  "version" varchar,
-  "description" varchar,
-  "file" varchar NOT NULL,
   "folder" varchar NOT NULL,
-  "tables" text NOT NULL,
   "active" integer,
   UNIQUE ("id")
 ) ;
@@ -118,40 +112,38 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]site_objects" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "templates"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "parent_id" integer,
-  "content_type" varchar,
-  "device" varchar,
-  "name" varchar,
-  "template" text,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 8000);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "themes"
 --
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]themes" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar NOT NULL,
-  "author" varchar,
-  "version" varchar,
-  "description" varchar,
-  "file" varchar NOT NULL,
   "folder" varchar NOT NULL,
   "active" integer,
   UNIQUE ("id")
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]themes', 9000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "templates"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "theme_id" integer,
+  "file" varchar(255),
+  "parent_id" integer,
+  "content_type" varchar,
+  "device" varchar,
+  "name" varchar,
+  "template" text,
+  UNIQUE ("id"),
+  CONSTRAINT "fk_theme_template" FOREIGN KEY ("theme_id") REFERENCES "[{prefix}]themes" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 8000);
 
 -- --------------------------------------------------------
 
@@ -325,7 +317,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "updated_by" integer,
   UNIQUE ("id"),
   CONSTRAINT "fk_content_template" FOREIGN KEY ("template_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-  CONSTRAINT "fk_content_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 7000);
