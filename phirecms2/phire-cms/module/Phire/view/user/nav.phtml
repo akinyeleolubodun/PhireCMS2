@@ -11,17 +11,40 @@ if (isset($user->username)) {
 ?>
     <ul>
         <li><a href="<?php echo BASE_PATH . APP_URI; ?>">Home</a></li>
-<?php
-if ($acl->isAllowed($role, 'users', 'read'))
-    echo '        <li><a href="' . BASE_PATH . APP_URI . '/users">Users</a></li>' . PHP_EOL;
-
-if ($acl->isAllowed($role, 'sessions', 'read'))
-    echo '        <li><a href="' . BASE_PATH . APP_URI . '/sessions">Sessions</a></li>' . PHP_EOL;
-
-if ($acl->isAllowed($role, 'roles', 'read'))
-    echo '        <li><a href="' . BASE_PATH . APP_URI . '/roles">Roles</a></li>' . PHP_EOL;
-
-if ($acl->isAllowed($role, 'types', 'read'))
-    echo '        <li><a href="' . BASE_PATH . APP_URI . '/types">Types</a></li>' . PHP_EOL;
-?>
+        <li>
+            <a href="<?php echo BASE_PATH . APP_URI; ?>/content">Content</a>
+            <ul>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/content/pages">Pages</a></li>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/content/templates">Templates</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="<?php echo BASE_PATH . APP_URI; ?>/media">Media</a>
+            <ul>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/media/files">Files</a></li>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/media/images">Images</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="<?php echo BASE_PATH . APP_URI; ?>/extensions">Extensions</a>
+            <ul>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes">Themes</a></li>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/extensions/plugins">Plugins</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="<?php echo BASE_PATH . APP_URI; ?>/system">System</a>
+            <ul>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/system/sites">Sites</a></li>
+                <li>
+                    <a href="<?php echo BASE_PATH . APP_URI; ?>/system/users">Users</a>
+                    <ul>
+                        <li><a href="<?php echo BASE_PATH . APP_URI; ?>/system/sessions">Sessions</a></li>
+                        <li><a href="<?php echo BASE_PATH . APP_URI; ?>/system/roles">Roles</a></li>
+                        <li><a href="<?php echo BASE_PATH . APP_URI; ?>/system/types">Types</a></li>
+                    </ul>
+                </li>
+                <li><a href="<?php echo BASE_PATH . APP_URI; ?>/system/config">Configuration</a></li>
+            </ul>
+        </li>
     </ul>
