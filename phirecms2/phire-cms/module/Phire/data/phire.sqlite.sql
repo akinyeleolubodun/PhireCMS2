@@ -26,15 +26,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]config" (
 --
 
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_version', '');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('server_os', '');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('server_software', '');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('db_version', '');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('php_version', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('installed_on', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('updated_on', '0000-00-00 00:00:00');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('table_optimization', '0');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('optimization_period', '');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('last_optimization', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_limit', '25');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_range', '10');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_editor', 'Source');
@@ -135,7 +128,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   "theme_id" integer,
   "file" varchar(255),
   "parent_id" integer,
-  "content_type" varchar,
   "device" varchar,
   "name" varchar,
   "template" text,

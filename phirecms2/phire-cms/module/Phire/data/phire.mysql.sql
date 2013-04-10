@@ -20,15 +20,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]config` (
 
 INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('system_version', ''),
-('server_os', ''),
-('server_software', ''),
-('db_version', ''),
-('php_version', ''),
 ('installed_on', '0000-00-00 00:00:00'),
 ('updated_on', '0000-00-00 00:00:00'),
-('table_optimization', '0'),
-('optimization_period', ''),
-('last_optimization', '0000-00-00 00:00:00'),
 ('pagination_limit', '25'),
 ('pagination_range', '10'),
 ('default_editor', 'Source'),
@@ -123,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
   `theme_id` int(16),
   `file` varchar(255),
   `parent_id` int(16),
-  `content_type` varchar(255),
   `device` varchar(255),
   `name` varchar(255),
   `template` mediumtext,
