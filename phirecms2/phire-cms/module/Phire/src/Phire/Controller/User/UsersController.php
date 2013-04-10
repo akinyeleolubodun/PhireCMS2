@@ -31,10 +31,6 @@ class UsersController extends IndexController
             $viewPath = __DIR__ . '/../../../../view/user/users';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH . APP_URI . '/users');
-        }
-
         parent::__construct($request, $response, $project, $viewPath);
     }
 

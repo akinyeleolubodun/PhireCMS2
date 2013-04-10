@@ -31,10 +31,6 @@ class SessionsController extends IndexController
             $viewPath = __DIR__ . '/../../../../view/user/sessions';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH . APP_URI . '/sessions');
-        }
-
         parent::__construct($request, $response, $project, $viewPath);
     }
 

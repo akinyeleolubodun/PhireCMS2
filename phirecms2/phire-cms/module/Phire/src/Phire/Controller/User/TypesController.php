@@ -31,10 +31,6 @@ class TypesController extends IndexController
             $viewPath = __DIR__ . '/../../../../view/user/types';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH . APP_URI . '/types');
-        }
-
         parent::__construct($request, $response, $project, $viewPath);
     }
 

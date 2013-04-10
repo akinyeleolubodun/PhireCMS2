@@ -29,10 +29,6 @@ class IndexController extends C
             $viewPath = __DIR__ . '/../../../view/';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH);
-        }
-
         if (\Phire\Project::isInstalled(true)) {
             parent::__construct($request, $response, $project, $viewPath);
         } else {

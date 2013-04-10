@@ -43,10 +43,6 @@ class InstallController extends C
             $viewPath = __DIR__ . '/../../../../view/user/install';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH . APP_URI . '/install');
-        }
-
         if (\Phire\Project::isInstalled()) {
             parent::__construct($request, $response, $project, $viewPath);
         }

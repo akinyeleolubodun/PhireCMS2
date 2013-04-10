@@ -31,10 +31,6 @@ class RolesController extends IndexController
             $viewPath = __DIR__ . '/../../../../view/user/roles';
         }
 
-        if (null === $request) {
-            $request = new Request(null, BASE_PATH . APP_URI . '/roles');
-        }
-
         parent::__construct($request, $response, $project, $viewPath);
     }
 

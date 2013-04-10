@@ -66,7 +66,7 @@ class IndexController extends C
                 $viewPath = __DIR__ . '/../../../../view/' . $type;
             }
 
-            if (null === $request) {
+            if (get_called_class() == 'Phire\Controller\User\IndexController') {
                 $basePath = ($type != 'user') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
                 $request = new Request(null, $basePath);
             }
