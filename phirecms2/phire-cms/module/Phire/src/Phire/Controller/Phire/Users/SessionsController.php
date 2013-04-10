@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\User;
+namespace Phire\Controller\Phire\Users;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -13,7 +13,7 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class SessionsController extends IndexController
+class SessionsController extends \Phire\Controller\Phire\IndexController
 {
 
     /**
@@ -28,7 +28,7 @@ class SessionsController extends IndexController
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../view/user/sessions';
+            $viewPath = __DIR__ . '/../../../../../view/phire/users';
         }
 
         parent::__construct($request, $response, $project, $viewPath);
@@ -49,7 +49,7 @@ class SessionsController extends IndexController
                 'title' => 'User Sessions'
             ));
             $session->getAll();
-            $this->view = View::factory($this->viewPath . '/index.phtml', $session);
+            $this->view = View::factory($this->viewPath . '/sessions.phtml', $session);
             $this->send();
         }
     }

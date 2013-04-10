@@ -80,10 +80,10 @@ class Role extends \Pop\Mvc\Model
         if ($fields['resource_new'] != '') {
             $resource = $fields['resource_new'];
             $permissions = $fields['permissions_new'];
-            unset($fields['resource_new']);
-            unset($fields['permissions_new']);
         }
 
+        unset($fields['resource_new']);
+        unset($fields['permissions_new']);
         unset($fields['id']);
         unset($fields['submit']);
 

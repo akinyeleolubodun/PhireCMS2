@@ -22,12 +22,14 @@ class Project extends P
         // Add main user routes
         $this->router->addControllers(array(
             APP_URI  => array(
-                '/'         => 'Phire\Controller\User\IndexController',
-                '/install'  => 'Phire\Controller\User\InstallController',
-                '/roles'    => 'Phire\Controller\User\RolesController',
-                '/sessions' => 'Phire\Controller\User\SessionsController',
-                '/types'    => 'Phire\Controller\User\TypesController',
-                '/users'    => 'Phire\Controller\User\UsersController'
+                '/'         => 'Phire\Controller\Phire\IndexController',
+                '/install'  => 'Phire\Controller\Phire\InstallController',
+                '/users'    => array(
+                    '/'         => 'Phire\Controller\Phire\Users\IndexController',
+                    '/sessions' => 'Phire\Controller\Phire\Users\SessionsController',
+                    '/roles'    => 'Phire\Controller\Phire\Users\RolesController',
+                    '/types'    => 'Phire\Controller\Phire\Users\TypesController'
+                )
             )
         ));
 
@@ -53,7 +55,7 @@ class Project extends P
                         }
                     // Else, just map to the base User controller
                     } else {
-                        $controller = 'Phire\Controller\User\IndexController';
+                        $controller = 'Phire\Controller\Phire\IndexController';
                     }
 
                     $this->router->addControllers(array(

@@ -5,7 +5,7 @@ include __DIR__ . '/../nav.phtml';
 
 if (isset($sessions[0])) {
     $i = null;
-    echo '    <form action="' . BASE_PATH . APP_URI . '/sessions/remove" method="post">' . PHP_EOL;
+    echo '    <form action="' . BASE_PATH . APP_URI . '/users/sessions/remove" method="post">' . PHP_EOL;
     echo '        <table cellpadding="5" cellspacing="5" border="0">' . PHP_EOL;
     echo '           <tr><th>ID #</th><th>Type</th><th>Username</th><th>IP</th><th>User Agent</th><th>Start</th><th>Remove?</th></tr>' . PHP_EOL;
     foreach ($sessions as $session) {

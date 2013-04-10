@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\User;
+namespace Phire\Controller\Phire\Users;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -13,11 +13,11 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class TypesController extends IndexController
+class RolesController extends \Phire\Controller\Phire\IndexController
 {
 
     /**
-     * Constructor method to instantiate the types controller object
+     * Constructor method to instantiate the roles controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -28,47 +28,47 @@ class TypesController extends IndexController
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../view/user/types';
+            $viewPath = __DIR__ . '/../../../../../view/phire/users';
         }
 
         parent::__construct($request, $response, $project, $viewPath);
     }
 
     /**
-     * Types index method
+     * Role index method
      *
      * @return void
      */
     public function index()
     {
-        if (!$this->isAuth('types', 'read')) {
+        if (!$this->isAuth('roles', 'read')) {
             Response::redirect(BASE_PATH . APP_URI . '/login');
         } else {
-            $type = new Model\Type(array(
+            $role = new Model\Role(array(
                 'acl'   => $this->project->getService('acl'),
-                'title' => 'User Types'
+                'title' => 'User Roles'
             ));
-            $type->getAll();
-            $this->view = View::factory($this->viewPath . '/index.phtml', $type);
+            $role->getAll();
+            $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
             $this->send();
         }
     }
 
     /**
-     * Type add method
+     * Role add method
      *
      * @return void
      */
     public function add()
     {
-        if (!$this->isAuth('types', 'add')) {
+        if (!$this->isAuth('roles', 'add')) {
             Response::redirect(BASE_PATH . APP_URI . '/login');
         } else {
-            $type = new Model\Type(array(
+            $role = new Model\Role(array(
                 'acl'   => $this->project->getService('acl'),
-                'title' => 'User Types &gt; Add'
+                'title' => 'User Roles &gt; Add'
             ));
-            $form = new Form\Type($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+            $form = new Form\Role($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
 
             // If form is submitted
             if ($this->request->isPost()) {
@@ -78,46 +78,46 @@ class TypesController extends IndexController
                     array(null, array(ENT_QUOTES, 'UTF-8'))
                 );
 
-                // If form is valid, save new type
+                // If form is valid, save new role
                 if ($form->isValid()) {
-                    $type->save($form);
-                    Response::redirect(BASE_PATH . APP_URI . '/types');
+                    $role->save($form);
+                    Response::redirect($this->request->getBasePath());
                 // Else, re-render the form with errors
                 } else {
-                    $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $type);
+                    $role->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
                     $this->send();
                 }
             // Else, render the form
             } else {
-                $type->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/index.phtml', $type);
+                $role->set('form', $form);
+                $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
                 $this->send();
             }
         }
     }
 
     /**
-     * Type edit method
+     * Role edit method
      *
      * @return void
      */
     public function edit()
     {
-        if (!$this->isAuth('types', 'edit')) {
+        if (!$this->isAuth('roles', 'edit')) {
             Response::redirect(BASE_PATH . APP_URI . '/login');
         } else if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $type = new Model\Type(array(
+            $role = new Model\Role(array(
                 'acl' => $this->project->getService('acl')
             ));
-            $type->getById($this->request->getPath(1));
+            $role->getById($this->request->getPath(1));
 
-            // If type is found and valid
-            if (null !== $type->type) {
-                $type->set('title', 'User Types &gt; ' . $type->type);
-                $form = new Form\Type($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+            // If role is found and valid
+            if (null !== $role->name) {
+                $role->set('title', 'User Roles &gt; ' . $role->name);
+                $form = new Form\Role($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ', $role->id);
 
                 // If form is submitted
                 if ($this->request->isPost()) {
@@ -127,58 +127,59 @@ class TypesController extends IndexController
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
 
-                    // If form is valid, save type
+                    // If form is valid, save role
                     if ($form->isValid()) {
-                        $type->update($form);
-                        Response::redirect(BASE_PATH . APP_URI . '/types');
+                        $role->update($form);
+                        Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {
-                        $type->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $type);
+                        $role->set('form', $form);
+                        $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
                         $this->send();
                     }
                 // Else, render form
                 } else {
-                    $typeValues = $type->asArray();
-                    unset($typeValues['acl']);
+                    $roleValues = $role->asArray();
+                    unset($roleValues['acl']);
                     $form->setFieldValues(
-                        $typeValues,
+                        $roleValues,
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $type);
+                    $role->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
                     $this->send();
                 }
-                // Else, redirect
+            // Else, redirect
             } else {
-                Response::redirect(BASE_PATH . APP_URI . '/types');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
 
     /**
-     * Type remove method
+     * Role remove method
      *
      * @return void
      */
     public function remove()
     {
-        if (!$this->isAuth('types', 'remove')) {
+        if (!$this->isAuth('roles', 'remove')) {
             Response::redirect(BASE_PATH . APP_URI . '/login');
         } else {
             // Loop through and delete the roles
             if ($this->request->isPost()) {
                 $post = $this->request->getPost();
-                if (isset($post['remove_types'])) {
-                    foreach ($post['remove_types'] as $id) {
-                        $type = Table\UserTypes::findById($id);
-                        if (isset($type->id)) {
-                            $type->delete();
+                if (isset($post['remove_roles'])) {
+                    foreach ($post['remove_roles'] as $id) {
+                        $role = Table\UserRoles::findById($id);
+                        if (isset($role->id)) {
+                            $role->delete();
                         }
                     }
                 }
             }
+
             Response::redirect($this->request->getBasePath());
         }
     }

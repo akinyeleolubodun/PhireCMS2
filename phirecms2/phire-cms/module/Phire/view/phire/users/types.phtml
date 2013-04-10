@@ -2,12 +2,12 @@
     <h1 style="color: #00f;">Phire Module &gt; <?php echo $title; ?></h1>
 <?php
 include __DIR__ . '/../nav.phtml';
-echo '    <p><a href="' . BASE_PATH . APP_URI . '/types/add">[+] Add</a></p>' . PHP_EOL;
+echo '    <p><a href="' . BASE_PATH . APP_URI . '/users/types/add">[+] Add</a></p>' . PHP_EOL;
 if (isset($form)) {
     echo $form;
 } else if (isset($types[0])) {
     $i = null;
-    echo '    <form action="' . BASE_PATH . APP_URI . '/types/remove" method="post">' . PHP_EOL;
+    echo '    <form action="' . BASE_PATH . APP_URI . '/users/types/remove" method="post">' . PHP_EOL;
     echo '        <table cellpadding="5" cellspacing="5" border="0">' . PHP_EOL;
     echo '           <tr><th>ID #</th><th><strong>Name</strong></th><th><strong>Remove?</strong></th></tr>' . PHP_EOL;
     foreach ($types as $type) {
@@ -17,7 +17,7 @@ if (isset($form)) {
         } else {
             $remove = null;
         }
-        echo '           <tr><td>' . $type->id . '</td><td><a href="' . BASE_PATH . APP_URI . '/types/edit/' . $type->id . '">' . $type->type . '</a></td><td>' . $remove . '</td></tr>' . PHP_EOL;
+        echo '           <tr><td>' . $type->id . '</td><td><a href="' . BASE_PATH . APP_URI . '/users/types/edit/' . $type->id . '">' . $type->type . '</a></td><td>' . $remove . '</td></tr>' . PHP_EOL;
     }
     echo '           <tr><td colspan="3"><input type="submit" name="submit" value="Remove" /></td></tr>' . PHP_EOL;
     echo '        </table>' . PHP_EOL;

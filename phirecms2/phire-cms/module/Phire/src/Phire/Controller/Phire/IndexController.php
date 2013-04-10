@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\User;
+namespace Phire\Controller\Phire;
 
 use Pop\Auth;
 use Pop\Http\Response;
@@ -63,10 +63,10 @@ class IndexController extends C
             }
 
             if (null === $viewPath) {
-                $viewPath = __DIR__ . '/../../../../view/' . $type;
+                $viewPath = __DIR__ . '/../../../../view/phire';
             }
 
-            if (get_called_class() == 'Phire\Controller\User\IndexController') {
+            if (get_called_class() == 'Phire\Controller\Phire\IndexController') {
                 $basePath = ($type != 'user') ? BASE_PATH . '/' . strtolower($type) : BASE_PATH . APP_URI;
                 $request = new Request(null, $basePath);
             }
@@ -151,7 +151,8 @@ class IndexController extends C
                 } else if (isset($this->sess->authError)) {
                     $user->set('error', 'The user is not allowed in this area.');
                 }
-                $form = new Form\Login($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+
+                $form = new Form\Login($this->request->getFullUri(), 'post', null, '    ');
 
                 // If form is submitted
                 if ($this->request->isPost()) {

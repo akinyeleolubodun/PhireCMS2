@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\User;
+namespace Phire\Controller\Phire;
 
 use Pop\Auth;
 use Pop\Http\Response;
@@ -40,7 +40,7 @@ class InstallController extends C
         $this->sess = Session::getInstance();
 
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../view/user/install';
+            $viewPath = __DIR__ . '/../../../../view/phire/install';
         }
 
         if (\Phire\Project::isInstalled()) {
@@ -59,6 +59,9 @@ class InstallController extends C
         // If the system is installed
         if ((DB_INTERFACE != '') && (DB_NAME != '')) {
             Response::redirect(BASE_PATH . APP_URI);
+        // Else, if the install process has begin but is not complete
+        } else if (isset($this->sess->config) && isset($this->sess->app_uri) && (DB_INTERFACE == '') && (DB_NAME == '')) {
+            Response::redirect(BASE_PATH . APP_URI . '/install/config');
         // Else, begin the install process
         } else {
             $install = new Model\Install(array('title' => 'Install'));
@@ -105,7 +108,8 @@ class InstallController extends C
         } else {
             $config = new Model\Install(array(
                 'title'  => 'Install Config',
-                'config' => unserialize($this->sess->config)
+                'config' => unserialize($this->sess->config),
+                'uri'    => BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user'
             ));
             $this->view = View::factory($this->viewPath . '/config.phtml', $config);
             $this->send();

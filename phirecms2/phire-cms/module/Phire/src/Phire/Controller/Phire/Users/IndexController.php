@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\User;
+namespace Phire\Controller\Phire\Users;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -13,7 +13,7 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class UsersController extends IndexController
+class IndexController extends \Phire\Controller\Phire\IndexController
 {
 
     /**
@@ -28,7 +28,7 @@ class UsersController extends IndexController
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../view/user/users';
+            $viewPath = __DIR__ . '/../../../../../view/phire/users';
         }
 
         parent::__construct($request, $response, $project, $viewPath);
@@ -70,7 +70,7 @@ class UsersController extends IndexController
                     'acl'   => $this->project->getService('acl'),
                     'title' => 'User &gt; Add'
                 ));
-                $form = new Form\User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', null, '    ');
+                $form = new Form\User($this->request->getFullUri(), 'post', null, '    ');
 
                 // If form is submitted
                 if ($this->request->isPost()) {
@@ -82,7 +82,7 @@ class UsersController extends IndexController
 
                     // If form is valid, redirect to the second part of the form
                     if ($form->isValid()) {
-                        Response::redirect($this->request->getBasePath() . $this->request->getRequestUri() . '/' . $form->type_id);
+                        Response::redirect($this->request->getFullUri() . '/' . $form->type_id);
                     // Else, re-render the form with errors
                     } else {
                         $user->set('form', $form);
