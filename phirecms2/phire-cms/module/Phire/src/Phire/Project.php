@@ -104,21 +104,19 @@ class Project extends P
 
         // Check if the necessary directories are writable for Windows.
         if (stripos(PHP_OS, 'win') !== false) {
-            touch($contentDir . '/writetest.txt');
-            clearstatcache();
-            if (!file_exists($contentDir . '/writetest.txt')) {
+            if ((@touch($contentDir . '/writetest.txt')) == false) {
                 $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
             } else {
                 unlink($contentDir . '/writetest.txt');
+                clearstatcache();
             }
             foreach ($files as $value) {
                 if (is_dir($value)) {
-                    touch($value . '/writetest.txt');
-                    clearstatcache();
-                    if (!file_exists($value . '/writetest.txt')) {
+                    if ((@touch($value . '/writetest.txt')) == false) {
                         $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $value) . " is not writable.";
                     } else {
                         unlink($value . '/writetest.txt');
+                        clearstatcache();
                     }
                 }
             }
