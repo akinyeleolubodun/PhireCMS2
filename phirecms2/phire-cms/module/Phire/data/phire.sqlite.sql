@@ -286,7 +286,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_sessions', 4
 CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
-  "sibling_id" integer,
   "template_id" integer,
   "content_type" varchar,
   "uri" text NOT NULL,
@@ -312,3 +311,26 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 7000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "media"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]media" (
+  "id" integer NOT NULL,
+  "content_type" varchar,
+  "file" text NOT NULL,
+  "title" text,
+  "caption" text,
+  "description" text
+  "order" integer
+  "uploaded" datetime,
+  "updated" datetime,
+  "created_by" integer,
+  "updated_by" integer,
+  PRIMARY KEY ("id")
+) ;
+
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]media', 11000);

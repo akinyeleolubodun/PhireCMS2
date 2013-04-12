@@ -262,7 +262,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
 CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `parent_id` int(16),
-  `sibling_id` int(16),
   `template_id` int(16),
   `content_type` varchar(255),
   `uri` text NOT NULL,
@@ -285,3 +284,25 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_content_template` FOREIGN KEY (`template_id`) REFERENCES `[{prefix}]templates` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `media`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]media` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `content_type` varchar(255),
+  `file` text NOT NULL,
+  `title` text,
+  `caption` text,
+  `description` text
+  `order` int(16)
+  `uploaded` datetime,
+  `updated` datetime,
+  `created_by` int(16),
+  `updated_by` int(16),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=11001 ;

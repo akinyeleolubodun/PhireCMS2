@@ -300,7 +300,6 @@ CREATE SEQUENCE content_id_seq START 7001;
 CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL,
   "parent_id" integer,
-  "sibling_id" integer,
   "template_id" integer,
   "content_type" varchar(255),
   "uri" text NOT NULL,
@@ -326,3 +325,28 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
 ) ;
 
 ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "media"
+--
+
+CREATE SEQUENCE media_id_seq START 11001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]media" (
+  "id" integer NOT NULL,
+  "content_type" varchar(255),
+  "file" text NOT NULL,
+  "title" text,
+  "caption" text,
+  "description" text
+  "order" integer
+  "uploaded" timestamp,
+  "updated" timestamp,
+  "created_by" integer,
+  "updated_by" integer,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE media_id_seq OWNED BY "[{prefix}]media"."id";
