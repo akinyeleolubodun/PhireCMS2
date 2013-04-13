@@ -130,6 +130,20 @@ class Install extends \Pop\Mvc\Model
                 "' WHERE id = 6001"
         );
 
+        $db->adapter()->query(
+            "UPDATE " . $db->adapter()->escape($dbPrefix) .
+                "content SET created = '" . $db->adapter()->escape(date('Y-m-d h:i:s')) .
+                "', published = '" . $db->adapter()->escape(date('Y-m-d h:i:s')) .
+                "' WHERE id = 7001"
+        );
+
+        $db->adapter()->query(
+            "UPDATE " . $db->adapter()->escape($dbPrefix) .
+                "content SET created = '" . $db->adapter()->escape(date('Y-m-d h:i:s')) .
+                "', published = '" . $db->adapter()->escape(date('Y-m-d h:i:s')) .
+                "' WHERE id = 7002"
+        );
+
         // Set the system configuration
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '2.0.0' WHERE setting = 'system_version'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_docroot'");

@@ -274,7 +274,7 @@ ALTER SEQUENCE user_id_seq OWNED BY "[{prefix}]users"."id";
 -- Table structure for table "user_sessions"
 --
 
-CREATE SEQUENCE session_id_seq START 4001;
+CREATE SEQUENCE session_id_seq START 5001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "id" integer NOT NULL DEFAULT nextval('session_id_seq'),
@@ -353,3 +353,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
 
 ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 
+--
+-- Dumping data for table "[{prefix}]content"
+--
+
+INSERT INTO "[{prefix}]content" ("id", "parent_id", "template_id", "media_id", "content_type", "uri", "title", "description", "content", "requests", "feed", "force_ssl", "order", "roles", "private", "live", "created", "published", "expires", "updated", "created_by", "updated_by") VALUES
+(7001, 0, NULL, NULL, 'text/html', '/', 'My Home Page', 'My home page description', '        <p>This is my home page.</p>\n', 0, 1, 0, 0, '', 0, 1, NULL, NULL, NULL, NULL, 1001, NULL),
+(7002, 0, NULL, NULL, 'text/html', '/about', 'My About Page', 'My about page description', '        <p>This is my about page.</p>\n', 0, 1, 0, 0, '', 0, 1, NULL, NULL, NULL, NULL, 1001, NULL);
