@@ -28,7 +28,7 @@ class RolesController extends \Phire\Controller\Phire\IndexController
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../../view/phire/users';
+            $viewPath = __DIR__ . '/../../../../../view/users';
         }
 
         parent::__construct($request, $response, $project, $viewPath);

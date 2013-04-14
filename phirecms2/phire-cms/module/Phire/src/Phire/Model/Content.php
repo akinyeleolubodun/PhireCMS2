@@ -29,7 +29,11 @@ class Content extends \Pop\Mvc\Model
      */
     public function getByUri($uri)
     {
+        $site = Table\Sites::getSite();
+        $this->data['site'] = new \ArrayObject($site->getValues(), \ArrayObject::ARRAY_AS_PROPS);
+
         $content = Table\Content::findBy(array('uri' => $uri));
+
         if(isset($content->id)) {
             $this->data = array_merge($this->data, $content->getValues());
             $this->data['code'] = 200;

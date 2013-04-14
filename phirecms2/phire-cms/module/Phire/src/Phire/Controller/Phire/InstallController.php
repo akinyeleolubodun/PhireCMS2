@@ -40,7 +40,7 @@ class InstallController extends C
         $this->sess = Session::getInstance();
 
         if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../../view/phire/install';
+            $viewPath = __DIR__ . '/../../../../view/install';
         }
 
         if (\Phire\Project::isInstalled()) {

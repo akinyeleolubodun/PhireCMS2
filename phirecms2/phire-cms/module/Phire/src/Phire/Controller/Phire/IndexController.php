@@ -63,7 +63,7 @@ class IndexController extends C
             }
 
             if (null === $viewPath) {
-                $viewPath = __DIR__ . '/../../../../view/phire';
+                $viewPath = __DIR__ . '/../../../../view';
             }
 
             if (get_called_class() == 'Phire\Controller\Phire\IndexController') {
