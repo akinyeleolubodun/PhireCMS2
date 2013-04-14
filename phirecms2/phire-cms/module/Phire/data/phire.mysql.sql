@@ -92,6 +92,14 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]site_objects` (
   CONSTRAINT `fk_site_object` FOREIGN KEY (`site_id`) REFERENCES `[{prefix}]sites` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
+--
+-- Dumping data for table `[{prefix}]site_objects`
+--
+
+INSERT INTO `[{prefix}]site_objects` (`id`, `site_id`, `object`) VALUES
+(7001, 6001, 'page'),
+(7002, 6001, 'page');
+
 -- --------------------------------------------------------
 
 --

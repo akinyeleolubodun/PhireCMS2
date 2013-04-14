@@ -10,6 +10,7 @@ use Pop\Mvc\Controller as C;
 use Pop\Mvc\Model;
 use Pop\Mvc\View;
 use Pop\Project\Project;
+use Phire\Model\Content;
 
 class IndexController extends C
 {
@@ -25,26 +26,11 @@ class IndexController extends C
      */
     public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
     {
-        if (null === $viewPath) {
-            $viewPath = __DIR__ . '/../../../view/';
-        }
-
         if (\Phire\Project::isInstalled(true)) {
             parent::__construct($request, $response, $project, $viewPath);
         } else {
             Response::redirect(BASE_PATH . APP_URI . '/install');
         }
-    }
-
-    /**
-     * Index method
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $this->view = View::factory($this->viewPath . '/index.phtml', new Model(array('title' => 'Home')));
-        $this->send();
     }
 
     /**
@@ -54,8 +40,10 @@ class IndexController extends C
      */
     public function error()
     {
-        $this->view = View::factory($this->viewPath . '/error.phtml', new Model(array('title' => '404 Error')));
-        $this->send(404);
+        $content = new Content();
+        $content->getByUri($this->request->getRequestUri());
+        $this->view = View::factory($content->template, $content);
+        $this->send($content->code);
     }
 
 }
