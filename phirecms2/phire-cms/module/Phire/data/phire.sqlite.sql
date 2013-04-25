@@ -31,7 +31,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('updated_on', '0000-
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_limit', '25');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_range', '10');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_editor', 'Source');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_template', '<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{title}]</h1>\n[{content}]\n</body>\n\n</html>');
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_template', '<!DOCTYPE html>' || x'0A' || '<!-- Header //-->' || x'0A' || '<html>' || x'0A' || '' || x'0A' || '<head>' || x'0A' || '' || x'0A' || '    <title>' || x'0A' || '        [{title}]' || x'0A' || '    </title>' || x'0A' || '' || x'0A' || '    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' || x'0A' || '' || x'0A' || '</head>' || x'0A' || '' || x'0A' || '<body>' || x'0A' || '    <h1>[{title}]</h1>' || x'0A' || '[{content}]' || x'0A' || '</body>' || x'0A' || '' || x'0A' || '</html>');
 
 -- --------------------------------------------------------
 

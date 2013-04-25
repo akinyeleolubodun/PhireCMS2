@@ -49,8 +49,8 @@ class Sites extends Record
                     break;
             }
             $sql->select()->where()
-                ->equalTo('domain', '?', 'OR')
-                ->like('aliases', '?');
+                ->equalTo('domain', $domain, 'OR')
+                ->like('aliases', $aliases);
 
             return self::execute($sql->render(true), array($_SERVER['HTTP_HOST'], '%' . $_SERVER['HTTP_HOST'] . '%'));
         } else {

@@ -25,7 +25,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
 ('pagination_limit', '25'),
 ('pagination_range', '10'),
 ('default_editor', 'Source'),
-('default_template', '<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{title}]</h1>\n[{content}]\n</body>\n\n</html>');
+('default_template', E'<!DOCTYPE html>\n<!-- Header //-->\n<html>\n\n<head>\n\n    <title>\n        [{title}]\n    </title>\n\n    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n\n</head>\n\n<body>\n    <h1>[{title}]</h1>\n[{content}]\n</body>\n\n</html>');
 
 -- --------------------------------------------------------
 
