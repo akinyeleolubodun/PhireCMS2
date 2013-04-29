@@ -381,7 +381,6 @@ class User extends \Pop\Mvc\Model
     public function sendVerification(\Phire\Table\Users $user, $type)
     {
         $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
-        $viewPath = ($type->type != 'user') ? strtolower($type->type) : 'phire';
         $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
 
         $rcpt = array(
@@ -394,7 +393,7 @@ class User extends \Pop\Mvc\Model
 
         $mail = new Mail($domain . ' - Email Verification', $rcpt);
         $mail->from('noreply@' . $domain);
-        $mail->setText(file_get_contents(__DIR__ . '/../../../view/' . $viewPath . '/mail/verify.txt'));
+        $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/verify.txt'));
         $mail->send();
     }
 
@@ -452,7 +451,6 @@ class User extends \Pop\Mvc\Model
             $user->save();
 
             $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
-            $viewPath = ($type->type != 'user') ? strtolower($type->type) : 'phire';
             $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
 
             $rcpt = array(
@@ -467,7 +465,7 @@ class User extends \Pop\Mvc\Model
 
             $mail = new Mail($domain . ' - Password Reset', $rcpt);
             $mail->from('noreply@' . $domain);
-            $mail->setText(file_get_contents(__DIR__ . '/../../../view/' . $viewPath . '/mail/forgot.txt'));
+            $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/forgot.txt'));
             $mail->send();
 
         }
