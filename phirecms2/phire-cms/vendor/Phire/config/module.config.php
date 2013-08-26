@@ -33,7 +33,7 @@ return array(
                 'children' => array(
                     array(
                         'name' => 'Content',
-                        'href' => BASE_PATH . APP_URI . '/content'
+                        'href' => BASE_PATH . APP_URI . '/content',
                         'children' => array(
                             array(
                                 'name' => 'Categories',
@@ -59,7 +59,7 @@ return array(
                     ),
                     array(
                         'name' => 'Users',
-                        'href' => BASE_PATH . APP_URI . '/users'
+                        'href' => BASE_PATH . APP_URI . '/users',
                         'children' => array(
                             array(
                                 'name' => 'User Roles',

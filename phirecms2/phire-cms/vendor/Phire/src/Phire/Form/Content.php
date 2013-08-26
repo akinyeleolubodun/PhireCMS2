@@ -230,7 +230,7 @@ class Content extends Form
                 'marked' => 0
             );
             $rolesAry = array();
-            $roles = \PopUser\Table\UserRoles::findAll('id ASC');
+            $roles = \Phire\Table\UserRoles::findAll('id ASC');
             foreach ($roles->rows as $role) {
                 $rolesAry[$role->id] = $role->name;
             }

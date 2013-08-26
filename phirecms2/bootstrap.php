@@ -18,10 +18,10 @@ require_once __DIR__ . APP_PATH . '/vendor/PopPHPFramework/src/Pop/Loader/Autolo
 // Create the autoloader object and register the Phire application
 $autoloader = new \Pop\Loader\Autoloader();
 $autoloader->splAutoloadRegister(false);
-$autoloader->register('Phire', __DIR__ . APP_PATH . '/module/Phire/src');
+$autoloader->register('Phire', __DIR__ . APP_PATH . '/vendor/Phire/src');
 
 // Create the Phire project object
 $project = \Phire\Project::factory(
     include __DIR__ . APP_PATH . '/config/project.config.php',
-    include __DIR__ . APP_PATH . '/module/Phire/config/module.config.php'
+    include __DIR__ . APP_PATH . '/vendor/Phire/config/module.config.php'
 );

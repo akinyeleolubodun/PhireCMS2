@@ -28,8 +28,10 @@ class Project extends P
             throw new \Exception('Error: The content folder(s) are not writable.');
         }
 
+
         $modulesDirs = array(
             __DIR__ . '/../../../',
+            __DIR__ . '/../../../../module',
             $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/',
             $_SERVER['DOCUMENT_ROOT'] . '/../module/'
         );
@@ -41,7 +43,8 @@ class Project extends P
                 $dirs = $dir->getFiles();
                 sort($dirs);
                 foreach ($dirs as $d) {
-                    if (($d != 'config') && ($d != 'vendor') && (is_dir($directory . $d))) {
+                    $moduleCfg = null;
+                    if (($d != 'PopPHPFramework') && ($d != 'config') && ($d != 'vendor') && (is_dir($directory . $d))) {
                         $this->loadAssets($directory . $d . '/data', $d);
                         if ($d != 'Phire') {
                             if (file_exists($directory . $d . '/src')) {
@@ -58,8 +61,10 @@ class Project extends P
                                     $moduleCfg[$d]->merge($override[$d]);
                                 }
                             }
-                            // Load module config
-                            $this->loadModule($moduleCfg);
+                            // Load module configs
+                            if (null !== $moduleCfg) {
+                                $this->loadModule($moduleCfg);
+                            }
                         }
                     }
                 }
