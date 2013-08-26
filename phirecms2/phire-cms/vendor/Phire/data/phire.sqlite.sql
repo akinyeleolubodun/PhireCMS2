@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "ph_config" (
 -- Dumping data for table "ph_config"
 --
 
-INSERT INTO "ph_config" ("setting", "value") VALUES ('system_version', '2.0.0');
+INSERT INTO "ph_config" ("setting", "value") VALUES ('system_version', '');
 INSERT INTO "ph_config" ("setting", "value") VALUES ('system_document_root', '');
 INSERT INTO "ph_config" ("setting", "value") VALUES ('server_operating_system', '');
 INSERT INTO "ph_config" ("setting", "value") VALUES ('server_software', '');
@@ -82,8 +82,7 @@ CREATE TABLE IF NOT EXISTS "ph_user_types" (
   "log_exclude" text,
   "controller" text,
   "sub_controllers" text,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_default_role" FOREIGN KEY ("default_role_id") REFERENCES "ph_user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  UNIQUE ("id")
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('ph_user_types', 2000);
@@ -93,9 +92,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('ph_user_types', 2000);
 --
 
 INSERT INTO "ph_user_types" ("id", "type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-(2001, 'user', 3002, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', '', '', '');
-INSERT INTO "ph_user_types" ("id", "type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-(2002, 'member', 3004, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '', '', '');
+(2001, 'user', 3001, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 2, '', '', '', '', '', '', '');;
 
 -- --------------------------------------------------------
 
@@ -119,12 +116,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('ph_user_roles', 3000);
 
 INSERT INTO "ph_user_roles" ("id", "type_id", "name") VALUES
 (3001, 2001, 'Admin');
-INSERT INTO "ph_user_roles" ("id", "type_id", "name") VALUES
-(3002, 2001, 'Restricted');
-INSERT INTO "ph_user_roles" ("id", "type_id", "name") VALUES
-(3003, 2002, 'Full');
-INSERT INTO "ph_user_roles" ("id", "type_id", "name") VALUES
-(3004, 2002, 'Basic');
 
 -- --------------------------------------------------------
 
@@ -166,13 +157,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('ph_users', 1000);
 --
 -- Dumping data for table "ph_users"
 --
-
-INSERT INTO "ph_users" ("id", "type_id", "role_id", "username", "password", "email", "verified") VALUES
-(1001, 2001, 3001, 'admin', 'babfd5547a2ee2692ee03d3f0d973dc8ce7297d4', 'test@admin.com', 1);
-INSERT INTO "ph_users" ("id", "type_id", "role_id", "username", "password", "email", "verified") VALUES
-(1002, 2001, 3002, 'testuser', 'c214105243281cf6147b81fde537bc2769200211', 'test@user.com', 1);
-INSERT INTO "ph_users" ("id", "type_id", "role_id", "username", "password", "email", "verified") VALUES
-(1003, 2002, 3003, 'test@member.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'test@member.com', 1);
 
 -- --------------------------------------------------------
 

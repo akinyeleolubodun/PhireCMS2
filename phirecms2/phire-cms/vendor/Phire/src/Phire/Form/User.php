@@ -160,7 +160,10 @@ class User extends Form
                     'label'      => 'Username:',
                     'required'   => true,
                     'attributes' => array('size' => 40),
-                    'validators' => new Validator\AlphaNumeric()
+                    'validators' => array(
+                        new Validator\AlphaNumeric(),
+                        new Validator\LengthGte(4)
+                    )
                 )
             );
         } else {

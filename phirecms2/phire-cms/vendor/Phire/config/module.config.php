@@ -10,7 +10,8 @@ return array(
         'routes' => array(
             '/' => 'Phire\Controller\IndexController',
             APP_URI  => array(
-                '/' => 'Phire\Controller\User\IndexController',
+                '/'         => 'Phire\Controller\User\IndexController',
+                '/install'  => 'Phire\Controller\Install\IndexController',
                 '/content'  => array(
                     '/'           => 'Phire\Controller\Content\IndexController',
                     '/categories' => 'Phire\Controller\Content\CategoriesController',

@@ -11,6 +11,11 @@ class Project extends P
 {
 
     /**
+     * Phire version
+     */
+    const VERSION = '2.0.0';
+
+    /**
      * Project assets
      */
     protected $assets = null;
@@ -24,10 +29,11 @@ class Project extends P
      */
     public function load($autoloader)
     {
+        self::isInstalled();
+
         if (!self::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH)) {
             throw new \Exception('Error: The content folder(s) are not writable.');
         }
-
 
         $modulesDirs = array(
             __DIR__ . '/../../../',
@@ -117,59 +123,64 @@ class Project extends P
             }
         }
 
-        // Load any user routes and initialize the ACL object
-        $this->loadUserRoutes();
-        $this->initAcl();
-
-        // Set the auth method to trigger on 'dispatch.pre'
-        $this->attachEvent('dispatch.pre', function($router) {
-            $resource = $router->getControllerClass();
-            $permission = $router->getAction();
-
-            // Check for the resource and permission
-            if ($resource != 'Phire\Controller\IndexController') {
-                if (null === $router->project()->getService('acl')->getResource($resource)) {
-                    $resource = null;
-                    $permission = null;
-                }
-
-                // Get the user URI
-                $uri = ($router->project()->getService('acl')->getType()->type == 'user') ?
-                    APP_URI :
-                    '/' . strtolower($router->project()->getService('acl')->getType()->type);
-
-                // If not logged in for unsubscribe and required, redirect to the system login
-                if (($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/unsubscribe') &&
-                    ($router->project()->getService('acl')->getType()->unsubscribe_login) &&
-                    (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                    \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
-                    return \Pop\Event\Manager::KILL;
-                // Else, if not logged in or allowed, redirect to the system login
-                } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
-                    ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
-                    ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
-                    ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
-                    (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
-                    (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                    \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
-                    return \Pop\Event\Manager::KILL;
-                // Else, if logged in and allowed, and a system access URI, redirect back to the system
-                } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
-                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
-                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
-                    ($router->project()->getService('acl')->isAuth($resource, $permission))) {
-                    \Pop\Http\Response::redirect(BASE_PATH . $uri);
-                    return \Pop\Event\Manager::KILL;
-                }
-            }
-        });
-
-        // If SSL is required for this user type, and not SSL,
-        // redirect to SSL, else, just run
-        if (($this->getService('acl')->getType()->force_ssl) && !($_SERVER['SERVER_PORT'] == '443')) {
-            \Pop\Http\Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        } else {
+        // If the path is the install path
+        if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') !== false)) {
             parent::run();
+        // Else, load any user routes and initialize the ACL object
+        } else {
+            $this->loadUserRoutes();
+            $this->initAcl();
+
+            // Set the auth method to trigger on 'dispatch.pre'
+            $this->attachEvent('dispatch.pre', function($router) {
+                $resource = $router->getControllerClass();
+                $permission = $router->getAction();
+
+                // Check for the resource and permission
+                if (($resource != 'Phire\Controller\IndexController') && ($resource != 'Phire\Controller\Install\IndexController')) {
+                    if (null === $router->project()->getService('acl')->getResource($resource)) {
+                        $resource = null;
+                        $permission = null;
+                    }
+
+                    // Get the user URI
+                    $uri = ($router->project()->getService('acl')->getType()->type == 'user') ?
+                        APP_URI :
+                        '/' . strtolower($router->project()->getService('acl')->getType()->type);
+
+                    // If not logged in for unsubscribe and required, redirect to the system login
+                    if (($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/unsubscribe') &&
+                        ($router->project()->getService('acl')->getType()->unsubscribe_login) &&
+                        (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
+                        \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                        return \Pop\Event\Manager::KILL;
+                    // Else, if not logged in or allowed, redirect to the system login
+                    } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
+                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
+                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
+                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
+                        (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
+                        (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
+                        \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                        return \Pop\Event\Manager::KILL;
+                    // Else, if logged in and allowed, and a system access URI, redirect back to the system
+                    } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
+                        ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
+                        ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
+                        ($router->project()->getService('acl')->isAuth($resource, $permission))) {
+                        \Pop\Http\Response::redirect(BASE_PATH . $uri);
+                        return \Pop\Event\Manager::KILL;
+                    }
+                }
+            });
+
+            // If SSL is required for this user type, and not SSL,
+            // redirect to SSL, else, just run
+            if (($this->getService('acl')->getType()->force_ssl) && !($_SERVER['SERVER_PORT'] == '443')) {
+                \Pop\Http\Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            } else {
+                parent::run();
+            }
         }
     }
 
@@ -314,6 +325,27 @@ class Project extends P
                 }
             }
         }
+    }
+
+    /**
+     * Method to check if the system is installed
+     *
+     * @param  boolean $suppress
+     * @throws \Exception
+     * @return boolean
+     */
+    public static function isInstalled($suppress = false)
+    {
+        if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
+            ((DB_INTERFACE == '') || (DB_NAME == ''))) {
+            if (!$suppress) {
+                throw new \Exception('Error: The application is not properly configured. Please check the config file or install the application.');
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -19,7 +19,7 @@ PRIMARY KEY ("setting")
 --
 
 INSERT INTO "ph_config" ("setting", "value") VALUES
-('system_version', '2.0.0'),
+('system_version', ''),
 ('system_document_root', ''),
 ('server_operating_system', ''),
 ('server_software', ''),
@@ -88,8 +88,7 @@ ALTER SEQUENCE type_id_seq OWNED BY "ph_user_types"."id";
 --
 
 INSERT INTO "ph_user_types" ("type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-('user', 3002, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, '', '', '', '', '', '', ''),
-('member', 3004, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 2, '', '', '', '', '', '', '');
+('user', 3001, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -114,10 +113,7 @@ ALTER SEQUENCE role_id_seq OWNED BY "ph_user_roles"."id";
 --
 
 INSERT INTO "ph_user_roles" ("type_id", "name") VALUES
-(2001, 'Admin'),
-(2001, 'Restricted'),
-(2002, 'Full'),
-(2002, 'Basic');
+(2001, 'Admin');
 
 ALTER TABLE "ph_user_types" ADD CONSTRAINT "fk_default_role" FOREIGN KEY ("default_role_id") REFERENCES "ph_user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -163,11 +159,6 @@ ALTER SEQUENCE user_id_seq OWNED BY "ph_users"."id";
 --
 -- Dumping data for table "ph_users"
 --
-
-INSERT INTO "ph_users" ("type_id", "role_id", "username", "password", "email", "verified") VALUES
-(2001, 3001, 'admin', 'babfd5547a2ee2692ee03d3f0d973dc8ce7297d4', 'test@admin.com', 1),
-(2001, 3002, 'testuser', 'c214105243281cf6147b81fde537bc2769200211', 'test@user.com', 1),
-(2002, 3003, 'test@member.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'test@member.com', 1);
 
 -- --------------------------------------------------------
 

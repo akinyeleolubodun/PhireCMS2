@@ -158,6 +158,15 @@ class RolesController extends AbstractController
                         $role->delete();
                     }
 
+                    $sql = Table\UserTypes::getSql();
+
+                    if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
+                        $sql->update(array(
+                            'default_role_id' => null
+                        ))->where()->equalTo('default_role_id', $role->id);
+                        Table\UserTypes::execute($sql->render(true));
+                    }
+
                     // If the Phields module is installed, and if there are fields for this form/model
                     if ($this->project->isLoaded('Phields')) {
                         $fields = new \Phields\Table\FieldValues();
