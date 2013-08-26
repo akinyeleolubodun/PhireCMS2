@@ -1,0 +1,20 @@
+<?php include __DIR__ . '/header.phtml'; ?>
+    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+<?php
+if (isset($nav)):
+    echo $nav;
+endif;
+?>
+<?php if (isset($breadcrumb)): ?>
+    <div class="breadcrumb"><?php echo $breadcrumb; ?></div>
+<?php endif; ?>
+<?php if (isset($categoryNav)): ?>
+    <h3>Categories</h3>
+<?php
+    echo $categoryNav;
+endif;
+?>
+    <p>
+        This is the public home page for the PopContent Module.
+    </p>
+<?php include __DIR__ . '/footer.phtml'; ?>

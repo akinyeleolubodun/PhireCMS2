@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Oracle extends AbstractAdapter
 {
@@ -87,9 +87,18 @@ class Oracle extends AbstractAdapter
      */
     public function bindParams($params)
     {
-        foreach ($params as $key => $value) {
-            ${$key} = $value;
-            oci_bind_by_name($this->statement, ':' . $key, ${$key});
+        foreach ($params as $dbColumnName => $dbColumnValue) {
+            if (is_array($dbColumnValue)) {
+                $i = 1;
+                foreach ($dbColumnValue as $dbColumnVal) {
+                    ${$dbColumnName . $i} = $dbColumnVal;
+                    oci_bind_by_name($this->statement, ':' . $dbColumnName . $i, ${$dbColumnName . $i});
+                    $i++;
+                }
+            } else {
+                ${$dbColumnName} = $dbColumnValue;
+                oci_bind_by_name($this->statement, ':' . $dbColumnName, ${$dbColumnName});
+            }
         }
 
         return $this;

@@ -23,7 +23,7 @@ namespace Pop\Feed;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Reader
 {
@@ -44,7 +44,7 @@ class Reader
      * Feed date format
      * @var string
      */
-    protected $dateFormat = 'm/d/Y g:ia';
+    protected $dateFormat = 'M j Y g:ia';
 
     /**
      * Constructor
@@ -419,8 +419,11 @@ class Reader
         $context = stream_context_create($options);
         $source = file_get_contents($url, false, $context);
 
+        // If Twitter or Facebook
+        if (strpos($url, 'twitter.com') !== false) {
+            $format = 'Rss';
         // If XML
-        if ((strpos($source, '<?xml') !== false) ||
+        } else if ((strpos($source, '<?xml') !== false) ||
             (strpos($source, '<rss') !== false) ||
             (strpos($source, '<feed') !== false)) {
             // If Atom

@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Sqlite extends AbstractAdapter
 {
@@ -98,9 +98,19 @@ class Sqlite extends AbstractAdapter
      */
     public function bindParams($params)
     {
-        foreach ($params as $key => $value) {
-            ${$key} = $value;
-            $this->statement->bindParam(':' . $key, ${$key});
+        foreach ($params as $dbColumnName => $dbColumnValue) {
+            if (is_array($dbColumnValue)) {
+                $i = 1;
+                foreach ($dbColumnValue as $dbColumnVal) {
+                    $dbColumnN = $dbColumnName . $i;
+                    ${$dbColumnN} = $dbColumnVal;
+                    $this->statement->bindParam(':' . $dbColumnN, ${$dbColumnN});
+                    $i++;
+                }
+            } else {
+                ${$dbColumnName} = $dbColumnValue;
+                $this->statement->bindParam(':' . $dbColumnName, ${$dbColumnName});
+            }
         }
 
         return $this;

@@ -25,7 +25,7 @@ use Pop\Code\Generator;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Reflection extends \ReflectionClass
 {
@@ -319,16 +319,18 @@ class Reflection extends \ReflectionClass
                         $start = $start + 1;
                         $end = $end - 1;
                         for ($i = $start; $i < $end; $i++) {
-                            if (substr($classLines[$i], 0, 8) == '        ') {
-                                $body .= substr($classLines[$i], 8);
-                            } else if (substr($classLines[$i], 0, 4) == '    ') {
-                                $body .= substr($classLines[$i], 4);
-                            } else if (substr($classLines[$i], 0, 2) == "\t\t") {
-                                $body .= substr($classLines[$i], 2);
-                            } else if (substr($classLines[$i], 0, 1) == "\t") {
-                                $body .= substr($classLines[$i], 1);
-                            } else {
-                                $body .= $classLines[$i];
+                            if (isset($classLines[$i])) {
+                                if (substr($classLines[$i], 0, 8) == '        ') {
+                                    $body .= substr($classLines[$i], 8);
+                                } else if (substr($classLines[$i], 0, 4) == '    ') {
+                                    $body .= substr($classLines[$i], 4);
+                                } else if (substr($classLines[$i], 0, 2) == "\t\t") {
+                                    $body .= substr($classLines[$i], 2);
+                                } else if (substr($classLines[$i], 0, 1) == "\t") {
+                                    $body .= substr($classLines[$i], 1);
+                                } else {
+                                    $body .= $classLines[$i];
+                                }
                             }
                         }
                         $mthd->setBody(rtrim($body), false);

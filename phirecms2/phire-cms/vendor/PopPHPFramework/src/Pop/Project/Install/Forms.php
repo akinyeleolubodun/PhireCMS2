@@ -27,7 +27,7 @@ use Pop\Code\Generator\NamespaceGenerator;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Forms
 {
@@ -61,23 +61,23 @@ class Forms
             // Create the constructor
             $construct = new MethodGenerator('__construct');
             $construct->setDesc('Constructor method to instantiate the form object');
-            $construct->getDocblock()->setReturn('void');
+            $construct->getDocblock()->setReturn('self');
             $construct->addArguments(
                 array(
-                    array('name' => 'action', 'value' => null, 'type' => 'string'),
-                    array('name' => 'method', 'value' => null, 'type' => 'string'),
-                    array('name' => 'fields', 'value' => 'null', 'type' => 'array'),
-                    array('name' => 'indent', 'value' => 'null', 'type' => 'string')
+                    array('name' => 'action', 'value' => 'null',   'type' => 'string'),
+                    array('name' => 'method', 'value' => "'post'", 'type' => 'string'),
+                    array('name' => 'fields', 'value' => 'null',   'type' => 'array'),
+                    array('name' => 'indent', 'value' => 'null',   'type' => 'string')
                 )
             );
 
             // Create the init values array within the constructor
-            if (isset($form['fields'])) {
+            if (is_array($form) && (count($form) > 0)) {
                 $construct->appendToBody("\$this->initFieldsValues = array (");
                 $i = 0;
-                foreach ($form['fields'] as $field) {
+                foreach ($form as $name => $field) {
                     $i++;
-                    $construct->appendToBody("    array (");
+                    $construct->appendToBody("    '" . $name . "' => array (");
                     $j = 0;
                     foreach ($field as $key => $value) {
                         $j++;
@@ -94,7 +94,7 @@ class Forms
                                 $val = 'new Validator\\' . $value;
                             }
                             $construct->appendToBody("        '{$key}' => {$val}{$comma}");
-                        } else if (($key == 'value') || ($key == 'marked') || ($key == 'attributes')) {
+                        } else if (($key == 'value') || ($key == 'marked') || ($key == 'attributes') || ($key == 'error')) {
                             $val = var_export($value, true);
                             $val = str_replace(PHP_EOL, PHP_EOL . '        ', $val);
                             if (strpos($val, 'Select::') !== false) {
@@ -110,7 +110,7 @@ class Forms
                             $construct->appendToBody("        '{$key}' => {$val}{$comma}");
                         }
                     }
-                    $end = ($i < count($form['fields'])) ? '    ),' : '    )';
+                    $end = ($i < count($form)) ? '    ),' : '    )';
                     $construct->appendToBody($end);
                 }
                 $construct->appendToBody(");");

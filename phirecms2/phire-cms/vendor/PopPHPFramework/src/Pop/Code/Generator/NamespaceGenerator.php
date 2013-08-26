@@ -23,7 +23,7 @@ namespace Pop\Code\Generator;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class NamespaceGenerator
 {
@@ -150,26 +150,14 @@ class NamespaceGenerator
         $this->output .= $this->indent . 'namespace ' . $this->namespace . ';' . PHP_EOL;
 
         if (count($this->use) > 0) {
-            $this->output .= PHP_EOL . $this->indent . 'use ';
-            $i = 0;
+            $this->output .= PHP_EOL;
             foreach ($this->use as $ns => $as) {
-                if ($i == 0) {
-                    $this->output .= $ns;
-                    if (null !== $as) {
-                        $this->output .= ' as ' . $as;
-                    }
-                } else {
-                    $this->output .= $this->indent . '    '. $ns;
-                    if (null !== $as) {
-                        $this->output .= ' as ' . $as;
-                    }
+                $this->output .= $this->indent . 'use ';
+                $this->output .= $ns;
+                if (null !== $as) {
+                    $this->output .= ' as ' . $as;
                 }
-                $i++;
-                if ($i < count($this->use)) {
-                    $this->output .= ',' . PHP_EOL;
-                } else {
-                    $this->output .= ';' . PHP_EOL;
-                }
+                $this->output .= ';' . PHP_EOL;
             }
         }
 

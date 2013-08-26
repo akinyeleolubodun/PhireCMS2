@@ -1,0 +1,30 @@
+<?php include __DIR__ . '/../user/header.phtml'; ?>
+<?php echo $nav; ?>
+    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+    <form id="config-form" action="<?php echo BASE_PATH . APP_URI; ?>/content/config" method="post">
+        <table class="data-table"  cellpadding="0" cellspacing="0" border="0">
+            <tr><th class="border-left">&nbsp;</th><th class="border-right">&nbsp;</th></tr>
+<?php foreach ($config['server'] as $setting => $value): ?>
+            <tr>
+                <td class="border-left" style="width: 30%;">
+                    <strong><?php echo ucwords(str_replace(array('_', 'php'), array(' ', 'PHP'), $setting)); ?></strong>
+                </td>
+                <td class="border-right">
+                    <?php echo $value . PHP_EOL; ?>
+                </td>
+            </tr>
+<?php endforeach; ?>
+<?php foreach ($config['settings'] as $setting => $value): ?>
+            <tr>
+                <td class="border-left">
+                    <strong><?php echo ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting)); ?></strong>
+                </td>
+                <td class="border-right">
+<?php echo $value; ?>
+                </td>
+            </tr>
+<?php endforeach; ?>
+            <tr><td colspan="2" class="table-bottom-row"><input type="submit" name="submit" id="submit" class="save-btn" value="Save" /></td></tr>
+        </table>
+    </form>
+<?php include __DIR__ . '/../user/footer.phtml'; ?>

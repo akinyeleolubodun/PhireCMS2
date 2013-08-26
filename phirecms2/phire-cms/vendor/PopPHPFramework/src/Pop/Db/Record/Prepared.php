@@ -25,7 +25,7 @@ use Pop\Db\Sql;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Prepared extends AbstractRecord
 {
@@ -39,7 +39,7 @@ class Prepared extends AbstractRecord
     /**
      * Constructor
      *
-     * Instantiate the record escaped object.
+     * Instantiate the record prepared object.
      *
      * @param  \Pop\Db\Db $db
      * @param  array      $options
@@ -319,7 +319,7 @@ class Prepared extends AbstractRecord
                             $id = $params[$value];
                         }
                         $params[$value] = $id;
-                        $this->sql->update()->where()->equalTo($value, $this->getPlaceholder($value, ($i + $key + 1)));
+                        $this->sql->update()->where()->equalTo($value, $this->getPlaceholder($value, ($i + $key)));
                     }
                 } else {
                     if (isset($params[$this->primaryId])) {

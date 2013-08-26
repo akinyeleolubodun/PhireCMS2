@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Sqlsrv extends AbstractAdapter
 {
@@ -117,8 +117,13 @@ class Sqlsrv extends AbstractAdapter
     {
         $bindParams = array();
         foreach ($params as $dbColumnName => $dbColumnValue) {
-            ${$dbColumnName} = $dbColumnValue;
-            $bindParams[] = &${$dbColumnName};
+            $dbColumnValueAry = (!is_array($dbColumnValue)) ? array($dbColumnValue) : $dbColumnValue;
+            $i = 1;
+            foreach ($dbColumnValueAry as $dbColumnValueAryValue) {
+                ${$dbColumnName . $i} = $dbColumnValueAryValue;
+                $bindParams[] = &${$dbColumnName . $i};
+                $i++;
+            }
         }
 
         if ((count($bindParams) > 0) && (null !== $options)) {

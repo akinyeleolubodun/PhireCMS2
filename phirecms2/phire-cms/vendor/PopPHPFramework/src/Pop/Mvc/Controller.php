@@ -27,7 +27,7 @@ use Pop\Project\Project;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Controller
 {
@@ -67,6 +67,12 @@ class Controller
      * @var string
      */
     protected $viewPath = null;
+
+    /**
+     * Error action
+     * @var string
+     */
+    protected $errorAction = 'error';
 
     /**
      * Constructor
@@ -142,6 +148,18 @@ class Controller
     }
 
     /**
+     * Set the error action
+     *
+     * @param  string $error
+     * @return \Pop\Mvc\Controller
+     */
+    public function setErrorAction($error)
+    {
+        $this->errorAction = $error;
+        return $this;
+    }
+
+    /**
      * Get the request object
      *
      * @return \Pop\Http\Request
@@ -189,6 +207,16 @@ class Controller
     public function getViewPath()
     {
         return $this->viewPath;
+    }
+
+    /**
+     * Get the error action
+     *
+     * @return string
+     */
+    public function getErrorAction()
+    {
+        return $this->errorAction;
     }
 
     /**

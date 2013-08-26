@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Mysqli extends AbstractAdapter
 {
@@ -92,19 +92,25 @@ class Mysqli extends AbstractAdapter
         $bindParams = array('');
 
         foreach ($params as $dbColumnName => $dbColumnValue) {
-            ${$dbColumnName} = $dbColumnValue;
+            $dbColumnValueAry = (!is_array($dbColumnValue)) ? array($dbColumnValue) : $dbColumnValue;
 
-            if (is_int($dbColumnValue)) {
-                $bindParams[0] .= 'i';
-            } else if (is_double($dbColumnValue)) {
-                $bindParams[0] .= 'd';
-            } else if (is_string($dbColumnValue)) {
-                $bindParams[0] .= 's';
-            } else {
-                $bindParams[0] .= 'b';
+            $i = 1;
+            foreach ($dbColumnValueAry as $dbColumnValueAryValue) {
+                ${$dbColumnName . $i} = $dbColumnValueAryValue;
+
+                if (is_int($dbColumnValueAryValue)) {
+                    $bindParams[0] .= 'i';
+                } else if (is_double($dbColumnValueAryValue)) {
+                    $bindParams[0] .= 'd';
+                } else if (is_string($dbColumnValueAryValue)) {
+                    $bindParams[0] .= 's';
+                } else {
+                    $bindParams[0] .= 'b';
+                }
+
+                $bindParams[] = &${$dbColumnName . $i};
+                $i++;
             }
-
-            $bindParams[] = &${$dbColumnName};
         }
 
         call_user_func_array(array($this->statement, 'bind_param'), $bindParams);

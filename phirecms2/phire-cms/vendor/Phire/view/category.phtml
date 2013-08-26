@@ -1,0 +1,44 @@
+<?php include __DIR__ . '/header.phtml'; ?>
+    <h1 style="color: #00f;">Category &gt; <?php echo $category; ?></h1>
+<?php
+if (isset($nav)):
+    echo $nav;
+endif;
+?>
+<?php if (isset($breadcrumb)): ?>
+    <div><?php echo $breadcrumb; ?></div>
+<?php endif; ?>
+<?php if (isset($categoryNav)): ?>
+    <h3>Categories</h3>
+<?php
+    echo $categoryNav;
+endif;
+?>
+    <p>
+        This is the public category page for the PopContent Module.
+    </p>
+<?php
+if (count($items) > 0):
+    $title = null;
+    foreach ($items as $item):
+        if (strpos($title, $item->category_title) === false):
+            if (null !== $title):
+                $title .= ' &gt; ' . $item->category_title;
+                echo '    </ul>' . PHP_EOL;
+            else:
+                $title .= $item->category_title;
+            endif;
+?>
+    <h3><a href="<?php echo BASE_PATH; ?>/category<?php echo $item->category_uri; ?>"><?php echo $title; ?></a></h3>
+    <ul>
+<?php
+        endif;
+?>
+        <li><a href="<?php echo BASE_PATH . $item->uri; ?>"><?php echo $item->title; ?></a></li>
+<?php
+    endforeach;
+    echo '    </ul>' . PHP_EOL;
+else: ?>
+    <p>No items found in this category.</p>
+<?php endif; ?>
+<?php include __DIR__ . '/footer.phtml'; ?>

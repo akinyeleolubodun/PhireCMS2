@@ -23,7 +23,7 @@ namespace Pop\Db\Adapter;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Pdo extends AbstractAdapter
 {
@@ -186,15 +186,32 @@ class Pdo extends AbstractAdapter
     {
         if ($this->placeholder == '?') {
             $i = 1;
-            foreach ($params as $key => $value) {
-                ${$key} = $value;
-                $this->statement->bindParam($i, ${$key});
-                $i++;
+            foreach ($params as $dbColumnName => $dbColumnValue) {
+                if (is_array($dbColumnValue)) {
+                    foreach ($dbColumnValue as $dbColumnVal) {
+                        ${$dbColumnName} = $dbColumnVal;
+                        $this->statement->bindParam($i, ${$dbColumnName});
+                        $i++;
+                    }
+                } else {
+                    ${$dbColumnName} = $dbColumnValue;
+                    $this->statement->bindParam($i, ${$dbColumnName});
+                    $i++;
+                }
             }
         } else if ($this->placeholder == ':') {
-            foreach ($params as $key => $value) {
-                ${$key} = $value;
-                $this->statement->bindParam(':' . $key, ${$key});
+            foreach ($params as $dbColumnName => $dbColumnValue) {
+                if (is_array($dbColumnValue)) {
+                    $i = 1;
+                    foreach ($dbColumnValue as $dbColumnVal) {
+                        ${$dbColumnName . $i} = $dbColumnVal;
+                        $this->statement->bindParam(':' . $dbColumnName . $i, ${$dbColumnName . $i});
+                        $i++;
+                    }
+                } else {
+                    ${$dbColumnName} = $dbColumnValue;
+                    $this->statement->bindParam(':' . $dbColumnName, ${$dbColumnName});
+                }
             }
         }
 

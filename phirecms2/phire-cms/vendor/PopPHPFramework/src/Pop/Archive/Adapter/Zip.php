@@ -25,7 +25,7 @@ use Pop\File\Dir;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Zip implements ArchiveInterface
 {
@@ -105,70 +105,58 @@ class Zip implements ArchiveInterface
      */
     public function addFiles($files)
     {
-        // Create a usable array of files
-        if (!is_array($files)) {
-            if (is_dir($files)) {
-                $dir = new Dir($files, true, true, false);
-                $files = $this->filterDirFiles($dir->getFiles(), $files);
-            } else {
-                $files = $this->filterDirFiles(array(realpath($files)), dirname($files));
+        if (is_array($files)) {
+            foreach ($files as $key => $value) {
+                $files[$key] = realpath($value);
             }
         } else {
-            $allFiles = array();
-            foreach ($files as $key => $value) {
-                if (is_dir($value)) {
-                    $dir = new Dir($value, true, true, false);
-                    $allFiles = array_merge($allFiles, $this->filterDirFiles($dir->getFiles(), $value));
-                    unset($files[$key]);
-                } else {
-                    $allFiles = array_merge($allFiles, $this->filterDirFiles(array(realpath($value)), dirname($value)));
-                    unset($files[$key]);
-                }
-            }
-            $files = array_merge($files, $allFiles);
+            $files = array(realpath($files));
         }
 
-        if (!file_exists($this->path)) {
-            $result = $this->archive->open($this->path, \ZipArchive::CREATE);
-            $dirs = array();
-        } else {
-            $result = $this->archive->open($this->path);
-            $dirs = $this->getDirs();
-        }
+        $result = (!file_exists($this->path)) ?
+            $this->archive->open($this->path, \ZipArchive::CREATE) :
+            $this->archive->open($this->path);
 
         if ($result === true) {
-            // Directory separator clean up
-            $search = array('\\', '../', './');
-            $replace = array('/', '', '');
-
             foreach ($files as $file) {
-                if ((substr($file, 0, 1) == '/') || (substr($file, 1, 1) == ':')) {
-                    $realfile = $file;
+                if (!is_dir($file)) {
+                    $this->archive->addFile($file, basename($file));
                 } else {
-                    $realfile = realpath($this->workingDir . DIRECTORY_SEPARATOR . $file);
+                    $this->addDir($file);
                 }
-                $name = basename($file);
-                $dir = str_replace($search, $replace, (str_replace($name, '', $file)));
-                if (($dir != '') && (!in_array($dir, $dirs))) {
-                    $newDirs = explode('/', substr($dir, 0, -1));
-                    $curDir = null;
-                    for ($i = 0; $i < count($newDirs); $i++) {
-                        if ($i == 0) {
-                            $this->archive->addEmptyDir($newDirs[$i]);
-                        } else {
-                            $this->archive->addEmptyDir($curDir . $newDirs[$i]);
-                        }
-                        $curDir .= $newDirs[$i] . '/';
-                        $dirs[] = $curDir;
-                    }
-                    $name = $dir . $name;
-                } else {
-                    $name = $dir . $name;
-                }
-                $this->archive->addFile($realfile, $name);
             }
-
             $this->archive->close();
+        }
+    }
+
+    /**
+     * Method to create sub directories within the zip archive
+     *
+     * @param  array $branch
+     * @param  string $level
+     * @param  string $orig
+     * @return void
+     */
+    public function addDir($branch, $level = null, $orig = null)
+    {
+        if (!is_array($branch)) {
+            $dir = new Dir($branch);
+            $branch = $dir->getTree();
+        }
+
+        foreach ($branch as $leaf => $node) {
+            if (is_array($node)) {
+                if (null === $level) {
+                    $new = basename($leaf);
+                    $orig = substr($leaf, 0, strrpos($leaf, $new));
+                } else {
+                    $new = $level . $leaf;
+                }
+                $this->archive->addEmptyDir($new);
+                $this->addDir($node, $new, $orig);
+            } else {
+                $this->archive->addFile($orig . $level . '/' . $node, $level . '/' . $node);
+            }
         }
     }
 
@@ -207,7 +195,7 @@ class Zip implements ArchiveInterface
      *
      * @return array
      */
-    protected function getDirs()
+    public function getDirs()
     {
         $dirs = array();
 
@@ -220,39 +208,6 @@ class Zip implements ArchiveInterface
         }
 
         return $dirs;
-    }
-
-    /**
-     * Method to return an array of all the directories in the archive
-     *
-     * @param  array  $dirFiles
-     * @param  string $dir
-     * @return array
-     */
-    protected function filterDirFiles($dirFiles, $dir)
-    {
-        if (strpos($dir, '../') !== false) {
-            $origDir = substr($dir, strpos($dir, '../'));
-            $dir = realpath($dir);
-        } else if (strpos($dir, './') !== false) {
-            $origDir = substr($dir, strpos($dir, './'));
-            $dir = realpath($dir);
-        } else {
-            $origDir = $dir;
-        }
-
-        $search = array('\\', '../', './');
-        $replace = array('/', '', '');
-
-        $dir = str_replace($search, $replace, $dir);
-        $files = array();
-
-        foreach ($dirFiles as $file) {
-            $f = str_replace('\\', '/', substr($file, strpos($file, $dir)));
-            $files[] = str_replace($dir, $origDir, $f);
-        }
-
-        return $files;
     }
 
 }

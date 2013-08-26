@@ -14,6 +14,7 @@
  * @namespace
  */
 namespace Pop\File;
+use Pop\Archive\Adapter\Exception;
 
 /**
  * File class
@@ -23,7 +24,7 @@ namespace Pop\File;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class File
 {
@@ -201,9 +202,13 @@ class File
                 throw new Exception('Error: The file uploaded is too big.');
             }
 
-            $fileObj = new static($file, $types);
-
-            return $fileObj;
+            try {
+                $fileObj = new static($file, $types);
+                return $fileObj;
+            } catch (Exception $e) {
+                unlink($file);
+                throw $e;
+            }
         } else {
             throw new Exception('Error: There was an error in uploading the file.');
         }
@@ -236,6 +241,26 @@ class File
         }
 
         return $newFilename;
+    }
+
+    /**
+     * Is dir object.
+     *
+     * @return boolean
+     */
+    public function isDir()
+    {
+        return false;
+    }
+
+    /**
+     * Is file object.
+     *
+     * @return boolean
+     */
+    public function isFile()
+    {
+        return true;
     }
 
     /**
@@ -323,13 +348,13 @@ class File
      * Set the file mime type.
      *
      * @param  string $mime
-     * @throws Exception
+     * @throws \Pop\File\Exception
      * @return \Pop\File\File
      */
     public function setMime($mime)
     {
         if ((count($this->allowed) > 0) && !in_array($mime, $this->allowed)) {
-            throw new Exception('Error: The file mime type ' . $mime . ' is not an accepted file mime type.');
+            throw new \Pop\File\Exception('Error: The file mime type ' . $mime . ' is not an accepted file mime type.');
         }
         $this->mime = $mime;
         return $this;
@@ -577,15 +602,16 @@ class File
     /**
      * Copy the file object directly to another file on disk.
      *
-     * @param  string $new
-     * @throws Exception
+     * @param  string  $new
+     * @param  boolean $overwrite
+     * @throws \Pop\File\Exception
      * @return \Pop\File\File
      */
-    public function copy($new)
+    public function copy($new, $overwrite = false)
     {
         // Check to see if the new file already exists.
-        if (file_exists($new)) {
-            throw new Exception('Error: The file already exists.');
+        if (file_exists($new) && (!$overwrite)) {
+            throw new \Pop\File\Exception('Error: The file already exists.');
         }
 
         if (file_exists($this->fullpath)) {
@@ -602,14 +628,15 @@ class File
      * Move the file object directly to another location on disk.
      *
      * @param  string $new
-     * @throws Exception
+     * @param  boolean $overwrite
+     * @throws \Pop\File\Exception
      * @return \Pop\File\File
      */
-    public function move($new)
+    public function move($new, $overwrite = false)
     {
         // Check to see if the new file already exists.
-        if (file_exists($new)) {
-            throw new Exception('Error: The file already exists.');
+        if (file_exists($new) && (!$overwrite)) {
+            throw new \Pop\File\Exception('Error: The file already exists.');
         }
 
         if (file_exists($this->fullpath)) {
@@ -708,13 +735,20 @@ class File
         }
 
         $this->fullpath = $file;
-        $this->dir = $file_parts['dirname'] . '/';
+        $this->dir = $file_parts['dirname'];
         $this->basename = $file_parts['basename'];
         $this->filename = $file_parts['filename'];
         $this->ext = (isset($file_parts['extension'])) ? $file_parts['extension'] : null;
 
         // Check if the file exists, and set the size and permissions accordingly.
-        $this->size = (file_exists($file)) ? filesize($file) : 0;
+        if (file_exists($file)) {
+            if (is_dir($file)) {
+                throw new Exception('The file passed is a directory.');
+            }
+            $this->size = filesize($file);
+        } else {
+            $this->size = 0;
+        }
 
         // Check to see if the file is an accepted file format.
         if ((null !== $this->allowed) && (null !== $this->ext) && (count($this->allowed) > 0) && (!array_key_exists(strtolower($this->ext), $this->allowed))) {

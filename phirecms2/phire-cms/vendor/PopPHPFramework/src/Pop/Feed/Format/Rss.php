@@ -23,7 +23,7 @@ namespace Pop\Feed\Format;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Rss extends AbstractFormat
 {
@@ -31,8 +31,8 @@ class Rss extends AbstractFormat
     /**
      * Method to create an RSS feed object
      *
-     * @param  mixed $options
-     * @param  int   $limit
+     * @param  mixed  $options
+     * @param  int    $limit
      * @throws Exception
      * @return \Pop\Feed\Format\Rss
      */
@@ -83,8 +83,12 @@ class Rss extends AbstractFormat
         $limit = (($this->limit > 0) && ($this->limit <= $count)) ? $this->limit : $count;
 
         for ($i = 0; $i < $limit; $i++) {
+            $title = trim((string)$itemObjs[$i]->title);
+            if ($title == '') {
+                $title = (string)$itemObjs[$i]->link;
+            }
             $items[] = new \ArrayObject(array(
-                'title'     => html_entity_decode((string)$itemObjs[$i]->title, ENT_QUOTES, 'UTF-8'),
+                'title'     => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
                 'content'   => html_entity_decode((string)$itemObjs[$i]->description, ENT_QUOTES, 'UTF-8'),
                 'link'      => (string)$itemObjs[$i]->link,
                 'published' => (string)$itemObjs[$i]->pubDate,

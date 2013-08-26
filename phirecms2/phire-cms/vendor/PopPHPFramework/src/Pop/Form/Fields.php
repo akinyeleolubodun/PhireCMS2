@@ -23,7 +23,7 @@ namespace Pop\Form;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Fields
 {
@@ -77,21 +77,9 @@ class Fields
      * @param  array $fields
      * @return \Pop\Form\Fields
      */
-    public function addFields($fields)
+    public function addFields(array $fields)
     {
-        $isArray = true;
-        foreach ($fields as $key => $value) {
-            if (!is_array($value)) {
-                $isArray = false;
-            }
-        }
-
-        if (!$isArray) {
-            $fields = array($fields);
-        }
-
         $this->fields = array_merge($this->fields, $fields);
-
         return $this;
     }
 
@@ -133,7 +121,7 @@ class Fields
 
                 $fieldType = (stripos($key, 'password') !== false) ?
                     'password' :
-                    ((stripos($value['type'], 'text' !== false)) ? 'textarea' : 'text');
+                    ((stripos($value['type'], 'text') !== false) ? 'textarea' : 'text');
 
                 if ((null !== $values) && isset($values[$key])) {
                     if (isset($values[$key]['type'])) {
@@ -163,9 +151,8 @@ class Fields
                     $validators = new \Pop\Validator\Email();
                 }
 
-                $this->fields[] = array(
+                $this->fields[$fieldName] = array(
                     'type'       => $fieldType,
-                    'name'       => $fieldName,
                     'label'      => $fieldLabel,
                     'value'      => $fieldValue,
                     'required'   => $required,

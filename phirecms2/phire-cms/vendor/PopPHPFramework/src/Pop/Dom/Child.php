@@ -23,7 +23,7 @@ namespace Pop\Dom;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Child extends AbstractDom
 {
@@ -256,6 +256,16 @@ class Child extends AbstractDom
         } else {
             echo $this->output;
         }
+    }
+
+    /**
+     * Render Dom child object to string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render(true);
     }
 
 }

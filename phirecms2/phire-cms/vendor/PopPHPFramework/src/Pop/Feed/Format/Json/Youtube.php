@@ -23,7 +23,7 @@ namespace Pop\Feed\Format\Json;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Youtube extends \Pop\Feed\Format\Json
 {
@@ -40,8 +40,8 @@ class Youtube extends \Pop\Feed\Format\Json
     /**
      * Method to create a Youtube JSON feed object
      *
-     * @param  mixed $options
-     * @param  int   $limit
+     * @param  mixed  $options
+     * @param  int    $limit
      * @return \Pop\Feed\Format\Json\Youtube
      */
     public function __construct($options, $limit = 0)

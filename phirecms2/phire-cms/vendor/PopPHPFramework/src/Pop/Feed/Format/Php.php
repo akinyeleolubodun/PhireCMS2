@@ -23,7 +23,7 @@ namespace Pop\Feed\Format;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Php extends AbstractFormat
 {
@@ -31,8 +31,8 @@ class Php extends AbstractFormat
     /**
      * Method to create a PHP feed object
      *
-     * @param  mixed $options
-     * @param  int   $limit
+     * @param  mixed  $options
+     * @param  int    $limit
      * @throws Exception
      * @return \Pop\Feed\Format\Php
      */

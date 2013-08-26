@@ -23,7 +23,7 @@ namespace Pop\Form\Element;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Select extends \Pop\Form\Element
 {
@@ -99,12 +99,6 @@ class Select extends \Pop\Form\Element
      * @var int
      */
     const US_STATES_LONG = 12;
-
-    /**
-     * Current values
-     * @var array
-     */
-    public $values = array();
 
     /**
      * Constructor
@@ -230,33 +224,10 @@ class Select extends \Pop\Form\Element
             }
         }
 
-        $this->values = $val;
+        $this->value = $val;
         $this->setMarked($marked);
 
         parent::__construct('select', $name, $val, $marked, $indent);
-    }
-
-    /**
-     * Set the current marked value. The marked value is based on the key of the associative array (not the value.)
-     *
-     * @param  string $val
-     * @return void
-     */
-    public function setMarked($val)
-    {
-        $this->marked = null;
-
-        if (is_array($val)) {
-            foreach ($val as $v) {
-                if (array_key_exists($v, $this->values) !==  false) {
-                    $this->marked[] = $this->values[$v];
-                }
-            }
-        } else {
-            if (array_key_exists($val, $this->values) !==  false) {
-                $this->marked[] = $this->values[$val];
-            }
-        }
     }
 
     /**
@@ -306,6 +277,8 @@ class Select extends \Pop\Form\Element
                 }
             }
         }
+
+        return $this;
     }
 
 }

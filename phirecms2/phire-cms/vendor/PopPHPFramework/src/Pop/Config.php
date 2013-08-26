@@ -23,7 +23,7 @@ namespace Pop;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Config
 {
@@ -71,6 +71,32 @@ class Config
     public static function factory(array $config = array(), $changes = false)
     {
         return new self($config, $changes);
+    }
+
+    /**
+     * Method to merge the values of another config object into this one
+     *
+     * @param  mixed $config
+     * @throws \Exception
+     * @return \Pop\Config
+     */
+    public function merge($config)
+    {
+        $orig = $this->asArray();
+        $merge = ($config instanceof \Pop\Config) ? $config->asArray() : $config;
+
+        if (!is_array($merge)) {
+            throw new \Exception('The config passed must be an array or an instance of Pop\Config.');
+        }
+
+        foreach ($orig as $key => $value) {
+            $merge[$key] = (isset($merge[$key])) ? $merge[$key] : $value;
+        }
+
+        $this->config = $merge;
+        $this->array = $merge;
+
+        return $this;
     }
 
     /**

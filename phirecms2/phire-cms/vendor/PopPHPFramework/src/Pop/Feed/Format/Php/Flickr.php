@@ -23,7 +23,7 @@ namespace Pop\Feed\Format\Php;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Flickr extends \Pop\Feed\Format\Php
 {
@@ -39,8 +39,8 @@ class Flickr extends \Pop\Feed\Format\Php
     /**
      * Method to create a Flickr Php feed object
      *
-     * @param  mixed $options
-     * @param  int   $limit
+     * @param  mixed  $options
+     * @param  int    $limit
      * @return \Pop\Feed\Format\Php\Flickr
      */
     public function __construct($options, $limit = 0)

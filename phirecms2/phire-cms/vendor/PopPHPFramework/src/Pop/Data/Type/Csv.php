@@ -23,7 +23,7 @@ namespace Pop\Data\Type;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Csv
 {
@@ -129,7 +129,7 @@ class Csv
             foreach ($value as $key => $val) {
                 if (!in_array($key, $omit)) {
                     if (null !== $dt) {
-                        if ((strtotime($val) !== false) || (stripos($key, 'date') !== false)) {
+                        if ((strtotime($val) !== false) && (stripos($key, 'date') !== false)) {
                             $v = (date($dt, strtotime($val)) != '12/31/1969') ? date($dt, strtotime((string)$val)) : '';
                         } else {
                             $v = (string)$val;

@@ -23,7 +23,7 @@ namespace Pop\Mvc;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class View
 {
@@ -67,9 +67,7 @@ class View
             if (((substr($template, -6) == '.phtml') ||
                  (substr($template, -5) == '.php3') ||
                  (substr($template, -4) == '.php')) && (file_exists($template))) {
-
                 $this->templateFile = $template;
-
             } else {
                 $this->templateString = $template;
             }
@@ -233,6 +231,7 @@ class View
         if (null !== $this->model) {
             $data = $this->model->asArrayObject();
 
+            // Render nested arrays first
             foreach ($data as $key => $value) {
                 if (is_array($value) || ($value instanceof \ArrayObject)) {
                     $start = '[{' . $key . '}]';
@@ -262,7 +261,12 @@ class View
                         }
                         $this->output = str_replace($loopCode, $outputLoop, $this->output);
                     }
-                } else {
+                }
+            }
+
+            // Render scalar values
+            foreach ($data as $key => $value) {
+                if (!is_array($value) && !($value instanceof \ArrayObject)) {
                     $this->output = str_replace('[{' . $key . '}]', $value, $this->output);
                 }
             }

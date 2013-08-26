@@ -25,7 +25,7 @@ use Pop\Dom\Child;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Form extends \Pop\Dom\Dom
 {
@@ -61,10 +61,22 @@ class Form extends \Pop\Dom\Dom
     protected $fields = array();
 
     /**
+     * Form field groups
+     * @var array
+     */
+    protected $groups = array();
+
+    /**
      * Form init field values
      * @var array
      */
     protected $initFieldsValues = array();
+
+    /**
+     * Global Form error display format
+     * @var array
+     */
+    protected $errorDisplay = null;
 
     /**
      * Constructor
@@ -77,10 +89,10 @@ class Form extends \Pop\Dom\Dom
      * @param  string $indent
      * @return \Pop\Form\Form
      */
-    public function __construct($action, $method, array $fields = null, $indent = null)
+    public function __construct($action = null, $method = 'post', array $fields = null, $indent = null)
     {
         // Set the form's action and method.
-        $this->action = $action;
+        $this->action = (null !== $action) ? $action : $_SERVER['REQUEST_URI'];
         $this->method = $method;
 
         // Create the parent DOM element and the form child element.
@@ -104,7 +116,7 @@ class Form extends \Pop\Dom\Dom
      * @param  string $indent
      * @return \Pop\Form\Form
      */
-    public static function factory($action, $method, array $fields = null, $indent = null)
+    public static function factory($action = null, $method = 'post', array $fields = null, $indent = null)
     {
         return new self($action, $method, $fields, $indent);
     }
@@ -117,19 +129,20 @@ class Form extends \Pop\Dom\Dom
      */
     public function setFields(array $fields)
     {
-        $isArray = true;
-        foreach ($fields as $value) {
-            if (!is_array($value)) {
-                $isArray = false;
+        $keys = array_keys($fields);
+        if (is_numeric($keys[0])) {
+            foreach ($fields as $field) {
+                foreach ($field as $name => $value) {
+                    $field[$name]['name'] = $name;
+                    $this->fields[$name] = (isset($value['value'])) ? $value['value'] : null;
+                }
+
             }
-        }
-
-        if (!$isArray) {
-            $fields = array($fields);
-        }
-
-        foreach ($fields as $value) {
-            $this->fields[$value['name']] = (isset($value['value'])) ? $value['value'] : null;
+        } else {
+            foreach ($fields as $name => $value) {
+                $fields[$name]['name'] = $name;
+                $this->fields[$name] = (isset($value['value'])) ? $value['value'] : null;
+            }
         }
 
         $this->initFieldsValues = (count($this->initFieldsValues) > 0) ? array_merge($this->initFieldsValues, $fields) : $fields;
@@ -166,17 +179,50 @@ class Form extends \Pop\Dom\Dom
 
         // Loop through the initial fields values and build the fields
         // based on the _initFieldsValues property.
-        if (isset($this->initFieldsValues[0])) {
-            foreach ($this->initFieldsValues as $field) {
-                if (is_array($field) && isset($field['type']) && isset($field['name'])) {
+        if (count($this->initFieldsValues) > 0) {
+            // If the fields are a group of fields
+            $keys = array_keys($this->initFieldsValues);
+            if (is_numeric($keys[0])) {
+                $fields = array();
+                foreach ($this->initFieldsValues as $ary) {
+                    $k = array_keys($ary);
+                    if (isset($k[0])) {
+                        $this->groups[] = $k[0];
+                    }
+                    $fields = array_merge($fields, $ary);
+                }
+                $this->initFieldsValues = $fields;
+            }
+
+            foreach ($this->initFieldsValues as $name => $field) {
+                if (is_array($field) && isset($field['type'])) {
                     $type = $field['type'];
-                    $name = $field['name'];
                     $label = (isset($field['label'])) ? $field['label'] : null;
                     $required = (isset($field['required'])) ? $field['required'] : null;
                     $attributes = (isset($field['attributes'])) ? $field['attributes'] : null;
                     $validators = (isset($field['validators'])) ? $field['validators'] : null;
                     $expire = (isset($field['expire'])) ? $field['expire'] : 300;
                     $captcha = (isset($field['captcha'])) ? $field['captcha'] : null;
+
+                    if (isset($field['error'])) {
+                        $error = array(
+                            'container'  => 'div',
+                            'attributes' => array(
+                                'class' => 'error'
+                            ),
+                            'pre' => false
+                        );
+                        foreach ($field['error'] as $key => $value) {
+                            if ($key != 'pre') {
+                                $error['container'] = $key;
+                                $error['attributes'] = $value;
+                            } else if ($key == 'pre') {
+                                $error['pre'] = $value;
+                            }
+                        }
+                    } else {
+                        $error = null;
+                    }
 
                     if ((null !== $values) && array_key_exists($name, $values)) {
                         if (($type == 'checkbox') || ($type == 'radio') || ($type == 'select')) {
@@ -224,18 +270,15 @@ class Form extends \Pop\Dom\Dom
                         $elem->setRequired($required);
                     }
 
+                    // Set if error display.
+                    if (null !== $error) {
+                        $elem->setErrorDisplay($error['container'], $error['attributes'], $error['pre']);
+                    }
+
                     // Set any attributes.
                     if (null !== $attributes) {
-                        if (is_array($attributes)) {
-                            if ((count($attributes) == 2) && !is_array($attributes[0]) && !is_array($attributes[1])) {
-                                $elem->setAttributes($attributes[0], $attributes[1]);
-                            } else {
-                                foreach ($attributes as $att) {
-                                    if (isset($att[0]) && isset($att[1])) {
-                                        $elem->setAttributes($att[0], $att[1]);
-                                    }
-                                }
-                            }
+                        foreach ($attributes as $a => $v) {
+                            $elem->setAttributes($a, $v);
                         }
                     }
 
@@ -258,14 +301,12 @@ class Form extends \Pop\Dom\Dom
         } else {
             $fields = $this->getElements();
             if ((null !== $values) && (count($fields) > 0)) {
-                //print_r($values);
                 foreach ($fields as $field) {
-                    //echo $field->getNodeName() . ' : ' . $field->name . '<br />' . PHP_EOL;
-                    // If a multi-value form element
-                    $fieldName = str_replace('[]', '', $field->name);
+                    $fieldName = str_replace('[]', '', $field->getName());
                     if (isset($values[$fieldName])) {
-                        if (isset($field->values)) {
-                            $field->marked = $values[$fieldName];
+                        // If a multi-value form element
+                        if ($field->hasChildren()) {
+                            $field->setMarked($values[$fieldName]);
                             $this->fields[$fieldName] = $values[$fieldName];
                             // Loop through the field's children
                             if ($field->hasChildren()) {
@@ -273,16 +314,16 @@ class Form extends \Pop\Dom\Dom
                                 foreach ($children as $key => $child) {
                                     // If checkbox or radio
                                     if (($child->getAttribute('type') == 'checkbox') || ($child->getAttribute('type') == 'radio')) {
-                                        if (is_array($field->marked) && in_array($child->getAttribute('value'), $field->marked)) {
+                                        if (is_array($field->getMarked()) && in_array($child->getAttribute('value'), $field->getMarked())) {
                                             $field->getChild($key)->setAttributes('checked', 'checked');
-                                        } else if ($child->getAttribute('value') == $field->marked) {
+                                        } else if ($child->getAttribute('value') == $field->getMarked()) {
                                             $field->getChild($key)->setAttributes('checked', 'checked');
                                         }
                                     // If select option
                                     } else if ($child->getNodeName() == 'option') {
-                                        if (is_array($field->marked) && in_array($child->getAttribute('value'), $field->marked)) {
+                                        if (is_array($field->getMarked()) && in_array($child->getAttribute('value'), $field->getMarked())) {
                                             $field->getChild($key)->setAttributes('selected', 'selected');
-                                        } else if ($child->getAttribute('value') == $field->marked) {
+                                        } else if ($child->getAttribute('value') == $field->getMarked()) {
                                             $field->getChild($key)->setAttributes('selected', 'selected');
                                         }
                                     }
@@ -290,7 +331,7 @@ class Form extends \Pop\Dom\Dom
                             }
                         // Else, if a single-value form element
                         } else {
-                            $field->value = $values[$fieldName];
+                            $field->setValue($values[$fieldName]);
                             $this->fields[$fieldName] = $values[$fieldName];
                             if ($field->getNodeName() == 'textarea') {
                                 $field->setNodeValue($values[$fieldName]);
@@ -301,6 +342,14 @@ class Form extends \Pop\Dom\Dom
                     }
                 }
             }
+        }
+
+        if (null !== $this->errorDisplay) {
+            $this->setErrorDisplay(
+                $this->errorDisplay['container'],
+                $this->errorDisplay['attributes'],
+                $this->errorDisplay['pre']
+            );
         }
 
         return $this;
@@ -314,8 +363,18 @@ class Form extends \Pop\Dom\Dom
      */
     public function setTemplate($tmpl)
     {
-        if (file_exists($tmpl)) {
-            $this->template = file_get_contents($tmpl);
+        if (preg_match('/(.*)\.(x|ht|pht|xht)ml/i', $tmpl) ||
+            (substr($tmpl, -4) == '.htm') ||
+            (substr($tmpl, -4) == '.php') ||
+            (substr($tmpl, -5) == '.php3') ||
+            (substr($tmpl, -4) == '.txt')) {
+            if (file_exists($tmpl)) {
+                $this->template = ((stripos($tmpl, '.phtml') === false) && (stripos($tmpl, '.php') === false)) ?
+                    file_get_contents($tmpl) :
+                    $tmpl;
+            } else {
+                $this->template = $tmpl;
+            }
         } else {
             $this->template = $tmpl;
         }
@@ -372,7 +431,7 @@ class Form extends \Pop\Dom\Dom
     /**
      * Add a form element or elements to the form object.
      *
-     * @param  array|string $e
+     * @param  mixed $e
      * @return \Pop\Form\Form
      */
     public function addElements($e)
@@ -389,24 +448,25 @@ class Form extends \Pop\Dom\Dom
             $attribs = $child->getAttributes();
             if ($child instanceof Element\Textarea) {
                 if (isset($attribs['name'])) {
-                    $this->fields[$attribs['name']] = (isset($child->value) ? $child->value : null);
+                    $this->fields[$attribs['name']] = ((null !== $child->getValue()) ? $child->getValue() : null);
                 }
             } else if ($child instanceof Element\Select) {
                 if (isset($attribs['name'])) {
-                    $this->fields[$attribs['name']] = (isset($child->marked) ? $child->marked : null);
+                    $name = (strpos($attribs['name'], '[]') !== false) ? substr($attribs['name'], 0, strpos($attribs['name'], '[]')) : $attribs['name'];
+                    $this->fields[$name] = ((null !== $child->getMarked()) ? $child->getMarked() : null);
                 }
             } else if ($child instanceof Element\Radio) {
                 $radioChildren = $child->getChildren();
                 $childAttribs = $radioChildren[0]->getAttributes();
                 if (isset($childAttribs['name'])) {
-                    $this->fields[$childAttribs['name']] = (isset($child->marked) ? $child->marked : null);
+                    $this->fields[$childAttribs['name']] = ((null !== $child->getMarked()) ? $child->getMarked() : null);
                 }
             } else if ($child instanceof Element\Checkbox) {
                 $radioChildren = $child->getChildren();
                 $childAttribs = $radioChildren[0]->getAttributes();
                 if (isset($childAttribs['name'])) {
                     $key = str_replace('[]', '', $childAttribs['name']);
-                    $this->fields[$key] = (isset($child->marked) ? $child->marked : null);
+                    $this->fields[$key] = ((null !== $child->getMarked()) ? $child->getMarked() : null);
                 }
             } else {
                 if (isset($attribs['name'])) {
@@ -517,7 +577,6 @@ class Form extends \Pop\Dom\Dom
             }
             if ($name == $elementName) {
                 $index = $i;
-                $elem = $e;
             }
         }
 
@@ -535,11 +594,27 @@ class Form extends \Pop\Dom\Dom
         $i = $this->getElementIndex($elementName);
 
         $newInitValues = array();
-        foreach ($this->initFieldsValues as $key => $field) {
-            if (isset($field['name']) && ($field['name'] == $elementName)) {
-                unset($this->initFieldsValues[$key]);
-            } else {
-                $newInitValues[] = $field;
+        $keys = array_keys($this->initFieldsValues);
+
+        if (isset($keys[0]) && is_numeric($keys[0])) {
+            foreach ($this->initFieldsValues as $fields) {
+                $newInitValuesAry = array();
+                foreach ($fields as $name => $field) {
+                    if (isset($name) && ($name == $elementName)) {
+                        unset($fields[$name]);
+                    } else {
+                        $newInitValuesAry[$name] = $field;
+                    }
+                }
+                $newInitValues[] = $newInitValuesAry;
+            }
+        } else {
+            foreach ($this->initFieldsValues as $name => $field) {
+                if (isset($name) && ($name == $elementName)) {
+                    unset($this->initFieldsValues[$name]);
+                } else {
+                    $newInitValues[$name] = $field;
+                }
             }
         }
         $this->initFieldsValues = $newInitValues;
@@ -576,12 +651,55 @@ class Form extends \Pop\Dom\Dom
     }
 
     /**
-     * Render the form object either using the defined template or by a basic
-     * 1:1 DL/DD tag structure. The template should use a simple search and
-     * replace format that contains [{element}] and/or [{element_label}] for
-     * the placeholders that will be swapped out. Required fields' labels have
-     * have class="required" and error messages have class="error" for
-     * styling purposes.
+     * Set error pre-display globally across all form element objects
+     *
+     * @param  string  $container
+     * @param  array   $attribs
+     * @param  boolean $pre
+     * @return \Pop\Form\Form
+     */
+    public function setErrorDisplay($container, array $attribs, $pre = false)
+    {
+        if (null === $this->errorDisplay) {
+            $this->errorDisplay = array(
+                'container'  => 'div',
+                'attributes' => array(
+                    'class' => 'error'
+                ),
+                'pre' => false
+            );
+        }
+
+        foreach ($this->form->childNodes as $child) {
+            $child->setErrorDisplay($container, $attribs, $pre);
+        }
+
+        $this->errorDisplay['container'] = $container;
+        $this->errorDisplay['attributes'] = $attribs;
+        $this->errorDisplay['pre'] = $pre;
+
+        return $this;
+    }
+
+    /**
+     * Get all form element errors.
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        $errors = array();
+        foreach ($this->form->childNodes as $child) {
+            if ($child->hasErrors()) {
+                $errors[str_replace('[]', '', $child->getName())] = $child->getErrors();
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * Render the form object either using the defined template or
+     * by a basic 1:1 DT/DD tag structure.
      *
      * @param  boolean $ret
      * @throws Exception
@@ -713,7 +831,7 @@ class Form extends \Pop\Dom\Dom
     }
 
     /**
-     * Method to render the form using a basic 1:1 DD/DL layout
+     * Method to render the form using a basic 1:1 DT/DD layout
      *
      * @return void
      */
@@ -724,41 +842,58 @@ class Form extends \Pop\Dom\Dom
         $children = $this->form->getChildren();
         $this->form->removeChildren();
 
+        $id = (null !== $this->form->getAttribute('id')) ? $this->form->getAttribute('id') . '-field-group-' : 'pop-form-field-group-';
+
         // Create DL element.
+        $i = 1;
         $dl = new Child('dl', null, null, false, $this->form->getIndent());
+        $dl->setAttributes('id', $id . $i);
 
         // Loop through the children and create and attach the appropriate DT and DT elements, with labels where applicable.
         foreach ($children as $child) {
+            if ($child->getNodeName() == 'fieldset') {
+                $chdrn = $child->getChildren();
+                $attribs = $chdrn[0]->getAttributes();
+            } else {
+                $attribs = $child->getAttributes();
+            }
+
+            $name = (isset($attribs['name'])) ? $attribs['name'] : '';
+            $name = str_replace('[]', '', $name);
+
+            if (count($this->groups) > 0) {
+                if (isset($this->groups[$i]) && ($this->groups[$i] == $name)) {
+                    $this->form->addChild($dl);
+                    $i++;
+                    $dl = new Child('dl', null, null, false, $this->form->getIndent());
+                    $dl->setAttributes('id', $id . $i);
+                }
+            }
+
             // Clear the password field from display.
             if ($child->getAttribute('type') == 'password') {
-                $child->value = null;
+                $child->setValue(null);
                 $child->setAttributes('value', null);
             }
 
             // If the element label is set, render the appropriate DT and DD elements.
-            if (isset($child->label) && (null !== $child->label)) {
+            if (null !== $child->getLabel()) {
                 // Create the DT and DD elements.
                 $dt = new Child('dt', null, null, false, ($this->form->getIndent() . '    '));
                 $dd = new Child('dd', null, null, false, ($this->form->getIndent() . '    '));
 
                 // Format the label name.
-                $lbl_name = ($child->getNodeName() == 'fieldset') ? '1' : '';
-                $label = new Child('label', $child->label, null, false, ($this->form->getIndent() . '        '));
+                $lblName = ($child->getNodeName() == 'fieldset') ? '1' : '';
+                $label = new Child('label', $child->getLabel(), null, false, ($this->form->getIndent() . '        '));
+                $label->setAttributes('for', ($name . $lblName));
 
-                if ($child->getNodeName() == 'fieldset') {
-                    $chdrn = $child->getChildren();
-                    $attribs = $chdrn[0]->getAttributes();
-                } else {
-                    $attribs = $child->getAttributes();
-                }
-
-                $name = (isset($attribs['name'])) ? $attribs['name'] : '';
-                $name = str_replace('[]', '', $name);
-
-                if ($child->required) {
-                    $label->setAttributes(array('for' => ($name . $lbl_name), 'class' => 'required'));
-                } else {
-                    $label->setAttributes('for', ($name . $lbl_name));
+                $labelAttributes = $child->getLabelAttributes();
+                if (null !== $labelAttributes) {
+                    foreach ($labelAttributes as $a => $v) {
+                        $label->setAttributes($a, $v);
+                    }
+                } else if ($child->isRequired()) {
+                    $label->setAttributes('class', 'required');
                 }
 
                 // Add the appropriate children to the appropriate elements.
@@ -796,6 +931,9 @@ class Form extends \Pop\Dom\Dom
     protected function renderWithTemplate()
     {
         // Initialize properties and variables.
+        $isFile = !((stripos($this->template, '.phtml') === false) && (stripos($this->template, '.php') === false));
+        $template = $this->template;
+        $fileContents = ($isFile) ? file_get_contents($this->template) : null;
         $this->output = null;
         $children = $this->form->getChildren();
 
@@ -803,7 +941,7 @@ class Form extends \Pop\Dom\Dom
         foreach ($children as $child) {
             // Clear the password field from display.
             if ($child->getAttribute('type') == 'password') {
-                $child->value = null;
+                $child->setValue(null);
                 $child->setAttributes('value', null);
             }
 
@@ -814,38 +952,58 @@ class Form extends \Pop\Dom\Dom
             } else {
                 $attribs = $child->getAttributes();
             }
+
             $name = (isset($attribs['name'])) ? $attribs['name'] : '';
             $name = str_replace('[]', '', $name);
 
             // Set the element's label, if applicable.
-            if (null !== $child->label) {
+            if (null !== $child->getLabel()) {
 
                 // Format the label name.
-                $label = new Child('label', $child->label);
+                $label = new Child('label', $child->getLabel());
+                $label->setAttributes('for', $name);
 
-                if ($child->required) {
-                    $label->setAttributes(array('for' => $name, 'class' => 'required'));
-                } else {
-                    $label->setAttributes('for', $name);
+                $labelAttributes = $child->getLabelAttributes();
+                if (null !== $labelAttributes) {
+                    foreach ($labelAttributes as $a => $v) {
+                        $label->setAttributes($a, $v);
+                    }
+                } else if ($child->isRequired()) {
+                    $label->setAttributes('class', 'required');
                 }
 
                 // Swap the element's label placeholder with the rendered label element.
                 $labelSearch = '[{' . $name . '_label}]';
                 $labelReplace = $label->render(true);
-                $this->template = str_replace($labelSearch, substr($labelReplace, 0, -1), $this->template);
+                $labelReplace = substr($labelReplace, 0, -1);
+                $template = str_replace($labelSearch, $labelReplace, $template);
+                ${$name . '_label'} = $labelReplace;
             }
 
             // Calculate the element's indentation.
-            $indent = null;
-            $childIndent = substr($this->template, 0, strpos($this->template, ('[{' . $name . '}]')));
-            $childIndent = substr($childIndent, (strrpos($childIndent, "\n") + 1));
+            if (null === $fileContents) {
+                $childIndent = substr($template, 0, strpos($template, ('[{' . $name . '}]')));
+                $childIndent = substr($childIndent, (strrpos($childIndent, "\n") + 1));
+            } else {
+                $childIndent = substr($fileContents, 0, strpos($fileContents, ('$' . $name)));
+                $childIndent = substr($childIndent, (strrpos($childIndent, "\n") + 1));
+            }
 
+            // Some whitespace clean up
+            $length = strlen($childIndent);
+            $last = 0;
             $matches = array();
-            preg_match_all('/[^\s]/', $childIndent, $matches);
+            preg_match_all('/[^\s]/', $childIndent, $matches, PREG_OFFSET_CAPTURE);
             if (isset($matches[0])) {
                 foreach ($matches[0] as $str) {
-                    $childIndent = str_replace($str, ' ', $childIndent);
+                    $childIndent = str_replace($str[0], null, $childIndent);
+                    $last = $str[1];
                 }
+            }
+
+            // Final whitespace clean up
+            if (null !== $fileContents) {
+                $childIndent = substr($childIndent, 0, (0 - abs($length - $last)));
             }
 
             // Set each child element's indentation.
@@ -858,17 +1016,27 @@ class Form extends \Pop\Dom\Dom
 
             // Swap the element's placeholder with the rendered element.
             $elementSearch = '[{' . $name . '}]';
-            $elementReplace = $child->render(true, 0, $indent, $childIndent);
+            $elementReplace = $child->render(true, 0, null, $childIndent);
             $elementReplace = substr($elementReplace, 0, -1);
             $elementReplace = str_replace('</select>', $childIndent . '</select>', $elementReplace);
             $elementReplace = str_replace('</fieldset>', $childIndent . '</fieldset>', $elementReplace);
-            $this->template = str_replace($elementSearch, $elementReplace, $this->template);
+            $template = str_replace($elementSearch, $elementReplace, $template);
+            ${$name} = $elementReplace;
         }
 
         // Set the rendered form content and remove the children.
-        $this->form->setNodeValue("\n" . $this->template . "\n" . $this->form->getIndent());
-        $this->form->removeChildren();
-        $this->output = $this->form->render(true);
+        if (!$isFile) {
+            $this->form->setNodeValue("\n" . $template . "\n" . $this->form->getIndent());
+            $this->form->removeChildren();
+            $this->output = $this->form->render(true);
+        } else {
+            $action = $this->action;
+            $method = $this->method;
+
+            ob_start();
+            include $this->template;
+            $this->output = ob_get_clean();
+        }
     }
 
     /**
@@ -897,9 +1065,29 @@ class Form extends \Pop\Dom\Dom
     }
 
     /**
-     * Output the form object in a basic HTML format. Each form element is formatted to a 1:1 label to element
-     * ratio, using <dl>, <dt> and <dd> tags. Required fields' labels have class="required" and error messages
-     * have class="error" for styling purposes.
+     * Return the isset value of fields[$name].
+     *
+     * @param  string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this->fields[$name]);
+    }
+
+    /**
+     * Unset fields[$name].
+     *
+     * @param  string $name
+     * @return void
+     */
+    public function __unset($name)
+    {
+        $this->fields[$name] = null;
+    }
+
+    /**
+     * Output the form object as a string
      *
      * @return string
      */

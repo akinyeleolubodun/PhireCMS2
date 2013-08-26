@@ -26,7 +26,7 @@ use Pop\Color\Space\Rgb;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Imagick extends AbstractImage
 {
@@ -204,6 +204,17 @@ class Imagick extends AbstractImage
     public static function isInstalled()
     {
         return class_exists('Imagick');
+    }
+
+    /**
+     * Get formats
+     *
+     * @return array
+     */
+    public static function formats()
+    {
+        $i = new static('i.jpg', 1, 1);
+        return $i->getFormats();
     }
 
     /**
@@ -936,7 +947,7 @@ class Imagick extends AbstractImage
      */
     public function flatten()
     {
-        $this->resource->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
+        $this->resource = $this->resource->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
         return $this;
     }
 

@@ -1,0 +1,202 @@
+/**
+ * Phire CMS 2.0 Style Sheet
+ */
+
+/* Global styles */
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75em;
+}
+
+a {
+    font-weight: bold;
+}
+
+p {
+    margin: 0 0 10px 0;
+    padding: 0;
+    line-height: 1.4em;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+    clear: both;
+
+}
+
+dt {
+    clear: left;
+    float: left;
+    margin: 0;
+    padding: 6px 3px 3px 3px;
+    width: 200px;
+    text-align: right;
+}
+
+dd {
+    float: left;
+    margin: 0;
+    padding: 3px;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0 3px 6px 3px;
+    border: none;
+}
+
+#uri-span, #slug-span {
+    margin: 0;
+    padding: 5px;
+    height: 10px;
+    color: #666;
+    font-weight: normal;
+    font-size: 1.0em;
+    display: block;
+}
+
+#media-sizes, #media-actions, #media-params, #media-quality, #media-remove {
+    margin: 0 20px 0 0;
+    padding: 0;
+    float: left;
+}
+
+#media-sizes input, #media-params input, #media-quality input {
+    margin: 0 0 10px 0;
+    padding: 0;
+    height: 20px;
+}
+
+#media-remove input.rm-media {
+    margin: 5px 0 22px 0;
+    padding: 0;
+}
+
+#media-actions select {
+    margin: 0 0 10px 0;
+    padding: 1px 0 1px 0;
+}
+
+.data-table {
+    margin: 0 auto 10px auto;
+    padding: 0;
+    width: 100%;
+    border-top: solid 1px #ccc;
+}
+
+.data-table tr {
+    margin: 0;
+    padding: 0;
+}
+
+.data-table tr:hover {
+    background-color: #e5f3ff;
+}
+
+.data-table th {
+    margin: 0;
+    text-align: left;
+    padding: 8px 5px 8px 5px;
+    background-color: #dedede;
+}
+
+.data-table td {
+    margin: 0;
+    padding: 8px 5px 8px 5px;
+    border-top: solid 1px #ccc;
+    font-size: 0.9em;
+}
+
+.required {
+    color: #0090ff;
+    font-weight: bold;
+}
+
+.error {
+    color: #f00;
+    font-weight: bold;
+}
+
+.check-box {
+    margin: 2px;
+    padding: 2px;
+    clear: left;
+    float: left;
+}
+
+.check-span {
+    margin: 2px;
+    padding: 2px;
+    float: left;
+}
+
+th.first-th, td.first-td {
+    width: 5%;
+    text-align: center;
+    border-left: solid 1px #ccc;
+}
+
+th.last-th, td.last-td {
+    width: 5%;
+    text-align: center;
+    border-right: solid 1px #ccc;
+}
+
+.table-bottom-row {
+    text-align: right;
+    background-color: #fff;
+}
+
+.border-left {
+    border-left: solid 1px #ccc;
+}
+
+.border-right {
+    border-right: solid 1px #ccc;
+}
+
+.page-links {
+    margin: 0;
+    padding: 5px;
+    float: right;
+}
+
+.save-btn {
+    float: right;
+}
+
+.remove-btn {
+    float: right;
+}
+
+.radio-btn {
+    margin: 0 5px 5px 0;
+    padding: 0 5px 5px 0;
+}
+
+.radio-span {
+    margin: 0 5px 5px 0;
+    padding: 0 5px 5px 0;
+}
+
+.radio-block-btn {
+    margin: 0 5px 5px 0;
+    padding: 0 5px 5px 0;
+    clear: left;
+    float: left;
+}
+
+.radio-block-span {
+    margin: 0 5px 5px 0;
+    padding: 0 5px 5px 0;
+    float: left;
+}
+
+.media-types-div {
+    margin: 0 15px 0 0;
+    padding: 0;
+    float: left;
+}

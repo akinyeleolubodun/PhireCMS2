@@ -26,7 +26,7 @@ use Pop\Color\Space\Rgb;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.2.3
+ * @version    1.4.0
  */
 class Gd extends AbstractImage
 {
@@ -163,6 +163,17 @@ class Gd extends AbstractImage
     public static function isInstalled()
     {
         return function_exists('gd_info');
+    }
+
+    /**
+     * Get formats
+     *
+     * @return array
+     */
+    public static function formats()
+    {
+        $i = new static('i.jpg', 1, 1);
+        return $i->getFormats();
     }
 
     /**
