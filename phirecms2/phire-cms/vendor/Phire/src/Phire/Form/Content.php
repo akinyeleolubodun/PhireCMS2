@@ -398,7 +398,14 @@ class Content extends Form
         foreach ($viewDir->getFiles() as $file) {
             $ext = strtolower(substr($file, strrpos($file, '.')));
             if (($ext == '.phtml') || ($ext == '.php') || ($ext == '.php3')) {
-                $templates[$file] = $file;
+                if ((stripos($file, 'search.') === false) &&
+                    (stripos($file, 'category.') === false) &&
+                    (stripos($file, 'date.') === false) &&
+                    (stripos($file, 'error.') === false) &&
+                    (stripos($file, 'header.') === false) &&
+                    (stripos($file, 'footer.') === false)) {
+                    $templates[$file] = $file;
+                }
             }
         }
 

@@ -228,8 +228,24 @@ class Extension extends AbstractModel
                             $db->adapter()->query('SET foreign_key_checks = 1;');
                         }
                     }
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $ext->name)) {
-                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $ext->name);
+
+                    $contentPath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH;
+                    $exts = array('.zip', '.tar.gz', '.tar.bz2', '.tgz', '.tbz', '.tbz2');
+
+                    if (file_exists($contentPath . '/extensions/modules/' . $ext->name)) {
+                        $dir = new Dir($contentPath . '/extensions/modules/' . $ext->name);
+                        $dir->emptyDir(null, true);
+                    }
+
+                    foreach ($exts as $e) {
+                        if (file_exists($contentPath . '/extensions/modules/' . $ext->name . $e) &&
+                            is_writable($contentPath . '/extensions/modules/' . $ext->name . $e)) {
+                            unlink($contentPath . '/extensions/modules/' . $ext->name . $e);
+                        }
+                    }
+
+                    if (file_exists($contentPath . '/assets/' . strtolower($ext->name))) {
+                        $dir = new Dir($contentPath . '/assets/' . strtolower($ext->name));
                         $dir->emptyDir(null, true);
                     }
                     $ext->delete();
