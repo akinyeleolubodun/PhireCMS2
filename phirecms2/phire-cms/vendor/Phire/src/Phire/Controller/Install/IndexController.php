@@ -149,6 +149,9 @@ class IndexController extends C
                 if ($form->isValid()) {
                     $user->save($form);
                     $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a>.</p>');
+                    Model\Install::send($form);
+                    unset($this->sess->config);
+                    unset($this->sess->app_uri);
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user);
                     $this->send();
                 } else {

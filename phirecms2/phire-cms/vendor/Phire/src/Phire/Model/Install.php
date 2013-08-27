@@ -7,6 +7,7 @@ namespace Phire\Model;
 use Phire\Table;
 use Pop\Db\Db;
 use Pop\File\File;
+use Pop\Mail\Mail;
 use Pop\Project\Install\Dbs;
 use Pop\Web\Server;
 use Pop\Web\Session;
@@ -24,9 +25,11 @@ class Install extends \Pop\Mvc\Model
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
 
+        // Get config file contents
         $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
         $config = $cfgFile->read();
 
+        // Get DB interface and type
         if (strpos($form->db_adapter, 'Pdo') !== false) {
             $dbInterface = 'Pdo';
             $dbType = strtolower(substr($form->db_adapter, (strrpos($form->db_adapter, '\\') + 1)));
@@ -35,6 +38,7 @@ class Install extends \Pop\Mvc\Model
             $dbType = null;
         }
 
+        // If DB is SQLite
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
             touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $form->content_path . '/.htphire.sqlite');
             $relativeDbName = "__DIR__ . '" . $form->content_path . '/.htphire.sqlite';
@@ -55,9 +59,9 @@ class Install extends \Pop\Mvc\Model
 
         $dbPrefix = $form->db_prefix;
 
-        $config = str_replace("define('APP_URI', '/phire');", "define('APP_URI', '" . $form->app_uri . "');", $config);
+        // Set config values
         $config = str_replace("define('CONTENT_PATH', '/phire-content');", "define('CONTENT_PATH', '" . $form->content_path . "');", $config);
-
+        $config = str_replace("define('APP_URI', '/phire');", "define('APP_URI', '" . $form->app_uri . "');", $config);
         $config = str_replace("define('DB_INTERFACE', '');", "define('DB_INTERFACE', '" . $dbInterface . "');", $config);
         $config = str_replace("define('DB_TYPE', '');", "define('DB_TYPE', '" . $dbType . "');", $config);
         $config = str_replace("define('DB_NAME', '');", "define('DB_NAME', " . ((null !== $relativeDbName) ? $relativeDbName : "'" . $dbName) . "');", $config);
@@ -66,8 +70,7 @@ class Install extends \Pop\Mvc\Model
         $config = str_replace("define('DB_HOST', '');", "define('DB_HOST', '" . $dbHost . "');", $config);
         $config = str_replace("define('DB_PREFIX', '');", "define('DB_PREFIX', '" . $dbPrefix . "');", $config);
 
-        $config = str_replace("define('POP_LANG', 'en_US');", "define('POP_LANG', '" . $form->language . "');", $config);
-
+        // Store the config values in session in case config file is not writable.
         $sess = Session::getInstance();
         $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
         $sess->app_uri = $form->app_uri;
@@ -109,6 +112,7 @@ class Install extends \Pop\Mvc\Model
             'type'     => $type
         ));
 
+        // Get server info
         $server = new Server();
         $os = $server->getOs() . ' (' . $server->getDistro() . ')';
         $srv = $server->getServer() . ' ' . $server->getServerVersion();
@@ -127,6 +131,33 @@ class Install extends \Pop\Mvc\Model
         if ($form->password_salt != '') {
             $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "user_types SET password_salt = '" . $db->adapter()->escape($form->password_salt) . "' WHERE id = 2001");
         }
+    }
+
+    /**
+     * Send install notification email to user
+     *
+     * @param  \Phire\Form\User $form
+     * @return void
+     */
+    public static function send(\Phire\Form\User $form)
+    {
+        // Get the domain
+        $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+
+        // Set the recipient
+        $rcpt = array(
+            'name'   => $form->username,
+            'email'  => $form->email1,
+            'url'    => 'http://' . $_SERVER['HTTP_HOST'] . BASE_PATH,
+            'login'  => 'http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI,
+            'domain' => $domain
+        );
+
+        // Send email verification
+        $mail = new Mail($domain . ' - Phire CMS Installation', $rcpt);
+        $mail->from('noreply@' . $domain);
+        $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/install.txt'));
+        $mail->send();
     }
 
 }

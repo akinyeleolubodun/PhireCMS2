@@ -8,5 +8,5 @@ Here is your password reminder for [{domain}]. [{message}]
 You can login at: [{login}]
 
 Thank You,
-The Pop PHP Framework Team
+The Phire CMS Team
 

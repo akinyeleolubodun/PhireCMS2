@@ -92,6 +92,7 @@ class Install extends Form
                     'type'     => str_replace('\\', '_', $this->db_adapter),
                 ));
 
+                // If there is a DB error
                 if (null != $dbCheck) {
                     $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, wordwrap($dbCheck, 50, '<br />')));
                 } else {
