@@ -68,9 +68,9 @@ class ContentType extends AbstractContentModel
         if (isset($type->id)) {
             $typeValues = $type->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $typeValues = array_merge($typeValues, \Phields\Model\FieldValue::getAll($id));
+                $typeValues = array_merge($typeValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $typeValues);
@@ -97,9 +97,9 @@ class ContentType extends AbstractContentModel
 
         $type->save();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $type->id);
+            \Fields\Model\FieldValue::save($fields, $type->id);
         }
     }
 
@@ -121,9 +121,9 @@ class ContentType extends AbstractContentModel
         $type->order = (int)$fields['order'];
         $type->update();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $type->id);
+            \Fields\Model\FieldValue::update($fields, $type->id);
         }
     }
 

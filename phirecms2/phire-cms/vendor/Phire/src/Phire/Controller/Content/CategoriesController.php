@@ -82,7 +82,7 @@ class CategoriesController extends C
 
         $form = new Form\Category(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->isLoaded('Phields')
+            0, $this->project->isLoaded('Fields')
         );
 
         if ($this->request->isPost()) {
@@ -93,7 +93,7 @@ class CategoriesController extends C
             );
 
             if ($form->isValid()) {
-                $category->save($form, $this->project->isLoaded('Phields'));
+                $category->save($form, $this->project->isLoaded('Fields'));
                 Response::redirect($this->request->getBasePath());
             } else {
                 $category->set('form', $form);
@@ -123,14 +123,14 @@ class CategoriesController extends C
                 'nav'    => $this->project->getService('nav')
             ));
 
-            $category->getById($this->request->getPath(1), $this->project->isLoaded('Phields'));
+            $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
             if (isset($category->id)) {
                 $category->set('title', 'Categories &gt; ' . $category->category);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $category->id, $this->project->isLoaded('Phields')
+                    $category->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -143,7 +143,7 @@ class CategoriesController extends C
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $category->update($form, $this->project->isLoaded('Phields'));
+                        $category->update($form, $this->project->isLoaded('Fields'));
                         Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {
@@ -188,9 +188,9 @@ class CategoriesController extends C
                         $category->delete();
                     }
 
-                    // If the Phields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Phields')) {
-                        $fields = new \Phields\Table\FieldValues();
+                    // If the Fields module is installed, and if there are fields for this form/model
+                    if ($this->project->isLoaded('Fields')) {
+                        $fields = new \Fields\Table\FieldValues();
                         $fields->delete(array('model_id' => $id));
                     }
                 }

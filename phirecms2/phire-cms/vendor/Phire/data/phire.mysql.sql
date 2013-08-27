@@ -277,3 +277,18 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_templates` (
   CONSTRAINT `fk_template_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_templates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `extensions`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` int(1) NOT NULL,
+  `active` int(1) NOT NULL,
+  `assets` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
+

@@ -308,3 +308,22 @@ CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefi
 ) ;
 
 ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]content_templates"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "extensions"
+--
+
+CREATE SEQUENCE extension_id_seq START 9001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
+  "id" integer NOT NULL DEFAULT nextval('extension_id_seq'),
+  "name" varchar(255) NOT NULL,
+  "type" integer NOT NULL,
+  "active" integer NOT NULL,
+  "assets" text,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE extension_id_seq OWNED BY "[{prefix}]extensions"."id";

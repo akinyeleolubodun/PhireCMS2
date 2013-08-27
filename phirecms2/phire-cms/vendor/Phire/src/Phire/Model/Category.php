@@ -110,9 +110,9 @@ class Category extends AbstractContentModel
             $categoryValues = $category->getValues();
             $categoryValues['title'] = $categoryValues['category'];
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $categoryValues = array_merge($categoryValues, \Phields\Model\FieldValue::getAll($category->id, true));
+                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($category->id, true));
             }
 
             // Get content object within the category
@@ -179,9 +179,9 @@ class Category extends AbstractContentModel
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $categoryValues = array_merge($categoryValues, \Phields\Model\FieldValue::getAll($id));
+                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $categoryValues);
@@ -229,9 +229,9 @@ class Category extends AbstractContentModel
 
         $category->save();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $category->id);
+            \Fields\Model\FieldValue::save($fields, $category->id);
         }
     }
 
@@ -274,9 +274,9 @@ class Category extends AbstractContentModel
         $category->order     = (int)$fields['order'];
         $category->update();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $category->id);
+            \Fields\Model\FieldValue::update($fields, $category->id);
         }
     }
 

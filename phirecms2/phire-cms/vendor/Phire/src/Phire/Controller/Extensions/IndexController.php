@@ -81,12 +81,23 @@ class IndexController extends C
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
             'nav'    => $this->project->getService('nav'),
-            'title'  => 'Extensions &gt; Themes'
         ));
 
         $ext->getThemes();
-        $this->view = View::factory($this->viewPath . '/themes.phtml', $ext);
-        $this->send();
+
+        if (null === $this->request->getPath(1)) {
+            $ext->set('title', 'Extensions &gt; Themes');
+            $this->view = View::factory($this->viewPath . '/themes.phtml', $ext);
+            $this->send();
+        } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
+            $ext->installThemes();
+            Response::redirect($this->request->getBasePath() . '/themes');
+        } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
+            $ext->processThemes($this->request->getPost());
+            Response::redirect($this->request->getBasePath() . '/themes');
+        } else {
+            Response::redirect($this->request->getBasePath() . '/themes');
+        }
     }
 
     /**
@@ -103,9 +114,21 @@ class IndexController extends C
             'title'  => 'Extensions &gt; Modules'
         ));
 
-        $ext->getThemes();
-        $this->view = View::factory($this->viewPath . '/modules.phtml', $ext);
-        $this->send();
+        $ext->getModules($this->project);
+
+        if (null === $this->request->getPath(1)) {
+            $ext->set('title', 'Extensions &gt; Modules');
+            $this->view = View::factory($this->viewPath . '/modules.phtml', $ext);
+            $this->send();
+        } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
+            $ext->installModules();
+            Response::redirect($this->request->getBasePath() . '/modules');
+        } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
+            $ext->processModules($this->request->getPost());
+            Response::redirect($this->request->getBasePath() . '/modules');
+        } else {
+            Response::redirect($this->request->getBasePath() . '/modules');
+        }
     }
 
     /**

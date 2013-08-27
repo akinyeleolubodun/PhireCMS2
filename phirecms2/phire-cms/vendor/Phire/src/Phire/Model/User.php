@@ -244,9 +244,9 @@ class User extends AbstractModel
             $userValues['email1'] = $userValues['email'];
             $userValues['verified'] = (int)$userValues['verified'];
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $userValues = array_merge($userValues, \Phields\Model\FieldValue::getAll($id));
+                $userValues = array_merge($userValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $userValues);
@@ -368,9 +368,9 @@ class User extends AbstractModel
         ));
         $user->save();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $user->id);
+            \Fields\Model\FieldValue::save($fields, $user->id);
         }
 
         // Send verification if needed
@@ -441,9 +441,9 @@ class User extends AbstractModel
 
         $user->update();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $user->id);
+            \Fields\Model\FieldValue::update($fields, $user->id);
         }
     }
 

@@ -82,7 +82,7 @@ class TypesController extends C
 
         $form = new Form\ContentType(
             $this->request->getBasePath() . $this->request->getRequestUri() . (isset($_GET['redirect']) ? '?redirect=1' : null),
-            'post', 0, $this->project->isLoaded('Phields')
+            'post', 0, $this->project->isLoaded('Fields')
         );
 
         if ($this->request->isPost()) {
@@ -93,7 +93,7 @@ class TypesController extends C
             );
 
             if ($form->isValid()) {
-                $type->save($form, $this->project->isLoaded('Phields'));
+                $type->save($form, $this->project->isLoaded('Fields'));
                 $url = ($form->redirect) ? BASE_PATH . APP_URI . '/content/add' : $this->request->getBasePath();
                 Response::redirect($url);
             } else {
@@ -124,14 +124,14 @@ class TypesController extends C
                 'nav'    => $this->project->getService('nav')
             ));
 
-            $type->getById($this->request->getPath(1), $this->project->isLoaded('Phields'));
+            $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
             if (isset($type->id)) {
                 $type->set('title', 'Content Types &gt; ' . $type->name);
                 $form = new Form\ContentType(
                     $this->request->getBasePath() . $this->request->getRequestUri(),
-                    'post', $type->id, $this->project->isLoaded('Phields')
+                    'post', $type->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -144,7 +144,7 @@ class TypesController extends C
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $type->update($form, $this->project->isLoaded('Phields'));
+                        $type->update($form, $this->project->isLoaded('Fields'));
                         Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {
@@ -189,9 +189,9 @@ class TypesController extends C
                         $type->delete();
                     }
 
-                    // If the Phields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Phields')) {
-                        $fields = new \Phields\Table\FieldValues();
+                    // If the Fields module is installed, and if there are fields for this form/model
+                    if ($this->project->isLoaded('Fields')) {
+                        $fields = new \Fields\Table\FieldValues();
                         $fields->delete(array('model_id' => $id));
                     }
                 }

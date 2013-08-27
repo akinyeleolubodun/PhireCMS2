@@ -116,9 +116,9 @@ class Template extends AbstractContentModel
         if (isset($template->id)) {
             $templateValues = $template->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $templateValues = array_merge($templateValues, \Phields\Model\FieldValue::getAll($id));
+                $templateValues = array_merge($templateValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $templateValues);
@@ -147,9 +147,9 @@ class Template extends AbstractContentModel
 
         $template->save();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $template->id);
+            \Fields\Model\FieldValue::save($fields, $template->id);
         }
     }
 
@@ -173,9 +173,9 @@ class Template extends AbstractContentModel
         $template->template     = $fields['template'];
         $template->update();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $template->id);
+            \Fields\Model\FieldValue::update($fields, $template->id);
         }
     }
 

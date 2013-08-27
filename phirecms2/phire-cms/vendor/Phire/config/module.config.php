@@ -18,7 +18,7 @@ return array(
                     '/templates'  => 'Phire\Controller\Content\TemplatesController',
                     '/types'      => 'Phire\Controller\Content\TypesController'
                 ),
-                '/extensions'   => 'Phire\Controller\Extensions\IndexController',
+                '/extensions' => 'Phire\Controller\Extensions\IndexController',
                 '/users' => array(
                     '/'         => 'Phire\Controller\User\UsersController',
                     '/roles'    => 'Phire\Controller\User\RolesController',
@@ -86,7 +86,8 @@ return array(
         ),
         // Exclude parameter for excluding user-specific resources (controllers) and permissions (actions)
         'exclude' => array(
-            'Phire\Controller\IndexController'
+            'Phire\Controller\IndexController',
+            'Phire\Controller\Install\IndexController'
         )
     ))
 );

@@ -74,9 +74,9 @@ class UserType extends AbstractModel
         if (isset($type->id)) {
             $typeValues = $type->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $typeValues = array_merge($typeValues, \Phields\Model\FieldValue::getAll($id));
+                $typeValues = array_merge($typeValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $typeValues);
@@ -117,9 +117,9 @@ class UserType extends AbstractModel
         $type = new Table\UserTypes($fields);
         $type->save();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fieldsAry, $type->id);
+            \Fields\Model\FieldValue::save($fieldsAry, $type->id);
         }
     }
 
@@ -190,9 +190,9 @@ class UserType extends AbstractModel
         $type->setValues($fields);
         $type->update();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fieldsAry, $type->id);
+            \Fields\Model\FieldValue::update($fieldsAry, $type->id);
         }
     }
 

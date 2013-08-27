@@ -49,7 +49,7 @@ class RolesController extends AbstractController
 
         $form = new Form\UserRole(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->module('Phire'), $this->project->isLoaded('Phields')
+            0, $this->project->module('Phire'), $this->project->isLoaded('Fields')
         );
 
         // If form is submitted
@@ -62,7 +62,7 @@ class RolesController extends AbstractController
 
             // If form is valid, save new role
             if ($form->isValid()) {
-                $role->save($form, $this->project->isLoaded('Phields'));
+                $role->save($form, $this->project->isLoaded('Fields'));
                 Response::redirect(BASE_PATH . APP_URI . '/users/roles');
             // Else, re-render the form with errors
             } else {
@@ -93,14 +93,14 @@ class RolesController extends AbstractController
                 'acl'    => $this->project->getService('acl'),
                 'nav'    => $this->project->getService('nav')
             ));
-            $role->getById($this->request->getPath(1), $this->project->isLoaded('Phields'));
+            $role->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If role is found and valid
             if (null !== $role->name) {
                 $role->set('title', 'User Roles &gt; ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $role->id, $this->project->module('Phire'), $this->project->isLoaded('Phields')
+                    $role->id, $this->project->module('Phire'), $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -113,7 +113,7 @@ class RolesController extends AbstractController
 
                     // If form is valid, save role
                     if ($form->isValid()) {
-                        $role->update($form, $this->project->isLoaded('Phields'));
+                        $role->update($form, $this->project->isLoaded('Fields'));
                         Response::redirect(BASE_PATH . APP_URI . '/users/roles');
                     // Else, re-render the form with errors
                     } else {
@@ -167,9 +167,9 @@ class RolesController extends AbstractController
                         Table\UserTypes::execute($sql->render(true));
                     }
 
-                    // If the Phields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Phields')) {
-                        $fields = new \Phields\Table\FieldValues();
+                    // If the Fields module is installed, and if there are fields for this form/model
+                    if ($this->project->isLoaded('Fields')) {
+                        $fields = new \Fields\Table\FieldValues();
                         $fields->delete(array('model_id' => $id));
                     }
                 }

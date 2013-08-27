@@ -94,7 +94,7 @@ class IndexController extends C
 
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, 0, $this->project->isLoaded('Phields')
+                    0, 0, $this->project->isLoaded('Fields')
                 );
 
                 if ($this->request->isPost()) {
@@ -132,7 +132,7 @@ class IndexController extends C
 
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                        $type->id, 0, $this->project->isLoaded('Phields')
+                        $type->id, 0, $this->project->isLoaded('Fields')
                     );
 
                     // If form is submitted
@@ -147,7 +147,7 @@ class IndexController extends C
                         if ($form->isValid()) {
                             $cfg = $this->project->module('Phire');
                             try {
-                                $content->save($form, $cfg->asArray(), $this->project->isLoaded('Phields'));
+                                $content->save($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
                                 Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
                             } catch (\Exception $e) {
                                 $this->error($e->getMessage());
@@ -188,7 +188,7 @@ class IndexController extends C
                 'nav'    => $this->project->getService('nav')
             ));
 
-            $content->getById($this->request->getPath(1), $this->project->isLoaded('Phields'));
+            $content->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
 
             // If content object is found and valid
@@ -197,7 +197,7 @@ class IndexController extends C
                 $content->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $content->type_id, $content->id, $this->project->isLoaded('Phields')
+                    $content->type_id, $content->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -212,7 +212,7 @@ class IndexController extends C
                     if ($form->isValid()) {
                         $cfg = $this->project->module('Phire');
                         try {
-                            $content->update($form, $cfg->asArray(), $this->project->isLoaded('Phields'));
+                            $content->update($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
                             Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
                         } catch (\Exception $e) {
                             $this->error($e->getMessage());
@@ -273,14 +273,14 @@ class IndexController extends C
                         }
                     }
 
-                    // If the Phields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Phields') && !((!$open) && ($createdBy != $model->user->id))) {
-                        $fields = \Phields\Table\FieldValues::findAll(null, array('model_id' => $id));
+                    // If the Fields module is installed, and if there are fields for this form/model
+                    if ($this->project->isLoaded('Fields') && !((!$open) && ($createdBy != $model->user->id))) {
+                        $fields = \Fields\Table\FieldValues::findAll(null, array('model_id' => $id));
                         if (isset($fields->rows[0])) {
                             foreach ($fields->rows as $field) {
                                 // Get the field values with the field type to check for any files to delete
                                 if (isset($field->field_id)) {
-                                    $sql = \Phields\Table\FieldValues::getSql();
+                                    $sql = \Fields\Table\FieldValues::getSql();
 
                                     // Get the correct placeholders
                                     if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
@@ -304,7 +304,7 @@ class IndexController extends C
                                       ->equalTo('field_id', $p1)
                                       ->equalTo('model_id', $p2);
 
-                                    $fld = \Phields\Table\FieldValues::execute(
+                                    $fld = \Fields\Table\FieldValues::execute(
                                         $sql->render(true),
                                         array('field_id' => $field->field_id, 'model_id' => $id)
                                     );

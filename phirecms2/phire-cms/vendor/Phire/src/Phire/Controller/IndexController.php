@@ -92,7 +92,7 @@ class IndexController extends C
     public function index()
     {
         $content = new Model\Content();
-        $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Phields'));
+        $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
         // If page found and allowed
         if (isset($content->id) && ($content->allowed)) {
@@ -107,7 +107,7 @@ class IndexController extends C
             }
             $date = $this->isDate($uri);
             if (null !== $date) {
-                $content->getByDate($date, $this->project->isLoaded('Phields'));
+                $content->getByDate($date, $this->project->isLoaded('Fields'));
                 if (isset($content->id) && ($content->allowed)) {
                     $template = $this->getTemplate($content->template, 'index');
                     $this->view = View::factory($template, $content);
@@ -135,7 +135,7 @@ class IndexController extends C
     public function category()
     {
         $category = new Model\Category();
-        $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Phields'));
+        $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
             $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->viewPath . '/category.phtml';

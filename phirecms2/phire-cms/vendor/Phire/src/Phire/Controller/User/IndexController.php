@@ -135,7 +135,7 @@ class IndexController extends AbstractController
             ));
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
-                'post', $this->type->id, true, 0, $this->project->isLoaded('Phields')
+                'post', $this->type->id, true, 0, $this->project->isLoaded('Fields')
             );
 
             // If form is submitted
@@ -186,7 +186,7 @@ class IndexController extends AbstractController
         if (null !== $user->id) {
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
-                'post', $this->type->id, true, $user->id, $this->project->isLoaded('Phields')
+                'post', $this->type->id, true, $user->id, $this->project->isLoaded('Fields')
             );
 
             // If the form is submitted

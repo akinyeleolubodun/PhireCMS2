@@ -31,6 +31,8 @@ abstract class AbstractModel extends \Pop\Mvc\Model
 
         $this->data['base_path'] = BASE_PATH;
         $this->data['content_path'] = CONTENT_PATH;
+        $this->data['phireHeader'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/user/header.phtml';
+        $this->data['phireFooter'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/user/footer.phtml';
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;

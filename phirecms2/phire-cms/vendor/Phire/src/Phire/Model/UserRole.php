@@ -174,9 +174,9 @@ class UserRole extends AbstractModel
         if (isset($role->id)) {
             $roleValues = $role->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $roleValues = array_merge($roleValues, \Phields\Model\FieldValue::getAll($id));
+                $roleValues = array_merge($roleValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             $this->data = array_merge($this->data, $roleValues);
@@ -216,9 +216,9 @@ class UserRole extends AbstractModel
             }
         }
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $role->id);
+            \Fields\Model\FieldValue::save($fields, $role->id);
         }
     }
 
@@ -271,9 +271,9 @@ class UserRole extends AbstractModel
             }
         }
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $role->id);
+            \Fields\Model\FieldValue::update($fields, $role->id);
         }
     }
 

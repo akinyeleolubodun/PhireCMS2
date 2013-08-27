@@ -210,10 +210,10 @@ class UserType extends Form
 
         $fields2 = array();
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Phields\Model\Field::getByModel($model, 0, $tid);
+            $newFields = \Fields\Model\Field::getByModel($model, 0, $tid);
             if (count($newFields) > 0) {
                 foreach ($newFields as $key => $value) {
                     $fields2[$key] = $value;

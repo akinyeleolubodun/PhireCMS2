@@ -295,3 +295,20 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_templates', 8000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "extensions"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" varchar NOT NULL,
+  "type" integer NOT NULL,
+  "active" integer NOT NULL,
+  "assets" text,
+  UNIQUE ("id")
+) ;
+
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]extensions', 9000);

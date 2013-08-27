@@ -1,5 +1,16 @@
 <?php include __DIR__ . '/../user/header.phtml'; ?>
 <?php echo $nav; ?>
     <h1 style="color: #00f;"><?php echo $title; ?></h1>
-    <p>Themes Page</p>
+<?php if (isset($install)): ?>
+    <p>Do some install stuff</p>
+<?php else: ?>
+<?php if (count($new) > 0): ?>
+    <p>New themes (<?php echo count($new); ?>) have been detected. <a href="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes/install">Click here</a> to install.</p>
+<?php endif; ?>
+<?php if (count($themes) > 0): ?>
+<?php print_r($themes); ?>
+<?php else: ?>
+    <p>There are currently no themes.</p>
+<?php endif; ?>
+<?php endif; ?>
 <?php include __DIR__ . '/../user/footer.phtml'; ?>

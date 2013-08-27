@@ -48,7 +48,7 @@ class TypesController extends AbstractController
 
         $form = new Form\UserType(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->isLoaded('Phields')
+            0, $this->project->isLoaded('Fields')
         );
 
         // If form is submitted
@@ -61,7 +61,7 @@ class TypesController extends AbstractController
 
             // If form is valid, save new type
             if ($form->isValid()) {
-                $type->save($form, $this->project->isLoaded('Phields'));
+                $type->save($form, $this->project->isLoaded('Fields'));
                 Response::redirect(BASE_PATH . APP_URI . '/users/types');
             // Else, re-render the form with errors
             } else {
@@ -92,14 +92,14 @@ class TypesController extends AbstractController
                 'acl'    => $this->project->getService('acl'),
                 'nav'    => $this->project->getService('nav')
             ));
-            $type->getById($this->request->getPath(1), $this->project->isLoaded('Phields'));
+            $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If type is found and valid
             if (null !== $type->type) {
                 $type->set('title', 'User Types &gt; ' . $type->type);
                 $form = new Form\UserType(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $this->request->getPath(1), $this->project->isLoaded('Phields')
+                    $this->request->getPath(1), $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -112,7 +112,7 @@ class TypesController extends AbstractController
 
                     // If form is valid, save type
                     if ($form->isValid()) {
-                        $type->update($form, $this->project->isLoaded('Phields'));
+                        $type->update($form, $this->project->isLoaded('Fields'));
                         Response::redirect(BASE_PATH . APP_URI . '/users/types');
                     // Else, re-render the form with errors
                     } else {
@@ -157,12 +157,12 @@ class TypesController extends AbstractController
                         $type->delete();
                     }
 
-                    // If the Phields module is installed, and if there are fields for this model type
-                    if ($this->project->isLoaded('Phields')) {
-                        $fields = new \Phields\Table\FieldsToModels();
+                    // If the Fields module is installed, and if there are fields for this model type
+                    if ($this->project->isLoaded('Fields')) {
+                        $fields = new \Fields\Table\FieldsToModels();
                         $fields->delete(array('type_id' => $id));
 
-                        $fields = new \Phields\Table\FieldValues();
+                        $fields = new \Fields\Table\FieldValues();
                         $fields->delete(array('model_id' => $id));
                     }
                 }

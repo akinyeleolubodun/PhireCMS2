@@ -282,9 +282,9 @@ class Content extends AbstractContentModel
 
             $contentValues = $content->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $contentValues = array_merge($contentValues, \Phields\Model\FieldValue::getAll($content->id, true));
+                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id, true));
             }
 
             $this->data = array_merge($this->data, $contentValues);
@@ -311,9 +311,9 @@ class Content extends AbstractContentModel
 
             $contentValues = $content->getValues();
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $contentValues = array_merge($contentValues, \Phields\Model\FieldValue::getAll($content->id, true));
+                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id, true));
             }
 
             $this->data = array_merge($this->data, $contentValues);
@@ -381,9 +381,9 @@ class Content extends AbstractContentModel
                 $contentValues['roles'] = $rolesAry;
             }
 
-            // If the Phields module is installed, and if there are fields for this form/model
+            // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
-                $contentValues = array_merge($contentValues, \Phields\Model\FieldValue::getAll($id));
+                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($id));
             }
 
             if (!((!$this->config->open_authoring) && ($contentValues['created_by'] != $this->user->id))) {
@@ -585,9 +585,9 @@ class Content extends AbstractContentModel
             }
         }
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::save($fields, $content->id, true);
+            \Fields\Model\FieldValue::save($fields, $content->id, true);
         }
     }
 
@@ -724,9 +724,9 @@ class Content extends AbstractContentModel
             }
         }
 
-        // If the Phields module is installed, and if there are fields for this form/model
+        // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Phields\Model\FieldValue::update($fields, $content->id, true);
+            \Fields\Model\FieldValue::update($fields, $content->id, true);
         }
     }
 
