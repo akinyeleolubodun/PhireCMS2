@@ -1,0 +1,9 @@
+<?php include __DIR__ . '/../user/header.phtml'; ?>
+<?php if (isset($role)): ?>
+<?php echo $nav; ?>
+<?php endif; ?>
+    <h1 class="error"><?php echo $title; ?></h1>
+    <p>
+        We're sorry. That page was not found.
+    </p>
+<?php include __DIR__ . '/../user/footer.phtml'; ?>
