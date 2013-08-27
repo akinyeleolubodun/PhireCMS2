@@ -5,20 +5,20 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_config"
+-- Table structure for table "config"
 --
 
-CREATE TABLE IF NOT EXISTS "ph_config" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]config" (
 "setting" varchar(255) NOT NULL,
 "value" text NOT NULL,
 PRIMARY KEY ("setting")
 ) ;
 
 --
--- Dumping data for table "ph_config"
+-- Dumping data for table "[{prefix}]config"
 --
 
-INSERT INTO "ph_config" ("setting", "value") VALUES
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
 ('system_version', ''),
 ('system_document_root', ''),
 ('server_operating_system', ''),
@@ -48,12 +48,12 @@ INSERT INTO "ph_config" ("setting", "value") VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_types"
+-- Table structure for table "user_types"
 --
 
 CREATE SEQUENCE type_id_seq START 2001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_types" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "id" integer NOT NULL DEFAULT nextval('type_id_seq'),
   "type" varchar(255) NOT NULL,
   "default_role_id" integer,
@@ -81,65 +81,65 @@ CREATE TABLE IF NOT EXISTS "ph_user_types" (
   PRIMARY KEY ("id")
 ) ;
 
-ALTER SEQUENCE type_id_seq OWNED BY "ph_user_types"."id";
+ALTER SEQUENCE type_id_seq OWNED BY "[{prefix}]user_types"."id";
 
 --
--- Dumping data for table "ph_user_types"
+-- Dumping data for table "[{prefix}]user_types"
 --
 
-INSERT INTO "ph_user_types" ("type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
+INSERT INTO "[{prefix}]user_types" ("type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
 ('user', 3001, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_roles"
+-- Table structure for table "user_roles"
 --
 
 CREATE SEQUENCE role_id_seq START 3001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_roles" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
   "id" integer NOT NULL DEFAULT nextval('role_id_seq'),
   "type_id" integer NOT NULL,
   "name" varchar(255) NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "ph_user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE role_id_seq OWNED BY "ph_user_roles"."id";
+ALTER SEQUENCE role_id_seq OWNED BY "[{prefix}]user_roles"."id";
 
 --
--- Dumping data for table "ph_user_roles"
+-- Dumping data for table "[{prefix}]user_roles"
 --
 
-INSERT INTO "ph_user_roles" ("type_id", "name") VALUES
+INSERT INTO "[{prefix}]user_roles" ("type_id", "name") VALUES
 (2001, 'Admin');
 
-ALTER TABLE "ph_user_types" ADD CONSTRAINT "fk_default_role" FOREIGN KEY ("default_role_id") REFERENCES "ph_user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "[{prefix}]user_types" ADD CONSTRAINT "fk_default_role" FOREIGN KEY ("default_role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_permissions"
+-- Table structure for table "user_permissions"
 --
 
-CREATE TABLE IF NOT EXISTS "ph_user_permissions" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_permissions" (
   "role_id" integer NOT NULL,
   "resource" varchar(255),
   "permission" varchar(255),
   UNIQUE ("role_id", "resource", "permission"),
-  CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "ph_user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_users"
+-- Table structure for table "users"
 --
 
 CREATE SEQUENCE user_id_seq START 1001;
 
-CREATE TABLE IF NOT EXISTS "ph_users" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
   "id" integer NOT NULL DEFAULT nextval('user_id_seq'),
   "type_id" integer,
   "role_id" integer,
@@ -150,25 +150,25 @@ CREATE TABLE IF NOT EXISTS "ph_users" (
   "logins" text,
   "failed_attempts" integer,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "ph_user_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "ph_user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE user_id_seq OWNED BY "ph_users"."id";
+ALTER SEQUENCE user_id_seq OWNED BY "[{prefix}]users"."id";
 
 --
--- Dumping data for table "ph_users"
+-- Dumping data for table "[{prefix}]users"
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_user_sessions"
+-- Table structure for table "user_sessions"
 --
 
 CREATE SEQUENCE session_id_seq START 4001;
 
-CREATE TABLE IF NOT EXISTS "ph_user_sessions" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "id" integer NOT NULL DEFAULT nextval('session_id_seq'),
   "user_id" integer,
   "ip" varchar(255) NOT NULL,
@@ -176,24 +176,24 @@ CREATE TABLE IF NOT EXISTS "ph_user_sessions" (
   "start" timestamp NOT NULL,
   "last" timestamp NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "ph_users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE session_id_seq OWNED BY "ph_user_sessions"."id";
+ALTER SEQUENCE session_id_seq OWNED BY "[{prefix}]user_sessions"."id";
 
 --
--- Dumping data for table "ph_user_sessions"
+-- Dumping data for table "[{prefix}]user_sessions"
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content_types"
+-- Table structure for table "content_types"
 --
 
 CREATE SEQUENCE content_type_id_seq START 5001;
 
-CREATE TABLE IF NOT EXISTS "ph_content_types" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_types" (
   "id" integer NOT NULL DEFAULT nextval('content_type_id_seq'),
   "name" varchar(255) NOT NULL,
   "uri" integer NOT NULL,
@@ -201,17 +201,17 @@ CREATE TABLE IF NOT EXISTS "ph_content_types" (
   PRIMARY KEY ("id")
 ) ;
 
-ALTER SEQUENCE content_type_id_seq OWNED BY "ph_content_types"."id";
+ALTER SEQUENCE content_type_id_seq OWNED BY "[{prefix}]content_types"."id";
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content"
+-- Table structure for table "content"
 --
 
 CREATE SEQUENCE content_id_seq START 6001;
 
-CREATE TABLE IF NOT EXISTS "ph_content" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL DEFAULT nextval('content_id_seq'),
   "type_id" integer,
   "parent_id" integer,
@@ -230,23 +230,23 @@ CREATE TABLE IF NOT EXISTS "ph_content" (
   "created_by" integer,
   "updated_by" integer,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_content_parent_id" FOREIGN KEY ("parent_id") REFERENCES "ph_content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_type" FOREIGN KEY ("type_id") REFERENCES "ph_content_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_created_by" FOREIGN KEY ("created_by") REFERENCES "ph_users" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT "fk_updated_by" FOREIGN KEY ("updated_by") REFERENCES "ph_users" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "fk_content_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]content_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_created_by" FOREIGN KEY ("created_by") REFERENCES "[{prefix}]users" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "fk_updated_by" FOREIGN KEY ("updated_by") REFERENCES "[{prefix}]users" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE content_id_seq OWNED BY "ph_content"."id";
+ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content_categories"
+-- Table structure for table "content_categories"
 --
 
 CREATE SEQUENCE category_id_seq START 7001;
 
-CREATE TABLE IF NOT EXISTS "ph_content_categories" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "id" integer NOT NULL DEFAULT nextval('category_id_seq'),
   "parent_id" integer,
   "category" varchar(255) NOT NULL,
@@ -254,49 +254,49 @@ CREATE TABLE IF NOT EXISTS "ph_content_categories" (
   "slug" varchar(255) NOT NULL,
   "order" integer NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "ph_content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE category_id_seq OWNED BY "ph_content_categories"."id";
+ALTER SEQUENCE category_id_seq OWNED BY "[{prefix}]content_categories"."id";
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content_to_categories"
+-- Table structure for table "content_to_categories"
 --
 
-CREATE TABLE IF NOT EXISTS "ph_content_to_categories" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
   "content_id" integer NOT NULL,
   "category_id" integer NOT NULL,
   UNIQUE ("content_id", "category_id"),
-  CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "ph_content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "ph_content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content_to_roles"
+-- Table structure for table "content_to_roles"
 --
 
-CREATE TABLE IF NOT EXISTS "ph_content_to_roles" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_roles" (
   "content_id" integer NOT NULL,
   "role_id" integer NOT NULL,
   UNIQUE ("content_id", "role_id"),
-  CONSTRAINT "fk_role_content_id" FOREIGN KEY ("content_id") REFERENCES "ph_content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_role_id" FOREIGN KEY ("role_id") REFERENCES "ph_user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_role_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_role_id" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table "ph_content_templates"
+-- Table structure for table "content_templates"
 --
 
 CREATE SEQUENCE template_id_seq START 8001;
 
-CREATE TABLE IF NOT EXISTS "ph_content_templates" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
   "id" integer NOT NULL DEFAULT nextval('template_id_seq'),
   "parent_id" integer,
   "name" varchar(255) NOT NULL,
@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS "ph_content_templates" (
   "device" varchar(255) NOT NULL,
   "template" text NOT NULL,
 PRIMARY KEY ("id"),
-CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "ph_content_templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE template_id_seq OWNED BY "ph_content_templates"."id";
+ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]content_templates"."id";
