@@ -69,6 +69,22 @@ class Project extends P
                             }
                             // Load module configs
                             if (null !== $moduleCfg) {
+                                // Attach any event hooks
+                                if (null !== $moduleCfg[$d]->events) {
+                                    $events = $moduleCfg[$d]->events->asArray();
+                                    foreach ($events as $event => $action) {
+                                        $priority = 0;
+                                        if (is_array($action)) {
+                                            if (isset($action['action'])) {
+                                                $act = $action['action'];
+                                            }
+                                            $priority = (isset($action['priority']) ? $action['priority'] : 0);
+                                        } else {
+                                            $act = $action;
+                                        }
+                                        $this->attachEvent($event, $act, $priority);
+                                    }
+                                }
                                 $this->loadModule($moduleCfg);
                             }
                         }

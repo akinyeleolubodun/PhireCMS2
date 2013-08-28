@@ -100,7 +100,7 @@ class IndexController extends C
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
+                        array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
 
@@ -139,7 +139,7 @@ class IndexController extends C
                     if ($this->request->isPost()) {
                         $form->setFieldValues(
                             $this->request->getPost(),
-                            array('strip_tags', 'htmlentities'),
+                            array('htmlentities'),
                             array(null, array(ENT_QUOTES, 'UTF-8'))
                         );
 
@@ -204,7 +204,7 @@ class IndexController extends C
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
+                        array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
 
@@ -229,7 +229,7 @@ class IndexController extends C
                     unset($contentValues['acl']);
                     $form->setFieldValues(
                         $contentValues,
-                        array('strip_tags', 'htmlentities'),
+                        array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $content->set('form', $form);
