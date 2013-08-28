@@ -390,15 +390,15 @@ class Content extends Form
         if (isset($theme->id)) {
             $assets = unserialize($theme->assets);
             foreach ($assets['templates'] as $key => $value) {
-                if ((stripos($value, 'search.') === false) &&
-                    (stripos($value, 'category.') === false) &&
-                    (stripos($value, 'date.') === false) &&
-                    (stripos($value, 'error.') === false) &&
-                    (stripos($value, 'header.') === false) &&
-                    (stripos($value, 'footer.') === false)) {
+                if ((stripos($value, 'search') === false) &&
+                    (stripos($value, 'category') === false) &&
+                    (stripos($value, 'date') === false) &&
+                    (stripos($value, 'error') === false) &&
+                    (stripos($value, 'header') === false) &&
+                    (stripos($value, 'footer') === false)) {
                     if (strpos($key, 'template_') !== false) {
                         $id = substr($key, (strpos($key, '_') + 1));
-                        $templates[$id] = $value;
+                        $templates[$id] = $value . ' (' . $theme->name . ')';
                     } else {
                         $templates[$value] = $value . ' (' . $theme->name . ')';
                     }
@@ -410,19 +410,26 @@ class Content extends Form
 
             foreach ($tmpls->rows as $tmpl) {
                 if (null === $tmpl->parent_id) {
-                    $templates[$tmpl->id] = $tmpl->name;
+                    if ((stripos($tmpl->name, 'search') === false) &&
+                        (stripos($tmpl->name, 'category') === false) &&
+                        (stripos($tmpl->name, 'date') === false) &&
+                        (stripos($tmpl->name, 'error') === false) &&
+                        (stripos($tmpl->name, 'header') === false) &&
+                        (stripos($tmpl->name, 'footer') === false)) {
+                        $templates[$tmpl->id] = $tmpl->name;
+                    }
                 }
             }
 
             foreach ($viewDir->getFiles() as $file) {
                 $ext = strtolower(substr($file, strrpos($file, '.')));
                 if (($ext == '.phtml') || ($ext == '.php') || ($ext == '.php3')) {
-                    if ((stripos($file, 'search.') === false) &&
-                        (stripos($file, 'category.') === false) &&
-                        (stripos($file, 'date.') === false) &&
-                        (stripos($file, 'error.') === false) &&
-                        (stripos($file, 'header.') === false) &&
-                        (stripos($file, 'footer.') === false)) {
+                    if ((stripos($file, 'search') === false) &&
+                        (stripos($file, 'category') === false) &&
+                        (stripos($file, 'date') === false) &&
+                        (stripos($file, 'error') === false) &&
+                        (stripos($file, 'header') === false) &&
+                        (stripos($file, 'footer') === false)) {
                         $templates[$file] = $file;
                     }
                 }

@@ -60,34 +60,38 @@ class IndexController extends C
      */
     public function index()
     {
-        $install = new Model\Install(array(
-            'title' => 'Phire CMS 2.0 Installation'
-        ));
+        if (\Phire\Project::isInstalled(true)) {
+            Response::redirect(BASE_PATH . APP_URI);
+        } else {
+            $install = new Model\Install(array(
+                'title' => 'Phire CMS 2.0 Installation'
+            ));
 
-        $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
+            $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
-        if ($this->request->isPost()) {
-            $form->setFieldValues(
-                $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
-            );
+            if ($this->request->isPost()) {
+                $form->setFieldValues(
+                    $this->request->getPost(),
+                    array('strip_tags', 'htmlentities'),
+                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                );
 
-            if ($form->isValid()) {
-                $install->config($form);
-                $url = ($install->configWritable) ?
-                    BASE_PATH . $form->app_uri . '/install/user' :
-                    BASE_PATH . APP_URI . '/install/config';
-                Response::redirect($url);
+                if ($form->isValid()) {
+                    $install->config($form);
+                    $url = ($install->configWritable) ?
+                        BASE_PATH . $form->app_uri . '/install/user' :
+                        BASE_PATH . APP_URI . '/install/config';
+                    Response::redirect($url);
+                } else {
+                    $install->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $install);
+                    $this->send();
+                }
             } else {
                 $install->set('form', $form);
                 $this->view = View::factory($this->viewPath . '/index.phtml', $install);
                 $this->send();
             }
-        } else {
-            $install->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/index.phtml', $install);
-            $this->send();
         }
     }
 

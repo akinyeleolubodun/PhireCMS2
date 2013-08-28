@@ -105,14 +105,15 @@ class Extension extends AbstractModel
             foreach ($dir->getFiles() as $file) {
                 if (stripos($file, '.html') !== false) {
                     $tmpl = file_get_contents($themePath . '/' . $name . '/' . $file);
+                    $tmplName = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($file, 0, strrpos($file, '.'))));
                     $t = new Table\Templates(array(
-                        'name'         => $file,
+                        'name'         => $tmplName,
                         'content_type' => 'text/html',
                         'device'       => 'desktop',
                         'template'     => $tmpl
                     ));
                     $t->save();
-                    $templates['template_' . $t->id] = $file;
+                    $templates['template_' . $t->id] = $tmplName;
                 } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
                     $templates[] = $file;
                 }
@@ -259,7 +260,7 @@ class Extension extends AbstractModel
                     $assets = unserialize($ext->assets);
                     $tmpls = array();
 
-                    foreach ($assets as $key => $value) {
+                    foreach ($assets['templates'] as $key => $value) {
                         if (strpos($key, 'template_') !== false) {
                             $tmpls[] = substr($key, (strpos($key, '_') + 1));
                         }

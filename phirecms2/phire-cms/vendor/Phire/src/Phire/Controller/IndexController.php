@@ -212,7 +212,7 @@ class IndexController extends C
 
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
-        $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->viewPath . '/error.phtml';
+        $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
         $this->view = View::factory($template, $content);
         $this->send($code);
     }
