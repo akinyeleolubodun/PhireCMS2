@@ -151,12 +151,17 @@ class Project extends P
             $this->attachEvent('dispatch.pre', function($router) {
                 $resource = $router->getControllerClass();
                 $permission = $router->getAction();
+                $isFrontController = (substr_count($resource, '\\') == 2);
 
                 // Check for the resource and permission
-                if (($resource != 'Phire\Controller\IndexController') && ($resource != 'Phire\Controller\Install\IndexController')) {
+                if (!($isFrontController) && ($resource != 'Phire\Controller\Install\IndexController')) {
                     if (null === $router->project()->getService('acl')->getResource($resource)) {
-                        $resource = null;
-                        $permission = null;
+                        if ($resource != 'Phire\Controller\User\IndexController') {
+                            $router->project()->getService('acl')->addResource($resource);
+                        } else {
+                            $resource = null;
+                            $permission = null;
+                        }
                     }
 
                     // Get the user URI
@@ -277,7 +282,11 @@ class Project extends P
                 if (count($perm) > 0) {
                     foreach ($perm as $resource => $p) {
                         $this->getService('acl')->addResource($resource);
-                        $this->getService('acl')->allow($role, $resource, ((count($p) > 0) ? $p : null));
+                        if (count($p) > 0) {
+                            $this->getService('acl')->allow($role, $resource, $p);
+                        } else {
+                            $this->getService('acl')->allow($role, $resource);
+                        }
                     }
                 } else {
                     $this->getService('acl')->allow($role);

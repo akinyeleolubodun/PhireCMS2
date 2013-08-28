@@ -173,6 +173,23 @@ class User extends AbstractModel
 
         $this->data['title'] .= (isset($userType->id)) ? ' &gt; ' . $userType->type : null;
 
+        if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_users[]" id="remove_users[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_users" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
         // Clean up user data
         $userRows = $users->rows;
         foreach ($userRows as $key => $value) {
@@ -180,11 +197,20 @@ class User extends AbstractModel
             if (is_array($logins)) {
                 $lastAry = end($logins);
                 $last = date('D  M j, Y H:i:s', key($logins)) . ', ' . $lastAry['ua'] . ' [' . $lastAry['ip'] . ']';
-                $count = '<a href="' . BASE_PATH . APP_URI . '/users/logins/' . $value->id . '">' . count($logins) . '</a>';
+                if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+                    $count = '<a href="' . BASE_PATH . APP_URI . '/users/logins/' . $value->id . '">' . count($logins) . '</a>';
+                } else {
+                    $count = count($logins);
+                }
             } else {
                 $last = '(N/A)';
                 $count = 0;
             }
+
+            if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+                $userRows[$key]->username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">' . $userRows[$key]->username . '</a>';
+            }
+
             $userRows[$key]->name = (null !== $value->name) ? $value->name : '(Blocked)';
             $userRows[$key]->last_login = $last;
             $userRows[$key]->login_count = $count;
@@ -195,11 +221,8 @@ class User extends AbstractModel
                 'id'      => 'user-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/users/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_users[]" id="remove_users[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
@@ -208,7 +231,7 @@ class User extends AbstractModel
                     'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username">Username</a>',
                     'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email">Email</a>',
                     'login_count' => 'Logins',
-                    'process'     => '<input type="checkbox" id="checkall" name="checkall" value="remove_users" />'
+                    'process'     => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -217,9 +240,7 @@ class User extends AbstractModel
             ),
             'exclude' => array(
                 'type_id', 'type', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
-            ),
-            'type'     => '<a href="' . BASE_PATH . APP_URI . '/users/type/[{id}]">[{type}]</a>',
-            'username' => '<a href="' . BASE_PATH . APP_URI . '/users/edit/[{id}]">[{username}]</a>'
+            )
         );
 
         if (isset($userRows[0])) {
@@ -630,12 +651,14 @@ class User extends AbstractModel
             $exclude = explode(',', $type->log_exclude);
         }
 
+        $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+
         if (!in_array($_SERVER['REMOTE_ADDR'], $exclude)) {
             $emails = explode(',', $type->log_emails);
-            $noreply = 'noreply@' . str_replace('www', '', $_SERVER['HTTP_HOST']);
+            $noreply = 'noreply@' . $domain;
 
             $options = array(
-                'subject' => $type->type . ' Login ',
+                'subject' => 'Phire CMS ' . ucfirst(strtolower($type->type)) . ' Login Notification (' . $domain . ')',
                 'headers' => array(
                     'From'       => $noreply . ' <' . $noreply . '>',
                     'Reply-To'   => $noreply . ' <' . $noreply . '>'

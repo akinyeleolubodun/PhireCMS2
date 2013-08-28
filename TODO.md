@@ -1,8 +1,8 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- Language
 - System Theme
+- Language
 - CLI Tool
 - Modules
     + Fields
@@ -13,6 +13,7 @@ Phire CMS 2.0.0 TO-DO
         - Inherit System Settings or Set Site-Specific Settings
     + Cache
     + Comments
+    + Tags
     + Download
     + Forms
     + Mail

@@ -28,8 +28,8 @@ class Category extends AbstractContentModel
     /**
      * Get all content categories method
      *
-     * @param  string $sort
-     * @param  string $page
+     * @param  string  $sort
+     * @param  string  $page
      * @return void
      */
     public function getAll($sort = null, $page = null)
@@ -41,29 +41,42 @@ class Category extends AbstractContentModel
         $this->data['categoryTree'] = $this->getChildren($categories->rows, 0);
         $this->getCategories($this->data['categoryTree']);
 
+        if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'remove'))) {
+            $removeCheckbox = '<input type="checkbox" name="remove_categories[]" id="remove_categories[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_categories" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'category-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/content/categories/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_categories[]" id="remove_categories[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
                     'id'       => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=id">#</a>',
                     'category' => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=category">Category</a>',
-                    'process'  => '<input type="checkbox" id="checkall" name="checkall" value="remove_categories" />'
+                    'process'  => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
                 'cellspacing' => 0,
                 'border'      => 0
-            ),
-            'category' => '<a href="' . BASE_PATH . APP_URI . '/content/categories/edit/[{id}]">[{category}]</a>'
+            )
         );
 
         $catAry = array();
@@ -71,6 +84,9 @@ class Category extends AbstractContentModel
         unset($cats[0]);
 
         foreach ($cats as $id => $name) {
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'edit'))) {
+                $name = '<a href="' . BASE_PATH . APP_URI . '/content/categories/edit/' . $id . '">' . $name . '</a>';
+            }
             $catAry[] = array(
                 'id' => $id,
                 'category' => $name
@@ -79,19 +95,22 @@ class Category extends AbstractContentModel
 
         if (isset($catAry[0])) {
             $table = Html::encode($catAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            $tableLines = explode(PHP_EOL, $table);
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'edit'))) {
+                $tableLines = explode(PHP_EOL, $table);
 
-            // Clean up the table
-            foreach ($tableLines as $key => $value) {
-                if (strpos($value, '">&') !== false) {
-                    $str = substr($value, (strpos($value, '">&') + 2));
-                    $str = substr($str, 0, (strpos($str, ' ') + 1));
-                    $value = str_replace($str, '', $value);
-                    $tableLines[$key] = str_replace('<td><a', '<td>' . $str . '<a', $value);
+                // Clean up the table
+                foreach ($tableLines as $key => $value) {
+                    if (strpos($value, '">&') !== false) {
+                        $str = substr($value, (strpos($value, '">&') + 2));
+                        $str = substr($str, 0, (strpos($str, ' ') + 1));
+                        $value = str_replace($str, '', $value);
+                        $tableLines[$key] = str_replace('<td><a', '<td>' . $str . '<a', $value);
+                    }
                 }
+                $table = implode(PHP_EOL, $tableLines);
             }
 
-            $this->data['table'] = implode(PHP_EOL, $tableLines);
+            $this->data['table'] = $table;
         }
     }
 

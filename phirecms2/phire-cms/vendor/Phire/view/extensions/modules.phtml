@@ -16,7 +16,7 @@ foreach ($modules as $module):
     if ($module->active):
         $yesChecked = 'checked="checked" ';
         $noChecked  = null;
-        $name = '<h3>' . $module->name . '</h3>' . $module->module_nav;
+        $name = '<h3>' . $module->name . '</h3>' . (isset($module->module_nav) ? $module->module_nav : null);
     else:
         $yesChecked = null;
         $noChecked  = 'checked="checked" ';

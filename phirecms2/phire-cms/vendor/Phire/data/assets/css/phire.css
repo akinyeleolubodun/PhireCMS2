@@ -125,18 +125,6 @@ fieldset {
     text-decoration: underline;
 }
 
-#main-nav-2 {
-    left: 0px;
-}
-
-#main-nav-3 {
-    left: 150px;
-}
-
-#main-nav-4 {
-    left: 300px;
-}
-
 #uri-span, #slug-span {
     margin: 0;
     padding: 5px;

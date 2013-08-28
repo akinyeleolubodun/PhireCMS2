@@ -28,22 +28,42 @@ class UserType extends AbstractModel
 
         $types = Table\UserTypes::execute($sql->render(true));
 
+        if ($this->data['acl']->isAuth('Phire\Controller\User\TypesController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
+        if ($this->data['acl']->isAuth('Phire\Controller\User\TypesController', 'edit')) {
+            $type = '<a href="' . BASE_PATH . APP_URI . '/users/types/edit/[{id}]">[{type}]</a>';
+        } else {
+            $type = '[{type}]';
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'type-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/users/types/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=id">#</a>',
                     'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=type">Type</a>',
-                    'process' => '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />'
+                    'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -53,7 +73,7 @@ class UserType extends AbstractModel
             'exclude' => array(
                 'process' => array('id' => $this->data['user']->type_id)
             ),
-            'type' => '<a href="' . BASE_PATH . APP_URI . '/users/types/edit/[{id}]">[{type}]</a>'
+            'type' => $type
         );
 
         if (isset($types->rows[0])) {

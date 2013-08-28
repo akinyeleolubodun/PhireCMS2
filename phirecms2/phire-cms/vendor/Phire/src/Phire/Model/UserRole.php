@@ -129,23 +129,43 @@ class UserRole extends AbstractModel
         // Execute SQL query
         $roles = Table\UserRoles::execute($sql->render(true));
 
+        if ($this->data['acl']->isAuth('Phire\Controller\User\RolesController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_roles[]" id="remove_roles[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_roles" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
+        if ($this->data['acl']->isAuth('Phire\Controller\User\RolesController', 'edit')) {
+            $name = '<a href="' . BASE_PATH . APP_URI . '/users/roles/edit/[{id}]">[{name}]</a>';
+        } else {
+            $name = '[{name}]';
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'role-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/users/roles/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_roles[]" id="remove_roles[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=id">#</a>',
                     'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=type">Type</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=name">Role</a>',
-                    'process' => '<input type="checkbox" id="checkall" name="checkall" value="remove_roles" />'
+                    'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -153,7 +173,7 @@ class UserRole extends AbstractModel
                 'border'      => 0
             ),
             'exclude' => array('type_id', 'process' => array('id' => $this->data['user']->role_id)),
-            'name' => '<a href="' . BASE_PATH . APP_URI . '/users/roles/edit/[{id}]">[{name}]</a>'
+            'name'    => $name
         );
 
         if (isset($roles->rows[0])) {

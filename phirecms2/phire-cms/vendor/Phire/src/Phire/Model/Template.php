@@ -38,30 +38,43 @@ class Template extends AbstractContentModel
             }
         }
 
+        if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_templates[]" id="remove_templates[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_templates" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'template-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/content/templates/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_templates[]" id="remove_templates[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=id">#</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=name">Name</a>',
-                    'process' => '<input type="checkbox" id="checkall" name="checkall" value="remove_templates" />'
+                    'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array('parent_id', 'template'),
-            'name' => '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/[{id}]">[{name}]</a>'
+            'exclude' => array('parent_id', 'template')
         );
 
         // Get template children
@@ -70,6 +83,14 @@ class Template extends AbstractContentModel
         if (isset($templateAry[0])) {
             foreach ($templateAry as $tmpl) {
                 $t = (array)$tmpl['template'];
+
+                if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+                    $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $t['id'] .'">' . $t['name'] . '</a>';
+                } else {
+                    $name = $t['name'];
+                }
+
+                $t['name'] = $name;
                 $t['device'] = $devices[$t['device']];
                 $tmplAry[] = $t;
 
@@ -77,7 +98,13 @@ class Template extends AbstractContentModel
                 if (count($tmpl['children']) > 0) {
                     foreach ($tmpl['children'] as $child) {
                         $c = (array)$child;
-                        $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $c['name'];
+
+                        if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+                            $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $c['id'] .'">' . $c['name'] . '</a>';
+                        } else {
+                            $name = $c['name'];
+                        }
+                        $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $name;
                         $c['device'] = $devices[$c['device']];
                         $tmplAry[] = $c;
                     }
@@ -85,18 +112,23 @@ class Template extends AbstractContentModel
             }
 
             $table = Html::encode($tmplAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            $tableLines = explode(PHP_EOL, $table);
 
-            // Clean up the table
-            foreach ($tableLines as $key => $value) {
-                if (strpos($value, '">&') !== false) {
-                    $str = substr($value, (strpos($value, '">&') + 2));
-                    $str = substr($str, 0, (strpos($str, ' ') + 1));
-                    $value = str_replace($str, '', $value);
-                    $tableLines[$key] = str_replace('<td><a', '<td>' . $str . '<a', $value);
+            if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+                $tableLines = explode(PHP_EOL, $table);
+
+                // Clean up the table
+                foreach ($tableLines as $key => $value) {
+                    if (strpos($value, '">&') !== false) {
+                        $str = substr($value, (strpos($value, '">&') + 2));
+                        $str = substr($str, 0, (strpos($str, ' ') + 1));
+                        $value = str_replace($str, '', $value);
+                        $tableLines[$key] = str_replace('<td><a', '<td>' . $str . '<a', $value);
+                    }
                 }
+                $table = implode(PHP_EOL, $tableLines);
             }
-            $this->data['table'] = implode(PHP_EOL, $tableLines);
+
+            $this->data['table'] = $table;
         }
 
         $this->data['templates'] = $templateAry;

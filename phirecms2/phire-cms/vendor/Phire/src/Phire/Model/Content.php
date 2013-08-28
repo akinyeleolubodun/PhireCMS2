@@ -172,6 +172,23 @@ class Content extends AbstractContentModel
         $content = Table\Content::execute($sql->render(true), array('type_id' => $typeId));
         $contentType = Table\ContentTypes::findById($typeId);
 
+        if ($this->data['acl']->isAuth('Phire\Controller\Content\IndexController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_content[]" value="[{id}]" id="remove_content[{i}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_content" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
         // Set headers based on URI or file
         if ($contentType->uri) {
             $headers = array(
@@ -181,7 +198,7 @@ class Content extends AbstractContentModel
                 'status'       => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=status">Status</a>',
                 'uri'          => 'URI',
                 'username'     => 'Author',
-                'process'      => '<input type="checkbox" id="checkall" name="checkall" value="remove_content" />'
+                'process'      => $removeCheckAll
             );
         } else {
             $headers = array(
@@ -192,7 +209,7 @@ class Content extends AbstractContentModel
                 'status'       => 'File',
                 'size'         => 'Size',
                 'uri'          => 'URI',
-                'process'      => '<input type="checkbox" id="checkall" name="checkall" value="remove_content" />'
+                'process'      => $removeCheckAll
             );
         }
 
@@ -201,11 +218,8 @@ class Content extends AbstractContentModel
                 'id'      => 'content-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/content/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_content[]" value="[{id}]" id="remove_content[{i}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers'     => $headers,
@@ -227,6 +241,7 @@ class Content extends AbstractContentModel
         $status = array('Unpublished', 'Draft', 'Published');
         $contentAry = array();
         $ids = array();
+
         foreach ($content->rows as $content) {
             $c = (array)$content;
 
@@ -234,7 +249,9 @@ class Content extends AbstractContentModel
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
                 $ids[] = $c['id'];
             } else {
-                $c['title'] = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
+                if ($this->data['acl']->isAuth('Phire\Controller\Content\IndexController', 'edit')) {
+                    $c['title'] = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
+                }
             }
 
             // Adjust URI link based on URI or file
@@ -254,12 +271,14 @@ class Content extends AbstractContentModel
 
         if (isset($contentAry[0])) {
             $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            // If there are open authoring ids, remove "remove" checkbox
-            if (count($ids) > 0) {
-                foreach ($ids as $id) {
-                    $rm = substr($table, strpos($table, '<input type="checkbox" name="remove_content[]" value="' . $id . '" id="remove_content'));
-                    $rm = substr($rm, 0, (strpos($rm, ' />') + 3));
-                    $table = str_replace($rm, '&nbsp;', $table);
+            if ($this->data['acl']->isAuth('Phire\Controller\Content\IndexController', 'remove')) {
+                // If there are open authoring ids, remove "remove" checkbox
+                if (count($ids) > 0) {
+                    foreach ($ids as $id) {
+                        $rm = substr($table, strpos($table, '<input type="checkbox" name="remove_content[]" value="' . $id . '" id="remove_content'));
+                        $rm = substr($rm, 0, (strpos($rm, ' />') + 3));
+                        $table = str_replace($rm, '&nbsp;', $table);
+                    }
                 }
             }
             $this->data['table'] = $table;

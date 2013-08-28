@@ -45,16 +45,36 @@ class UserSession extends AbstractModel
         // Execute SQL query
         $sessions = Table\UserSessions::execute($sqlString);
 
+        if ($this->data['acl']->isAuth('Phire\Controller\User\SessionsController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_sessions[]" id="remove_sessions[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_sessions" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
+        if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+            $username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/[{user_id}]">[{username}]</a>';
+        } else {
+            $username = '[{username}]';
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'session-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/users/sessions/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_sessions[]" id="remove_sessions[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
@@ -64,7 +84,7 @@ class UserSession extends AbstractModel
                     'ip'         => 'IP',
                     'ua'         => 'User Agent',
                     'start_date' => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">Start</a>',
-                    'process'    => '<input type="checkbox" id="checkall" name="checkall" value="remove_sessions" />'
+                    'process'    => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -75,7 +95,7 @@ class UserSession extends AbstractModel
             'exclude' => array(
                 'type_id', 'user_id', 'process' => array('id' => $this->data['user']->sess_id)
             ),
-            'username' => '<a href="' . BASE_PATH . APP_URI . '/users/edit/[{user_id}]">[{username}]</a>'
+            'username' => $username
         );
 
         if (isset($sessions->rows[0])) {

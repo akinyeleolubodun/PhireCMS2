@@ -22,22 +22,42 @@ class ContentType extends AbstractContentModel
         $order = $this->getSortOrder($sort, $page);
         $types = Table\ContentTypes::findAll($order['field'] . ' ' . $order['order']);
 
+        if ($this->data['acl']->isAuth('Phire\Controller\Content\TypesController', 'remove')) {
+            $removeCheckbox = '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove'
+            );
+        } else {
+            $removeCheckbox = '&nbsp;';
+            $removeCheckAll = '&nbsp;';
+            $submit = array(
+                'class' => 'remove-btn',
+                'value' => 'Remove',
+                'style' => 'display: none;'
+            );
+        }
+
+        if ($this->data['acl']->isAuth('Phire\Controller\Content\TypesController', 'edit')) {
+            $name = '<a href="' . BASE_PATH . APP_URI . '/content/types/edit/[{id}]">[{name}]</a>';
+        } else {
+            $name = '[{name}]';
+        }
+
         $options = array(
             'form' => array(
                 'id'      => 'content-type-remove-form',
                 'action'  => BASE_PATH . APP_URI . '/content/types/remove',
                 'method'  => 'post',
-                'process' => '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />',
-                'submit'  => array(
-                    'class' => 'remove-btn',
-                    'value' => 'Remove'
-                )
+                'process' => $removeCheckbox,
+                'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=id">#</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=name">Name</a>',
-                    'process' => '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />'
+                    'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -45,7 +65,7 @@ class ContentType extends AbstractContentModel
                 'border'      => 0
             ),
             'exclude' => array('uri'),
-            'name' => '<a href="' . BASE_PATH . APP_URI . '/content/types/edit/[{id}]">[{name}]</a>'
+            'name'    => $name
         );
 
         if (isset($types->rows[0])) {

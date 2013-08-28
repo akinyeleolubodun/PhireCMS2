@@ -73,14 +73,15 @@ class UserRoles extends Record
                 $results['resources'][$role->name] = array();
                 $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
                 if (isset($permissions->rows[0])) {
-
                     foreach ($permissions->rows as $permission) {
                         if (!isset($results['resources'][$role->name][$permission->resource])) {
                             $results['resources'][$role->name][$permission->resource] = array();
                         }
-                        $r->addPermission($permission->permission);
-                        if ($permission->resource != '') {
-                            $results['resources'][$role->name][$permission->resource][] = $permission->permission;
+                        if ($permission->permission != '') {
+                            $r->addPermission($permission->permission);
+                            if ($permission->resource != '') {
+                                $results['resources'][$role->name][$permission->resource][] = $permission->permission;
+                            }
                         }
                     }
                 }

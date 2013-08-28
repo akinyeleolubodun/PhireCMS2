@@ -72,7 +72,10 @@ class Extension extends AbstractModel
         foreach ($moduleRows as $key => $module) {
             $cfg = $project->module($module->name);
             if ((null !== $cfg) && (null !== $cfg->module_nav)) {
-                $moduleRows[$key]->module_nav = new Nav($cfg->module_nav->asArray());
+                $modNav = new Nav($cfg->module_nav->asArray());
+                $modNav->setAcl($this->data['acl']);
+                $modNav->setRole($this->data['role']);
+                $moduleRows[$key]->module_nav = $modNav;
             }
             if (isset($moduleFiles[$module->name])) {
                 unset($moduleFiles[$module->name]);
@@ -228,6 +231,14 @@ class Extension extends AbstractModel
                     );
                                  //$dbname, $db, $dir, $install = null, $suppress = false, $clear = true
                     Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
+                } else {
+                    $ext = new Table\Extensions(array(
+                        'name'   => $name,
+                        'type'   => 1,
+                        'active' => 1,
+                        'assets' => serialize(array('tables' => $tables))
+                    ));
+                    $ext->save();
                 }
             }
         } catch (\Exception $e) {
