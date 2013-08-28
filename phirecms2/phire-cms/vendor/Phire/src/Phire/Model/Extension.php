@@ -148,7 +148,7 @@ class Extension extends AbstractModel
                 if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar'))) {
                     unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar');
                 }
-                echo 'Extracting...' . $module . '<br />' . PHP_EOL;
+
                 $dbType =  Table\Extensions::getSql()->getDbType();
                 if ($dbType == \Pop\Db\Sql::SQLITE) {
                     $type = 'sqlite';
@@ -195,8 +195,16 @@ class Extension extends AbstractModel
                         }
                     }
 
+                    $ext = new Table\Extensions(array(
+                        'name'   => $name,
+                        'type'   => 1,
+                        'active' => 1,
+                        'assets' => serialize(array('tables' => $tables))
+                    ));
+                    $ext->save();
+
                     // If DB is SQLite
-                    if (strpos($type, 'Sqlite') !== false) {
+                    if (stripos($type, 'Sqlite') !== false) {
                         $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/.htphire.sqlite');
                         $dbUser = null;
                         $dbPassword = null;
@@ -218,17 +226,9 @@ class Extension extends AbstractModel
                         'prefix'   => DB_PREFIX,
                         'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
                     );
-
+                                 //$dbname, $db, $dir, $install = null, $suppress = false, $clear = true
                     Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
                 }
-
-                $ext = new Table\Extensions(array(
-                    'name'   => $name,
-                    'type'   => 1,
-                    'active' => 1,
-                    'assets' => serialize(array('tables' => $tables))
-                ));
-                $ext->save();
             }
         } catch (\Exception $e) {
             $this->data['error'] = $e->getMessage();
@@ -341,12 +341,18 @@ class Extension extends AbstractModel
                         $db = Table\Extensions::getDb();
                         if ((DB_INTERFACE == 'Mysqli') || (DB_TYPE == 'mysql')) {
                             $db->adapter()->query('SET foreign_key_checks = 0;');
-                        }
-                        foreach ($assets['tables'] as $table) {
-                            $db->adapter()->query('DROP TABLE ' . $table);
-                        }
-                        if ((DB_INTERFACE == 'Mysqli') || (DB_TYPE == 'mysql')) {
+                            foreach ($assets['tables'] as $table) {
+                                $db->adapter()->query('DROP TABLE ' . $table);
+                            }
                             $db->adapter()->query('SET foreign_key_checks = 1;');
+                        } else if ((DB_INTERFACE == 'Pgsql') || (DB_TYPE == 'pgsql')) {
+                            foreach ($assets['tables'] as $table) {
+                                $db->adapter()->query('DROP TABLE ' . $table . ' CASCADE');
+                            }
+                        } else {
+                            foreach ($assets['tables'] as $table) {
+                                $db->adapter()->query('DROP TABLE ' . $table);
+                            }
                         }
                     }
 

@@ -60,7 +60,7 @@ class IndexController extends C
      */
     public function index()
     {
-        if (\Phire\Project::isInstalled(true)) {
+        if ((DB_INTERFACE != '') && (DB_NAME != '')) {
             Response::redirect(BASE_PATH . APP_URI);
         } else {
             $install = new Model\Install(array(
