@@ -1,9 +1,6 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- Module & Theme Support
-    + Installation
-    + System Hooks
 - Language
 - System Theme
 - CLI Tool
