@@ -90,43 +90,47 @@ class Extension extends AbstractModel
      */
     public function installThemes()
     {
-        $i = 1;
-        $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
-        foreach ($this->data['new'] as $name => $theme) {
-            $archive = new Archive($themePath . '/' . $theme);
-            $archive->extract($themePath . '/');
-            if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($themePath . '/' . $name . '.tar'))) {
-                unlink($themePath . '/' . $name . '.tar');
-            }
-
-            $templates = array();
-
-            $dir = new Dir($themePath . '/' . $name);
-            foreach ($dir->getFiles() as $file) {
-                if (stripos($file, '.html') !== false) {
-                    $tmpl = file_get_contents($themePath . '/' . $name . '/' . $file);
-                    $tmplName = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($file, 0, strrpos($file, '.'))));
-                    $t = new Table\Templates(array(
-                        'name'         => $tmplName,
-                        'content_type' => 'text/html',
-                        'device'       => 'desktop',
-                        'template'     => $tmpl
-                    ));
-                    $t->save();
-                    $templates['template_' . $t->id] = $tmplName;
-                } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
-                    $templates[] = $file;
+        try {
+            $i = 1;
+            $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+            foreach ($this->data['new'] as $name => $theme) {
+                $archive = new Archive($themePath . '/' . $theme);
+                $archive->extract($themePath . '/');
+                if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($themePath . '/' . $name . '.tar'))) {
+                    unlink($themePath . '/' . $name . '.tar');
                 }
-            }
 
-            $ext = new Table\Extensions(array(
-                'name'   => $name,
-                'type'   => 0,
-                'active' => ($i == 1) ? 1 : 0,
-                'assets' => serialize(array('templates' => $templates))
-            ));
-            $ext->save();
-            $i++;
+                $templates = array();
+
+                $dir = new Dir($themePath . '/' . $name);
+                foreach ($dir->getFiles() as $file) {
+                    if (stripos($file, '.html') !== false) {
+                        $tmpl = file_get_contents($themePath . '/' . $name . '/' . $file);
+                        $tmplName = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($file, 0, strrpos($file, '.'))));
+                        $t = new Table\Templates(array(
+                            'name'         => $tmplName,
+                            'content_type' => 'text/html',
+                            'device'       => 'desktop',
+                            'template'     => $tmpl
+                        ));
+                        $t->save();
+                        $templates['template_' . $t->id] = $tmplName;
+                    } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
+                        $templates[] = $file;
+                    }
+                }
+
+                $ext = new Table\Extensions(array(
+                    'name'   => $name,
+                    'type'   => 0,
+                    'active' => ($i == 1) ? 1 : 0,
+                    'assets' => serialize(array('templates' => $templates))
+                ));
+                $ext->save();
+                $i++;
+            }
+        } catch (\Exception $e) {
+            $this->data['error'] = $e->getMessage();
         }
     }
 
@@ -137,93 +141,97 @@ class Extension extends AbstractModel
      */
     public function installModules()
     {
-        foreach ($this->data['new'] as $name => $module) {
-            $archive = new Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module);
-            $archive->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/');
-            if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar'))) {
-                unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar');
-            }
-            echo 'Extracting...' . $module . '<br />' . PHP_EOL;
-            $dbType =  Table\Extensions::getSql()->getDbType();
-            if ($dbType == \Pop\Db\Sql::SQLITE) {
-                $type = 'sqlite';
-            } else if ($dbType == \Pop\Db\Sql::PGSQL) {
-                $type = 'pgsql';
-            } else {
-                $type = 'mysql';
-            }
-
-            $sqlFile = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' .
-                $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
-
-            $tables = array();
-            if (file_exists($sqlFile)) {
-                // Get any tables required and created by this module
-                $sql = file_get_contents($sqlFile);
-                $tables = array();
-                $matches = array();
-                preg_match_all('/^CREATE TABLE(.*)$/mi', $sql, $matches);
-
-                if (isset($matches[0]) && isset($matches[0][0])) {
-                    foreach ($matches[0] as $table) {
-                        if (strpos($table, '`') !== false) {
-                            $table = substr($table, (strpos($table, '`') + 1));
-                            $table = substr($table, 0, strpos($table, '`'));
-                        } else if (strpos($table, '"') !== false) {
-                            $table = substr($table, (strpos($table, '"') + 1));
-                            $table = substr($table, 0, strpos($table, '"'));
-                        } else if (strpos($table, "'") !== false) {
-                            $table = substr($table, (strpos($table, "'") + 1));
-                            $table = substr($table, 0, strpos($table, "'"));
-                        } else {
-                            if (stripos($table, 'EXISTS') !== false) {
-                                $table = substr($table, (stripos($table, 'EXISTS') + 6));
-                            } else {
-                                $table = substr($table, (stripos($table, 'TABLE') + 5));
-                            }
-                            if (strpos($table, '(') !== false) {
-                                $table = substr($table, 0, strpos($table, '('));
-                            }
-                            $table = trim($table);
-                        }
-                        $tables[] = str_replace('[{prefix}]', DB_PREFIX, $table);
-                    }
+        try {
+            foreach ($this->data['new'] as $name => $module) {
+                $archive = new Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module);
+                $archive->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/');
+                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar'))) {
+                    unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar');
                 }
-
-                // If DB is SQLite
-                if (strpos($type, 'Sqlite') !== false) {
-                    $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/.htphire.sqlite');
-                    $dbUser = null;
-                    $dbPassword = null;
-                    $dbHost = null;
-                    $installFile = $dbName;
+                echo 'Extracting...' . $module . '<br />' . PHP_EOL;
+                $dbType =  Table\Extensions::getSql()->getDbType();
+                if ($dbType == \Pop\Db\Sql::SQLITE) {
+                    $type = 'sqlite';
+                } else if ($dbType == \Pop\Db\Sql::PGSQL) {
+                    $type = 'pgsql';
                 } else {
-                    $dbName = DB_NAME;
-                    $dbUser = DB_USER;
-                    $dbPassword = DB_PASS;
-                    $dbHost = DB_HOST;
-                    $installFile = null;
+                    $type = 'mysql';
                 }
 
-                $db = array(
-                    'database' => $dbName,
-                    'username' => $dbUser,
-                    'password' => $dbPassword,
-                    'host'     => $dbHost,
-                    'prefix'   => DB_PREFIX,
-                    'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
-                );
+                $sqlFile = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' .
+                    $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
 
-                Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
+                $tables = array();
+                if (file_exists($sqlFile)) {
+                    // Get any tables required and created by this module
+                    $sql = file_get_contents($sqlFile);
+                    $tables = array();
+                    $matches = array();
+                    preg_match_all('/^CREATE TABLE(.*)$/mi', $sql, $matches);
+
+                    if (isset($matches[0]) && isset($matches[0][0])) {
+                        foreach ($matches[0] as $table) {
+                            if (strpos($table, '`') !== false) {
+                                $table = substr($table, (strpos($table, '`') + 1));
+                                $table = substr($table, 0, strpos($table, '`'));
+                            } else if (strpos($table, '"') !== false) {
+                                $table = substr($table, (strpos($table, '"') + 1));
+                                $table = substr($table, 0, strpos($table, '"'));
+                            } else if (strpos($table, "'") !== false) {
+                                $table = substr($table, (strpos($table, "'") + 1));
+                                $table = substr($table, 0, strpos($table, "'"));
+                            } else {
+                                if (stripos($table, 'EXISTS') !== false) {
+                                    $table = substr($table, (stripos($table, 'EXISTS') + 6));
+                                } else {
+                                    $table = substr($table, (stripos($table, 'TABLE') + 5));
+                                }
+                                if (strpos($table, '(') !== false) {
+                                    $table = substr($table, 0, strpos($table, '('));
+                                }
+                                $table = trim($table);
+                            }
+                            $tables[] = str_replace('[{prefix}]', DB_PREFIX, $table);
+                        }
+                    }
+
+                    // If DB is SQLite
+                    if (strpos($type, 'Sqlite') !== false) {
+                        $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/.htphire.sqlite');
+                        $dbUser = null;
+                        $dbPassword = null;
+                        $dbHost = null;
+                        $installFile = $dbName;
+                    } else {
+                        $dbName = DB_NAME;
+                        $dbUser = DB_USER;
+                        $dbPassword = DB_PASS;
+                        $dbHost = DB_HOST;
+                        $installFile = null;
+                    }
+
+                    $db = array(
+                        'database' => $dbName,
+                        'username' => $dbUser,
+                        'password' => $dbPassword,
+                        'host'     => $dbHost,
+                        'prefix'   => DB_PREFIX,
+                        'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
+                    );
+
+                    Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
+                }
+
+                $ext = new Table\Extensions(array(
+                    'name'   => $name,
+                    'type'   => 1,
+                    'active' => 1,
+                    'assets' => serialize(array('tables' => $tables))
+                ));
+                $ext->save();
             }
-
-            $ext = new Table\Extensions(array(
-                'name'   => $name,
-                'type'   => 1,
-                'active' => 1,
-                'assets' => serialize(array('tables' => $tables))
-            ));
-            $ext->save();
+        } catch (\Exception $e) {
+            $this->data['error'] = $e->getMessage();
         }
     }
 

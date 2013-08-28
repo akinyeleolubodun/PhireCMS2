@@ -91,7 +91,13 @@ class IndexController extends C
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installThemes();
-            Response::redirect($this->request->getBasePath() . '/themes');
+            if (null !== $ext->error) {
+                $ext->set('title', 'Extensions &gt; Themes &gt; Installation Error');
+                $this->view = View::factory($this->viewPath . '/themes.phtml', $ext);
+                $this->send();
+            } else {
+                Response::redirect($this->request->getBasePath() . '/themes');
+            }
         } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
             $ext->processThemes($this->request->getPost());
             Response::redirect($this->request->getBasePath() . '/themes');
@@ -122,7 +128,13 @@ class IndexController extends C
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installModules();
-            Response::redirect($this->request->getBasePath() . '/modules');
+            if (null !== $ext->error) {
+                $ext->set('title', 'Extensions &gt; Modules &gt; Installation Error');
+                $this->view = View::factory($this->viewPath . '/modules.phtml', $ext);
+                $this->send();
+            } else {
+                Response::redirect($this->request->getBasePath() . '/modules');
+            }
         } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
             $ext->processModules($this->request->getPost());
             Response::redirect($this->request->getBasePath() . '/modules');
