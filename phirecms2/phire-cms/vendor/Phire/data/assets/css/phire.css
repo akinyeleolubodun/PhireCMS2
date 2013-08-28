@@ -289,3 +289,10 @@ th.last-th, td.last-td {
     padding: 0;
     float: left;
 }
+
+.theme-screenshot {
+    margin: 5px 0 0 0;
+    padding: 3px;
+    background-color: #eee;
+    border: solid 1px #aaa;
+}

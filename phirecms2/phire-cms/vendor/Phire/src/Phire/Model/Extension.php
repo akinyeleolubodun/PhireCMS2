@@ -23,7 +23,9 @@ class Extension extends AbstractModel
         $themes = Table\Extensions::findAll('id ASC', array('type' => 0));
         $themeRows = $themes->rows;
 
-        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes', false, false, false);
+        $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+
+        $dir = new Dir($themePath, false, false, false);
         $themeFiles = array();
         foreach ($dir->getFiles() as $file) {
             if ($file != 'index.html') {
@@ -31,7 +33,14 @@ class Extension extends AbstractModel
             }
         }
 
-        foreach ($themeRows as $theme) {
+        foreach ($themeRows as $key => $theme) {
+            if (file_exists($themePath . '/' . $theme->name . '/screenshot.jpg')) {
+                $themeRows[$key]->screenshot = '<br /><img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.jpg" width="60" />';
+            } else if (file_exists($themePath . '/' . $theme->name . '/screenshot.png')) {
+                $themeRows[$key]->screenshot = '<br /><img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.png" width="60" />';
+            } else {
+                $themeRows[$key]->screenshot = null;
+            }
             if (isset($themeFiles[$theme->name])) {
                 unset($themeFiles[$theme->name]);
             }
@@ -81,7 +90,43 @@ class Extension extends AbstractModel
      */
     public function installThemes()
     {
+        $i = 1;
+        $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+        foreach ($this->data['new'] as $name => $theme) {
+            $archive = new Archive($themePath . '/' . $theme);
+            $archive->extract($themePath . '/');
+            if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($themePath . '/' . $name . '.tar'))) {
+                unlink($themePath . '/' . $name . '.tar');
+            }
 
+            $templates = array();
+
+            $dir = new Dir($themePath . '/' . $name);
+            foreach ($dir->getFiles() as $file) {
+                if (stripos($file, '.html') !== false) {
+                    $tmpl = file_get_contents($themePath . '/' . $name . '/' . $file);
+                    $t = new Table\Templates(array(
+                        'name'         => $file,
+                        'content_type' => 'text/html',
+                        'device'       => 'desktop',
+                        'template'     => $tmpl
+                    ));
+                    $t->save();
+                    $templates['template_' . $t->id] = $file;
+                } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
+                    $templates[] = $file;
+                }
+            }
+
+            $ext = new Table\Extensions(array(
+                'name'   => $name,
+                'type'   => 0,
+                'active' => ($i == 1) ? 1 : 0,
+                'assets' => serialize(array('templates' => $templates))
+            ));
+            $ext->save();
+            $i++;
+        }
     }
 
     /**
@@ -189,7 +234,74 @@ class Extension extends AbstractModel
      */
     public function processThemes($post)
     {
+        $sql = Table\Extensions::getSql();
 
+        $sql->update(array(
+            'active' => 0
+        ))->where()->equalTo('type', 0);
+
+        Table\Extensions::execute($sql->render(true));
+
+        $ext = Table\Extensions::findById($post['theme_active']);
+        $ext->active = 1;
+        $ext->save();
+
+        $active = false;
+        if (isset($post['remove_themes'])) {
+            foreach ($post['remove_themes'] as $id) {
+                $ext = Table\Extensions::findById($id);
+
+                if (isset($ext->id)) {
+                    if ($ext->active) {
+                        $active = true;
+                    }
+
+                    $assets = unserialize($ext->assets);
+                    $tmpls = array();
+
+                    foreach ($assets as $key => $value) {
+                        if (strpos($key, 'template_') !== false) {
+                            $tmpls[] = substr($key, (strpos($key, '_') + 1));
+                        }
+                    }
+
+                    if (count($tmpls) > 0) {
+                        foreach ($tmpls as $tId) {
+                            $t = Table\Templates::findById($tId);
+                            if (isset($t->id)) {
+                                $t->delete();
+                            }
+                        }
+                    }
+
+                    $contentPath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH;
+                    $exts = array('.zip', '.tar.gz', '.tar.bz2', '.tgz', '.tbz', '.tbz2');
+
+                    if (file_exists($contentPath . '/extensions/themes/' . $ext->name)) {
+                        $dir = new Dir($contentPath . '/extensions/themes/' . $ext->name);
+                        $dir->emptyDir(null, true);
+                    }
+
+                    foreach ($exts as $e) {
+                        if (file_exists($contentPath . '/extensions/themes/' . $ext->name . $e) &&
+                            is_writable($contentPath . '/extensions/themes/' . $ext->name . $e)) {
+                            unlink($contentPath . '/extensions/themes/' . $ext->name . $e);
+                        }
+                    }
+
+                    $ext->delete();
+                }
+            }
+        }
+
+        if ($active) {
+            $themes = Table\Extensions::findAll('id ASC', array('type' => 0));
+            if (isset($themes->rows[0])) {
+                $theme = Table\Extensions::findById($themes->rows[0]->id);
+                $theme->active = 1;
+                $theme->save();
+            }
+        }
     }
 
     /**
