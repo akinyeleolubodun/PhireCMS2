@@ -207,19 +207,19 @@ class Content extends Form
 
         // Add nav include and roles
         if (!$this->hasFile) {
-            $fields1['include'] = array(
+            $fields5['include'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Nav:',
                 'value'  => array(1 => 'Yes', 0 => 'No'),
                 'marked' => 1
             );
-            $fields1['feed'] = array(
+            $fields5['feed'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Feed:',
                 'value'  => array(1 => 'Yes', 0 => 'No'),
                 'marked' => 1
             );
-            $fields1['status'] = array(
+            $fields5['status'] = array(
                 'type'   => 'select',
                 'label'  => 'Status:',
                 'value'  => array(
@@ -240,7 +240,7 @@ class Content extends Form
                 'value'  => $rolesAry
             );
         } else {
-            $fields1['feed'] = array(
+            $fields5['feed'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Feed:',
                 'value'  => array(1 => 'Yes', 0 => 'No'),
