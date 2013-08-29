@@ -41,7 +41,7 @@ class Category extends AbstractContentModel
         $this->data['categoryTree'] = $this->getChildren($categories->rows, 0);
         $this->getCategories($this->data['categoryTree']);
 
-        if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'remove'))) {
+        if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'remove'))) {
             $removeCheckbox = '<input type="checkbox" name="remove_categories[]" id="remove_categories[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_categories" />';
             $submit = array(
@@ -84,7 +84,7 @@ class Category extends AbstractContentModel
         unset($cats[0]);
 
         foreach ($cats as $id => $name) {
-            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'edit'))) {
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'edit'))) {
                 $name = '<a href="' . BASE_PATH . APP_URI . '/content/categories/edit/' . $id . '">' . $name . '</a>';
             }
             $catAry[] = array(
@@ -95,7 +95,7 @@ class Category extends AbstractContentModel
 
         if (isset($catAry[0])) {
             $table = Html::encode($catAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Content\CategoriesController', 'edit'))) {
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'edit'))) {
                 $tableLines = explode(PHP_EOL, $table);
 
                 // Clean up the table

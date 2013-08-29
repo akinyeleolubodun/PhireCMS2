@@ -156,7 +156,7 @@ class Install extends \Pop\Mvc\Model
         // Send email verification
         $mail = new Mail($domain . ' - Phire CMS Installation', $rcpt);
         $mail->from('noreply@' . $domain);
-        $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/install.txt'));
+        $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/install.txt'));
         $mail->send();
     }
 

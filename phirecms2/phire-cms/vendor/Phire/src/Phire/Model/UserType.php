@@ -28,7 +28,7 @@ class UserType extends AbstractModel
 
         $types = Table\UserTypes::execute($sql->render(true));
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\TypesController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\TypesController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
             $submit = array(
@@ -45,7 +45,7 @@ class UserType extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\TypesController', 'edit')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\TypesController', 'edit')) {
             $type = '<a href="' . BASE_PATH . APP_URI . '/users/types/edit/[{id}]">[{type}]</a>';
         } else {
             $type = '[{type}]';

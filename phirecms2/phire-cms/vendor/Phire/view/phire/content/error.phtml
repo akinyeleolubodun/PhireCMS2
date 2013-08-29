@@ -1,0 +1,9 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+<?php if (isset($role)): ?>
+<?php echo $nav; ?>
+<?php endif; ?>
+    <h1 class="error"><?php echo $title; ?></h1>
+    <p>
+        <?php echo $msg; ?>
+    </p>
+<?php include __DIR__ . '/../footer.phtml'; ?>

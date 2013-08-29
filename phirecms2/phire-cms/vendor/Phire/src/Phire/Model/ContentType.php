@@ -22,7 +22,7 @@ class ContentType extends AbstractContentModel
         $order = $this->getSortOrder($sort, $page);
         $types = Table\ContentTypes::findAll($order['field'] . ' ' . $order['order']);
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Content\TypesController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TypesController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_types[]" id="remove_types[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
             $submit = array(
@@ -39,7 +39,7 @@ class ContentType extends AbstractContentModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Content\TypesController', 'edit')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TypesController', 'edit')) {
             $name = '<a href="' . BASE_PATH . APP_URI . '/content/types/edit/[{id}]">[{name}]</a>';
         } else {
             $name = '[{name}]';

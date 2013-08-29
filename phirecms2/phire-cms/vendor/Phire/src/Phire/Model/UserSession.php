@@ -45,7 +45,7 @@ class UserSession extends AbstractModel
         // Execute SQL query
         $sessions = Table\UserSessions::execute($sqlString);
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\SessionsController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\SessionsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_sessions[]" id="remove_sessions[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_sessions" />';
             $submit = array(
@@ -62,7 +62,7 @@ class UserSession extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'edit')) {
             $username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/[{user_id}]">[{username}]</a>';
         } else {
             $username = '[{username}]';

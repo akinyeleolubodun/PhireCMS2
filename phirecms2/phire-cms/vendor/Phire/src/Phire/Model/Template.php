@@ -38,7 +38,7 @@ class Template extends AbstractContentModel
             }
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_templates[]" id="remove_templates[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_templates" />';
             $submit = array(
@@ -84,7 +84,7 @@ class Template extends AbstractContentModel
             foreach ($templateAry as $tmpl) {
                 $t = (array)$tmpl['template'];
 
-                if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
                     $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $t['id'] .'">' . $t['name'] . '</a>';
                 } else {
                     $name = $t['name'];
@@ -99,7 +99,7 @@ class Template extends AbstractContentModel
                     foreach ($tmpl['children'] as $child) {
                         $c = (array)$child;
 
-                        if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+                        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
                             $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $c['id'] .'">' . $c['name'] . '</a>';
                         } else {
                             $name = $c['name'];
@@ -113,7 +113,7 @@ class Template extends AbstractContentModel
 
             $table = Html::encode($tmplAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
 
-            if ($this->data['acl']->isAuth('Phire\Controller\Content\TemplatesController', 'edit')) {
+            if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
                 $tableLines = explode(PHP_EOL, $table);
 
                 // Clean up the table

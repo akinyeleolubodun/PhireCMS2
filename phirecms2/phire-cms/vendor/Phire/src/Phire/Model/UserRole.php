@@ -129,7 +129,7 @@ class UserRole extends AbstractModel
         // Execute SQL query
         $roles = Table\UserRoles::execute($sql->render(true));
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\RolesController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\RolesController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_roles[]" id="remove_roles[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_roles" />';
             $submit = array(
@@ -146,7 +146,7 @@ class UserRole extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\RolesController', 'edit')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\RolesController', 'edit')) {
             $name = '<a href="' . BASE_PATH . APP_URI . '/users/roles/edit/[{id}]">[{name}]</a>';
         } else {
             $name = '[{name}]';

@@ -1,0 +1,16 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+<?php echo $nav; ?>
+    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'add')): ?>
+    <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/categories/add">[+] Add</a></p>
+<?php endif; ?>
+<?php
+if (isset($form)):
+    echo $form;
+elseif (isset($table)):
+    echo $table;
+else:
+?>
+    <p>There are currently no categories.</p>
+<?php endif; ?>
+<?php include __DIR__ . '/../footer.phtml'; ?>

@@ -162,9 +162,9 @@ class Project extends P
                 $isFrontController = (substr_count($resource, '\\') == 2);
 
                 // Check for the resource and permission
-                if (!($isFrontController) && ($resource != 'Phire\Controller\Install\IndexController')) {
+                if (!($isFrontController) && ($resource != 'Phire\Controller\Phire\Install\IndexController')) {
                     if (null === $router->project()->getService('acl')->getResource($resource)) {
-                        if ($resource != 'Phire\Controller\User\IndexController') {
+                        if ($resource != 'Phire\Controller\Phire\IndexController') {
                             $router->project()->getService('acl')->addResource($resource);
                         } else {
                             $resource = null;
@@ -239,9 +239,9 @@ class Project extends P
                     } else {
                         $controller = $type->controller;
                     }
-                    // Else, just map to the base User controller
+                    // Else, just map to the base Phire controller
                 } else {
-                    $controller = 'Phire\Controller\User\IndexController';
+                    $controller = 'Phire\Controller\Phire\IndexController';
                 }
 
                 $this->router->addControllers(array(

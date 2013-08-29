@@ -173,7 +173,7 @@ class User extends AbstractModel
 
         $this->data['title'] .= (isset($userType->id)) ? ' &gt; ' . $userType->type : null;
 
-        if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_users[]" id="remove_users[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_users" />';
             $submit = array(
@@ -197,7 +197,7 @@ class User extends AbstractModel
             if (is_array($logins)) {
                 $lastAry = end($logins);
                 $last = date('D  M j, Y H:i:s', key($logins)) . ', ' . $lastAry['ua'] . ' [' . $lastAry['ip'] . ']';
-                if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'edit')) {
                     $count = '<a href="' . BASE_PATH . APP_URI . '/users/logins/' . $value->id . '">' . count($logins) . '</a>';
                 } else {
                     $count = count($logins);
@@ -207,7 +207,7 @@ class User extends AbstractModel
                 $count = 0;
             }
 
-            if ($this->data['acl']->isAuth('Phire\Controller\User\UsersController', 'edit')) {
+            if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'edit')) {
                 $userRows[$key]->username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">' . $userRows[$key]->username . '</a>';
             }
 
@@ -538,7 +538,7 @@ class User extends AbstractModel
         // Send email verification
         $mail = new Mail($domain . ' - Email Verification', $rcpt);
         $mail->from('noreply@' . $domain);
-        $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/verify.txt'));
+        $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/verify.txt'));
         $mail->send();
     }
 
@@ -616,7 +616,7 @@ class User extends AbstractModel
             // Send reminder
             $mail = new Mail($domain . ' - Password Reset', $rcpt);
             $mail->from('noreply@' . $domain);
-            $mail->setText(file_get_contents(__DIR__ . '/../../../view/mail/forgot.txt'));
+            $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/forgot.txt'));
             $mail->send();
         }
     }
