@@ -340,6 +340,115 @@ class Content extends AbstractContentModel
     }
 
     /**
+     * Search for content
+     *
+     * @param  boolean $isFields
+     * @param  \Pop\Http\Request $request
+     * @return void
+     */
+    public function search($request, $isFields = false)
+    {
+        $this->getNav();
+        $this->data['keys'] = array();
+        $this->data['results'] = array();
+        $search = array();
+        $track = array();
+
+        // Get keywords
+        if ($request->isPost()) {
+            $this->data['keys'] = array_keys($request->getPost());
+            $search = $request->getPost();
+        } else {
+            $this->data['keys'] = array_keys($request->getQuery());
+            $search = $request->getQuery();
+        }
+
+        // Perform search
+        if (count($this->data['keys']) > 0) {
+            $results = array();
+
+            if (isset($search['title'])) {
+                $sql = Table\Content::getSql();
+
+                // Get the correct placeholder
+                if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
+                    $placeholder = '$1';
+                } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
+                    $placeholder = ':title';
+                } else {
+                    $placeholder = '?';
+                }
+
+                $sql->select()->where()->like('title', $placeholder);
+                $content = Table\Content::execute($sql->render(true), array('title' => '%' . $search['title'] . '%'));
+                $results = $content->rows;
+            }
+
+            // If the Fields module is installed, search fields
+            if ($isFields) {
+                foreach ($this->data['keys'] as $key) {
+                    if (isset($search[$key]) && ($search[$key] != '')) {
+                        $field = \Fields\Table\Fields::findBy(array('name' => $key));
+                        if (isset($field->id)) {
+                            $sql = \Fields\Table\FieldValues::getSql();
+                            // Get the correct placeholder
+                            if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
+                                $p1 = '$1';
+                                $p2 = '$2';
+                            } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
+                                $p1 = ':field_id';
+                                $p2 = ':value';
+                            } else {
+                                $p1 = '?';
+                                $p2 = '?';
+                            }
+                            $sql->select(array(
+                                DB_PREFIX . 'field_values.field_id',
+                                DB_PREFIX . 'field_values.model_id',
+                                DB_PREFIX . 'field_values.value',
+                                DB_PREFIX . 'fields_to_models.model'
+                            ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
+                            $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', $p1)->like('value', $p2);
+
+                            $fieldValues = \Fields\Table\FieldValues::execute($sql->render(true), array('field_id' => $field->id, 'value' => '%' . $search[$key] . '%'));
+                            if (isset($fieldValues->rows[0])) {
+                                foreach ($fieldValues->rows as $fv) {
+                                    $tableClass = str_replace('Model', 'Table', $fv->model);
+                                    if (!class_exists($tableClass)) {
+                                        if (substr($tableClass, -1) == 's') {
+                                            $tableClass = substr($tableClass, 0, -1);
+                                        } else {
+                                            $tableClass .= 's';
+                                        }
+                                        if (!class_exists($tableClass)) {
+                                            if (substr($tableClass, -1) == 'y') {
+                                                $tableClass = substr($tableClass, 0, -1) . 'ies';
+                                                if (!class_exists($tableClass)) {
+                                                    $tableClass = null;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if ((null !== $tableClass) && (!in_array($fv->model_id, $track))) {
+                                        $cont = $tableClass::findById($fv->model_id);
+                                        if (isset($cont->id)) {
+                                            $results[] = $cont;
+                                            $track[] = $fv->model_id;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $this->data['results'] = $results;
+        }
+    }
+
+    /**
      * Get content by ID method
      *
      * @param  int     $id
@@ -408,48 +517,6 @@ class Content extends AbstractContentModel
             if (!((!$this->config->open_authoring) && ($contentValues['created_by'] != $this->user->id))) {
                 $this->data = array_merge($this->data, $contentValues);
             }
-        }
-    }
-
-    /**
-     * Search for content
-     *
-     * @param  \Pop\Http\Request $request
-     * @return void
-     */
-    public function search($request)
-    {
-        $this->getNav();
-        $this->data['keywords'] = null;
-        $this->data['results'] = array();
-
-        // Get keywords
-        if ($request->isPost()) {
-            if (null !== $request->getPost('keywords')) {
-                $this->data['keywords'] = $request->getPost('keywords');
-            }
-        } else {
-            if (null !== $request->getQuery('keywords')) {
-                $this->data['keywords'] = $request->getQuery('keywords');
-            }
-        }
-
-        // Perform search
-        if (null !== $this->data['keywords']) {
-            $sql = Table\Content::getSql();
-
-            // Get the correct placeholder
-            if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-                $placeholder = '$1';
-            } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-                $placeholder = ':title';
-            } else {
-                $placeholder = '?';
-            }
-
-            $sql->select()->where()->like('title', $placeholder);
-            $content = Table\Content::execute($sql->render(true), array('title' => '%' . $this->data['keywords'] . '%'));
-            $this->data['results'] = $content->rows;
         }
     }
 

@@ -138,7 +138,7 @@ class IndexController extends C
         $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
-            $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->viewPath . '/category.phtml';
+            $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
             $this->view = View::factory($template, $category);
             $this->send();
         } else {
@@ -154,13 +154,13 @@ class IndexController extends C
     public function search()
     {
         $content = new Model\Content(array('title' => 'Search'));
-        $content->search($this->request);
-        if (null === $content->keywords) {
-            $content->set('error', 'No keywords were passed. Please try again.');
+        $content->search($this->request, $this->project->isLoaded('Fields'));
+        if (count($content->keys) == 0) {
+            $content->set('error', 'No search keywords were passed. Please try again.');
         }
 
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
-        $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->viewPath . '/search.phtml';
+        $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
 
         $this->view = View::factory($template, $content);
         $this->send();
