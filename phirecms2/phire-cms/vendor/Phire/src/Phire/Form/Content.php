@@ -389,6 +389,35 @@ class Content extends Form
         $theme = Table\Extensions::findBy(array('type' => 0, 'active' => 1), null, 1);
         if (isset($theme->id)) {
             $assets = unserialize($theme->assets);
+            // Get any new templates
+            $newTmpls = false;
+            $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name, false, false, false);
+            foreach ($dir->getFiles() as $file) {
+                if (!in_array($file, $assets['templates'])) {
+                    if (stripos($file, '.html') !== false) {
+                        $tmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/' . $file);
+                        $newTemplate = new Table\Templates(array(
+                            'parent_id'    => null,
+                            'name'         => $file,
+                            'content_type' => 'text/html',
+                            'device'       => 'desktop',
+                            'template'     => $tmpl
+                        ));
+                        $newTemplate->save();
+                        $assets['templates']['template_' . $newTemplate->id] = $file;
+                    } else {
+                        $assets['templates'][] = $file;
+                    }
+                    $newTmpls = true;
+                }
+            }
+
+            // Save new template assets
+            if ($newTmpls) {
+                $theme->assets = serialize($assets);
+                $theme->update();
+            }
+
             foreach ($assets['templates'] as $key => $value) {
                 if ((stripos($value, 'search') === false) &&
                     (stripos($value, 'category') === false) &&
