@@ -337,26 +337,30 @@ class User extends AbstractModel
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
-
-        $password = $fields['password1'];
-
-        // Set the password according to the user type
         $type = Table\UserTypes::findById($fields['type_id']);
-        if (isset($type->id)) {
-            switch ($type->password_encryption) {
-                case 3:
-                    $password = crypt($fields['password1'], $type->password_salt);
-                    break;
-                case 2:
-                    $password = sha1($fields['password1']);
-                    break;
-                case 1:
-                    $password = md5($fields['password1']);
-                    break;
-                case 0:
-                    $password = $fields['password1'];
-                    break;
+
+        if (isset($fields['password1'])) {
+            $password = $fields['password1'];
+
+            // Set the password according to the user type
+            if (isset($type->id)) {
+                switch ($type->password_encryption) {
+                    case 3:
+                        $password = crypt($fields['password1'], $type->password_salt);
+                        break;
+                    case 2:
+                        $password = sha1($fields['password1']);
+                        break;
+                    case 1:
+                        $password = md5($fields['password1']);
+                        break;
+                    case 0:
+                        $password = $fields['password1'];
+                        break;
+                }
             }
+        } else {
+            $password = '';
         }
 
         // Set the username according to user type
@@ -411,14 +415,13 @@ class User extends AbstractModel
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
-
+        $type = Table\UserTypes::findById($fields['type_id']);
         $user = Table\Users::findById($fields['id']);
 
         // If there's a new password, set according to the user type
         if (($fields['password1'] != '') && ($fields['password2'] != '')) {
             $password = $fields['password1'];
 
-            $type = Table\UserTypes::findById($fields['type_id']);
             if (isset($type->id)) {
                 switch ($type->password_encryption) {
                     case 3:

@@ -99,6 +99,9 @@ class IndexController extends C
         // If user type is not found, 404
         if (!isset($this->type->id)) {
             $this->error();
+        // If login is not allowed
+        } else if (!$this->type->login) {
+            Response::redirect(BASE_PATH);
         // Else, render the form
         } else {
             $user = new Model\User(array(

@@ -95,8 +95,12 @@ class User extends Form
 
             $this->getElement('email2')
                  ->addValidator(new Validator\Equal($this->email1, 'The emails do not match.'));
-            $this->getElement('password2')
-                 ->addValidator(new Validator\Equal($this->password1, 'The passwords do not match.'));
+
+            // If the password fields are set, check them for a match
+            if (isset($this->password2)) {
+                $this->getElement('password2')
+                     ->addValidator(new Validator\Equal($this->password1, 'The passwords do not match.'));
+            }
         }
 
         return $this;
@@ -171,22 +175,26 @@ class User extends Form
         }
 
         // Continue setting up initial user fields
-        $fields3 = array(
-            'password1' => array(
-                'type'       => 'password',
-                'label'      => 'Enter Password:',
-                'required'   => true,
-                'attributes' => array('size' => 20),
-                'validators' => new Validator\LengthGte(6)
-            ),
-            'password2' => array(
-                'type'       => 'password',
-                'label'      => 'Re-Type Password:',
-                'required'   => true,
-                'attributes' => array('size' => 20),
-                'validators' => new Validator\LengthGte(6)
-            )
-        );
+        if ($type->login) {
+            $fields3 = array(
+                'password1' => array(
+                    'type'       => 'password',
+                    'label'      => 'Enter Password:',
+                    'required'   => true,
+                    'attributes' => array('size' => 20),
+                    'validators' => new Validator\LengthGte(6)
+                ),
+                'password2' => array(
+                    'type'       => 'password',
+                    'label'      => 'Re-Type Password:',
+                    'required'   => true,
+                    'attributes' => array('size' => 20),
+                    'validators' => new Validator\LengthGte(6)
+                )
+            );
+        } else {
+            $fields3 = array();
+        }
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
