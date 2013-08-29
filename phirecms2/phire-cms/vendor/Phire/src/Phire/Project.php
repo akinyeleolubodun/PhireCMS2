@@ -63,7 +63,7 @@ class Project extends P
                             // Check for any module config overrides
                             if (file_exists($directory . '/config/' . strtolower($d) . '.config.php')) {
                                 $override = include $directory . '/config/' . strtolower($d) . '.config.php';
-                                if (isset($override[$d])) {
+                                if (isset($override[$d]) && (null !== $moduleCfg)) {
                                     $moduleCfg[$d]->merge($override[$d]);
                                 }
                             }
@@ -90,6 +90,14 @@ class Project extends P
                         }
                     }
                 }
+            }
+        }
+
+        // Load any overriding Phire configuration
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php')) {
+            $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php';
+            if (isset($phireCfg['Phire'])) {
+                $this->module('Phire')->merge($phireCfg['Phire']);
             }
         }
 

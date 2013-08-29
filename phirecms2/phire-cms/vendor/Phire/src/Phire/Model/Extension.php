@@ -72,7 +72,8 @@ class Extension extends AbstractModel
         foreach ($moduleRows as $key => $module) {
             $cfg = $project->module($module->name);
             if ((null !== $cfg) && (null !== $cfg->module_nav)) {
-                $modNav = new Nav($cfg->module_nav->asArray());
+                $n = (!is_array($cfg->module_nav)) ? $cfg->module_nav->asArray() : $cfg->module_nav;
+                $modNav = new Nav($n);
                 $modNav->setAcl($this->data['acl']);
                 $modNav->setRole($this->data['role']);
                 $moduleRows[$key]->module_nav = $modNav;
