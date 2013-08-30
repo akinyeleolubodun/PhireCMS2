@@ -38,7 +38,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
             $this->data['user'] = $sess->user;
             $this->data['role'] = \Phire\Table\UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
-            if (isset($this->data['nav']) && isset($this->data['acl'])) {
+            if (isset($this->data['nav']) && isset($this->data['acl']) && ($this->data['acl']->hasRole($this->data['role']->getName()))) {
                 $this->data['nav']->setConfig(array(
                     'parent' => array(
                         'node'  => 'ul',
