@@ -73,6 +73,7 @@ class Project extends P
                                 if (null !== $moduleCfg[$d]->events) {
                                     $events = $moduleCfg[$d]->events->asArray();
                                     foreach ($events as $event => $action) {
+                                        $act = null;
                                         $priority = 0;
                                         if (is_array($action)) {
                                             if (isset($action['action'])) {
@@ -82,7 +83,9 @@ class Project extends P
                                         } else {
                                             $act = $action;
                                         }
-                                        $this->attachEvent($event, $act, $priority);
+                                        if (null !== $act) {
+                                            $this->attachEvent($event, $act, $priority);
+                                        }
                                     }
                                 }
                                 $this->loadModule($moduleCfg);
