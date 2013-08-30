@@ -78,6 +78,8 @@ var slug = function(src, tar) {
         val = contentParentUri + val;
         if ((val != '') && (val.substring(0, 1) != '/')) {
             val = '/' + val;
+        } else if (val == '') {
+            val = '/';
         }
         $('#uri-span').obj.innerHTML = (val.substring(0, 2) == '//') ? val.substring(1) : val;
     }
@@ -108,6 +110,8 @@ var catSlug = function(src, tar) {
         val = categoryParentUri + val;
         if ((val != '') && (val.substring(0, 1) != '/')) {
             val = '/' + val;
+        } else if (val == '') {
+            val = '/';
         }
         $('#slug-span').obj.innerHTML = (val.substring(0, 2) == '//') ? val.substring(1) : val;
     }
@@ -145,6 +149,8 @@ $(document).ready(function(){
             if ($('#uri').obj.type != 'file') {
                 if ((val != '') && (val.substring(0, 1) != '/')) {
                     val = '/' + val;
+                } else if (val == '') {
+                    val = '/';
                 }
                 $($('#uri').parent()).append('span', ['id', 'uri-span'], (val.substring(0, 2) == '//') ? val.substring(1) : val);
             }
@@ -169,6 +175,8 @@ $(document).ready(function(){
             }
             if ((val != '') && (val.substring(0, 1) != '/')) {
                 val = '/' + val;
+            } else if (val == '') {
+                val = '/';
             }
             $($('#slug').parent()).append('span', ['id', 'slug-span'], (val.substring(0, 2) == '//') ? val.substring(1) : val);
         }

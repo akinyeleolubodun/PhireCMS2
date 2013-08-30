@@ -249,6 +249,73 @@ class User extends AbstractModel
     }
 
     /**
+     * Get all users for export method
+     *
+     * @param  int $typeId
+     * @param  string $sort
+     * @param  string $page
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function getExport($typeId, $sort = null, $page = null, $isFields = false)
+    {
+        $order = $this->getSortOrder($sort, $page);
+        $sql = Table\Users::getSql();
+
+        // Get the correct placeholder
+        if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
+            $placeholder = '$1';
+        } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
+            $placeholder = ':type_id';
+        } else {
+            $placeholder = '?';
+        }
+
+        $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
+
+        // Build the SQL statement to get users
+        $sql->select(array(
+            DB_PREFIX . 'users.id',
+            DB_PREFIX . 'users.username',
+            DB_PREFIX . 'users.email',
+            DB_PREFIX . 'users.logins'
+        ))->orderBy($order['field'], $order['order']);
+
+        $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', $placeholder);
+
+        // Execute SQL query and get user type
+        $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
+        $type = Table\UserTypes::findById($typeId);
+
+        $userRows = array();
+        if (isset($users->rows[0])) {
+            foreach ($users->rows as $row) {
+                if (null !== $row->logins) {
+                    $logins = unserialize($row->logins);
+                    $row->logins = count($logins);
+                    end($logins);
+                    $row->last_login = date('M j Y g:i A', key($logins));
+                } else {
+                    $row->logins = 0;
+                    $row->last_login = '(Never)';
+                }
+
+                // Get any field values
+                if ($isFields) {
+                    $values = \Fields\Model\FieldValue::getAll($row->id, true);
+                    $row = new \ArrayObject(array_merge((array)$row, $values), \ArrayObject::ARRAY_AS_PROPS);
+                }
+
+                $userRows[] = $row;
+            }
+        }
+
+        $this->data['userType'] = $type->type;
+        $this->data['userRows'] = $userRows;
+
+    }
+
+    /**
      * Get user by ID method
      *
      * @param  int     $id

@@ -8,6 +8,7 @@ use Pop\File\Dir;
 use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
+use Phire\Table;
 
 class ContentType extends Form
 {
@@ -26,6 +27,28 @@ class ContentType extends Form
         $this->initFieldsValues = $this->getInitFields($tid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'content-type-form');
+    }
+
+    /**
+     * Set the field values
+     *
+     * @param  array $values
+     * @param  mixed $filters
+     * @param  mixed $params
+     * @return \Pop\Form\Form
+     */
+    public function setFieldValues(array $values = null, $filters = null, $params = null)
+    {
+        parent::setFieldValues($values, $filters, $params);
+
+        // Check for dupe content type names
+        if ($_POST) {
+            $type = Table\ContentTypes::findBy(array('name' => $this->name));
+            if (isset($type->id) && ($this->id != $type->id)) {
+                $this->getElement('name')
+                     ->addValidator(new Validator\NotEqual($this->name, 'That content type name already exists. The name must be unique.'));
+            }
+        }
     }
 
     /**

@@ -351,10 +351,9 @@ class Content extends AbstractContentModel
         $this->getNav();
         $this->data['keys'] = array();
         $this->data['results'] = array();
-        $search = array();
         $track = array();
 
-        // Get keywords
+        // Get search keys
         if ($request->isPost()) {
             $this->data['keys'] = array_keys($request->getPost());
             $search = $request->getPost();
@@ -367,6 +366,7 @@ class Content extends AbstractContentModel
         if (count($this->data['keys']) > 0) {
             $results = array();
 
+            // If just a search by content title
             if (isset($search['title'])) {
                 $sql = Table\Content::getSql();
 
@@ -384,7 +384,7 @@ class Content extends AbstractContentModel
                 $results = $content->rows;
             }
 
-            // If the Fields module is installed, search fields
+            // If the Fields module is installed, search fields by name/value
             if ($isFields) {
                 foreach ($this->data['keys'] as $key) {
                     if (isset($search[$key]) && ($search[$key] != '')) {
@@ -410,26 +410,36 @@ class Content extends AbstractContentModel
                             ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
                             $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', $p1)->like('value', $p2);
 
-                            $fieldValues = \Fields\Table\FieldValues::execute($sql->render(true), array('field_id' => $field->id, 'value' => '%' . $search[$key] . '%'));
+                            // Execute field values SQL
+                            $fieldValues = \Fields\Table\FieldValues::execute(
+                                $sql->render(true),
+                                array(
+                                    'field_id' => $field->id,
+                                    'value' => '%' . $search[$key] . '%'
+                                )
+                            );
+
+                            // If field values are found, extrapolate the table class from the model class
                             if (isset($fieldValues->rows[0])) {
                                 foreach ($fieldValues->rows as $fv) {
                                     $tableClass = str_replace('Model', 'Table', $fv->model);
-                                    if (!class_exists($tableClass)) {
+                                    if (!class_exists($tableClass, false)) {
                                         if (substr($tableClass, -1) == 's') {
                                             $tableClass = substr($tableClass, 0, -1);
                                         } else {
                                             $tableClass .= 's';
                                         }
-                                        if (!class_exists($tableClass)) {
+                                        if (!class_exists($tableClass, false)) {
                                             if (substr($tableClass, -1) == 'y') {
                                                 $tableClass = substr($tableClass, 0, -1) . 'ies';
-                                                if (!class_exists($tableClass)) {
+                                                if (!class_exists($tableClass, false)) {
                                                     $tableClass = null;
                                                 }
                                             }
                                         }
                                     }
 
+                                    // If table class is found, find model object
                                     if ((null !== $tableClass) && (!in_array($fv->model_id, $track))) {
                                         $cont = $tableClass::findById($fv->model_id);
                                         if (isset($cont->id)) {
@@ -507,6 +517,17 @@ class Content extends AbstractContentModel
                     $rolesAry[] = $role->role_id;
                 }
                 $contentValues['roles'] = $rolesAry;
+            }
+            if ($contentValues['updated'] != '0000-00-00 00:00:00') {
+                $contentValues['updated'] = '<strong>Updated:</strong> ' . date('M j Y H:i', strtotime($contentValues['updated']));
+                if (null !== $contentValues['updated_by']) {
+                    $u = Table\Users::findById($contentValues['updated_by']);
+                    if (isset($u->username)) {
+                        $contentValues['updated'] .= ' by <strong>'. $u->username . '</strong>';
+                    }
+                }
+            } else {
+                $contentValues['updated'] = '<strong>Updated:</strong> Never';
             }
 
             // If the Fields module is installed, and if there are fields for this form/model
@@ -625,6 +646,8 @@ class Content extends AbstractContentModel
                 $uri = '/' . $uri;
             } else if (substr($uri, 0, 2) == '//') {
                 $uri = substr($uri, 1);
+            } else if ($uri == '') {
+                $uri = '/';
             }
         }
 
@@ -752,6 +775,8 @@ class Content extends AbstractContentModel
                 $uri = '/' . $uri;
             } else if (substr($uri, 0, 2) == '//') {
                 $uri = substr($uri, 1);
+            } else if ($uri == '') {
+                $uri = '/';
             }
         }
 

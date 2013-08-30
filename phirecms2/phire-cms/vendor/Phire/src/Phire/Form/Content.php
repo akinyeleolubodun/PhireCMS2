@@ -84,9 +84,15 @@ class Content extends Form
             $type = Table\ContentTypes::findById($_POST['type_id']);
             $uri = Table\Content::findBy(array('slug' => $this->uri));
             if (($type->uri) && (isset($uri->id)) && ((int)$this->parent_id == (int)$uri->parent_id)  && ($this->id != $uri->id)) {
-                $this->getElement('uri')
-                     ->addValidator(new Validator\NotEqual($this->uri, 'That URI already exists under that parent content.'));
+                if ($this->uri == '') {
+                    $this->getElement('uri')
+                         ->addValidator(new Validator\NotEmpty($this->uri, 'The root URI already exists.'));
+                } else {
+                    $this->getElement('uri')
+                         ->addValidator(new Validator\NotEqual($this->uri, 'That URI already exists under that parent content.'));
+                }
             }
+
         }
 
         return $this;
@@ -149,7 +155,6 @@ class Content extends Form
             $uri = array(
                 'type'       => 'text',
                 'label'      => 'URI:',
-                'required'   => true,
                 'attributes' => array(
                     'size'    => 40,
                     'onkeyup' => "slug(null, 'uri');"

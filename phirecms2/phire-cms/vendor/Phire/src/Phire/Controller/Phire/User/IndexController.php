@@ -346,5 +346,46 @@ class IndexController extends C
         Response::redirect($this->request->getBasePath() . $typeId);
     }
 
+    /**
+     * Export method
+     *
+     * @return void
+     */
+    public function export()
+    {
+        $user = new Model\User();
+        $user->getExport(
+            $this->request->getPath(1),
+            $this->request->getQuery('sort'),
+            $this->request->getQuery('page'),
+            $this->project->isLoaded('Fields')
+        );
+
+        if (isset($user->userRows[0])) {
+            \Pop\Data\Data::factory($user->userRows)->writeData($_SERVER['HTTP_HOST'] . '_' . $user->userType . '_' . date('Y-m-d') . '.csv', true, true);
+        } else {
+            Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
+        }
+    }
+
+
+    /**
+     * Error method
+     *
+     * @return void
+     */
+    public function error()
+    {
+        $user = new Model\User(array(
+            'assets' => $this->project->getAssets(),
+            'acl'    => $this->project->getService('acl'),
+            'nav'    => $this->project->getService('nav'),
+            'title'  => '404 Error &gt; Page Not Found'
+        ));
+
+        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $this->send(404);
+    }
+
 }
 

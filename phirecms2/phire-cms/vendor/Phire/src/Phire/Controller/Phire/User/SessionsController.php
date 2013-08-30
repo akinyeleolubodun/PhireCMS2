@@ -88,5 +88,23 @@ class SessionsController extends C
         Response::redirect($this->request->getBasePath());
     }
 
+    /**
+     * Error method
+     *
+     * @return void
+     */
+    public function error()
+    {
+        $user = new Model\User(array(
+            'assets' => $this->project->getAssets(),
+            'acl'    => $this->project->getService('acl'),
+            'nav'    => $this->project->getService('nav'),
+            'title'  => '404 Error &gt; Page Not Found'
+        ));
+
+        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $this->send(404);
+    }
+
 }
 

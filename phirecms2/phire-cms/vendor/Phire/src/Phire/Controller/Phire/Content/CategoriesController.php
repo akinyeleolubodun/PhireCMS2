@@ -208,7 +208,7 @@ class CategoriesController extends C
     public function json()
     {
         if (null !== $this->request->getPath(1)) {
-            $uri = '';
+            $uri = '/';
             $category = Table\Categories::findById($this->request->getPath(1));
 
             // Construct the full parent URI
