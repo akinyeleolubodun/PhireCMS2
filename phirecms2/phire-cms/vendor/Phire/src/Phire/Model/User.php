@@ -460,6 +460,9 @@ class User extends AbstractModel
         ));
         $user->save();
 
+        $sess = Session::getInstance();
+        $sess->last_user_id = $user->id;
+
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             \Fields\Model\FieldValue::save($fields, $user->id);
@@ -531,6 +534,9 @@ class User extends AbstractModel
         $sess->user->username = $user->username;
 
         $user->update();
+
+        $sess = Session::getInstance();
+        $sess->last_user_id = $user->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
