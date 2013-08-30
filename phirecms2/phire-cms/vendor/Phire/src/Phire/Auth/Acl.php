@@ -106,7 +106,7 @@ class Acl extends A
         } else if (isset($this->sess->user->id)) {
             // If the user is not the right type, check for global access
             if ($this->type->id != $this->sess->user->type_id) {
-                $auth = ($this->sess->user->global) ? true : false;
+                $auth = ($this->sess->user->global_access) ? true : false;
             // Else, authorize the user role
             } else if ($this->sess->user->role_id != 0) {
                 $role = Table\UserRoles::getRole($this->sess->user->role_id);

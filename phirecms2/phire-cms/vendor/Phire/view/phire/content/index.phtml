@@ -5,7 +5,9 @@
     <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a></p>
 <?php endif; ?>
 <?php if (isset($form)): ?>
+<?php if (isset($updated)): ?>
     <p><?php echo $updated; ?></p>
+<?php endif; ?>
 <?php echo $form; ?>
 <?php elseif (isset($table)):
     echo $table;
