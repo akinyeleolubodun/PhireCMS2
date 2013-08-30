@@ -12,6 +12,14 @@ use Phire\Table;
 class Template extends Form
 {
 
+
+    /**
+     * Has file flag
+     *
+     * @var boolean
+     */
+    protected $hasFile = false;
+
     /**
      * Content types
      *
@@ -62,6 +70,10 @@ class Template extends Form
         $this->initFieldsValues = $this->getInitFields($tid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'template-form');
+
+        if ($this->hasFile) {
+            $this->setAttributes('enctype', 'multipart/form-data');
+        }
     }
 
     /**
@@ -94,6 +106,24 @@ class Template extends Form
                 if (isset($tmpl->id) && ($this->id != $tmpl->id)) {
                     $this->getElement('device')
                          ->addValidator(new Validator\NotEqual($this->device, 'That device is already to that template set.'));
+                }
+            }
+        }
+
+        // Check for global file setting configurations
+        if ($_FILES) {
+            $config = \Phire\Table\Config::getSystemConfig();
+            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
+
+            foreach ($_FILES as $key => $value) {
+                if ($value['size'] > $config->media_max_filesize) {
+                    $this->getElement($key)
+                         ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
+                }
+                if (preg_match($regex, $value['name']) == 0) {
+                    $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
+                    $this->getElement($key)
+                         ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
                 }
             }
         }
@@ -156,6 +186,9 @@ class Template extends Form
             if (count($newFields) > 0) {
                 foreach ($newFields as $key => $value) {
                     $fields2[$key] = $value;
+                    if ($value['type'] == 'file') {
+                        $this->hasFile = true;
+                    }
                 }
             }
         }

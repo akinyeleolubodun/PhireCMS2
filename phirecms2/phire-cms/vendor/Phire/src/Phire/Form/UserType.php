@@ -11,6 +11,14 @@ use Phire\Table;
 class UserType extends Form
 {
 
+
+    /**
+     * Has file flag
+     *
+     * @var boolean
+     */
+    protected $hasFile = false;
+
     /**
      * Constructor method to instantiate the form object
      *
@@ -25,6 +33,10 @@ class UserType extends Form
         $this->initFieldsValues = $this->getInitFields($tid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'user-type-form');
+
+        if ($this->hasFile) {
+            $this->setAttributes('enctype', 'multipart/form-data');
+        }
     }
 
     /**
@@ -49,6 +61,26 @@ class UserType extends Form
                      ->addValidator(new Validator\NotEmpty(null, 'The crypt password encryption requires a password salt.'));
             }
         }
+
+        // Check for global file setting configurations
+        if ($_FILES) {
+            $config = \Phire\Table\Config::getSystemConfig();
+            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
+
+            foreach ($_FILES as $key => $value) {
+                if ($value['size'] > $config->media_max_filesize) {
+                    $this->getElement($key)
+                         ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
+                }
+                if (preg_match($regex, $value['name']) == 0) {
+                    $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
+                    $this->getElement($key)
+                         ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
+                }
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -217,6 +249,9 @@ class UserType extends Form
             if (count($newFields) > 0) {
                 foreach ($newFields as $key => $value) {
                     $fields2[$key] = $value;
+                    if ($value['type'] == 'file') {
+                        $this->hasFile = true;
+                    }
                 }
             }
         }

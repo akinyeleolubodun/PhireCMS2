@@ -195,8 +195,7 @@ class TypesController extends C
                         $fields = new \Fields\Table\FieldsToModels();
                         $fields->delete(array('type_id' => $id));
 
-                        $fields = new \Fields\Table\FieldValues();
-                        $fields->delete(array('model_id' => $id));
+                        \Fields\Model\FieldValue::remove($id);
                     }
                 }
             }

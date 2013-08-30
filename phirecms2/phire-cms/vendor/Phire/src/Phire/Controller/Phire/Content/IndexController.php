@@ -275,57 +275,7 @@ class IndexController extends C
 
                     // If the Fields module is installed, and if there are fields for this form/model
                     if ($this->project->isLoaded('Fields') && !((!$open) && ($createdBy != $model->user->id))) {
-                        $fields = \Fields\Table\FieldValues::findAll(null, array('model_id' => $id));
-                        if (isset($fields->rows[0])) {
-                            foreach ($fields->rows as $field) {
-                                // Get the field values with the field type to check for any files to delete
-                                if (isset($field->field_id)) {
-                                    $sql = \Fields\Table\FieldValues::getSql();
-
-                                    // Get the correct placeholders
-                                    if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-                                        $p1 = '$1';
-                                        $p2 = '$2';
-                                    } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-                                        $p1 = ':field_id';
-                                        $p2 = ':model_id';
-                                    } else {
-                                        $p1 = '?';
-                                        $p2 = '?';
-                                    }
-
-                                    $sql->select(array(
-                                        DB_PREFIX . 'field_values.field_id',
-                                        DB_PREFIX . 'field_values.model_id',
-                                        DB_PREFIX . 'field_values.value',
-                                        DB_PREFIX . 'fields.type'
-                                    ))->join(DB_PREFIX . 'fields', array('field_id', 'id'), 'LEFT JOIN')
-                                      ->where()
-                                      ->equalTo('field_id', $p1)
-                                      ->equalTo('model_id', $p2);
-
-                                    $fld = \Fields\Table\FieldValues::execute(
-                                        $sql->render(true),
-                                        array('field_id' => $field->field_id, 'model_id' => $id)
-                                    );
-
-                                    if (isset($fld->field_id)) {
-                                        // If field type is file, delete file(s)
-                                        if ($fld->type == 'file') {
-                                            $file = unserialize($fld->value);
-                                            if (is_array($file)) {
-                                                foreach ($file as $f) {
-                                                    Model\Content::removeMedia($f);
-                                                }
-                                            } else {
-                                                Model\Content::removeMedia($file);
-                                            }
-                                        }
-                                        $fld->delete();
-                                    }
-                                }
-                            }
-                        }
+                        \Fields\Model\FieldValue::remove($id);
                     }
                 }
             }

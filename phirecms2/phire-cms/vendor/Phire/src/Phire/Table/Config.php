@@ -90,6 +90,15 @@ class Config extends Record
             }
         }
 
+        if ($config['media_max_filesize'] > 999999) {
+            $maxSize = round($config['media_max_filesize'] / 1000000) . ' MB';
+        } else if ($config['media_max_filesize'] > 999) {
+            $maxSize = round($config['media_max_filesize'] / 1000) . ' KB';
+        } else {
+            $maxSize = $config['media_max_filesize'] . ' B';
+        }
+
+        $config['media_max_filesize_formatted'] = $maxSize;
         $config['media_allowed_types'] = $allowedTypes;
 
         return new \ArrayObject($config, \ArrayObject::ARRAY_AS_PROPS);

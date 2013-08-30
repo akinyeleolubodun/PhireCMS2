@@ -190,8 +190,7 @@ class TemplatesController extends C
 
                     // If the Fields module is installed, and if there are fields for this form/model
                     if ($this->project->isLoaded('Fields')) {
-                        $fields = new \Fields\Table\FieldValues();
-                        $fields->delete(array('model_id' => $id));
+                        \Fields\Model\FieldValue::remove($id);
                     }
                 }
             }

@@ -696,7 +696,7 @@ class Content extends AbstractContentModel
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $content->id, true);
+            \Fields\Model\FieldValue::save($fields, $content->id);
         }
     }
 
@@ -837,7 +837,7 @@ class Content extends AbstractContentModel
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $content->id, true);
+            \Fields\Model\FieldValue::update($fields, $content->id);
         }
     }
 
