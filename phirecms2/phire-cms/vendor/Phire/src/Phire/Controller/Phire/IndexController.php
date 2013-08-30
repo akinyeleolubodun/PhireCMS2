@@ -92,9 +92,10 @@ class IndexController extends C
     /**
      * Login method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function login()
+    public function login($redirect = null)
     {
         // If user type is not found, 404
         if (!isset($this->type->id)) {
@@ -154,7 +155,11 @@ class IndexController extends C
                     // Else, login
                     } else {
                         $user->login($form->username, $this->type);
-                        $url = (isset($this->sess->lastUrl)) ? $this->sess->lastUrl : $this->request->getBasePath();
+                        if (isset($this->sess->lastUrl)) {
+                            $url = $this->sess->lastUrl;
+                        } else {
+                            $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
+                        }
                         unset($this->sess->expired);
                         unset($this->sess->authError);
                         unset($this->sess->lastUrl);
@@ -177,9 +182,10 @@ class IndexController extends C
     /**
      * Register method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function register()
+    public function register($redirect = null)
     {
         // If registration is not allowed
         if (!$this->type->registration) {
@@ -208,9 +214,13 @@ class IndexController extends C
                 // If form is valid, save the user
                 if ($form->isValid()) {
                     $user->save($form, $this->project->isLoaded('Fields'));
-                    $user->set('form', '    <p>Thank you for registering.</p>');
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
-                    $this->send();
+                    if (null !== $redirect) {
+                        Response::redirect($redirect);
+                    } else {
+                        $user->set('form', '    <p>Thank you for registering.</p>');
+                        $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                        $this->send();
+                    }
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
@@ -229,9 +239,10 @@ class IndexController extends C
     /**
      * Profile method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function profile()
+    public function profile($redirect = null)
     {
         $user = new Model\User(array(
             'assets' => $this->project->getAssets(),
@@ -259,7 +270,8 @@ class IndexController extends C
                 // If the form is valid
                 if ($form->isValid()) {
                     $user->update($form, $this->project->isLoaded('Fields'));
-                    Response::redirect($this->request->getBasePath());
+                    $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
+                    Response::redirect($url);
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
@@ -285,9 +297,10 @@ class IndexController extends C
     /**
      * Unsubscribe method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function unsubscribe()
+    public function unsubscribe($redirect = null)
     {
         $user = new Model\User(array(
             'assets' => $this->project->getAssets(),
@@ -311,12 +324,16 @@ class IndexController extends C
                 if ($this->project->getService('acl')->isAuth()) {
                     $this->logout(false);
                 }
-                $user = new Model\User(array(
-                    'title' => 'Unsubscribe',
-                    'form'  => '    <p>Thank you. You have been unsubscribed from this website.</p>'
-                ));
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
-                $this->send();
+                if (null !== $redirect) {
+                    Response::redirect($redirect);
+                } else {
+                    $user = new Model\User(array(
+                        'title' => 'Unsubscribe',
+                        'form'  => '    <p>Thank you. You have been unsubscribed from this website.</p>'
+                    ));
+                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                    $this->send();
+                }
             // Else, re-render the form with errors
             } else {
                 $user->set('form', $form);
@@ -337,9 +354,10 @@ class IndexController extends C
     /**
      * Forgot method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function forgot()
+    public function forgot($redirect = null)
     {
         $user = new Model\User(array(
             'assets' => $this->project->getAssets(),
@@ -360,9 +378,13 @@ class IndexController extends C
             // If form is valid, send reminder
             if ($form->isValid()) {
                 $user->sendReminder($form);
-                $user->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
-                $this->view = View::factory($this->viewPath . '/forgot.phtml', $user);
-                $this->send();
+                if (null !== $redirect) {
+                    Response::redirect($redirect);
+                } else {
+                    $user->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
+                    $this->view = View::factory($this->viewPath . '/forgot.phtml', $user);
+                    $this->send();
+                }
             // Else, re-render the form with errors
             } else {
                 $user->set('form', $form);
@@ -383,9 +405,10 @@ class IndexController extends C
     /**
      * Verify method
      *
+     * @param  string $redirect
      * @return void
      */
-    public function verify()
+    public function verify($redirect = null)
     {
         // If the required user ID and hash is submitted
         if ((null !== $this->request->getPath(1)) && (null !== $this->request->getPath(2))) {
@@ -405,10 +428,13 @@ class IndexController extends C
             } else {
                 $message = 'Sorry. That email could not be verified.';
             }
-
-            $user->set('message', $message);
-            $this->view = View::factory($this->viewPath . '/verify.phtml', $user);
-            $this->send();
+            if (null !== $redirect) {
+                Response::redirect($redirect);
+            } else {
+                $user->set('message', $message);
+                $this->view = View::factory($this->viewPath . '/verify.phtml', $user);
+                $this->send();
+            }
         // Else, redirect
         } else {
             Response::redirect($this->request->getBasePath());
