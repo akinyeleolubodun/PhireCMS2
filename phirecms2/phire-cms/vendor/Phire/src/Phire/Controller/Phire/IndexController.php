@@ -207,7 +207,7 @@ class IndexController extends C
 
                 // If form is valid, save the user
                 if ($form->isValid()) {
-                    $user->save($form);
+                    $user->save($form, $this->project->isLoaded('Fields'));
                     $user->set('form', '    <p>Thank you for registering.</p>');
                     $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
                     $this->send();
@@ -258,7 +258,7 @@ class IndexController extends C
 
                 // If the form is valid
                 if ($form->isValid()) {
-                    $user->update($form);
+                    $user->update($form, $this->project->isLoaded('Fields'));
                     Response::redirect($this->request->getBasePath());
                 // Else, re-render the form with errors
                 } else {
