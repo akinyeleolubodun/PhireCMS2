@@ -142,7 +142,7 @@ class Install extends \Pop\Mvc\Model
     public static function send(\Phire\Form\User $form)
     {
         // Get the domain
-        $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+        $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
         // Set the recipient
         $rcpt = array(

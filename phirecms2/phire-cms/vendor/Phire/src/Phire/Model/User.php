@@ -600,7 +600,7 @@ class User extends AbstractModel
     {
         // Get the base path and domain
         $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
-        $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+        $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
         // Set the recipient
         $rcpt = array(
@@ -676,7 +676,7 @@ class User extends AbstractModel
 
             // Get base path and domain
             $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
-            $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+            $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
             // Set recipient
             $rcpt = array(
@@ -727,7 +727,7 @@ class User extends AbstractModel
             $exclude = explode(',', $type->log_exclude);
         }
 
-        $domain = str_replace('www', '', $_SERVER['HTTP_HOST']);
+        $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
         if (!in_array($_SERVER['REMOTE_ADDR'], $exclude)) {
             $emails = explode(',', $type->log_emails);
