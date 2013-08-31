@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
   `controller` text,
   `sub_controllers` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2003 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2002 ;
 
 --
 -- Dumping data for table `[{prefix}]user_types`
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_roles` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_role_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3005 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3002 ;
 
 --
 -- Dumping data for table `[{prefix}]user_roles`
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]users` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_user_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1004 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;
 
 --
 -- Dumping data for table `[{prefix}]users`
