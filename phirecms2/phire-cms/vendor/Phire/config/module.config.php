@@ -37,6 +37,20 @@ return array(
                 ),
                 'children' => array(
                     array(
+                        'name' => 'Content',
+                        'href' => '',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Content\IndexController'
+                        )
+                    ),
+                    array(
+                        'name' => 'Content Types',
+                        'href' => 'types',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Content\TypesController'
+                        )
+                    ),
+                    array(
                         'name' => 'Categories',
                         'href' => 'categories',
                         'acl' => array(
@@ -48,13 +62,6 @@ return array(
                         'href' => 'templates',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\TemplatesController'
-                        )
-                    ),
-                    array(
-                        'name' => 'Content Types',
-                        'href' => 'types',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\TypesController'
                         )
                     )
                 )
@@ -92,10 +99,10 @@ return array(
                 ),
                 'children' => array(
                     array(
-                        'name' => 'User Roles',
-                        'href' => 'roles',
+                        'name' => 'Users',
+                        'href' => '',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\RolesController'
+                            'resource'   => 'Phire\Controller\Phire\User\IndexController'
                         )
                     ),
                     array(
@@ -103,6 +110,13 @@ return array(
                         'href' => 'types',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\User\TypesController'
+                        )
+                    ),
+                    array(
+                        'name' => 'User Roles',
+                        'href' => 'roles',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\User\RolesController'
                         )
                     ),
                     array(

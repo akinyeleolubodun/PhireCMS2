@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
 <?php echo $nav; ?>
     <h1 style="color: #00f;"><?php echo $title; ?></h1>
-<?php if (isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'export'))): ?>
+<?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'export'))): ?>
     <p style="float: right;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>">Export</a></a></p>
 <?php endif; ?>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'add')): ?>
@@ -22,6 +22,6 @@ elseif (isset($types) && isset($types[0])): ?>
         <?php endforeach; ?>
     </table>
 <?php else: ?>
-    <p>There are currently no users. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">a user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a user type here</a>.</p>
+    <p>There are currently no <?php echo $type; ?>s. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>"> a new <?php echo $type; ?> here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

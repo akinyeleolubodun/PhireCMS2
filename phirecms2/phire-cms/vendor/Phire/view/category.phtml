@@ -1,5 +1,5 @@
 <?php include __DIR__ . '/header.phtml'; ?>
-    <h1 style="color: #00f;">Category &gt; <?php echo $category; ?></h1>
+    <h1 style="color: #00f;">Category <?php echo $separator . ' ' . $category; ?></h1>
 <?php
 if (isset($nav)):
     echo $nav;
@@ -23,7 +23,7 @@ if (count($items) > 0):
     foreach ($items as $item):
         if (strpos($title, $item->category_title) === false):
             if (null !== $title):
-                $title .= ' &gt; ' . $item->category_title;
+                $title .= ' ' . $separator . ' ' . $item->category_title;
                 echo '    </ul>' . PHP_EOL;
             else:
                 $title .= $item->category_title;

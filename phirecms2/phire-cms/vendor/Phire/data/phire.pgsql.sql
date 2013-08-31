@@ -28,7 +28,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
 ('installed_on', '0000-00-00 00:00:00'),
 ('updated_on', '0000-00-00 00:00:00'),
 ('site_title', 'Default Site Title'),
-('separator', ' > '),
+('separator', '&gt;'),
 ('default_language', 'en_US'),
 ('error_message', 'Sorry. That page was not found.'),
 ('datetime_format', 'M j Y g:i A'),

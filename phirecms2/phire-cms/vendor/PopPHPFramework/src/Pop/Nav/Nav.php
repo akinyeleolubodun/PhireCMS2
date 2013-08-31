@@ -131,12 +131,16 @@ class Nav
      * Add to a leaf to nav tree branch
      *
      * @param  string $branch
-     * @param  array $leaf
+     * @param  array  $leaf
+     * @param  int    $pos
      * @return \Pop\Nav\Nav
      */
-    public function addLeaf($branch, array $leaf)
+    public function addLeaf($branch, array $leaf, $pos = null)
     {
-        $this->tree = $this->traverseTree($this->tree, $branch, $leaf);
+        $this->tree = $this->traverseTree($this->tree, $branch, $leaf, $pos);
+        $this->parentLevel = 1;
+        $this->childLevel = 1;
+        $this->nav = $this->traverse($this->tree);
         return $this;
     }
 
@@ -289,13 +293,15 @@ class Nav
      * @param  array  $tree
      * @param  string $branch
      * @param  array  $newLeaf
+     * @param  int    $pos
+     * @param  int    $depth
      * @return array
      */
-    protected function traverseTree($tree, $branch, $newLeaf)
+    protected function traverseTree($tree, $branch, $newLeaf, $pos = null, $depth = 0)
     {
         $t = array();
         foreach ($tree as $leaf) {
-            if ($leaf['name'] == $branch) {
+            if (((null === $pos) || ($pos == $depth)) && ($leaf['name'] == $branch)) {
                 if (isset($leaf['children'])) {
                     $leaf['children'][] = $newLeaf;
                 } else {
@@ -303,7 +309,7 @@ class Nav
                 }
             }
             if (isset($leaf['children'])) {
-                $leaf['children'] = $this->traverseTree($leaf['children'], $branch, $newLeaf);
+                $leaf['children'] = $this->traverseTree($leaf['children'], $branch, $newLeaf, $pos, ($depth + 1));
             }
             $t[] = $leaf;
         }
@@ -387,7 +393,11 @@ class Nav
                 if ((substr($node['href'], 0, 1) == '/') || (substr($node['href'], 0, 4) == 'http')) {
                     $href = $node['href'];
                 } else {
-                    $href = $parentHref . '/' . $node['href'];
+                    if (substr($parentHref, -1) == '/') {
+                        $href = $parentHref . $node['href'];
+                    } else {
+                        $href = $parentHref . '/' . $node['href'];
+                    }
                 }
                 $a->setAttributes('href', $href);
 

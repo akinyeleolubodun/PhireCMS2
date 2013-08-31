@@ -95,14 +95,14 @@ class SessionsController extends C
      */
     public function error()
     {
-        $user = new Model\User(array(
+        $session = new Model\UserSession(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
 
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $session->set('title', '404 Error ' . $session->config()->separator . ' Page Not Found');
+        $this->view = View::factory($this->viewPath . '/error.phtml', $session);
         $this->send(404);
     }
 

@@ -76,10 +76,10 @@ class CategoriesController extends C
         $category = new Model\Category(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Categories &gt; Add'
+            'nav'    => $this->project->getService('nav')
         ));
 
+        $category->set('title', 'Categories ' . $category->config()->separator . ' Add');
         $form = new Form\Category(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
@@ -127,7 +127,7 @@ class CategoriesController extends C
 
             // If field is found and valid
             if (isset($category->id)) {
-                $category->set('title', 'Categories &gt; ' . $category->category);
+                $category->set('title', 'Categories ' . $category->config()->separator . ' ' . $category->category);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $category->id, $this->project->isLoaded('Fields')
@@ -241,9 +241,10 @@ class CategoriesController extends C
         $category = new Model\Category(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
+
+        $category->set('title', '404 Error ' . $category->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $category);
         $this->send(404);
     }

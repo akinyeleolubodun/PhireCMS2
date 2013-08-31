@@ -34,7 +34,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('php_version', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('installed_on', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('updated_on', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('site_title', 'Default Site Title');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('separator', ' > ');
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('separator', '&gt;');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_language', 'en_US');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('error_message', 'Sorry. That page was not found.');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('datetime_format', 'M j Y g:i A');

@@ -171,7 +171,8 @@ class User extends AbstractModel
         $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
         $userType = Table\UserTypes::findById($typeId);
 
-        $this->data['title'] .= (isset($userType->id)) ? ' &gt; ' . $userType->type : null;
+        $this->data['title'] .= (isset($userType->id)) ? ' ' . $this->config->separator . ' ' . ucfirst($userType->type) : null;
+        $this->data['type'] = $userType->type;
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_users[]" id="remove_users[{i}]" value="[{id}]" />';
@@ -328,7 +329,7 @@ class User extends AbstractModel
         if (isset($user->id)) {
             $type = Table\UserTypes::findById($user->type_id);
             $userValues = $user->getValues();
-            $userValues['type_name'] = (isset($type->id) ? $type->type . ' &gt; ' : null);
+            $userValues['type_name'] = (isset($type->id) ? ucfirst($type->type) : null);
             $userValues['email1'] = $userValues['email'];
             $userValues['verified'] = (int)$userValues['verified'];
 
@@ -389,7 +390,7 @@ class User extends AbstractModel
             )
         );
 
-        $this->data['title'] = 'User &gt; Logins &gt; ' . $this->data['username'];
+        $this->data['title'] = 'Users ' . $this->config->separator . ' ' . $this->type_name . ' ' . $this->config->separator . ' Logins ' . $this->config->separator . ' ' . $this->data['username'];
         $this->data['table'] = Html::encode($loginsAry, $options, $this->config()->pagination_limit, $this->config()->pagination_range);
     }
 
@@ -531,12 +532,12 @@ class User extends AbstractModel
         $user->failed_attempts = $failedAttempts;
 
         $sess = Session::getInstance();
-        $sess->user->username = $user->username;
+        $sess->last_user_id = $user->id;
+        if ($sess->user->id == $user->id) {
+            $sess->user->username = $user->username;
+        }
 
         $user->update();
-
-        $sess = Session::getInstance();
-        $sess->last_user_id = $user->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

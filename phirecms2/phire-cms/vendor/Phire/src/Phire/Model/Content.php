@@ -171,6 +171,7 @@ class Content extends AbstractContentModel
 
         $content = Table\Content::execute($sql->render(true), array('type_id' => $typeId));
         $contentType = Table\ContentTypes::findById($typeId);
+        $this->data['type'] = $contentType->name;
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_content[]" value="[{id}]" id="remove_content[{i}]" />';
@@ -234,7 +235,7 @@ class Content extends AbstractContentModel
             )
         );
 
-        $this->data['title'] .= (isset($contentType->id)) ? ' &gt; ' . $contentType->name : null;
+        $this->data['title'] .= (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;
         $this->data['content'] = $content->rows;
         $this->data['contentTree'] = $this->getChildren($content->rows, 0);
 
@@ -472,7 +473,7 @@ class Content extends AbstractContentModel
             $type = Table\ContentTypes::findById($content->type_id);
 
             $contentValues = $content->getValues();
-            $contentValues['type_name'] = (isset($type->id) ? $type->name . ' &gt; ' : null);
+            $contentValues['type_name'] = (isset($type->id) ? $type->name : null);
             $contentValues['content_title'] = $contentValues['title'];
             $contentValues['uri'] = $contentValues['slug'];
             unset($contentValues['title']);
@@ -974,7 +975,7 @@ class Content extends AbstractContentModel
                 $fileIcon = '/icons/50x50/' . $ext . '.png';
             // Else, use generic file icon
             } else {
-                $fileIcon = '/icons/50x50/file.png';
+                $fileIcon = '/icons/50x50/img.png';
             }
         // Else, if file type is a file type with an available icon
         } else if (file_exists($mediaDir . 'icons/50x50/' . $ext . '.png')) {

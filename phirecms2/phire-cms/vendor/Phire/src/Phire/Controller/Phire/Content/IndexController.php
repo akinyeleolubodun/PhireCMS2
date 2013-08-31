@@ -88,10 +88,10 @@ class IndexController extends C
                 $content = new Model\Content(array(
                     'assets' => $this->project->getAssets(),
                     'acl'    => $this->project->getService('acl'),
-                    'nav'    => $this->project->getService('nav'),
-                    'title'  => 'Content &gt; Add'
+                    'nav'    => $this->project->getService('nav')
                 ));
 
+                $content->set('title', 'Content ' . $content->config()->separator . ' Select Type');
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, 0, $this->project->isLoaded('Fields')
@@ -126,10 +126,10 @@ class IndexController extends C
                         'assets' => $this->project->getAssets(),
                         'acl'    => $this->project->getService('acl'),
                         'nav'    => $this->project->getService('nav'),
-                        'title'  => 'Content &gt; Add ' . $type->name,
                         'typeId' => $type->id
                     ));
 
+                    $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Add');
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                         $type->id, 0, $this->project->isLoaded('Fields')
@@ -190,10 +190,9 @@ class IndexController extends C
 
             $content->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
-
             // If content object is found and valid
             if (isset($content->id)) {
-                $content->set('title', 'Content &gt; ' . $content->type_name . $content->content_title);
+                $content->set('title', 'Content ' . $content->config()->separator . ' ' . $content->type_name . ' ' . $content->config()->separator . ' ' . $content->content_title);
                 $content->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -329,9 +328,11 @@ class IndexController extends C
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
             'nav'    => $this->project->getService('nav'),
-            'title'  => (null !== $msg) ? 'System Error' : '404 Error &gt; Page Not Found',
+
         ));
 
+        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
+        $content->set('title', $title);
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
         $this->view = View::factory($this->viewPath . '/error.phtml', $content);
         $this->send($code);

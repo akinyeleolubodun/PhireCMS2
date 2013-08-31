@@ -86,10 +86,10 @@ class IndexController extends C
             $user = new Model\User(array(
                 'assets' => $this->project->getAssets(),
                 'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav'),
-                'title'  => 'User &gt; Add'
+                'nav'    => $this->project->getService('nav')
             ));
 
+            $user->set('title', 'Users ' . $user->config()->separator . ' Select Type');
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                 '0', false, 0, $this->project->isLoaded('Fields')
@@ -127,10 +127,10 @@ class IndexController extends C
                 $user = new Model\User(array(
                     'assets' => $this->project->getAssets(),
                     'acl'    => $this->project->getService('acl'),
-                    'nav'    => $this->project->getService('nav'),
-                    'title'  => 'User &gt; Add ' . $type->type
+                    'nav'    => $this->project->getService('nav')
                 ));
 
+                $user->set('title', 'Users ' . $user->config()->separator . ' ' . ucfirst($type->type) . ' ' . $user->config()->separator . ' Add');
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $type->id, false, 0, $this->project->isLoaded('Fields')
@@ -186,7 +186,7 @@ class IndexController extends C
 
             // If user is found and valid
             if (null !== $user->id) {
-                $user->set('title', 'User &gt; Edit &gt; ' . $user->type_name . $user->username);
+                $user->set('title', 'Users ' . $user->config()->separator . ' ' . $user->type_name . ' ' . $user->config()->separator . ' ' . $user->username);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $user->type_id, false, $user->id, $this->project->isLoaded('Fields')
@@ -249,7 +249,7 @@ class IndexController extends C
 
             // If user is found and valid
             if (null !== $user->id) {
-                $user->set('title', 'User &gt; Type &gt; ' . $user->username);
+                $user->set('title', 'Users ' . $user->config()->separator . ' Type ' . $user->config()->separator . ' ' . $user->username);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, false, 0, $this->project->isLoaded('Fields')
@@ -378,10 +378,10 @@ class IndexController extends C
         $user = new Model\User(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
 
+        $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $user);
         $this->send(404);
     }

@@ -75,9 +75,10 @@ class RolesController extends C
         $role = new Model\UserRole(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'User Roles &gt; Add'
+            'nav'    => $this->project->getService('nav')
         ));
+
+        $role->set('title', 'User Roles ' . $role->config()->separator . ' Add');
 
         $form = new Form\UserRole(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -129,7 +130,7 @@ class RolesController extends C
 
             // If role is found and valid
             if (null !== $role->name) {
-                $role->set('title', 'User Roles &gt; ' . $role->name);
+                $role->set('title', 'User Roles ' . $role->config()->separator . ' ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $role->id, $this->project->module('Phire'), $this->project->isLoaded('Fields')
@@ -245,14 +246,14 @@ class RolesController extends C
      */
     public function error()
     {
-        $user = new Model\User(array(
+        $role = new Model\UserRole(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
 
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');
+        $this->view = View::factory($this->viewPath . '/error.phtml', $role);
         $this->send(404);
     }
 

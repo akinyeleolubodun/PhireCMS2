@@ -463,10 +463,10 @@ class IndexController extends C
         $user = new Model\User(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
 
+        $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $user);
         $this->send(404);
     }

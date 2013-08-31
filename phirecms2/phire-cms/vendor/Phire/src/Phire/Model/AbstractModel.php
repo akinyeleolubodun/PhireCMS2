@@ -5,6 +5,7 @@
 namespace Phire\Model;
 
 use Pop\Web\Session;
+use Phire\Table;
 
 abstract class AbstractModel extends \Pop\Mvc\Model
 {
@@ -48,10 +49,38 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 $this->data['nav']->setAcl($this->data['acl']);
                 $this->data['nav']->setRole($this->data['role']);
                 $this->data['nav']->nav()->setIndent('    ');
+
+                // And any content types to the main nav
+                $contentTypes = Table\ContentTypes::findAll('order ASC');
+                if (isset($contentTypes->rows)) {
+                    foreach ($contentTypes->rows as $type) {
+                        $this->data['nav']->addLeaf('Content', array(
+                            'name'     => $type->name,
+                            'href'     => 'index/' . $type->id
+                        ), 1);
+                    }
+                }
+
+                // And any user types to the main nav
+                $userTypes = Table\UserTypes::findAll('id ASC');
+                if (isset($userTypes->rows)) {
+                    foreach ($userTypes->rows as $type) {
+                        $this->data['nav']->addLeaf('Users', array(
+                            'name'     => $type->type,
+                            'href'     => 'index/' . $type->id
+                        ), 1);
+                    }
+                }
             }
         }
 
+        // Set config object and system/site default data
         $this->config = \Phire\Table\Config::getSystemConfig();
+        $this->data['site_title']       = $this->config->site_title;
+        $this->data['separator']        = $this->config->separator;
+        $this->data['default_language'] = $this->config->default_language;
+        $this->data['error_message']    = $this->config->error_message;
+        $this->data['datetime_format']  = $this->config->datetime_format;
     }
 
     /**

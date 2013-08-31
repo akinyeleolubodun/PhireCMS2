@@ -31,7 +31,8 @@ class UserSession extends AbstractModel
             $sql->quoteId(DB_PREFIX . 'user_sessions.ip') . ', ' .
             $sql->quoteId(DB_PREFIX . 'user_sessions.user_id') . ', ' .
             $sql->quoteId(DB_PREFIX . 'user_sessions.ua') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.start') . ' AS ' . $sql->quoteId('start_date') . ', ' .
+            $sql->quoteId(DB_PREFIX . 'user_sessions.start') . ', ' .
+            $sql->quoteId(DB_PREFIX . 'user_sessions.last') . ' AS ' . $sql->quoteId('last_date') . ', ' .
             $sql->quoteId(DB_PREFIX . 'users.type_id') . ' FROM ' .
             $sql->quoteId(DB_PREFIX . 'user_sessions') . ' LEFT JOIN ' .
             $sql->quoteId(DB_PREFIX . 'users') . ' ON ' .
@@ -83,23 +84,30 @@ class UserSession extends AbstractModel
                     'username'   => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=type">Username</a>',
                     'ip'         => 'IP',
                     'ua'         => 'User Agent',
-                    'start_date' => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">Start</a>',
+                    'started'    => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">Started</a>',
+                    'last_date'  => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=last">Last Action</a>',
                     'process'    => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
                 'cellspacing' => 0,
-                'border'      => 0
+                'border'      => 0,
             ),
-            'date' => 'D M j, Y g:i A',
+            'date' => $this->config->datetime_format,
             'exclude' => array(
-                'type_id', 'user_id', 'process' => array('id' => $this->data['user']->sess_id)
+                'type_id', 'user_id', 'start', 'process' => array('id' => $this->data['user']->sess_id)
             ),
             'username' => $username
         );
 
-        if (isset($sessions->rows[0])) {
-            $this->data['table'] = Html::encode($sessions->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+        $sessAry = array();
+        foreach ($sessions->rows as $session) {
+            $session->started = date($this->config->datetime_format, strtotime($session->start)) . ' (' . \Pop\Feed\Format\AbstractFormat::calculateTime($session->start) . ')';
+            $sessAry[] = $session;
+        }
+
+        if (isset($sessAry[0])) {
+            $this->data['table'] = Html::encode($sessAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 

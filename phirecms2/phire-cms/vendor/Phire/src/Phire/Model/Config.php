@@ -4,6 +4,7 @@
  */
 namespace Phire\Model;
 
+use Pop\File\Dir;
 use Pop\Form\Element;
 use Pop\I18n\I18n;
 use Phire\Table;
@@ -128,9 +129,8 @@ class Config extends AbstractContentModel
         unset($post['submit']);
 
         foreach ($post as $key => $value) {
-            if ((strpos($key, 'media_') === false) && ($key != 'custom_datetime')) {
+            if ((strpos($key, 'media') === false) && ($key != 'custom_datetime')) {
                 $cfg = Table\Config::findById($key);
-
                 if (($key == 'datetime_format') && ($value == 'custom')) {
                     $value = ($post['custom_datetime'] != '') ? $post['custom_datetime'] : 'F d, Y';
                 }
@@ -186,6 +186,10 @@ class Config extends AbstractContentModel
         if (isset($post['rm_media'])) {
             foreach ($post['rm_media'] as $rm) {
                 if (isset($mediaActions[$rm])) {
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $rm)) {
+                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $rm);
+                        $dir->emptyDir(null, true);
+                    }
                     unset($mediaActions[$rm]);
                 }
             }

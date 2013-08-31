@@ -76,10 +76,10 @@ class TypesController extends C
         $type = new Model\ContentType(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Content Types &gt; Add'
+            'nav'    => $this->project->getService('nav')
         ));
 
+        $type->set('title', 'Content Types ' . $type->config()->separator . ' Add');
         $form = new Form\ContentType(
             $this->request->getBasePath() . $this->request->getRequestUri() . (isset($_GET['redirect']) ? '?redirect=1' : null),
             'post', 0, $this->project->isLoaded('Fields')
@@ -128,7 +128,7 @@ class TypesController extends C
 
             // If field is found and valid
             if (isset($type->id)) {
-                $type->set('title', 'Content Types &gt; ' . $type->name);
+                $type->set('title', 'Content Types ' . $type->config()->separator . ' ' . $type->name);
                 $form = new Form\ContentType(
                     $this->request->getBasePath() . $this->request->getRequestUri(),
                     'post', $type->id, $this->project->isLoaded('Fields')
@@ -218,9 +218,10 @@ class TypesController extends C
         $type = new Model\ContentType(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
+
+        $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $type);
         $this->send(404);
     }

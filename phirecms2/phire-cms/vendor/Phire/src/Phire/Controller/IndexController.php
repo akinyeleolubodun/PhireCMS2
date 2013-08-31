@@ -206,11 +206,13 @@ class IndexController extends C
     public function error($msg = null)
     {
         $code = (null !== $msg) ? 200 : 404;
-        $content = new Model\Content(array(
-            'title' => (null !== $msg) ? 'System Error' : '404 Error &gt; Page Not Found'
-        ));
+        $content = new Model\Content();
 
+        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
+
+        $content->set('title', $title);
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
+
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
         $this->view = View::factory($template, $content);

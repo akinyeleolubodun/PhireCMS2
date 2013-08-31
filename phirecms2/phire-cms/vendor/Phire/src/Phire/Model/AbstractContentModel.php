@@ -96,7 +96,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                 if (!(isset($content->include) && (!$content->include) && ($content->uri == '/'))) {
                     if (!isset($content->status) || (isset($content->status) && ($content->status == self::PUBLISHED))) {
                         $breadcrumb = '<a href="' . BASE_PATH . (isset($content->category) ? '/category' : null) . $content->uri . '">' .
-                            (isset($content->category) ? $content->category : $content->title) . '</a> &gt; ' . $breadcrumb;
+                            (isset($content->category) ? $content->category : $content->title) . '</a> ' . $this->config->separator . ' ' . $breadcrumb;
                     }
                 }
                 $pId = $content->parent_id;

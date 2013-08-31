@@ -75,9 +75,10 @@ class TypesController extends C
         $type = new Model\UserType(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'User Types &gt; Add'
+            'nav'    => $this->project->getService('nav')
         ));
+
+        $type->set('title', 'User Types ' . $type->config()->separator . ' Add');
 
         $form = new Form\UserType(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -129,7 +130,7 @@ class TypesController extends C
 
             // If type is found and valid
             if (null !== $type->type) {
-                $type->set('title', 'User Types &gt; ' . $type->type);
+                $type->set('title', 'User Types ' . $type->config()->separator . ' ' . $type->type);
                 $form = new Form\UserType(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $this->request->getPath(1), $this->project->isLoaded('Fields')
@@ -211,14 +212,14 @@ class TypesController extends C
      */
     public function error()
     {
-        $user = new Model\User(array(
+        $type = new Model\UserType(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
 
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');
+        $this->view = View::factory($this->viewPath . '/error.phtml', $type);
         $this->send(404);
     }
 

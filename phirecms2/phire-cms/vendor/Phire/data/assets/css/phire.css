@@ -125,6 +125,21 @@ fieldset {
     text-decoration: underline;
 }
 
+#main-nav-1 li > ul > li > ul {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0px;
+    left: 170px;
+    z-index: 100;
+    background-color: #000;
+}
+
+#main-nav-1 li > ul > li:hover > ul {
+    display: block;
+}
+
 #uri-span, #slug-span {
     margin: 0;
     padding: 5px;

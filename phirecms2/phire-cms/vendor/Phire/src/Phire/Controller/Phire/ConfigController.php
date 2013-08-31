@@ -95,13 +95,14 @@ class ConfigController extends C
      */
     public function error()
     {
-        $template = new Model\Template(array(
+        $config = new Model\Config(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
-        $this->view = View::factory($this->viewPath . '/error.phtml', $template);
+
+        $config->set('title', '404 Error ' . $config->config()->separator . ' Page Not Found');
+        $this->view = View::factory($this->viewPath . '/error.phtml', $config);
         $this->send(404);
     }
 

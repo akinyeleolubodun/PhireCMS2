@@ -76,10 +76,10 @@ class TemplatesController extends C
         $template = new Model\Template(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Templates &gt; Add'
+            'nav'    => $this->project->getService('nav')
         ));
 
+        $template->set('title', 'Templates ' . $template->config()->separator . ' Add');
         $form = new Form\Template(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
@@ -127,7 +127,7 @@ class TemplatesController extends C
 
             // If field is found and valid
             if (isset($template->id)) {
-                $template->set('title', 'Templates &gt; ' . $template->name);
+                $template->set('title', 'Templates ' . $template->config()->separator . ' ' . $template->name);
                 $form = new Form\Template(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $template->id, $this->project->isLoaded('Fields')
@@ -209,9 +209,10 @@ class TemplatesController extends C
         $template = new Model\Template(array(
             'assets' => $this->project->getAssets(),
             'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => '404 Error &gt; Page Not Found'
+            'nav'    => $this->project->getService('nav')
         ));
+
+        $template->set('title', '404 Error ' . $template->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $template);
         $this->send(404);
     }
