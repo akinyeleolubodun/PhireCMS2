@@ -38,21 +38,21 @@ return array(
                 'children' => array(
                     array(
                         'name' => 'Categories',
-                        'href' => BASE_PATH . APP_URI . '/content/categories',
+                        'href' => 'categories',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\CategoriesController'
                         )
                     ),
                     array(
                         'name' => 'Templates',
-                        'href' => BASE_PATH . APP_URI . '/content/templates',
+                        'href' => 'templates',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\TemplatesController'
                         )
                     ),
                     array(
                         'name' => 'Content Types',
-                        'href' => BASE_PATH . APP_URI . '/content/types',
+                        'href' => 'types',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\TypesController'
                         )
@@ -68,7 +68,7 @@ return array(
                 'children' => array(
                     array(
                         'name' => 'Themes',
-                        'href' => BASE_PATH . APP_URI . '/extensions/themes',
+                        'href' => 'themes',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
                             'permission' => 'themes'
@@ -76,7 +76,7 @@ return array(
                     ),
                     array(
                         'name' => 'Modules',
-                        'href' => BASE_PATH . APP_URI . '/extensions/modules',
+                        'href' => 'modules',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
                             'permission' => 'modules'
@@ -93,21 +93,21 @@ return array(
                 'children' => array(
                     array(
                         'name' => 'User Roles',
-                        'href' => BASE_PATH . APP_URI . '/users/roles',
+                        'href' => 'roles',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\User\RolesController'
                         )
                     ),
                     array(
                         'name' => 'User Types',
-                        'href' => BASE_PATH . APP_URI . '/users/types',
+                        'href' => 'types',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\User\TypesController'
                         )
                     ),
                     array(
                         'name' => 'User Sessions',
-                        'href' => BASE_PATH . APP_URI . '/users/sessions',
+                        'href' => 'sessions',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\User\SessionsController'
                         )
