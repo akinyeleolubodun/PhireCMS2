@@ -100,6 +100,12 @@ class Project extends P
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php')) {
             $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php';
             if (isset($phireCfg['Phire'])) {
+                // If the overriding config is set to allow changes, merge new nav with the original nav
+                // else, the entire original nav will be overwritten with the new nav.
+                if (isset($phireCfg['Phire']->nav) && $phireCfg['Phire']->changesAllowed()) {
+                    $nav = array_merge($phireCfg['Phire']->nav->asArray(), $this->module('Phire')->nav->asArray());
+                    $phireCfg['Phire']->nav = new \Pop\Config($nav);
+                }
                 $this->module('Phire')->merge($phireCfg['Phire']);
             }
         }
