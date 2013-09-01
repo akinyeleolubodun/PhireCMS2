@@ -237,6 +237,10 @@ th.last-th, td.last-td {
     border-right: solid 1px #ccc;
 }
 
+th.vert-top, td.vert-top {
+    vertical-align: top;
+}
+
 .table-bottom-row {
     text-align: right;
     background-color: #fff;
@@ -298,4 +302,28 @@ th.last-th, td.last-td {
     padding: 3px;
     background-color: #eee;
     border: solid 1px #aaa;
+}
+
+.pad {
+    margin: 0;
+    padding: 0 10px 0 10px;
+}
+
+.module-header {
+    margin: 0;
+    padding: 0;
+}
+
+.module-nav {
+    margin: 5px 0 5px 0;
+    padding: 0;
+    width: 100%;
+    border-top: solid 1px #ccc;
+}
+
+.module-nav li {
+    margin: 0;
+    padding: 5px;
+    list-style-type: none;
+    border-bottom: solid 1px #ccc;
 }

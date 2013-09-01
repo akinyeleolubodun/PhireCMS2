@@ -75,7 +75,8 @@ class Extension extends AbstractModel
                 $n = (!is_array($cfg->module_nav)) ? $cfg->module_nav->asArray() : $cfg->module_nav;
                 $modNav = new Nav($n, array(
                     'top' => array(
-                        'id' => strtolower($module->name) . '-nav'
+                        'id'    => strtolower($module->name) . '-nav',
+                        'class' => 'module-nav'
                     ))
                 );
                 $modNav->setAcl($this->data['acl']);

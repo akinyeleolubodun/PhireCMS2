@@ -141,7 +141,7 @@ class Project extends P
             $cfg = $config->asArray();
             // Add nav
             if (isset($cfg['nav'])) {
-                $nav->addBranch($cfg['nav']);
+                $nav->addBranch($cfg['nav'], true);
             }
 
             // Add routes
