@@ -35,14 +35,33 @@ class Extension extends AbstractModel
 
         foreach ($themeRows as $key => $theme) {
             if (file_exists($themePath . '/' . $theme->name . '/screenshot.jpg')) {
-                $themeRows[$key]->screenshot = '<br /><img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.jpg" width="60" />';
+                $themeRows[$key]->screenshot = '<img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.jpg" width="100" />';
             } else if (file_exists($themePath . '/' . $theme->name . '/screenshot.png')) {
-                $themeRows[$key]->screenshot = '<br /><img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.png" width="60" />';
+                $themeRows[$key]->screenshot = '<img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.png" width="100" />';
             } else {
                 $themeRows[$key]->screenshot = null;
             }
+
             if (isset($themeFiles[$theme->name])) {
                 unset($themeFiles[$theme->name]);
+            }
+
+            // Get theme info
+            $assets = unserialize($theme->assets);
+            $themeRows[$key]->author  = '';
+            $themeRows[$key]->desc    = '';
+            $themeRows[$key]->version = '';
+
+            foreach ($assets['info'] as $k => $v) {
+                if (stripos($k, 'name') !== false) {
+                    $themeRows[$key]->name = $v;
+                } else if (stripos($k, 'author') !== false) {
+                    $themeRows[$key]->author = $v;
+                } else if (stripos($k, 'desc') !== false) {
+                    $themeRows[$key]->desc = $v;
+                } else if (stripos($k, 'version') !== false) {
+                    $themeRows[$key]->version = $v;
+                }
             }
         }
 
@@ -86,6 +105,24 @@ class Extension extends AbstractModel
             if (isset($moduleFiles[$module->name])) {
                 unset($moduleFiles[$module->name]);
             }
+
+            // Get module info
+            $assets = unserialize($module->assets);
+            $moduleRows[$key]->author  = '';
+            $moduleRows[$key]->desc    = '';
+            $moduleRows[$key]->version = '';
+
+            foreach ($assets['info'] as $k => $v) {
+                if (stripos($k, 'name') !== false) {
+                    $moduleRows[$key]->name = $v;
+                } else if (stripos($k, 'author') !== false) {
+                    $moduleRows[$key]->author = $v;
+                } else if (stripos($k, 'desc') !== false) {
+                    $moduleRows[$key]->desc = $v;
+                } else if (stripos($k, 'version') !== false) {
+                    $moduleRows[$key]->version = $v;
+                }
+            }
         }
 
         $this->data['modules'] = $moduleRows;
@@ -100,7 +137,16 @@ class Extension extends AbstractModel
     public function installThemes()
     {
         try {
-            $i = 1;
+            $exts = Table\Extensions::findAll(null, array('active' => 1));
+            foreach ($exts->rows as $ext) {
+                $e = Table\Extensions::findById($ext->id);
+                if (isset($e->id) && ($ext->type == 0)) {
+                    $e->active = 0;
+                    $e->update();
+                }
+            }
+
+            $last = null;
             $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
             foreach ($this->data['new'] as $name => $theme) {
                 $archive = new Archive($themePath . '/' . $theme);
@@ -129,14 +175,54 @@ class Extension extends AbstractModel
                     }
                 }
 
+                $style = null;
+                $info = array();
+
+                // Check for a style sheet
+                if (file_exists($themePath . '/' . $name . '/style.css')) {
+                    $style = $themePath . '/' . $name . '/style.css';
+                } else if (file_exists($themePath . '/' . $name . '/styles.css')) {
+                    $style = $themePath . '/' . $name . '/styles.css';
+                } else if (file_exists($themePath . '/' . $name . '/css/style.css')) {
+                    $style = $themePath . '/' . $name . '/css/style.css';
+                } else if (file_exists($themePath . '/' . $name . '/css/styles.css')) {
+                    $style = $themePath . '/' . $name . '/css/styles.css';
+                }
+
+                // Try and get theme info from style sheet
+                if (null !== $style) {
+                    $css = file_get_contents($style);
+                    if (strpos($css, '*/') !== false) {
+                        $cssHeader = substr($css, 0, strpos($css, '*/'));
+                        $cssHeader = substr($cssHeader, (strpos($cssHeader, '/*') + 2));
+                        $cssHeaderAry = explode(PHP_EOL, $cssHeader);
+                        foreach ($cssHeaderAry as $line) {
+                            if (strpos($line, ':')) {
+                                $ary = explode(':', $line);
+                                if (isset($ary[0]) && isset($ary[1])) {
+                                    $key = trim(str_replace('*', '', $ary[0]));
+                                    $value = trim(str_replace('*', '', $ary[1]));
+                                    $info[$key] = $value;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $ext = new Table\Extensions(array(
                     'name'   => $name,
                     'type'   => 0,
-                    'active' => ($i == 1) ? 1 : 0,
-                    'assets' => serialize(array('templates' => $templates))
+                    'active' => 0,
+                    'assets' => serialize(array(
+                        'templates' => $templates,
+                        'info'      => $info
+                    ))
                 ));
                 $ext->save();
-                $i++;
+            }
+            if (isset($ext->id)) {
+                $ext->active = 1;
+                $ext->update();
             }
         } catch (\Exception $e) {
             $this->data['error'] = $e->getMessage();
@@ -151,11 +237,12 @@ class Extension extends AbstractModel
     public function installModules()
     {
         try {
+            $modulePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
             foreach ($this->data['new'] as $name => $module) {
-                $archive = new Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module);
-                $archive->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/');
-                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar'))) {
-                    unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $name . '.tar');
+                $archive = new Archive($modulePath . '/' . $module);
+                $archive->extract($modulePath . '/');
+                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($modulePath . '/' . $name . '.tar'))) {
+                    unlink($modulePath . '/' . $name . '.tar');
                 }
 
                 $dbType =  Table\Extensions::getSql()->getDbType();
@@ -167,10 +254,32 @@ class Extension extends AbstractModel
                     $type = 'mysql';
                 }
 
-                $sqlFile = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' .
+                $sqlFile = $modulePath . '/' .
                     $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
 
                 $tables = array();
+                $info = array();
+
+                // Check for a config and try to get info out of it
+                if (file_exists($modulePath . '/' . $name . '/config') && file_exists($modulePath . '/' . $name . '/config/module.config.php')) {
+                    $cfg = file_get_contents($modulePath . '/' . $name . '/config/module.config.php');
+                    if (strpos($cfg, '*/') !== false) {
+                        $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
+                        $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));
+                        $cfgHeaderAry = explode(PHP_EOL, $cfgHeader);
+                        foreach ($cfgHeaderAry as $line) {
+                            if (strpos($line, ':')) {
+                                $ary = explode(':', $line);
+                                if (isset($ary[0]) && isset($ary[1])) {
+                                    $key = trim(str_replace('*', '', $ary[0]));
+                                    $value = trim(str_replace('*', '', $ary[1]));
+                                    $info[$key] = $value;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (file_exists($sqlFile)) {
                     // Get any tables required and created by this module
                     $sql = file_get_contents($sqlFile);
@@ -208,7 +317,10 @@ class Extension extends AbstractModel
                         'name'   => $name,
                         'type'   => 1,
                         'active' => 1,
-                        'assets' => serialize(array('tables' => $tables))
+                        'assets' => serialize(array(
+                            'tables' => $tables,
+                            'info'   => $info
+                        ))
                     ));
                     $ext->save();
 
@@ -235,14 +347,17 @@ class Extension extends AbstractModel
                         'prefix'   => DB_PREFIX,
                         'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
                     );
-                                 //$dbname, $db, $dir, $install = null, $suppress = false, $clear = true
+
                     Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
                 } else {
                     $ext = new Table\Extensions(array(
                         'name'   => $name,
                         'type'   => 1,
                         'active' => 1,
-                        'assets' => serialize(array('tables' => $tables))
+                        'assets' => serialize(array(
+                            'tables' => $tables,
+                            'info'   => $info
+                        ))
                     ));
                     $ext->save();
                 }

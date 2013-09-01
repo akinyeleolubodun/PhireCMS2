@@ -427,7 +427,7 @@ class Content extends Form
                         ));
                         $newTemplate->save();
                         $assets['templates']['template_' . $newTemplate->id] = $file;
-                    } else {
+                    } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
                         $assets['templates'][] = $file;
                     }
                     $newTmpls = true;
@@ -440,6 +440,13 @@ class Content extends Form
                 $theme->update();
             }
 
+            $themeName = $theme->name;
+            foreach ($assets['info'] as $k => $v) {
+                if (stripos($k, 'name') !== false) {
+                    $themeName = $v;
+                }
+            }
+
             foreach ($assets['templates'] as $key => $value) {
                 if ((stripos($value, 'search') === false) &&
                     (stripos($value, 'category') === false) &&
@@ -449,9 +456,9 @@ class Content extends Form
                     (stripos($value, 'footer') === false)) {
                     if (strpos($key, 'template_') !== false) {
                         $id = substr($key, (strpos($key, '_') + 1));
-                        $templates[$id] = $value . ' (' . $theme->name . ')';
+                        $templates[$id] = $value . ' (' . $themeName . ')';
                     } else {
-                        $templates[$value] = $value . ' (' . $theme->name . ')';
+                        $templates[$value] = $value . ' (' . $themeName . ')';
                     }
                 }
             }

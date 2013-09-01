@@ -1,5 +1,5 @@
 /**
- * Phire CMS 2.0 User Scripts
+ * Phire CMS 2.0 Users Scripts
  */
 
 var resourceCount = 1;
@@ -86,36 +86,36 @@ $(document).ready(function(){
     if ($('#user-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('user-remove-form').checkAll(this.value);
+                $form('#user-remove-form').checkAll(this.value);
             } else {
-                $form('user-remove-form').uncheckAll(this.value);
+                $form('#user-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#role-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('role-remove-form').checkAll(this.value);
+                $form('3role-remove-form').checkAll(this.value);
             } else {
-                $form('role-remove-form').uncheckAll(this.value);
+                $form('#role-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#session-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('session-remove-form').checkAll(this.value);
+                $form('#session-remove-form').checkAll(this.value);
             } else {
-                $form('session-remove-form').uncheckAll(this.value);
+                $form('#session-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#type-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('type-remove-form').checkAll(this.value);
+                $form('#type-remove-form').checkAll(this.value);
             } else {
-                $form('type-remove-form').uncheckAll(this.value);
+                $form('#type-remove-form').uncheckAll(this.value);
             }
         });
     }

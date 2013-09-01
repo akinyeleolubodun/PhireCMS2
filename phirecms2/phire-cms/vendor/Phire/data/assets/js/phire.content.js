@@ -185,36 +185,36 @@ $(document).ready(function(){
     if ($('#content-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('content-remove-form').checkAll(this.value);
+                $form('#content-remove-form').checkAll(this.value);
             } else {
-                $form('content-remove-form').uncheckAll(this.value);
+                $form('#content-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#category-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('category-remove-form').checkAll(this.value);
+                $form('#category-remove-form').checkAll(this.value);
             } else {
-                $form('category-remove-form').uncheckAll(this.value);
+                $form('#category-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#content-type-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('content-type-remove-form').checkAll(this.value);
+                $form('#content-type-remove-form').checkAll(this.value);
             } else {
-                $form('content-type-remove-form').uncheckAll(this.value);
+                $form('#content-type-remove-form').uncheckAll(this.value);
             }
         });
     }
     if ($('#template-remove-form').obj != null) {
         $('#checkall').click(function(){
             if (this.checked) {
-                $form('template-remove-form').checkAll(this.value);
+                $form('#template-remove-form').checkAll(this.value);
             } else {
-                $form('template-remove-form').uncheckAll(this.value);
+                $form('#template-remove-form').uncheckAll(this.value);
             }
         });
     }

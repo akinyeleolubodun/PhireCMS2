@@ -298,7 +298,7 @@ th.vert-top, td.vert-top {
 }
 
 .theme-screenshot {
-    margin: 5px 0 0 0;
+    margin: 0;
     padding: 3px;
     background-color: #eee;
     border: solid 1px #aaa;
@@ -309,16 +309,15 @@ th.vert-top, td.vert-top {
     padding: 0 10px 0 10px;
 }
 
-.module-header {
+.module-header, .theme-header {
     margin: 0;
     padding: 0;
 }
 
 .module-nav {
-    margin: 5px 0 5px 0;
+    margin: 0;
     padding: 0;
     width: 100%;
-    border-top: solid 1px #ccc;
 }
 
 .module-nav li {
