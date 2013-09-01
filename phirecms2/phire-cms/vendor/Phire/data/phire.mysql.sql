@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_permissions` (
   `role_id` int(16) NOT NULL,
   `resource` varchar(255),
   `permission` varchar(255),
+  `allow` int(1),
   UNIQUE (`role_id`, `resource`, `permission`),
   CONSTRAINT `fk_permission_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;

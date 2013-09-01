@@ -33,35 +33,40 @@ return array(
                 'name' => 'Content',
                 'href' => BASE_PATH . APP_URI . '/content',
                 'acl' => array(
-                    'resource'   => 'Phire\Controller\Phire\Content\IndexController'
+                    'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                    'permission' => 'index'
                 ),
                 'children' => array(
                     array(
                         'name' => 'Content',
                         'href' => '',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\IndexController'
+                            'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'Content Types',
                         'href' => 'types',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\TypesController'
+                            'resource'   => 'Phire\Controller\Phire\Content\TypesController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'Categories',
                         'href' => 'categories',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\CategoriesController'
+                            'resource'   => 'Phire\Controller\Phire\Content\CategoriesController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'Templates',
                         'href' => 'templates',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\TemplatesController'
+                            'resource'   => 'Phire\Controller\Phire\Content\TemplatesController',
+                            'permission' => 'index'
                         )
                     )
                 )
@@ -70,7 +75,8 @@ return array(
                 'name' => 'Extensions',
                 'href' => BASE_PATH . APP_URI . '/extensions',
                 'acl' => array(
-                    'resource'   => 'Phire\Controller\Phire\Extensions\IndexController'
+                    'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
+                    'permission' => 'index'
                 ),
                 'children' => array(
                     array(
@@ -95,35 +101,40 @@ return array(
                 'name' => 'Users',
                 'href' => BASE_PATH . APP_URI . '/users',
                 'acl' => array(
-                    'resource'   => 'Phire\Controller\Phire\User\IndexController'
+                    'resource'   => 'Phire\Controller\Phire\User\IndexController',
+                    'permission' => 'index'
                 ),
                 'children' => array(
                     array(
                         'name' => 'Users',
                         'href' => '',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\IndexController'
+                            'resource'   => 'Phire\Controller\Phire\User\IndexController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'User Types',
                         'href' => 'types',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\TypesController'
+                            'resource'   => 'Phire\Controller\Phire\User\TypesController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'User Roles',
                         'href' => 'roles',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\RolesController'
+                            'resource'   => 'Phire\Controller\Phire\User\RolesController',
+                            'permission' => 'index'
                         )
                     ),
                     array(
                         'name' => 'User Sessions',
                         'href' => 'sessions',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\SessionsController'
+                            'resource'   => 'Phire\Controller\Phire\User\SessionsController',
+                            'permission' => 'index'
                         )
                     )
                 )
@@ -132,7 +143,8 @@ return array(
                 'name'     => 'Configuration',
                 'href'     => BASE_PATH . APP_URI . '/config',
                 'acl' => array(
-                    'resource'   => 'Phire\Controller\Phire\ConfigController'
+                    'resource'   => 'Phire\Controller\Phire\ConfigController',
+                    'permission' => 'index'
                 )
             )
         ),

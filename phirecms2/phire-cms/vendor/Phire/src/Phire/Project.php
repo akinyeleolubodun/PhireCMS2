@@ -290,8 +290,8 @@ class Project extends P
         // Set up the ACL object's resources and permissions
         if (count($perms['resources']) > 0) {
             foreach ($perms['resources'] as $role => $perm) {
-                if (count($perm) > 0) {
-                    foreach ($perm as $resource => $p) {
+                if (count($perm['allow']) > 0) {
+                    foreach ($perm['allow'] as $resource => $p) {
                         $this->getService('acl')->addResource($resource);
                         if (count($p) > 0) {
                             $this->getService('acl')->allow($role, $resource, $p);
@@ -301,6 +301,17 @@ class Project extends P
                     }
                 } else {
                     $this->getService('acl')->allow($role);
+                }
+
+                if (count($perm['deny']) > 0) {
+                    foreach ($perm['deny'] as $resource => $p) {
+                        $this->getService('acl')->addResource($resource);
+                        if (count($p) > 0) {
+                            $this->getService('acl')->deny($role, $resource, $p);
+                        } else {
+                            $this->getService('acl')->deny($role, $resource);
+                        }
+                    }
                 }
             }
         }

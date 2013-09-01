@@ -39,8 +39,15 @@ var addResource = function() {
         [['name', 'permission_new_' + resourceCount], ['id', 'permission_new_' + resourceCount]]
     );
 
+    // Add allow select field
+    $($('#allow_new_1').parent()).clone(
+        '#allow_new_1',
+        [['name', 'allow_new_' + resourceCount], ['id', 'allow_new_' + resourceCount]]
+    );
+
     $('#resource_new_' + resourceCount).val($('#resource_new_' + (resourceCount - 1) + ' > option:selected').val());
     $('#permission_new_' + resourceCount).val($('#permission_new_' + (resourceCount - 1) + ' > option:selected').val());
+    $('#allow_new_' + resourceCount).val($('#allow_new_' + (resourceCount - 1) + ' > option:selected').val());
 };
 
 /**

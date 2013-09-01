@@ -229,7 +229,8 @@ class UserRole extends AbstractModel
                     $permission = new Table\UserPermissions(array(
                         'role_id'    => $role->id,
                         'resource'   => $value,
-                        'permission' => (($_POST['permission_new_' . $id] != '0') ? $_POST['permission_new_' . $id] : '')
+                        'permission' => (($_POST['permission_new_' . $id] != '0') ? $_POST['permission_new_' . $id] : ''),
+                        'allow'      => (int)$_POST['allow_new_' . $id]
                     ));
                     $permission->save();
                 }
@@ -274,7 +275,8 @@ class UserRole extends AbstractModel
                     $permission = new Table\UserPermissions(array(
                         'role_id'    => $role->id,
                         'resource'   => $value,
-                        'permission' => (($_POST['permission_' . $cur . '_' . $id] != '0') ? $_POST['permission_' . $cur . '_' . $id] : '')
+                        'permission' => (($_POST['permission_' . $cur . '_' . $id] != '0') ? $_POST['permission_' . $cur . '_' . $id] : ''),
+                        'allow'      => (int)$_POST['allow_' . $cur . '_' . $id]
                     ));
                     $permission->save();
                 }

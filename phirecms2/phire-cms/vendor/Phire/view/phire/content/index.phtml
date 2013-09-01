@@ -18,7 +18,9 @@ elseif (isset($types) && isset($types[0])): ?>
         <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo $type->id; ?>"><?php echo $type->name;?></a></td></tr>
 <?php endforeach; ?>
     </table>
-<?php else: ?>
+<?php elseif (isset($type)): ?>
     <p>There is currently no content under the <strong><?php echo $type; ?></strong> content type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
+<?php else: ?>
+    <p>There is currently no content. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

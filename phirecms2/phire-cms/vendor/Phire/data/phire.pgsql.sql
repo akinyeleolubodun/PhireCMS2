@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_permissions" (
   "role_id" integer NOT NULL,
   "resource" varchar(255),
   "permission" varchar(255),
+  "allow" integer,
   UNIQUE ("role_id", "resource", "permission"),
   CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;

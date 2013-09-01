@@ -158,6 +158,15 @@ class UserRole extends Form
                     'marked'     => $permission->permission,
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
                 );
+                $fields2['allow_cur_' . $i] = array(
+                    'type'       => 'select',
+                    'value'      => array(
+                        '1' => 'allow',
+                        '0' => 'deny'
+                    ),
+                    'marked'     => $permission->allow,
+                    'attributes' => array('style' => 'display: block; min-width: 150px;')
+                );
                 $fields2['rm_resource_' . $i] = array(
                     'type'       => 'checkbox',
                     'value'      => array($permission->role_id . '_' . $permission->resource . '_' . $permission->permission => 'Remove?')
@@ -181,6 +190,14 @@ class UserRole extends Form
                 'type'       => 'select',
                 'attributes' => array('style' => 'display: block; min-width: 150px;'),
                 'value'      => array('0' => '(All)')
+            ),
+            'allow_new_1' => array(
+                'type'       => 'select',
+                'attributes' => array('style' => 'display: block; min-width: 150px;'),
+                'value'      => array(
+                    '1' => 'allow',
+                    '0' => 'deny'
+                )
             ),
             'id' => array(
                 'type' => 'hidden',
