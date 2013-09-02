@@ -172,6 +172,20 @@ class IndexController extends C
     }
 
     /**
+     * CSS method
+     *
+     * @return void
+     */
+    public function css()
+    {
+        $css = file_get_contents(__DIR__ . '/../../../../../data/assets/css/phire.css');
+        $response = new Response();
+        $response->setHeader('Content-Type', 'text/css')
+                 ->setBody($css);
+        $response->send();
+    }
+
+    /**
      * Error method
      *
      * @return void
