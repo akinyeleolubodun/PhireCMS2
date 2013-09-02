@@ -163,6 +163,10 @@ class IndexController extends C
                         unset($this->sess->expired);
                         unset($this->sess->authError);
                         unset($this->sess->lastUrl);
+
+                        if ($url == '') {
+                            $url = '/';
+                        }
                         Response::redirect($url);
                     }
                 // Else, re-render the form
@@ -271,6 +275,9 @@ class IndexController extends C
                 if ($form->isValid()) {
                     $user->update($form, $this->project->isLoaded('Fields'));
                     $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
+                    if ($url == '') {
+                        $url = '/';
+                    }
                     Response::redirect($url);
                 // Else, re-render the form with errors
                 } else {
