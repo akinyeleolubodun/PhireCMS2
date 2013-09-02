@@ -2,6 +2,8 @@
 -- Phire CMS 2.0 SQLite Database
 --
 
+-- --------------------------------------------------------
+
 --
 -- Set database encoding
 --
