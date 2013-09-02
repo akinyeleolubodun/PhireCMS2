@@ -81,7 +81,7 @@ class IndexController extends C
     public function add()
     {
         if (count(Table\ContentTypes::findAll()->rows) == 0) {
-            Response::redirect(BASE_PATH . APP_URI . '/content/types/add?redirect=1');
+            Response::redirect($this->request->getBasePath() . '/types/add?redirect=1');
         } else {
             // Select content type
             if (null === $this->request->getPath(1)) {
@@ -148,15 +148,28 @@ class IndexController extends C
                             $cfg = $this->project->module('Phire');
                             try {
                                 $content->save($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
-                                Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
+                                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                                    Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
+                                } else if (null !== $this->request->getQuery('update')) {
+                                    $this->sendResponse(array(
+                                        'redirect' => $this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time(),
+                                        'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
+                                    ));
+                                } else {
+                                    Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
+                                }
                             } catch (\Exception $e) {
                                 $this->error($e->getMessage());
                             }
                         // Else, re-render form with errors
                         } else {
-                            $content->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $content);
-                            $this->send();
+                            if (null !== $this->request->getQuery('update')) {
+                                $this->sendResponse($form->getErrors());
+                            } else {
+                                $content->set('form', $form);
+                                $this->view = View::factory($this->viewPath . '/index.phtml', $content);
+                                $this->send();
+                            }
                         }
                     // Else, render form
                     } else {
@@ -212,15 +225,27 @@ class IndexController extends C
                         $cfg = $this->project->module('Phire');
                         try {
                             $content->update($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
-                            Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
+                            if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                                Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
+                            } else if (null !== $this->request->getQuery('update')) {
+                                $this->sendResponse(array(
+                                    'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
+                                ));
+                            } else {
+                                Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
+                            }
                         } catch (\Exception $e) {
                             $this->error($e->getMessage());
                         }
                     // Else, re-render the form with errors
                     } else {
-                        $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $content);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $content->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/index.phtml', $content);
+                            $this->send();
+                        }
                     }
                 // Else, render form
                 } else {
@@ -336,6 +361,21 @@ class IndexController extends C
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
         $this->view = View::factory($this->viewPath . '/error.phtml', $content);
         $this->send($code);
+    }
+
+    /**
+     * Method to send a response for JS
+     *
+     * @param  array $values
+     * @return void
+     */
+    protected function sendResponse($values)
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode($values));
+        $response->send();
     }
 
 }

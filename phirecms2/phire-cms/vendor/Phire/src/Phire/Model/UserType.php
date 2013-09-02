@@ -125,6 +125,8 @@ class UserType extends AbstractModel
 
         unset($fields['id']);
         unset($fields['submit']);
+        unset($fields['update_value']);
+        unset($fields['update']);
 
         $fieldsAry = array();
         foreach ($fields as $key => $value) {
@@ -136,6 +138,7 @@ class UserType extends AbstractModel
 
         $type = new Table\UserTypes($fields);
         $type->save();
+        $this->data['id'] = $type->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
@@ -164,6 +167,8 @@ class UserType extends AbstractModel
         }
 
         unset($fields['submit']);
+        unset($fields['update_value']);
+        unset($fields['update']);
 
         $type = Table\UserTypes::findById($form->id);
 
@@ -209,6 +214,7 @@ class UserType extends AbstractModel
         // Save updated type fields
         $type->setValues($fields);
         $type->update();
+        $this->data['id'] = $type->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

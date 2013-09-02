@@ -96,12 +96,25 @@ class RolesController extends C
             // If form is valid, save new role
             if ($form->isValid()) {
                 $role->save($form, $this->project->isLoaded('Fields'));
-                Response::redirect(BASE_PATH . APP_URI . '/users/roles');
+                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
+                } else if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse(array(
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time(),
+                        'updated'  => ''
+                    ));
+                } else {
+                    Response::redirect($this->request->getBasePath());
+                }
             // Else, re-render the form with errors
             } else {
-                $role->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
-                $this->send();
+                if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse($form->getErrors());
+                } else {
+                    $role->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+                    $this->send();
+                }
             }
         // Else, render the form
         } else {
@@ -147,12 +160,24 @@ class RolesController extends C
                     // If form is valid, save role
                     if ($form->isValid()) {
                         $role->update($form, $this->project->isLoaded('Fields'));
-                        Response::redirect(BASE_PATH . APP_URI . '/users/roles');
+                        if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
+                        } else if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse(array(
+                                'updated' => ''
+                            ));
+                        } else {
+                            Response::redirect($this->request->getBasePath());
+                        }
                     // Else, re-render the form with errors
                     } else {
-                        $role->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $role->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+                            $this->send();
+                        }
                     }
                 // Else, render form
                 } else {
@@ -169,7 +194,7 @@ class RolesController extends C
                 }
             // Else, redirect
             } else {
-                Response::redirect(BASE_PATH . APP_URI . '/users/roles');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
@@ -255,6 +280,21 @@ class RolesController extends C
         $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $role);
         $this->send(404);
+    }
+
+    /**
+     * Method to send a response for JS
+     *
+     * @param  array $values
+     * @return void
+     */
+    protected function sendResponse($values)
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode($values));
+        $response->send();
     }
 
 }

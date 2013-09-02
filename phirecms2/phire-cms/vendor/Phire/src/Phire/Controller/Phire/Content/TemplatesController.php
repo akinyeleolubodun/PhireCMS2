@@ -94,11 +94,24 @@ class TemplatesController extends C
 
             if ($form->isValid()) {
                 $template->save($form, $this->project->isLoaded('Fields'));
-                Response::redirect($this->request->getBasePath());
+                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
+                } else if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse(array(
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time(),
+                        'updated'  => ''
+                    ));
+                } else {
+                    Response::redirect($this->request->getBasePath());
+                }
             } else {
-                $template->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
-                $this->send();
+                if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse($form->getErrors());
+                } else {
+                    $template->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+                    $this->send();
+                }
             }
         } else {
             $template->set('form', $form);
@@ -144,12 +157,24 @@ class TemplatesController extends C
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $template->update($form, $this->project->isLoaded('Fields'));
-                        Response::redirect($this->request->getBasePath());
+                        if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
+                        } else if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse(array(
+                                'updated' => ''
+                            ));
+                        } else {
+                            Response::redirect($this->request->getBasePath());
+                        }
                     // Else, re-render the form with errors
                     } else {
-                        $template->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $template->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+                            $this->send();
+                        }
                     }
                 // Else, render form
                 } else {
@@ -215,6 +240,21 @@ class TemplatesController extends C
         $template->set('title', '404 Error ' . $template->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $template);
         $this->send(404);
+    }
+
+    /**
+     * Method to send a response for JS
+     *
+     * @param  array $values
+     * @return void
+     */
+    protected function sendResponse($values)
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode($values));
+        $response->send();
     }
 
 }

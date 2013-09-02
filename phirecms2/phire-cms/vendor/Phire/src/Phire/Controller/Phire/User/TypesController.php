@@ -96,12 +96,25 @@ class TypesController extends C
             // If form is valid, save new type
             if ($form->isValid()) {
                 $type->save($form, $this->project->isLoaded('Fields'));
-                Response::redirect(BASE_PATH . APP_URI . '/users/types');
+                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
+                } else if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse(array(
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time(),
+                        'updated'  => ''
+                    ));
+                } else {
+                    Response::redirect($this->request->getBasePath());
+                }
             // Else, re-render the form with errors
             } else {
-                $type->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/types.phtml', $type);
-                $this->send();
+                if (null !== $this->request->getQuery('update')) {
+                    $this->sendResponse($form->getErrors());
+                } else {
+                    $type->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+                    $this->send();
+                }
             }
         // Else, render the form
         } else {
@@ -147,12 +160,24 @@ class TypesController extends C
                     // If form is valid, save type
                     if ($form->isValid()) {
                         $type->update($form, $this->project->isLoaded('Fields'));
-                        Response::redirect(BASE_PATH . APP_URI . '/users/types');
+                        if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
+                        } else if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse(array(
+                                'updated' => ''
+                            ));
+                        } else {
+                            Response::redirect($this->request->getBasePath());
+                        }
                     // Else, re-render the form with errors
                     } else {
-                        $type->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/types.phtml', $type);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $type->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+                            $this->send();
+                        }
                     }
                 // Else, render form
                 } else {
@@ -169,7 +194,7 @@ class TypesController extends C
                 }
             // Else, redirect
             } else {
-                Response::redirect(BASE_PATH . APP_URI . '/users/types');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
@@ -221,6 +246,21 @@ class TypesController extends C
         $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $type);
         $this->send(404);
+    }
+
+    /**
+     * Method to send a response for JS
+     *
+     * @param  array $values
+     * @return void
+     */
+    protected function sendResponse($values)
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode($values));
+        $response->send();
     }
 
 }

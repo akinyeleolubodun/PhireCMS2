@@ -519,12 +519,12 @@ class Content extends AbstractContentModel
                 }
                 $contentValues['roles'] = $rolesAry;
             }
-            if ($contentValues['updated'] != '0000-00-00 00:00:00') {
-                $contentValues['updated'] = '<strong>Updated:</strong> ' . date('M j Y H:i', strtotime($contentValues['updated']));
+            if (($contentValues['updated'] != '0000-00-00 00:00:00') && (null !== $contentValues['updated'])) {
+                $contentValues['updated'] = '<strong>Updated:</strong> ' . date($this->config->datetime_format, strtotime($contentValues['updated']));
                 if (null !== $contentValues['updated_by']) {
                     $u = Table\Users::findById($contentValues['updated_by']);
                     if (isset($u->username)) {
-                        $contentValues['updated'] .= ' by <strong>'. $u->username . '</strong>';
+                        $contentValues['updated'] .= ' by <strong>' . $u->username . '</strong>';
                     }
                 }
             } else {
@@ -672,6 +672,7 @@ class Content extends AbstractContentModel
         ));
 
         $content->save();
+        $this->data['id'] = $content->id;
 
         // Save content categories
         if (isset($fields['category_id'])) {
@@ -736,25 +737,31 @@ class Content extends AbstractContentModel
             ($fields['expired_day'] != '--') && ($fields['expired_hour'] != '--') && ($fields['expired_minute'] != '--')) {
             $expired = $fields['expired_year'] . '-' . $fields['expired_month'] . '-' .
                 $fields['expired_day'] . ' ' . $fields['expired_hour'] . ':' . $fields['expired_minute'] . ':00';
-        } else {
-            $expired = $content->expired;
+        } else if (isset($fields['expired_year']) && ($fields['expired_year'] == '----') && ($fields['expired_month'] == '--') &&
+            ($fields['expired_day'] == '--') && ($fields['expired_hour'] == '--') && ($fields['expired_minute'] == '--')) {
+            $expired = '0000-00-00 00:00:00';
         }
 
         // If content is a file
-        if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
-            self::removeMedia($content->uri);
-            $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
-            $upload = File::upload(
-                $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
-                $this->config->media_max_filesize, $this->config->media_allowed_types
-            );
-            $upload->setPermissions(0777);
-            if (preg_match(self::$imageRegex, $fileName)) {
-                self::processMedia($fileName, $this->config);
+        if (!isset($fields['parent_id'])) {
+            if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
+                $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                self::removeMedia($content->uri);
+                $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
+                $upload = File::upload(
+                    $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
+                    $this->config->media_max_filesize, $this->config->media_allowed_types
+                );
+                $upload->setPermissions(0777);
+                if (preg_match(self::$imageRegex, $fileName)) {
+                    self::processMedia($fileName, $this->config);
+                }
+                $uri = $fileName;
+                $slug = $fileName;
+            } else {
+                $uri = $content->uri;
+                $slug = $content->slug;
             }
-            $uri = $fileName;
-            $slug = $fileName;
         // Else, if the content is a regular content object
         } else {
             $slug = $fields['uri'];
@@ -797,6 +804,7 @@ class Content extends AbstractContentModel
         $content->updated_by = ((isset($this->user) && isset($this->user->id)) ? $this->user->id : null);
 
         $content->update();
+        $this->data['id'] = $content->id;
 
         // Update content categories
         $contentToCategories = Table\ContentToCategories::findBy(array('content_id' => $content->id));

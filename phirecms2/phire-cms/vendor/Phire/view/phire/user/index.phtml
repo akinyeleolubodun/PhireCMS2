@@ -11,6 +11,7 @@
 if (isset($form)):
     if (isset($error))
         echo '    <h4 class="error">' . $error . '</h4>' . PHP_EOL;
+    echo '    <div id="result" style="display: none;"></div>' . PHP_EOL;
     echo $form;
 elseif (isset($table)):
     echo $table;

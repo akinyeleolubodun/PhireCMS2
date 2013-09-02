@@ -460,6 +460,7 @@ class User extends AbstractModel
             'failed_attempts' => 0
         ));
         $user->save();
+        $this->data['id'] = $user->id;
 
         $sess = Session::getInstance();
         $sess->last_user_id = $user->id;
@@ -538,6 +539,7 @@ class User extends AbstractModel
         }
 
         $user->update();
+        $this->data['id'] = $user->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

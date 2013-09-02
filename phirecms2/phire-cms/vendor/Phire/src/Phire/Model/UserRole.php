@@ -219,7 +219,9 @@ class UserRole extends AbstractModel
             'type_id' => $fields['type_id'],
             'name'    => $fields['name']
         ));
+
         $role->save();
+        $this->data['id'] = $role->id;
 
         // Add new permissions if any
         foreach ($_POST as $key => $value) {
@@ -260,6 +262,8 @@ class UserRole extends AbstractModel
             $role->type_id = $fields['type_id'];
             $role->name    = $fields['name'];
             $role->update();
+
+            $this->data['id'] = $role->id;
         }
 
         // Delete all resource/permissions to re-enter them

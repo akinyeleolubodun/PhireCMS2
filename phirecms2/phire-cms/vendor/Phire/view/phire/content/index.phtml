@@ -6,8 +6,9 @@
 <?php endif; ?>
 <?php if (isset($form)): ?>
 <?php if (isset($updated)): ?>
-    <p><?php echo $updated; ?></p>
+    <div id="updated"><?php echo $updated; ?></div>
 <?php endif; ?>
+    <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php elseif (isset($table)):
     echo $table;

@@ -161,10 +161,21 @@ class Category extends Form
                 'type'  => 'hidden',
                 'value' => 0
             ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
                 'value' => 'Save'
+            ),
+            'update' => array(
+                'type'       => 'button',
+                'value'      => 'Update',
+                'attributes' => array(
+                    'onclick' => "return updateForm('#category-form', " . (($this->hasFile) ? 'true' : 'false') . ");"
+                )
             )
         );
 

@@ -147,12 +147,25 @@ class IndexController extends C
                     // If form is valid, save new user
                     if ($form->isValid()) {
                         $user->save($form, $this->project->isLoaded('Fields'));
-                        Response::redirect(BASE_PATH . APP_URI . '/users/index/' . $this->request->getPath(1));
+                        if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
+                        } else if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse(array(
+                                'redirect' => $this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time(),
+                                'updated'  => ''
+                            ));
+                        } else {
+                            Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
+                        }
                     // Else, re-render form with errors
                     } else {
-                        $user->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $user);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $user->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                            $this->send();
+                        }
                     }
                 // Else, render form
                 } else {
@@ -203,12 +216,24 @@ class IndexController extends C
                     // If form is valid, save the user
                     if ($form->isValid()) {
                         $user->update($form, $this->project->isLoaded('Fields'));
-                        Response::redirect(BASE_PATH . APP_URI . '/users/index/' . $form->type_id);
+                        if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
+                        } else if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse(array(
+                                'updated' => ''
+                            ));
+                        } else {
+                            Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
+                        }
                     // Else, re-render form with errors
                     } else {
-                        $user->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $user);
-                        $this->send();
+                        if (null !== $this->request->getQuery('update')) {
+                            $this->sendResponse($form->getErrors());
+                        } else {
+                            $user->set('form', $form);
+                            $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                            $this->send();
+                        }
                     }
                 // Else, render the form
                 } else {
@@ -225,7 +250,7 @@ class IndexController extends C
                 }
             // Else redirect
             } else {
-                Response::redirect(BASE_PATH . APP_URI . '/users');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
@@ -262,7 +287,7 @@ class IndexController extends C
                     // If the form is valid, save user type
                     if ($form->isValid()) {
                         $user->updateType($form);
-                        Response::redirect(BASE_PATH . APP_URI . '/users');
+                        Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {
                         $user->set('form', $form);
@@ -278,7 +303,7 @@ class IndexController extends C
                 }
             // Else redirect
             } else {
-                Response::redirect(BASE_PATH . APP_URI . '/users');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
@@ -299,7 +324,7 @@ class IndexController extends C
                     $user->logins = null;
                     $user->update();
                 }
-                Response::redirect(BASE_PATH . APP_URI . '/users');
+                Response::redirect($this->request->getBasePath());
             } else {
                 $user = new Model\User(array(
                     'assets' => $this->project->getAssets(),
@@ -384,6 +409,21 @@ class IndexController extends C
         $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $user);
         $this->send(404);
+    }
+
+    /**
+     * Method to send a response for JS
+     *
+     * @param  array $values
+     * @return void
+     */
+    protected function sendResponse($values)
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode($values));
+        $response->send();
     }
 
 }

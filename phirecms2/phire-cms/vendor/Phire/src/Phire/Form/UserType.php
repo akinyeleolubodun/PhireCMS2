@@ -260,10 +260,21 @@ class UserType extends Form
             'type'  => 'hidden',
             'value' => 0
         );
+        $fields2['update_value'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
         $fields2['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
             'value' => 'Save'
+        );
+        $fields2['update'] = array(
+            'type'       => 'button',
+            'value'      => 'Update',
+            'attributes' => array(
+                'onclick' => "return updateForm('#user-type-form', " . (($this->hasFile) ? 'true' : 'false') . ");"
+            )
         );
 
         return array($fields1, $fields2);

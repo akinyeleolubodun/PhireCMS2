@@ -12,7 +12,6 @@ use Phire\Table;
 class Template extends Form
 {
 
-
     /**
      * Has file flag
      *
@@ -208,10 +207,21 @@ class Template extends Form
                 'type'  => 'hidden',
                 'value' => 0
             ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
                 'value' => 'Save'
+            ),
+            'update' => array(
+                'type'       => 'button',
+                'value'      => 'Update',
+                'attributes' => array(
+                    'onclick' => "return updateForm('#template-form', " . (($this->hasFile) ? 'true' : 'false') . ");"
+                )
             )
         );
 

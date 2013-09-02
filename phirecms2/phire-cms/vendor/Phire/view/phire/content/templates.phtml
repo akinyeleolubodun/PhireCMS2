@@ -4,9 +4,9 @@
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'add')): ?>
     <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/templates/add">[+] Add</a></p>
 <?php endif; ?>
-<?php
-if (isset($form)):
-    echo $form;
+<?php if (isset($form)): ?>
+    <div id="result" style="display: none;"></div>
+<?php echo $form;
 elseif (isset($table)):
     echo $table;
 else:

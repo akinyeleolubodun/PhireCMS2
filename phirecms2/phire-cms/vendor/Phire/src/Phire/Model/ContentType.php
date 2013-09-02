@@ -116,6 +116,7 @@ class ContentType extends AbstractContentModel
         ));
 
         $type->save();
+        $this->data['id'] = $type->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
@@ -140,6 +141,8 @@ class ContentType extends AbstractContentModel
         $type->uri   = (int)$fields['uri'];
         $type->order = (int)$fields['order'];
         $type->update();
+        
+        $this->data['id'] = $type->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

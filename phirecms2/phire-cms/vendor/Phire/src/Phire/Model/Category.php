@@ -247,6 +247,7 @@ class Category extends AbstractContentModel
         ));
 
         $category->save();
+        $this->data['id'] = $category->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
@@ -292,6 +293,8 @@ class Category extends AbstractContentModel
         $category->slug      = $fields['slug'];
         $category->order     = (int)$fields['order'];
         $category->update();
+
+        $this->data['id'] = $category->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

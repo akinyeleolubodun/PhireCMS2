@@ -326,3 +326,11 @@ th.vert-top, td.vert-top {
     list-style-type: none;
     border-bottom: solid 1px #ccc;
 }
+
+#result {
+    margin: 0 auto;
+    padding: 1%;
+    width: 98%;
+    display: none;
+    font-weight: bold;
+}

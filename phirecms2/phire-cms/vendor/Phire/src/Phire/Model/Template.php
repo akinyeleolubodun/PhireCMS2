@@ -178,6 +178,7 @@ class Template extends AbstractContentModel
         ));
 
         $template->save();
+        $this->data['id'] = $template->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
@@ -204,6 +205,8 @@ class Template extends AbstractContentModel
         $template->device       = $fields['device'];
         $template->template     = $fields['template'];
         $template->update();
+
+        $this->data['id'] = $template->id;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
