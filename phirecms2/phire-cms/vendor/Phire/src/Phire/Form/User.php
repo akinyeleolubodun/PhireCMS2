@@ -160,7 +160,8 @@ class User extends Form
                 'type'     => 'select',
                 'required' => true,
                 'label'    => 'User Role:',
-                'value'    => $rolesAry
+                'value'    => $rolesAry,
+                'marked'   => $type->default_role_id
             );
         }
 
