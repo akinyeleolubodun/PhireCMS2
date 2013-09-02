@@ -1,6 +1,7 @@
 <?php include __DIR__ . '/header.phtml'; ?>
 <?php echo $nav; ?>
     <h1 style="color: #00f;"><?php echo $title; ?></h1>
+    <div id="result" style="display: none;"></div>
     <form id="config-form" action="<?php echo BASE_PATH . APP_URI; ?>/config" method="post">
         <table class="data-table"  cellpadding="0" cellspacing="0" border="0">
             <tr><th class="border-left">&nbsp;</th><th class="border-right">&nbsp;</th></tr>
@@ -15,9 +16,34 @@
             </tr>
 <?php endforeach; ?>
 <?php foreach ($config['settings'] as $setting => $value): ?>
-            <tr>
+<?php
+    $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting));
+    switch ($setting):
+        case 'site_title':
+            echo '            <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#site_title\').toggle(\'table-row\'); $(\'#separator\').toggle(\'table-row\'); $(\'#default_language\').toggle(\'table-row\'); $(\'#error_message\').toggle(\'table-row\'); return false;">Default Site Settings</a></th></tr>' . PHP_EOL;
+            $display = 'none';
+            break;
+        case 'datetime_format':
+            echo '            <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#datetime_format\').toggle(\'table-row\'); return false;">Date &amp; Time Settings</a></th></tr>' . PHP_EOL;
+            $display = 'none';
+            break;
+        case 'media_allowed_types':
+            echo '            <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#media_actions\').toggle(\'table-row\'); $(\'#media_allowed_types\').toggle(\'table-row\'); $(\'#media_image_adapter\').toggle(\'table-row\'); $(\'#media_max_filesize\').toggle(\'table-row\'); return false;">Media Settings</a></th></tr>' . PHP_EOL;
+            $display = 'none';
+            break;
+        case 'feed_type':
+            echo '            <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#feed_type\').toggle(\'table-row\'); $(\'#feed_limit\').toggle(\'table-row\'); $(\'#pagination_limit\').toggle(\'table-row\'); $(\'#pagination_range\').toggle(\'table-row\'); $(\'#category_totals\').toggle(\'table-row\'); $(\'#live-header\').toggle(\'table-row\'); return false;">Feed &amp; Page Settings</a></th></tr>' . PHP_EOL;
+            $display = 'none';
+            break;
+        case 'open_authoring':
+            echo '            <tr id="live-header" style="display: none;"><th class="config-header" colspan="2">&nbsp;</th></tr>' . PHP_EOL;
+            $display = 'table-row';
+            break;
+    endswitch;
+?>
+            <tr id="<?php echo $setting; ?>" style="display: <?php echo $display; ?>;">
                 <td class="border-left">
-                    <strong><?php echo ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting)); ?></strong>
+                    <strong><?php echo $formattedSetting ?></strong>
                 </td>
                 <td class="border-right">
 <?php echo $value; ?>

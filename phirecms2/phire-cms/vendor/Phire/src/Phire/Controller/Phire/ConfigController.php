@@ -63,7 +63,7 @@ class ConfigController extends C
 
         if ($this->request->isPost()) {
             $config->update($this->request->getPost());
-            Response::redirect($this->request->getBasePath());
+            Response::redirect($this->request->getBasePath() . '?saved=' . time());
         } else {
             $config->getAll();
             $this->view = View::factory($this->viewPath . '/config.phtml', $config);

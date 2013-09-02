@@ -172,6 +172,14 @@ fieldset {
     padding: 1px 0 1px 0;
 }
 
+#result {
+    margin: 0 auto 5px auto;
+    padding: 1%;
+    width: 98%;
+    display: none;
+    font-weight: bold;
+}
+
 .data-table {
     margin: 0 auto 10px auto;
     padding: 0;
@@ -327,10 +335,24 @@ th.vert-top, td.vert-top {
     border-bottom: solid 1px #ccc;
 }
 
-#result {
-    margin: 0 auto;
-    padding: 1%;
-    width: 98%;
-    display: none;
-    font-weight: bold;
+th.config-header {
+    margin: 0;
+    padding: 5px;
+    border-top: solid 1px #ccc;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    text-align: left;
+}
+
+th.config-header > a {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+th.config-header > a:hover {
+    color: #808080;
+    text-decoration: underline;
 }

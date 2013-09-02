@@ -238,7 +238,7 @@ var processForm = function() {
             } else {
                 if ($('#result').obj != null) {
                     $('#result').css('background-color', '#e8d0d0')
-                        .css('color', '#f00')
+                        .css('color', '#8e0202')
                         .css('opacity', 0);
                     $('#result').val('Please correct the errors below.');
                     for (var i = 1; i <= curErrors; i++) {
@@ -273,7 +273,8 @@ var updateForm = function(form, ret) {
         }
         return true;
     } else {
-        var url = $(form).attrib('action') + '?update=1';
+        var act = $(form).attrib('action');
+        var url = act + ((act.indexOf('?') != -1) ? '&update=1' : '?update=1');
         $xmlHttp().post($(form).obj, processForm, url);
         return false;
     }
