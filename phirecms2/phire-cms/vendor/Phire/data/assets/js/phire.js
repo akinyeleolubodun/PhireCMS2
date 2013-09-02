@@ -298,7 +298,7 @@ $(document).ready(function(){
     if ($().get('saved') != undefined) {
         var ts = Math.round(new Date().getTime() / 1000);
         var diff = Math.abs($().get('saved') - ts);
-        if (diff < 10) {
+        if (diff < 40) {
             if ($('#result').obj != null) {
                 $('#result').css('background-color', '#dbf2bf')
                     .css('color', '#315900')
