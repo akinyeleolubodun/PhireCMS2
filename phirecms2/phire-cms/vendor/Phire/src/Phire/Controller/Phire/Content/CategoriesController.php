@@ -97,7 +97,7 @@ class CategoriesController extends C
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
-                    $this->sendResponse(array(
+                    $this->sendJson(array(
                         'redirect' => $this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time(),
                         'updated'  => ''
                     ));
@@ -106,7 +106,7 @@ class CategoriesController extends C
                 }
             } else {
                 if (null !== $this->request->getQuery('update')) {
-                    $this->sendResponse($form->getErrors());
+                    $this->sendJson($form->getErrors());
                 } else {
                     $category->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
@@ -160,7 +160,7 @@ class CategoriesController extends C
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
-                            $this->sendResponse(array(
+                            $this->sendJson(array(
                                 'updated' => ''
                             ));
                         } else {
@@ -169,7 +169,7 @@ class CategoriesController extends C
                     // Else, re-render the form with errors
                     } else {
                         if (null !== $this->request->getQuery('update')) {
-                            $this->sendResponse($form->getErrors());
+                            $this->sendJson($form->getErrors());
                         } else {
                             $category->set('form', $form);
                             $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
@@ -272,21 +272,6 @@ class CategoriesController extends C
         $category->set('title', '404 Error ' . $category->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $category);
         $this->send(404);
-    }
-
-    /**
-     * Method to send a response for JS
-     *
-     * @param  array $values
-     * @return void
-     */
-    protected function sendResponse($values)
-    {
-        // Build the response and send it
-        $response = new Response();
-        $response->setHeader('Content-Type', 'application/json')
-                 ->setBody(json_encode($values));
-        $response->send();
     }
 
 }

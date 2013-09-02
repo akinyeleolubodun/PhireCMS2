@@ -151,7 +151,7 @@ class IndexController extends C
                                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                                 } else if (null !== $this->request->getQuery('update')) {
-                                    $this->sendResponse(array(
+                                    $this->sendJson(array(
                                         'redirect' => $this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time(),
                                         'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
                                     ));
@@ -164,7 +164,7 @@ class IndexController extends C
                         // Else, re-render form with errors
                         } else {
                             if (null !== $this->request->getQuery('update')) {
-                                $this->sendResponse($form->getErrors());
+                                $this->sendJson($form->getErrors());
                             } else {
                                 $content->set('form', $form);
                                 $this->view = View::factory($this->viewPath . '/index.phtml', $content);
@@ -228,7 +228,7 @@ class IndexController extends C
                             if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                             } else if (null !== $this->request->getQuery('update')) {
-                                $this->sendResponse(array(
+                                $this->sendJson(array(
                                     'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
                                 ));
                             } else {
@@ -240,7 +240,7 @@ class IndexController extends C
                     // Else, re-render the form with errors
                     } else {
                         if (null !== $this->request->getQuery('update')) {
-                            $this->sendResponse($form->getErrors());
+                            $this->sendJson($form->getErrors());
                         } else {
                             $content->set('form', $form);
                             $this->view = View::factory($this->viewPath . '/index.phtml', $content);
@@ -361,21 +361,6 @@ class IndexController extends C
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
         $this->view = View::factory($this->viewPath . '/error.phtml', $content);
         $this->send($code);
-    }
-
-    /**
-     * Method to send a response for JS
-     *
-     * @param  array $values
-     * @return void
-     */
-    protected function sendResponse($values)
-    {
-        // Build the response and send it
-        $response = new Response();
-        $response->setHeader('Content-Type', 'application/json')
-                 ->setBody(json_encode($values));
-        $response->send();
     }
 
 }

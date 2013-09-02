@@ -14,13 +14,6 @@ class Category extends Form
 {
 
     /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
-    /**
      * Constructor method to instantiate the form object
      *
      * @param  string  $action
@@ -34,10 +27,6 @@ class Category extends Form
         $this->initFieldsValues = $this->getInitFields($cid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'category-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**

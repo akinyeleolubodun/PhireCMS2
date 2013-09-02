@@ -11,14 +11,6 @@ use Phire\Table;
 class UserType extends Form
 {
 
-
-    /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
     /**
      * Constructor method to instantiate the form object
      *
@@ -33,10 +25,6 @@ class UserType extends Form
         $this->initFieldsValues = $this->getInitFields($tid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'user-type-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**

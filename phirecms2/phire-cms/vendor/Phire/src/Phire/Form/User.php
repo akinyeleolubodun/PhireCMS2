@@ -12,13 +12,6 @@ class User extends Form
 {
 
     /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
-    /**
      * Constructor method to instantiate the form object
      *
      * @param  string  $action
@@ -57,10 +50,6 @@ class User extends Form
 
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'user-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**

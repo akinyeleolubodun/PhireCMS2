@@ -99,7 +99,7 @@ class RolesController extends C
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
-                    $this->sendResponse(array(
+                    $this->sendJson(array(
                         'redirect' => $this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time(),
                         'updated'  => ''
                     ));
@@ -109,7 +109,7 @@ class RolesController extends C
             // Else, re-render the form with errors
             } else {
                 if (null !== $this->request->getQuery('update')) {
-                    $this->sendResponse($form->getErrors());
+                    $this->sendJson($form->getErrors());
                 } else {
                     $role->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
@@ -163,7 +163,7 @@ class RolesController extends C
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
-                            $this->sendResponse(array(
+                            $this->sendJson(array(
                                 'updated' => ''
                             ));
                         } else {
@@ -172,7 +172,7 @@ class RolesController extends C
                     // Else, re-render the form with errors
                     } else {
                         if (null !== $this->request->getQuery('update')) {
-                            $this->sendResponse($form->getErrors());
+                            $this->sendJson($form->getErrors());
                         } else {
                             $role->set('form', $form);
                             $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
@@ -280,21 +280,6 @@ class RolesController extends C
         $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');
         $this->view = View::factory($this->viewPath . '/error.phtml', $role);
         $this->send(404);
-    }
-
-    /**
-     * Method to send a response for JS
-     *
-     * @param  array $values
-     * @return void
-     */
-    protected function sendResponse($values)
-    {
-        // Build the response and send it
-        $response = new Response();
-        $response->setHeader('Content-Type', 'application/json')
-                 ->setBody(json_encode($values));
-        $response->send();
     }
 
 }

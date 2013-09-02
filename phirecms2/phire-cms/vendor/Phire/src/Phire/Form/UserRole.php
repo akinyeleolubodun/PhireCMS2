@@ -13,14 +13,6 @@ use Phire\Table\UserTypes;
 class UserRole extends Form
 {
 
-
-    /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
     /**
      * Constructor method to instantiate the form object
      *
@@ -36,10 +28,6 @@ class UserRole extends Form
         $this->initFieldsValues = $this->getInitFields($rid, $config, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'user-role-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**

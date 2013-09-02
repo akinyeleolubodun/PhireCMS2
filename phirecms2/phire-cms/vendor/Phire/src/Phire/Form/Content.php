@@ -16,13 +16,6 @@ class Content extends Form
 {
 
     /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
-    /**
      * Constructor method to instantiate the form object
      *
      * @param  string  $action
@@ -61,10 +54,6 @@ class Content extends Form
 
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'content-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**

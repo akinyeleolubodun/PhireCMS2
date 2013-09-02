@@ -13,13 +13,6 @@ class Template extends Form
 {
 
     /**
-     * Has file flag
-     *
-     * @var boolean
-     */
-    protected $hasFile = false;
-
-    /**
      * Content types
      *
      * @var array
@@ -69,10 +62,6 @@ class Template extends Form
         $this->initFieldsValues = $this->getInitFields($tid, $isFields);
         parent::__construct($action, $method, null, '    ');
         $this->setAttributes('id', 'template-form');
-
-        if ($this->hasFile) {
-            $this->setAttributes('enctype', 'multipart/form-data');
-        }
     }
 
     /**
