@@ -250,8 +250,17 @@ var processForm = function() {
                     clr = setTimeout(clearStatus, 3000);
                 }
                 for (name in j) {
-                    curErrors++;
-                    $($('#' + name).parent()).append('div', [['id', 'error-' + curErrors], ['class', 'error']], j[name]);
+                    // Check if the error already exists via a PHP POST
+                    var curErrorDivs = $('#' + name).parent().getElementsByTagName('div');
+                    var curErrorDivsHtml = [];
+                    for (var i = 0; i < curErrorDivs.length; i++) {
+                        curErrorDivsHtml.push(curErrorDivs[i].innerHTML);
+                    }
+                    // If error doesn't exists yet, append it
+                    if (curErrorDivsHtml.indexOf(j[name].toString()) == -1) {
+                        curErrors++;
+                        $($('#' + name).parent()).append('div', [['id', 'error-' + curErrors], ['class', 'error']], j[name]);
+                    }
 
                 }
             }

@@ -144,6 +144,12 @@ class UserType extends Form
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
+            'email_verification' => array(
+                'type'   => 'radio',
+                'label'  => 'User Email Verification:',
+                'value'  => $yesNo,
+                'marked' => '0'
+            ),
             'force_ssl' => array(
                 'type'   => 'radio',
                 'label'  => 'Force SSL:',
@@ -158,7 +164,7 @@ class UserType extends Form
             ),
             'verification' => array(
                 'type'   => 'radio',
-                'label'  => 'Require Verification:',
+                'label'  => 'System Email Verification:',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),

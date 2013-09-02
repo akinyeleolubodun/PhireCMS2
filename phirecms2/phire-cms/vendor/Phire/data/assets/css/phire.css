@@ -36,15 +36,17 @@ dt {
     clear: left;
     float: left;
     margin: 0;
-    padding: 6px 3px 3px 3px;
+    padding: 12px 3px 6px 3px;
     width: 200px;
     text-align: right;
+    line-height: 1.0em;
 }
 
 dd {
     float: left;
     margin: 0;
-    padding: 3px;
+    padding: 6px 3px 9px 3px;
+    line-height: 1.0em;
 }
 
 fieldset {

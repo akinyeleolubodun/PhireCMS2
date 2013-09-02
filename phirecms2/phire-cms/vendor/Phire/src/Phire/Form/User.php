@@ -76,7 +76,9 @@ class User extends Form
         parent::setFieldValues($values, $filters, $params);
 
         if ($this->id != 0) {
-            $this->getElement('email2')->setRequired(false);
+            if (null !== $this->getElement('email2')) {
+                $this->getElement('email2')->setRequired(false);
+            }
             $this->getElement('password1')->setRequired(false);
             $this->getElement('password2')->setRequired(false);
         }
@@ -104,8 +106,10 @@ class User extends Form
                      ->addValidator(new Validator\NotEqual($this->email1, 'That email already exists.'));
             }
 
-            $this->getElement('email2')
-                 ->addValidator(new Validator\Equal($this->email1, 'The emails do not match.'));
+            if (null !== $this->getElement('email2')) {
+                $this->getElement('email2')
+                     ->addValidator(new Validator\Equal($this->email1, 'The emails do not match.'));
+            }
 
             // If the password fields are set, check them for a match
             if (isset($this->password2)) {
@@ -177,13 +181,15 @@ class User extends Form
             'attributes' => array('size' => 40),
             'validators' => new Validator\Email()
         );
-        $fields1['email2'] = array(
-            'type'       => 'text',
-            'label'      => 'Re-Type Email:',
-            'required'   => true,
-            'attributes' => array('size' => 40),
-            'validators' => new Validator\Email()
-        );
+        if ($type->email_verification) {
+            $fields1['email2'] = array(
+                'type'       => 'text',
+                'label'      => 'Re-Type Email:',
+                'required'   => true,
+                'attributes' => array('size' => 40),
+                'validators' => new Validator\Email()
+            );
+        }
 
         // If not email as username, create username field
         if (!$type->email_as_username) {

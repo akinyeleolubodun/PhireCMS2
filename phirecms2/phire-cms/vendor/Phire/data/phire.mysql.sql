@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
   `multiple_sessions` int(1),
   `mobile_access` int(1),
   `email_as_username` int(1),
+  `email_verification` int(1),
   `force_ssl` int(1),
   `track_sessions` int(1),
   `verification` int(1),
@@ -83,8 +84,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
 -- Dumping data for table `[{prefix}]user_types`
 --
 
-INSERT INTO `[{prefix}]user_types` (`id`, `type`, `default_role_id`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`, `controller`, `sub_controllers`) VALUES
-(2001, 'user', 3001, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 30, 2, '', '', '', '', '', '', '');
+INSERT INTO `[{prefix}]user_types` (`id`, `type`, `default_role_id`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `email_verification`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`, `controller`, `sub_controllers`) VALUES
+(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 

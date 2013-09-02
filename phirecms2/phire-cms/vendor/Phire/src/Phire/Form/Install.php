@@ -209,14 +209,14 @@ class Install extends Form
             ),
             'app_uri' => array (
                 'type' => 'text',
-                'label' => 'Application URI:<br /><em style="font-size: 0.825em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
+                'label' => 'Application URI:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
                 'required' => true,
                 'attributes' => array('size' => 40),
                 'value' => APP_URI
             ),
             'content_path' => array (
                 'type' => 'text',
-                'label' => 'Content Path:<br /><em style="font-size: 0.825em; color: #666; font-weight: normal;">(Where assets will be located)</em>',
+                'label' => 'Content Path:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Where assets will be located)</em>',
                 'required' => true,
                 'attributes' => array('size' => 40),
                 'value' => CONTENT_PATH
@@ -234,7 +234,7 @@ class Install extends Form
             ),
             'password_salt' => array (
                 'type' => 'text',
-                'label' => 'Password Salt:<br /><em style="font-size: 0.825em; color: #666; font-weight: normal;">(Required for \'Crypt\')</em>',
+                'label' => 'Password Salt:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Required for \'Crypt\')</em>',
                 'attributes' => array('size' => 40)
             ),
             'submit' => array (
