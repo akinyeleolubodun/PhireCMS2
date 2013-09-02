@@ -41,9 +41,9 @@ class IndexController extends C
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'];
+                    $viewPath = $cfg['view']['*'] . '/extensions';
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'];
+                    $viewPath = $cfg['view'] . '/extensions';
                 }
             }
         }

@@ -616,10 +616,16 @@ class User extends AbstractModel
             'domain'   => $domain
         );
 
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+            $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/verify.txt');
+        } else {
+            $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/verify.txt');
+        }
+
         // Send email verification
         $mail = new Mail($domain . ' - Email Verification', $rcpt);
         $mail->from('noreply@' . $domain);
-        $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/verify.txt'));
+        $mail->setText($mailTmpl);
         $mail->send();
     }
 
@@ -694,10 +700,16 @@ class User extends AbstractModel
                 'message'  => $msg
             );
 
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+                $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/forgot.txt');
+            } else {
+                $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/forgot.txt');
+            }
+
             // Send reminder
             $mail = new Mail($domain . ' - Password Reset', $rcpt);
             $mail->from('noreply@' . $domain);
-            $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/forgot.txt'));
+            $mail->setText($mailTmpl);
             $mail->send();
         }
     }

@@ -153,10 +153,16 @@ class Install extends \Pop\Mvc\Model
             'domain' => $domain
         );
 
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+            $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/install.txt');
+        } else {
+            $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/install.txt');
+        }
+
         // Send email verification
         $mail = new Mail($domain . ' - Phire CMS Installation', $rcpt);
         $mail->from('noreply@' . $domain);
-        $mail->setText(file_get_contents(__DIR__ . '/../../../view/phire/mail/install.txt'));
+        $mail->setText($mailTmpl);
         $mail->send();
     }
 

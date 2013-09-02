@@ -339,6 +339,15 @@ class Project extends P
             );
         }
 
+        // Add Phire CSS override file if it exists
+        $phireCss = false;
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
+            $phireCss = true;
+            if (strpos($this->assets['css'], '/phire.css') === false) {
+                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css" />' . PHP_EOL;
+            }
+        }
+
         $newModuleDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName);
         if (!file_exists($newModuleDir)) {
             mkdir($newModuleDir);
@@ -372,7 +381,9 @@ class Project extends P
                         if ($assetDir == 'js') {
                             $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
                         } else if ($assetDir == 'css') {
-                            $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
+                            if (($as->getBasename() == 'phire.css') && (!$phireCss)) {
+                                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
+                            }
                         }
                     }
                 }
