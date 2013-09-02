@@ -93,7 +93,8 @@ class Acl extends A
                         $session->save();
                         $auth = true;
                     } else {
-                        $auth = false;
+                        $auth = false;            $uri = ($this->basePath == '') ? '/' : $this->basePath;
+            \Pop\Http\Response::redirect($uri);
                     }
                 // Else, validate the session and record the action
                 } else {
@@ -142,7 +143,8 @@ class Acl extends A
         unset($this->sess->user);
 
         if ($redirect) {
-            \Pop\Http\Response::redirect($this->basePath);
+            $uri = ($this->basePath == '') ? '/' : $this->basePath;
+            \Pop\Http\Response::redirect($uri);
         }
     }
 
