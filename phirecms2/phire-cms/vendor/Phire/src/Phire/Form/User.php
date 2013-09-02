@@ -79,8 +79,10 @@ class User extends Form
             if (null !== $this->getElement('email2')) {
                 $this->getElement('email2')->setRequired(false);
             }
-            $this->getElement('password1')->setRequired(false);
-            $this->getElement('password2')->setRequired(false);
+            if (null !== $this->getElement('password1')) {
+                $this->getElement('password1')->setRequired(false);
+                $this->getElement('password2')->setRequired(false);
+            }
         }
 
         // Add validators for checking dupe usernames

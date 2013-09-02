@@ -490,28 +490,30 @@ class User extends AbstractModel
         $type = Table\UserTypes::findById($fields['type_id']);
         $user = Table\Users::findById($fields['id']);
 
-        // If there's a new password, set according to the user type
-        if (($fields['password1'] != '') && ($fields['password2'] != '')) {
-            $password = $fields['password1'];
+        if (isset($fields['password1'])) {
+            // If there's a new password, set according to the user type
+            if (($fields['password1'] != '') && ($fields['password2'] != '')) {
+                $password = $fields['password1'];
 
-            if (isset($type->id)) {
-                switch ($type->password_encryption) {
-                    case 3:
-                        $password = crypt($fields['password1'], $type->password_salt);
-                        break;
-                    case 2:
-                        $password = sha1($fields['password1']);
-                        break;
-                    case 1:
-                        $password = md5($fields['password1']);
-                        break;
-                    case 0:
-                        $password = $fields['password1'];
-                        break;
+                if (isset($type->id)) {
+                    switch ($type->password_encryption) {
+                        case 3:
+                            $password = crypt($fields['password1'], $type->password_salt);
+                            break;
+                        case 2:
+                            $password = sha1($fields['password1']);
+                            break;
+                        case 1:
+                            $password = md5($fields['password1']);
+                            break;
+                        case 0:
+                            $password = $fields['password1'];
+                            break;
+                    }
                 }
-            }
 
-            $user->password = $password;
+                $user->password = $password;
+            }
         }
 
         // Set role
