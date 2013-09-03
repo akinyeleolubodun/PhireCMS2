@@ -339,6 +339,8 @@ class Project extends P
      */
     protected function loadAssets($d, $moduleName)
     {
+        clearstatcache();
+
         if (null === $this->assets) {
             $this->assets = array(
                 'js'  => PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL,
