@@ -260,6 +260,8 @@ class Content extends Form
         }
 
         $fields2 = array();
+        $dynamicFields = false;
+
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
@@ -269,6 +271,9 @@ class Content extends Form
                     $fields2[$key] = $value;
                     if ($value['type'] == 'file') {
                         $this->hasFile = true;
+                    }
+                    if (strpos($key, 'new_') !== false) {
+                        $dynamicFields = true;
                     }
                 }
             }
@@ -358,7 +363,7 @@ class Content extends Form
                 'type'       => 'button',
                 'value'      => 'Update',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#content-form', " . (($this->hasFile) ? 'true' : 'false') . ");"
+                    'onclick' => "return updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");"
                 )
             )
         );

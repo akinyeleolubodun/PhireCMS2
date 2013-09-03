@@ -248,7 +248,7 @@ class Project extends P
                     } else {
                         $controller = $type->controller;
                     }
-                    // Else, just map to the base Phire controller
+                // Else, just map to the base Phire controller
                 } else {
                     $controller = 'Phire\Controller\Phire\IndexController';
                 }
@@ -267,7 +267,8 @@ class Project extends P
      */
     protected function initAcl()
     {
-        // Get the user type from the URI
+        // Get the user type from either session or the URI
+        $sess = \Pop\Web\Session::getInstance();
         $type = str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
 
         // If the URI matches the system user URI
@@ -282,7 +283,12 @@ class Project extends P
         }
 
         // Create the type object and pass it to the Acl object
-        $typeObj = \Phire\Table\UserTypes::findBy(array('type' => $type));
+        if (isset($sess->user->type_id)) {
+            $typeObj = \Phire\Table\UserTypes::findById($sess->user->type_id);
+        } else {
+            $typeObj = \Phire\Table\UserTypes::findBy(array('type' => $type));
+        }
+
         $this->getService('acl')->setType($typeObj);
 
         // Set the roles for this user type in the Acl object

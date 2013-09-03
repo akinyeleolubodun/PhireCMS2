@@ -254,7 +254,7 @@ class IndexController extends C
             'nav'    => $this->project->getService('nav'),
             'title'  => 'Profile'
         ));
-        $user->getById($this->sess->user->id);
+        $user->getById($this->sess->user->id, $this->project->isLoaded('Fields'));
 
         // If user is found and valid
         if (null !== $user->id) {

@@ -386,7 +386,15 @@ class IndexController extends C
         );
 
         if (isset($user->userRows[0])) {
-            \Pop\Data\Data::factory($user->userRows)->writeData($_SERVER['HTTP_HOST'] . '_' . $user->userType . '_' . date('Y-m-d') . '.csv', true, true);
+            $userRows = $user->userRows;
+            foreach ($userRows as $key => $value) {
+                foreach ($value as $k => $v) {
+                    if (is_array($v)) {
+                        $userRows[$key]->{$k} = implode('|', $v);
+                    }
+                }
+            }
+            \Pop\Data\Data::factory($userRows)->writeData($_SERVER['HTTP_HOST'] . '_' . $user->userType . '_' . date('Y-m-d') . '.csv', true, true);
         } else {
             Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
         }

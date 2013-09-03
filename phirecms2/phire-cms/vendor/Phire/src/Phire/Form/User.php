@@ -223,6 +223,8 @@ class User extends Form
             $fields3 = array();
         }
 
+        $dynamicFields = false;
+
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
@@ -232,6 +234,9 @@ class User extends Form
                     $fields3[$key] = $value;
                     if ($value['type'] == 'file') {
                         $this->hasFile = true;
+                    }
+                    if (strpos($key, 'new_') !== false) {
+                        $dynamicFields = true;
                     }
                 }
             }
@@ -280,7 +285,7 @@ class User extends Form
                 'type'       => 'button',
                 'value'      => 'Update',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#user-form', " . (($this->hasFile) ? 'true' : 'false') . ");"
+                    'onclick' => "return updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");"
                 )
             );
         }
