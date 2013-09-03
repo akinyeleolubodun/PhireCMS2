@@ -152,7 +152,7 @@ class Project extends P
 
             // Add routes
             if (isset($cfg['routes'])) {
-                $routes = (APP_URI == '') ? $cfg['routes']['/'] : $cfg['routes'];
+                $routes = ((APP_URI == '') && isset($cfg['routes']['/'])) ? $cfg['routes']['/'] : $cfg['routes'];
                 $this->router->addControllers($routes);
             }
         }
