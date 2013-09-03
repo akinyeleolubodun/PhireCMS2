@@ -87,6 +87,11 @@ class Auth extends A\Auth
                 $result = 'Mobile access is not allowed.';
             } else if (!$user['verified']) {
                 $result = 'The user is not verified.';
+            } else if ($type->id != $user['type_id']) {
+                $userType = Table\UserTypes::findById($user['type_id']);
+                if (isset($userType->id) && (!$userType->global_access)) {
+                    $result = 'The user is not allowed in this area.';
+                }
             }
         }
 

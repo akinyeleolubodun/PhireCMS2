@@ -152,7 +152,8 @@ class Project extends P
 
             // Add routes
             if (isset($cfg['routes'])) {
-                $this->router->addControllers($cfg['routes']);
+                $routes = (APP_URI == '') ? $cfg['routes']['/'] : $cfg['routes'];
+                $this->router->addControllers($routes);
             }
         }
 
@@ -182,7 +183,7 @@ class Project extends P
                     }
 
                     // Get the user URI
-                    $uri = ($router->project()->getService('acl')->getType()->type == 'user') ?
+                    $uri = (strtolower($router->project()->getService('acl')->getType()->type) == 'user') ?
                         APP_URI :
                         '/' . strtolower($router->project()->getService('acl')->getType()->type);
 
@@ -233,7 +234,7 @@ class Project extends P
         $types = \Phire\Table\UserTypes::findAll();
 
         foreach ($types->rows as $type) {
-            if (($type->type != 'user')) {
+            if (strtolower($type->type) != 'user') {
                 // If the user type has a defined controller
                 if ($type->controller != '') {
                     // If the user type has defined sub-controllers

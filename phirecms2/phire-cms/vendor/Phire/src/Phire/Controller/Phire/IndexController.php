@@ -47,8 +47,7 @@ class IndexController extends C
 
         if (null === $viewPath) {
             $cfg = $project->module('Phire')->asArray();
-            $viewPath = ($this->type->type == 'user') ? __DIR__ . '/../../../../view/phire' :
-                __DIR__ . '/../../../../view/' . $this->type->type;
+            $viewPath = __DIR__ . '/../../../../view/phire';
 
             if (isset($cfg['view'])) {
                 $class = get_class($this);
@@ -60,11 +59,22 @@ class IndexController extends C
                     $viewPath = $cfg['view'];
                 }
             }
+
+            // If it is not a user, or a user globally logged into another area
+            if (((strtolower($this->type->type) != 'user') && (!$this->type->global_access)) ||
+                (substr($_SERVER['REQUEST_URI'], 0, strlen(BASE_PATH . APP_URI)) != BASE_PATH . APP_URI)) {
+                $typePath = $viewPath . '/../' . strtolower($this->type->type);
+                if (file_exists($typePath)) {
+                    $viewPath = $typePath;
+                } else {
+                    $viewPath = __DIR__ . '/../../../../view/member';
+                }
+            }
         }
 
         // Set the correct base path and user URI based on user type
         if (get_called_class() == 'Phire\Controller\Phire\IndexController') {
-            $basePath = ($this->type->type != 'user') ? BASE_PATH . '/' . strtolower($this->type->type) : BASE_PATH . APP_URI;
+            $basePath = (strtolower($this->type->type) != 'user') ? BASE_PATH . '/' . strtolower($this->type->type) : BASE_PATH . APP_URI;
             $request = new Request(null, $basePath);
         }
 
@@ -113,7 +123,7 @@ class IndexController extends C
             ));
 
             // Set up 'forgot,' 'register' and 'unsubscribe' links
-            $uri = ($this->type->type == 'user') ? APP_URI : '/' . $this->type->type;
+            $uri = (strtolower($this->type->type) == 'user') ? APP_URI : '/' . strtolower($this->type->type);
             $forgot = '<a href="' . BASE_PATH . $uri . '/forgot">Forgot</a>';
             $forgot .= (($this->type->registration) ? ' | <a href="' . BASE_PATH . $uri . '/register">Register</a>' : null);
             $forgot .= (!($this->type->unsubscribe_login) ? ' | <a href="' . BASE_PATH . $uri . '/unsubscribe">Unsubscribe</a>' : null);

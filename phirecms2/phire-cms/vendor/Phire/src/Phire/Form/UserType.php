@@ -42,7 +42,7 @@ class UserType extends Form
         if ($_POST) {
             if ($this->id == 2001) {
                 $this->getElement('type')
-                     ->addValidator(new Validator\Equal('user', "The type name for this user type cannot change and must be 'user'."));
+                     ->addValidator(new Validator\Equal('User', "The type name for this user type cannot change and must be 'User'."));
             }
             if ($this->password_encryption == 3) {
                 $this->getElement('password_salt')

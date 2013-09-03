@@ -9,7 +9,7 @@ return array(
         //'view'   => realpath(__DIR__ . '/../view'),
         'routes' => array(
             '/' => 'Phire\Controller\IndexController',
-            APP_URI  => array(
+            ((APP_URI == '') ? '/' : APP_URI)  => array(
                 '/'         => 'Phire\Controller\Phire\IndexController',
                 '/install'  => 'Phire\Controller\Phire\Install\IndexController',
                 '/content'  => array(

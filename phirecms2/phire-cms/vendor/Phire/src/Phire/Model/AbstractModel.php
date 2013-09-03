@@ -66,7 +66,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 if (isset($userTypes->rows)) {
                     foreach ($userTypes->rows as $type) {
                         $this->data['nav']->addLeaf('Users', array(
-                            'name'     => $type->type,
+                            'name'     => ucwords(str_replace('-', ' ', $type->type)),
                             'href'     => 'index/' . $type->id
                         ), 1);
                     }

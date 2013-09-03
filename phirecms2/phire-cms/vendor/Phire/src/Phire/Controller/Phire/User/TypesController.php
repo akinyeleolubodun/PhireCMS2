@@ -143,7 +143,7 @@ class TypesController extends C
 
             // If type is found and valid
             if (null !== $type->type) {
-                $type->set('title', 'User Types ' . $type->config()->separator . ' ' . $type->type);
+                $type->set('title', 'User Types ' . $type->config()->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)));
                 $form = new Form\UserType(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $this->request->getPath(1), $this->project->isLoaded('Fields')

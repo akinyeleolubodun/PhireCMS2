@@ -26,7 +26,7 @@ class User extends AbstractModel
     {
         $user = Table\Users::findBy(array('username' => $username));
         $sess = Session::getInstance();
-        $typeUri = ($type->type != 'user') ? '/' . $type->type : APP_URI;
+        $typeUri = (strtolower($type->type) != 'user') ? '/' . strtolower($type->type) : APP_URI;
 
         // If login success
         if (($success) && isset($user->id)) {
@@ -124,7 +124,12 @@ class User extends AbstractModel
     public function getUserTypes()
     {
         $types = Table\UserTypes::findAll('id ASC');
-        $this->data['types'] = $types->rows;
+        $typeRows = array();
+        foreach ($types->rows as $type) {
+            $type->type = ucwords(str_replace('-', ' ', $type->type));
+            $typeRows[] = $type;
+        }
+        $this->data['types'] = $typeRows;
     }
 
     /**
@@ -171,7 +176,7 @@ class User extends AbstractModel
         $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
         $userType = Table\UserTypes::findById($typeId);
 
-        $this->data['title'] .= (isset($userType->id)) ? ' ' . $this->config->separator . ' ' . ucfirst($userType->type) : null;
+        $this->data['title'] .= (isset($userType->id)) ? ' ' . $this->config->separator . ' ' . ucwords(str_replace('-', ' ', $userType->type)) : null;
         $this->data['type'] = $userType->type;
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'remove')) {
@@ -329,7 +334,7 @@ class User extends AbstractModel
         if (isset($user->id)) {
             $type = Table\UserTypes::findById($user->type_id);
             $userValues = $user->getValues();
-            $userValues['type_name'] = (isset($type->id) ? ucfirst($type->type) : null);
+            $userValues['type_name'] = (isset($type->id) ? ucwords(str_replace('-', ' ', $type->type)) : null);
             $userValues['email1'] = $userValues['email'];
             $userValues['verified'] = (int)$userValues['verified'];
 
@@ -604,7 +609,7 @@ class User extends AbstractModel
     public function sendVerification(\Phire\Table\Users $user, $type)
     {
         // Get the base path and domain
-        $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+        $basePath = (strtolower($type->type) != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
         $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
         // Set the recipient
@@ -686,7 +691,7 @@ class User extends AbstractModel
             $user->save();
 
             // Get base path and domain
-            $basePath = ($type->type != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+            $basePath = (strtolower($type->type) != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
             $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
             // Set recipient

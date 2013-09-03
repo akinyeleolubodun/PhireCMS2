@@ -209,8 +209,7 @@ class Install extends Form
             ),
             'app_uri' => array (
                 'type' => 'text',
-                'label' => 'Application URI:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(How you will access the CMS)</em>',
-                'required' => true,
+                'label' => 'Application URI:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(How you will access the system)</em>',
                 'attributes' => array('size' => 40),
                 'value' => APP_URI
             ),

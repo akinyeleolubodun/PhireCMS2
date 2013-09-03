@@ -77,7 +77,12 @@ class UserType extends AbstractModel
         );
 
         if (isset($types->rows[0])) {
-            $this->data['table'] = Html::encode($types->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $typeRows = array();
+            foreach ($types->rows as $type) {
+                $type->type = ucwords(str_replace('-', ' ', $type->type));
+                $typeRows[] = $type;
+            }
+            $this->data['table'] = Html::encode($typeRows, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 

@@ -130,7 +130,7 @@ class IndexController extends C
                     'nav'    => $this->project->getService('nav')
                 ));
 
-                $user->set('title', 'Users ' . $user->config()->separator . ' ' . ucfirst($type->type) . ' ' . $user->config()->separator . ' Add');
+                $user->set('title', 'Users ' . $user->config()->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $user->config()->separator . ' Add');
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $type->id, false, 0, $this->project->isLoaded('Fields')

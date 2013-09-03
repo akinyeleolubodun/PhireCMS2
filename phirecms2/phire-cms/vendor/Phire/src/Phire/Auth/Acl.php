@@ -39,7 +39,7 @@ class Acl extends A
     {
         $this->sess = Session::getInstance();
         $this->type = $type;
-        $this->basePath = ($this->type->type != 'user') ? BASE_PATH . '/' . strtolower($this->type->type) : BASE_PATH . APP_URI;
+        $this->basePath = (strtolower($this->type->type) != 'user') ? BASE_PATH . '/' . strtolower($this->type->type) : BASE_PATH . APP_URI;
     }
 
     /**
@@ -93,8 +93,9 @@ class Acl extends A
                         $session->save();
                         $auth = true;
                     } else {
-                        $auth = false;            $uri = ($this->basePath == '') ? '/' : $this->basePath;
-            \Pop\Http\Response::redirect($uri);
+                        $auth = false;
+                        $uri = ($this->basePath == '') ? '/' : $this->basePath;
+                        \Pop\Http\Response::redirect($uri);
                     }
                 // Else, validate the session and record the action
                 } else {

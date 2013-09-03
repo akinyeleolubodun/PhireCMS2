@@ -22,7 +22,9 @@ elseif (isset($types) && isset($types[0])): ?>
             <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/index/<?php echo $type->id; ?>"><?php echo $type->type;?></a></td></tr>
         <?php endforeach; ?>
     </table>
+<?php elseif (isset($type)): ?>
+    <p>There are currently no users under the <strong><?php echo ucwords(str_replace('-', ' ', $type)); ?></strong> user type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
 <?php else: ?>
-    <p>There are currently no <?php echo $type; ?>s. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>"> a new <?php echo $type; ?> here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
+    <p>There are currently no users. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

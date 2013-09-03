@@ -195,7 +195,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             } else if ((int)$content->status == self::UNPUBLISHED) {
                 $this->data['allowed'] = false;
             } else if ((int)$content->status == self::DRAFT) {
-                $this->data['allowed'] = (isset($sess->user) && ($sess->user->type == 'user'));
+                $this->data['allowed'] = (isset($sess->user) && (strtolower($sess->user->type) == 'user'));
             }
         }
 

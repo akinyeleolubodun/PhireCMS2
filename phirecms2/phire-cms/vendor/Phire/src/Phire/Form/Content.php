@@ -158,9 +158,18 @@ class Content extends Form
                     'value'      => $this->getTemplates(),
                 )
             );
+
+            $viewLink = null;
+            if ($mid != 0) {
+                $c = Table\Content::findById($mid);
+                if (isset($c->id)) {
+                    $viewLink = '<br /><span style="font-size: 0.9em;">[ <a href="' . BASE_PATH . $c->uri . '" target="_blank">View</a> ]</span>';
+                }
+            }
+
             $uri = array(
                 'type'       => 'text',
-                'label'      => 'URI:',
+                'label'      => 'URI:' . $viewLink,
                 'attributes' => array(
                     'size'    => 40,
                     'onkeyup' => "slug(null, 'uri');"
