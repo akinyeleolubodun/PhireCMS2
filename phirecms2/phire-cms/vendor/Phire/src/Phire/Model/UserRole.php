@@ -88,6 +88,7 @@ class UserRole extends AbstractModel
                             // Format the resource and permissions
                             $c = str_replace('Controller.php', '', $c);
                             $c = substr($c, (strpos($c, 'Controller') + 11));
+                            $c = str_replace('Phire/', '', $c);
                             if (!in_array($class, $exclude) || (isset($exclude[$class]) && is_array($exclude[$class]))) {
                                 $resources[$class] = array(
                                     'name'    => $c,
