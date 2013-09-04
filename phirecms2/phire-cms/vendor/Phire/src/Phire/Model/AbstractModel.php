@@ -32,8 +32,17 @@ abstract class AbstractModel extends \Pop\Mvc\Model
 
         $this->data['base_path'] = BASE_PATH;
         $this->data['content_path'] = CONTENT_PATH;
-        $this->data['phireHeader'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/header.phtml';
-        $this->data['phireFooter'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/footer.phtml';
+
+        // Check for an override Phire theme for the header/footer
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml') &&
+            file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml')) {
+            $this->data['phireHeader'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml';
+            $this->data['phireFooter'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/footer.phtml';
+            // Else, just use the default header/footer
+        } else {
+            $this->data['phireHeader'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/header.phtml';
+            $this->data['phireFooter'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/footer.phtml';
+        }
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;
