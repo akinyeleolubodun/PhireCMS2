@@ -76,14 +76,18 @@ class UserRoles extends Record
                     'allow' => array(),
                     'deny'  => array()
                 );
+
                 $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
+
                 if (isset($permissions->rows[0])) {
                     foreach ($permissions->rows as $permission) {
-                        if (!isset($results['resources'][$role->name][$permission->resource])) {
+                        if (!isset($results['resources'][$role->name]['allow'][$permission->resource])) {
                             if ($permission->allow) {
                                 $results['resources'][$role->name]['allow'][$permission->resource] = array();
                             } else {
-                                $results['resources'][$role->name]['deny'][$permission->resource] = array();
+                                if (!isset($results['resources'][$role->name]['deny'][$permission->resource])) {
+                                    $results['resources'][$role->name]['deny'][$permission->resource] = array();
+                                }
                             }
                         }
                         if ($permission->permission != '') {
@@ -98,6 +102,7 @@ class UserRoles extends Record
                         }
                     }
                 }
+
                 $results['roles'][] = $r;
             }
         }
