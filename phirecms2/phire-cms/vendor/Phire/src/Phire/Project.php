@@ -390,7 +390,7 @@ class Project extends P
                         if ($assetDir == 'js') {
                             $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
                         } else if ($assetDir == 'css') {
-                            if (($as->getBasename() == 'phire.css') && (!$phireCss)) {
+                            if (($as->getBasename() != 'phire.css') || (!$phireCss)) {
                                 $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
                             }
                         }
