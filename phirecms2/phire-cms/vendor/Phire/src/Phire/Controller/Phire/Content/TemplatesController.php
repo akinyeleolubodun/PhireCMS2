@@ -99,7 +99,8 @@ class TemplatesController extends C
                 } else if (null !== $this->request->getQuery('update')) {
                     $this->sendJson(array(
                         'redirect' => $this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time(),
-                        'updated'  => ''
+                        'updated'  => '',
+                        'form'     => 'template-form'
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -161,7 +162,8 @@ class TemplatesController extends C
                             Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
-                                'updated' => ''
+                                'updated' => '',
+                                'form'    => 'template-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());

@@ -12,6 +12,7 @@ var categoryParentId = 0;
 var categoryParentUri = '';
 var curErrors = 0;
 var clr;
+var submitted = false;
 
 /**
  * Function to get resource permission actions
@@ -231,6 +232,25 @@ var processForm = function() {
                         if ($('#updated').obj != null) {
                             $('#updated').val(j.updated);
                         }
+                        if ((j.form != undefined) && ($('#' + j.form).obj != null)) {
+                            var f = $('#' + j.form).obj;
+                            for (var i = 0; i < f.elements.length; i++) {
+                                if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
+                                    f.elements[i].defaultValue = f.elements[i].value;
+                                }
+                            }
+                            if (typeof CKEDITOR !== 'undefined') {
+                                for (ed in CKEDITOR.instances) {
+                                    CKEDITOR.instances[ed].setData(f.elements[ed].value);
+                                }
+                            } else if (typeof tinymce !== 'undefined') {
+                                for (ed in tinymce.editors) {
+                                    if (ed.indexOf('field_') != -1) {
+                                        tinymce.editors[ed].setContent(f.elements[ed].value);
+                                    }
+                                }
+                            }
+                        }
                         $fx('#result').fade(100, 10, 20);
                         clr = setTimeout(clearStatus, 3000);
                     }
@@ -282,9 +302,21 @@ var updateForm = function(form, ret) {
         }
         return true;
     } else {
+        var f = $(form).obj;
+        if (typeof CKEDITOR !== 'undefined') {
+            for (ed in CKEDITOR.instances) {
+                f.elements[ed].value = CKEDITOR.instances[ed].getData();
+            }
+        } else if (typeof tinymce !== 'undefined') {
+            for (ed in tinymce.editors) {
+                if (ed.indexOf('field_') != -1) {
+                    f.elements[ed].value = tinymce.editors[ed].getContent();
+                }
+            }
+        }
         var act = $(form).attrib('action');
         var url = act + ((act.indexOf('?') != -1) ? '&update=1' : '?update=1');
-        $xmlHttp().post($(form).obj, processForm, url);
+        $xmlHttp().post(f, processForm, url);
         return false;
     }
 };
@@ -322,6 +354,10 @@ $(document).ready(function(){
     // For content form
     if ($('#content-form').obj != null) {
         contentForm = $form('#content-form');
+        contentForm.submit(function(){
+            submitted = true;
+        });
+
         if ($('#uri').obj != null) {
             var val = '';
             if ($('#parent_id').obj != null) {
@@ -345,17 +381,36 @@ $(document).ready(function(){
         }
 
         $().beforeunload(function() {
-            var change = false;
-            var f = $('#content-form').obj;
-            for (var i = 0; i < f.elements.length; i++) {
-                if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
-                    if (f.elements[i].value != f.elements[i].defaultValue) {
-                        change = true;
+            if (!submitted) {
+                var change = false;
+                var f = $('#content-form').obj;
+                for (var i = 0; i < f.elements.length; i++) {
+                    if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
+                        if (f.elements[i].value != f.elements[i].defaultValue) {
+                            change = true;
+                        }
                     }
                 }
-            }
-            if (change) {
-                return 'You are about to leave this page and have unsaved changes. Are you sure?';
+                if (typeof CKEDITOR !== 'undefined') {
+                    for (ed in CKEDITOR.instances) {
+                        if (CKEDITOR.instances[ed].getData() != f.elements[ed].defaultValue) {
+                            change = true;
+                        }
+                    }
+                } else if (typeof tinymce !== 'undefined') {
+                    for (ed in tinymce.editors) {
+                        if (ed.indexOf('field_') != -1) {
+                            if (tinymce.editors[ed].getContent() != f.elements[ed].defaultValue) {
+                                change = true;
+                            }
+                        }
+                    }
+                }
+                if (change) {
+                    return 'You are about to leave this page and have unsaved changes. Are you sure?';
+                } else {
+                    return;
+                }
             } else {
                 return;
             }

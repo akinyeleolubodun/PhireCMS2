@@ -101,7 +101,8 @@ class RolesController extends C
                 } else if (null !== $this->request->getQuery('update')) {
                     $this->sendJson(array(
                         'redirect' => $this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time(),
-                        'updated'  => ''
+                        'updated'  => '',
+                        'form'     => 'user-role-form'
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -164,7 +165,8 @@ class RolesController extends C
                             Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
-                                'updated' => ''
+                                'updated' => '',
+                                'form'    => 'user-role-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());

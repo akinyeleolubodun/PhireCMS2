@@ -211,7 +211,7 @@ ALTER SEQUENCE content_type_id_seq OWNED BY "[{prefix}]content_types"."id";
 
 INSERT INTO "[{prefix}]content_types" ("name", "uri", "order") VALUES
 ('Page', 1, 1),
-('Media', 0, 1);
+('Media', 0, 2);
 
 -- --------------------------------------------------------
 

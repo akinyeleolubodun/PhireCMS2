@@ -152,7 +152,8 @@ class IndexController extends C
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
                                 'redirect' => $this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time(),
-                                'updated'  => ''
+                                'updated'  => '',
+                                'form'     => 'user-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
@@ -220,7 +221,8 @@ class IndexController extends C
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
-                                'updated' => ''
+                                'updated' => '',
+                                'form'    => 'user-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);

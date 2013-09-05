@@ -206,7 +206,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_types', 5
 --
 
 INSERT INTO "[{prefix}]content_types" ("id", "name", "uri", "order") VALUES (5001, 'Page', 1, 1);
-INSERT INTO "[{prefix}]content_types" ("id", "name", "uri", "order") VALUES (5002, 'Media', 0, 1);
+INSERT INTO "[{prefix}]content_types" ("id", "name", "uri", "order") VALUES (5002, 'Media', 0, 2);
 
 -- --------------------------------------------------------
 

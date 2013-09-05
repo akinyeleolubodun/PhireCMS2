@@ -153,7 +153,8 @@ class IndexController extends C
                                 } else if (null !== $this->request->getQuery('update')) {
                                     $this->sendJson(array(
                                         'redirect' => $this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time(),
-                                        'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
+                                        'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>',
+                                        'form'     => 'content-form'
                                     ));
                                 } else {
                                     Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
@@ -229,7 +230,8 @@ class IndexController extends C
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                             } else if (null !== $this->request->getQuery('update')) {
                                 $this->sendJson(array(
-                                    'updated'  => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>'
+                                    'updated' => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>',
+                                    'form'    => 'content-form'
                                 ));
                             } else {
                                 Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
