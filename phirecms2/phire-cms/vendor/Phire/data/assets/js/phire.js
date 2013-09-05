@@ -343,6 +343,23 @@ $(document).ready(function(){
                 $($('#uri').parent()).append('span', ['id', 'uri-span'], (val.substring(0, 2) == '//') ? val.substring(1) : val);
             }
         }
+
+        $().beforeunload(function() {
+            var change = false;
+            var f = $('#content-form').obj;
+            for (var i = 0; i < f.elements.length; i++) {
+                if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
+                    if (f.elements[i].value != f.elements[i].defaultValue) {
+                        change = true;
+                    }
+                }
+            }
+            if (change) {
+                return 'You are about to leave this page and have unsaved changes. Are you sure?';
+            } else {
+                return;
+            }
+        });
     }
 
     // For category form

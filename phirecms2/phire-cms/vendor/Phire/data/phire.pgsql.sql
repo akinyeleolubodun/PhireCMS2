@@ -232,6 +232,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "order" integer NOT NULL,
   "include" integer,
   "feed" integer,
+  "force_ssl" integer,
   "status" integer,
   "created" timestamp,
   "updated" timestamp,
@@ -252,8 +253,8 @@ ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "order") VALUES
-(5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
+INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "order", "include", "feed", "force_ssl", "status") VALUES
+(5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
 
 -- --------------------------------------------------------
 

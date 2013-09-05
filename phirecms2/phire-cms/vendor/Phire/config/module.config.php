@@ -7,6 +7,7 @@ return array(
         'data'   => realpath(__DIR__ . '/../data'),
         'src'    => realpath(__DIR__ . '/../src'),
         //'view'   => realpath(__DIR__ . '/../view'),
+        'dev'    => true,
         'routes' => array(
             '/' => 'Phire\Controller\IndexController',
             APP_URI => array(

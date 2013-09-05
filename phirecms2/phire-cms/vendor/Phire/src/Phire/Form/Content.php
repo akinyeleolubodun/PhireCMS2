@@ -241,6 +241,12 @@ class Content extends Form
                 'value'  => array(1 => 'Yes', 0 => 'No'),
                 'marked' => 1
             );
+            $fields5['force_ssl'] = array(
+                'type'   => 'radio',
+                'label'  => 'Force SSL:',
+                'value'  => array(1 => 'Yes', 0 => 'No'),
+                'marked' => 0
+            );
             $fields5['status'] = array(
                 'type'   => 'select',
                 'label'  => 'Status:',

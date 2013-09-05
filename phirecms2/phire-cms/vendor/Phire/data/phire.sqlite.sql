@@ -225,6 +225,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "order" integer NOT NULL,
   "include" integer,
   "feed" integer,
+  "force_ssl" integer,
   "status" integer,
   "created" datetime,
   "updated" datetime,
@@ -245,7 +246,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "order") VALUES (6001, 5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
+INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "order", "include", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
 
 -- --------------------------------------------------------
 

@@ -190,7 +190,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
         if (isset($content->title) && (null !== $content->status)) {
             $sess = Session::getInstance();
             if ((strtotime($content->published) >= time()) ||
-                ((null !== $content->expired) && (strtotime($content->expired) <= time()))) {
+                ((null !== $content->expired) && ($content->expired != '0000-00-00 00:00:00') && (strtotime($content->expired) <= time()))) {
                 $this->data['allowed'] = false;
             } else if ((int)$content->status == self::UNPUBLISHED) {
                 $this->data['allowed'] = false;

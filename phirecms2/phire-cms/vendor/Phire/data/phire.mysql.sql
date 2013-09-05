@@ -210,6 +210,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `order` int(16) NOT NULL,
   `include` int(1),
   `feed` int(1),
+  `force_ssl` int(1),
   `status` int(1),
   `created` datetime,
   `updated` datetime,
@@ -228,8 +229,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
 -- Dumping data for table `content`
 --
 
-INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `order`) VALUES
-(6001, 5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
+INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `order`, `include`, `feed`, `force_ssl`, `status`) VALUES
+(6001, 5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
 
 -- --------------------------------------------------------
 

@@ -662,6 +662,7 @@ class Content extends AbstractContentModel
             'order'      => (int)$fields['order'],
             'include'    => ((isset($fields['include']) ? (int)$fields['include'] : null)),
             'feed'       => (int)$fields['feed'],
+            'force_ssl'  => ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null)),
             'status'     => ((isset($fields['status']) ? (int)$fields['status'] : null)),
             'created'    => date('Y-m-d H:i:s'),
             'updated'    => null,
@@ -797,6 +798,7 @@ class Content extends AbstractContentModel
         $content->order      = (int)$fields['order'];
         $content->include    = ((isset($fields['include']) ? (int)$fields['include'] : null));
         $content->feed       = (int)$fields['feed'];
+        $content->force_ssl  = ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null));
         $content->status     = ((isset($fields['status']) ? (int)$fields['status'] : null));
         $content->updated    = date('Y-m-d H:i:s');
         $content->published  = $published;

@@ -94,8 +94,11 @@ class IndexController extends C
         $content = new Model\Content();
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
-        // If page found and allowed
-        if (isset($content->id) && ($content->allowed)) {
+        // If page found, but requires SSL
+        if (isset($content->id) && (($_SERVER['SERVER_PORT'] != '443') && ($content->force_ssl))) {
+            Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        // Else, if page found and allowed
+        } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
             $this->view = View::factory($template, $content);
             $this->send();
