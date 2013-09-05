@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]config" (
 ) ;
 
 --
--- Dumping data for table "[{prefix}]config"
+-- Dumping data for table "config"
 --
 
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_version', '');
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_types', 2000);
 
 --
--- Dumping data for table "[{prefix}]user_types"
+-- Dumping data for table "user_types"
 --
 
 INSERT INTO "[{prefix}]user_types" ("id", "type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "email_verification", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_roles', 3000);
 
 --
--- Dumping data for table "[{prefix}]user_roles"
+-- Dumping data for table "user_roles"
 --
 
 INSERT INTO "[{prefix}]user_roles" ("id", "type_id", "name") VALUES
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]users', 1000);
 
 --
--- Dumping data for table "[{prefix}]users"
+-- Dumping data for table "users"
 --
 
 -- --------------------------------------------------------
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_sessions', 4000);
 
 --
--- Dumping data for table "[{prefix}]user_sessions"
+-- Dumping data for table "user_sessions"
 --
 
 -- --------------------------------------------------------
@@ -200,6 +200,13 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_types" (
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_types', 5000);
+
+--
+-- Dumping data for table "content_types"
+--
+
+INSERT INTO "[{prefix}]content_types" ("id", "name", "uri", "order") VALUES (5001, 'Page', 1, 1);
+INSERT INTO "[{prefix}]content_types" ("id", "name", "uri", "order") VALUES (5002, 'Media', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -233,6 +240,12 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
+
+--
+-- Dumping data for table "content"
+--
+
+INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "order") VALUES (6001, 5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
 
 -- --------------------------------------------------------
 

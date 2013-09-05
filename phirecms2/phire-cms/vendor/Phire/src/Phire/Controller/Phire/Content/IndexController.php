@@ -94,7 +94,7 @@ class IndexController extends C
                 $content->set('title', 'Content ' . $content->config()->separator . ' Select Type');
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, 0, $this->project->isLoaded('Fields')
+                    0, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
                 );
 
                 if ($this->request->isPost()) {
@@ -132,7 +132,7 @@ class IndexController extends C
                     $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Add');
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                        $type->id, 0, $this->project->isLoaded('Fields')
+                        $type->id, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
                     );
 
                     // If form is submitted
@@ -209,7 +209,7 @@ class IndexController extends C
                 $content->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $content->type_id, $content->id, $this->project->isLoaded('Fields')
+                    $content->type_id, $content->id, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
                 );
 
                 // If form is submitted

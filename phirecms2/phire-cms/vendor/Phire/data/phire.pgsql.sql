@@ -15,7 +15,7 @@ PRIMARY KEY ("setting")
 ) ;
 
 --
--- Dumping data for table "[{prefix}]config"
+-- Dumping data for table "config"
 --
 
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
 ALTER SEQUENCE type_id_seq OWNED BY "[{prefix}]user_types"."id";
 
 --
--- Dumping data for table "[{prefix}]user_types"
+-- Dumping data for table "user_types"
 --
 
 INSERT INTO "[{prefix}]user_types" ("type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "email_verification", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
 ALTER SEQUENCE role_id_seq OWNED BY "[{prefix}]user_roles"."id";
 
 --
--- Dumping data for table "[{prefix}]user_roles"
+-- Dumping data for table "user_roles"
 --
 
 INSERT INTO "[{prefix}]user_roles" ("type_id", "name") VALUES
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
 ALTER SEQUENCE user_id_seq OWNED BY "[{prefix}]users"."id";
 
 --
--- Dumping data for table "[{prefix}]users"
+-- Dumping data for table "users"
 --
 
 -- --------------------------------------------------------
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
 ALTER SEQUENCE session_id_seq OWNED BY "[{prefix}]user_sessions"."id";
 
 --
--- Dumping data for table "[{prefix}]user_sessions"
+-- Dumping data for table "user_sessions"
 --
 
 -- --------------------------------------------------------
@@ -204,6 +204,14 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_types" (
 ) ;
 
 ALTER SEQUENCE content_type_id_seq OWNED BY "[{prefix}]content_types"."id";
+
+--
+-- Dumping data for table "content_types"
+--
+
+INSERT INTO "[{prefix}]content_types" ("name", "uri", "order") VALUES
+('Page', 1, 1),
+('Media', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -239,6 +247,13 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
 ) ;
 
 ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
+
+--
+-- Dumping data for table "content"
+--
+
+INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "order") VALUES
+(5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
 
 -- --------------------------------------------------------
 

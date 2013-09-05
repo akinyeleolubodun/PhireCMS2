@@ -23,9 +23,10 @@ class Content extends Form
      * @param  int     $tid
      * @param  int     $mid
      * @param  boolean $isFields
+     * @param  array   $cfg
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $isFields = false)
+    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $isFields = false, $cfg = array())
     {
         // Generate fields for content type select first
         if ($tid == 0) {
@@ -49,7 +50,7 @@ class Content extends Form
             );
         // Else, generate fields for the content object
         } else {
-            $this->initFieldsValues = $this->getInitFields($tid, $mid, $isFields);
+            $this->initFieldsValues = $this->getInitFields($tid, $mid, $isFields, $cfg);
         }
 
         parent::__construct($action, $method, null, '    ');
@@ -110,9 +111,10 @@ class Content extends Form
      * @param  int     $tid
      * @param  int     $mid
      * @param  boolean $isFields
+     * @param  array   $cfg
      * @return array
      */
-    protected function getInitFields($tid = 0, $mid = 0, $isFields = false)
+    protected function getInitFields($tid = 0, $mid = 0, $isFields = false, $cfg = array())
     {
         // Get types and type object
         $typesAry = array();
@@ -155,7 +157,7 @@ class Content extends Form
                 'template' => array(
                     'type' => 'select',
                     'label'      => 'Template:',
-                    'value'      => $this->getTemplates(),
+                    'value'      => $this->getTemplates($cfg),
                 )
             );
 
@@ -396,13 +398,11 @@ class Content extends Form
     /**
      * Method to get templates
      *
+     * @param  array $cfg
      * @return array
      */
-    protected function getTemplates()
+    protected function getTemplates($cfg = array())
     {
-        $cfg = include __DIR__ . '/../../../config/module.config.php';
-        $cfg = $cfg['Phire']->asArray();
-
         // Get view templates path from config, or fall back to the default
         if (isset($cfg['view'])) {
             if (is_array($cfg['view'])) {

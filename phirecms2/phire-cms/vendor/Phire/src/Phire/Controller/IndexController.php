@@ -187,7 +187,7 @@ class IndexController extends C
             'language'  => $lang,
             'updated'   => date('Y-m-d H:i:s'),
             'generator' => 'http://' . $_SERVER['HTTP_HOST'] . '/',
-            'author'    => 'PopPHP Feed Generator'
+            'author'    => 'Phire CMS Feed Generator'
         );
 
         $feed = new \Pop\Feed\Writer(

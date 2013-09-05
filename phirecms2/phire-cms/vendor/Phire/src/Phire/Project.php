@@ -38,8 +38,7 @@ class Project extends P
         $modulesDirs = array(
             __DIR__ . '/../../../',
             __DIR__ . '/../../../../module',
-            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/',
-            $_SERVER['DOCUMENT_ROOT'] . '/../module/'
+            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
         );
 
         // Register and load any other internal modules
@@ -51,46 +50,49 @@ class Project extends P
                 foreach ($dirs as $d) {
                     $moduleCfg = null;
                     if (($d != 'PopPHPFramework') && ($d != 'config') && ($d != 'vendor') && (is_dir($directory . $d))) {
+                        //$ext = Table\Extensions::findBy(array('name' => $d));
+                        //if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
                         $this->loadAssets($directory . $d . '/data', $d);
-                        if ($d != 'Phire') {
-                            if (file_exists($directory . $d . '/src')) {
-                                $autoloader->register($d, $directory . $d . '/src');
-                            }
-                            // Get module config
-                            if (file_exists($directory . $d . '/config/module.config.php')) {
-                                $moduleCfg = include $directory . $d . '/config/module.config.php';
-                            }
-                            // Check for any module config overrides
-                            if (file_exists($directory . '/config/' . strtolower($d) . '.config.php')) {
-                                $override = include $directory . '/config/' . strtolower($d) . '.config.php';
-                                if (isset($override[$d]) && (null !== $moduleCfg)) {
-                                    $moduleCfg[$d]->merge($override[$d]);
+                            if ($d != 'Phire') {
+                                if (file_exists($directory . $d . '/src')) {
+                                    $autoloader->register($d, $directory . $d . '/src');
                                 }
-                            }
-                            // Load module configs
-                            if (null !== $moduleCfg) {
-                                // Attach any event hooks
-                                if (null !== $moduleCfg[$d]->events) {
-                                    $events = $moduleCfg[$d]->events->asArray();
-                                    foreach ($events as $event => $action) {
-                                        $act = null;
-                                        $priority = 0;
-                                        if (is_array($action)) {
-                                            if (isset($action['action'])) {
-                                                $act = $action['action'];
-                                            }
-                                            $priority = (isset($action['priority']) ? $action['priority'] : 0);
-                                        } else {
-                                            $act = $action;
-                                        }
-                                        if (null !== $act) {
-                                            $this->attachEvent($event, $act, $priority);
-                                        }
+                                // Get module config
+                                if (file_exists($directory . $d . '/config/module.config.php')) {
+                                    $moduleCfg = include $directory . $d . '/config/module.config.php';
+                                }
+                                // Check for any module config overrides
+                                if (file_exists($directory . '/config/' . strtolower($d) . '.config.php')) {
+                                    $override = include $directory . '/config/' . strtolower($d) . '.config.php';
+                                    if (isset($override[$d]) && (null !== $moduleCfg)) {
+                                        $moduleCfg[$d]->merge($override[$d]);
                                     }
                                 }
-                                $this->loadModule($moduleCfg);
+                                // Load module configs
+                                if (null !== $moduleCfg) {
+                                    // Attach any event hooks
+                                    if (null !== $moduleCfg[$d]->events) {
+                                        $events = $moduleCfg[$d]->events->asArray();
+                                        foreach ($events as $event => $action) {
+                                            $act = null;
+                                            $priority = 0;
+                                            if (is_array($action)) {
+                                                if (isset($action['action'])) {
+                                                    $act = $action['action'];
+                                                }
+                                                $priority = (isset($action['priority']) ? $action['priority'] : 0);
+                                            } else {
+                                                $act = $action;
+                                            }
+                                            if (null !== $act) {
+                                                $this->attachEvent($event, $act, $priority);
+                                            }
+                                        }
+                                    }
+                                    $this->loadModule($moduleCfg);
+                                }
                             }
-                        }
+                        //}
                     }
                 }
             }

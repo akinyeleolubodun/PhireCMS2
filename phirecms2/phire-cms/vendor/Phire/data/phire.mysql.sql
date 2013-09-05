@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
--- Dumping data for table `[{prefix}]config`
+-- Dumping data for table `config`
 --
 
 INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2002 ;
 
 --
--- Dumping data for table `[{prefix}]user_types`
+-- Dumping data for table `user_types`
 --
 
 INSERT INTO `[{prefix}]user_types` (`id`, `type`, `default_role_id`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `email_verification`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`, `controller`, `sub_controllers`) VALUES
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_roles` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3002 ;
 
 --
--- Dumping data for table `[{prefix}]user_roles`
+-- Dumping data for table `user_roles`
 --
 
 INSERT INTO `[{prefix}]user_roles` (`id`, `type_id`, `name`) VALUES
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;
 
 --
--- Dumping data for table `[{prefix}]users`
+-- Dumping data for table `users`
 --
 
 -- --------------------------------------------------------
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4001 ;
 
 --
--- Dumping data for table `[{prefix}]user_sessions`
+-- Dumping data for table `user_sessions`
 --
 
 -- --------------------------------------------------------
@@ -183,7 +183,15 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_types` (
   `uri` int(1) NOT NULL,
   `order` int(16) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5003 ;
+
+--
+-- Dumping data for table `content_types`
+--
+
+INSERT INTO `[{prefix}]content_types` (`id`, `name`, `uri`, `order`) VALUES
+(5001, 'Page', 1, 1),
+(5002, 'Media', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -215,6 +223,13 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   CONSTRAINT `fk_created_by` FOREIGN KEY (`created_by`) REFERENCES `[{prefix}]users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `[{prefix}]users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6001 ;
+
+--
+-- Dumping data for table `content`
+--
+
+INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `order`) VALUES
+(6001, 5001, 'Phire CMS 2.0 Home Page', '/', '', 0);
 
 -- --------------------------------------------------------
 
