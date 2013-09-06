@@ -19,8 +19,8 @@ Extensions
 Users
 -----
 
-    ./phire show-types          - Show user types
-    ./phire show-roles          - Show user roles
+    ./phire user-types          - Show user types
+    ./phire user-roles          - Show user roles
     ./phire user-add            - Add a user
     ./phire user-password       - Set a user password
     ./phire user-role           - Set a user role
@@ -39,10 +39,10 @@ SQL
 System
 ------
 
-    ./phire archive             - Archive system
+    ./phire archive             - Archive the system
     ./phire update              - Update a module or theme
     ./phire update-core         - Update the core
     ./phire update-all          - Update all
-    ./phire deploy              - Deploy to site to a production location or server
-    ./phire deploy-content      - Deploy only content
-    ./phire deploy-assets       - Deploy only assets
+    ./phire deploy              - Deploy the system to a production local or remote location
+    ./phire deploy-content      - Deploy only the content
+    ./phire deploy-assets       - Deploy only the assets
