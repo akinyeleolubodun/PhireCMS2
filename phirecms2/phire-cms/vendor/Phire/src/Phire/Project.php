@@ -6,6 +6,7 @@ namespace Phire;
 
 use Pop\File\Dir;
 use Pop\Project\Project as P;
+use Pop\Web\Session;
 
 class Project extends P
 {
@@ -31,8 +32,12 @@ class Project extends P
     {
         self::isInstalled();
 
-        if (!self::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH)) {
-            throw new \Exception('Error: The content folder(s) are not writable.');
+        $sess = Session::getInstance();
+        $errors = self::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH, true);
+        if (count($errors) > 0) {
+            $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
+        } else {
+            unset($sess->errors);
         }
 
         $modulesDirs = array(

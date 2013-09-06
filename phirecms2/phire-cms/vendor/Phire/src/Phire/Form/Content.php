@@ -165,7 +165,7 @@ class Content extends Form
             if ($mid != 0) {
                 $c = Table\Content::findById($mid);
                 if (isset($c->id)) {
-                    $viewLink = '<br /><span style="font-size: 0.9em;">[ <a href="' . BASE_PATH . $c->uri . '" target="_blank">View</a> ]</span>';
+                    $viewLink = "<br /><span style=\"font-size: 0.9em;\">[ <a href=\"#\" onclick=\"window.open('" . BASE_PATH . "' + $('#uri-span').val()); return false;\">View</a> ]</span>";
                 }
             }
 

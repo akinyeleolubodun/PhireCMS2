@@ -44,7 +44,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
     }
 
     /**
-     * Recursive method to get content children
+     * Recursive method to get content or category children
      *
      * @param array   $content
      * @param int     $pid
@@ -61,6 +61,15 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                 if (isset($c->include) && (!$c->include) && ($c->uri == '/')) {
                     $children = $this->getChildren($content, $c->id, $count);
                 } else {
+                    // Get any content roles
+                    $rolesAry = array();
+                    if (isset($c->title)) {
+                        $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
+                        foreach ($roles->rows as $role) {
+                            $rolesAry[] = $role->role_id;
+                        }
+                    }
+
                     $p = (array)$c;
                     $p['uri'] = BASE_PATH . (isset($c->category) ? '/category' : null) . $c->uri;
                     $p['href'] = $p['uri'];
@@ -69,8 +78,10 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                     if (($count) && ($this->config->category_totals)) {
                         $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
                     }
-                    $p['children'] = $this->getChildren($content, $c->id, $count);
-                    $children[] = $p;
+                    if (isset($c->category) || (count($rolesAry) == 0) || ((count($rolesAry) > 0) && (isset($this->data['user'])) && in_array($this->data['user']['role_id'], $rolesAry))) {
+                        $p['children'] = $this->getChildren($content, $c->id, $count);
+                        $children[] = $p;
+                    }
                 }
             }
         }

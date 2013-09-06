@@ -187,6 +187,27 @@ fieldset {
     font-weight: bold;
 }
 
+#errors {
+    margin: 0 auto 5px auto;
+    padding: 10px 1% 10px 1%;
+    width: 98%;
+    height: 17px;
+    overflow: hidden;
+    color: #8e0202;
+    background-color: #e8d0d0;
+}
+
+#errors p {
+    margin: 0 0 20px 0;
+    padding: 0;
+    line-height: 1.5em;
+}
+
+#errors a {
+    color: #e20d0d;
+    text-decoration: underline;
+}
+
 .data-table {
     margin: 0 auto 10px auto;
     padding: 0;

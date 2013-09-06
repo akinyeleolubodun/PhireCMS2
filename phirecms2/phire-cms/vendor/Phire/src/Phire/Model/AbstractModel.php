@@ -33,6 +33,10 @@ abstract class AbstractModel extends \Pop\Mvc\Model
         $this->data['base_path'] = BASE_PATH;
         $this->data['content_path'] = CONTENT_PATH;
 
+        if (isset($sess->errors)) {
+            $this->data['errors'] = $sess->errors;
+        }
+
         // Check for an override Phire theme for the header/footer
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml') &&
             file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml')) {

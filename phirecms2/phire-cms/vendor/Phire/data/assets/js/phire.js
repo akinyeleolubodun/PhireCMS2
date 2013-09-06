@@ -332,6 +332,23 @@ var clearStatus = function() {
 }
 
 /**
+ * Function to clear the status
+ *
+ * @param  Object a
+ * @param  int    hgt
+ * @return void
+ */
+var wipeErrors = function(a, hgt) {
+    if ($('#errors').height() > 50) {
+        $(a).val('Show');
+        $fx('#errors').wipeUp(17, 10, 20);
+    } else {
+        $(a).val('Hide');
+        $fx('#errors').wipeUp(hgt, 10, 20);
+    }
+}
+
+/**
  * Document ready function to load the correct URI string into the URI span
  */
 $(document).ready(function(){
@@ -349,6 +366,10 @@ $(document).ready(function(){
                 clr = setTimeout(clearStatus, 3000);
             }
         }
+    }
+
+    if ($('#errors').obj != null) {
+        $('#errors').css('opacity', 100);
     }
 
     // For content form

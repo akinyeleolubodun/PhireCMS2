@@ -140,6 +140,11 @@ class Extension extends AbstractModel
     public function installThemes()
     {
         try {
+            $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+            if (!is_writable($themePath)) {
+                throw new \Phire\Exception('The themes folder is not writable.');
+            }
+
             $exts = Table\Extensions::findAll(null, array('active' => 1));
             foreach ($exts->rows as $ext) {
                 $e = Table\Extensions::findById($ext->id);
@@ -150,7 +155,6 @@ class Extension extends AbstractModel
             }
 
             $last = null;
-            $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
             foreach ($this->data['new'] as $name => $theme) {
                 $archive = new Archive($themePath . '/' . $theme);
                 $archive->extract($themePath . '/');
@@ -248,7 +252,7 @@ class Extension extends AbstractModel
                 $modPath = (file_exists($modulePath1 . '/' . $module)) ? $modulePath1 : $modulePath2;
 
                 if (!is_writable($modPath)) {
-                    throw new \Phire\Exception('The module folder is not writable.');
+                    throw new \Phire\Exception('The modules folder is not writable.');
                 }
 
                 $archive = new Archive($modPath . '/' . $module);
