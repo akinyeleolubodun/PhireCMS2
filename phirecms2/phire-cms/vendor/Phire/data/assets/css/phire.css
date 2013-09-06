@@ -66,15 +66,16 @@ fieldset {
 }
 
 #main-nav-1 li {
+    position: relative;
     margin: 0;
     padding: 0;
     list-style-type: none;
-    display: inline;
+    display: inline-block;
 }
 
 #main-nav-1 li > a {
     margin: 0;
-    padding: 10px 30px 10px 30px;
+    padding: 11px 30px 9px 30px;
     display: block;
     float: left;
     height: 16px;
@@ -93,6 +94,7 @@ fieldset {
     position: absolute;
     margin: 0;
     padding: 0;
+    left: 0;
     top: 36px;
     z-index: 100;
     background-color: #000;
