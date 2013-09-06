@@ -37,7 +37,7 @@ class Project extends P
 
         $modulesDirs = array(
             __DIR__ . '/../../../',
-            __DIR__ . '/../../../../module',
+            __DIR__ . '/../../../../module/',
             $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
         );
 

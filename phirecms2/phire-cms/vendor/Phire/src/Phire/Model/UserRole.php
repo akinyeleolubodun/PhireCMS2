@@ -42,8 +42,9 @@ class UserRole extends AbstractModel
         // Else, get all controllers from the system and module directories
         } else {
             $systemDirectory = new Dir(realpath(__DIR__ . '/../../../../'), true);
+            $systemModuleDirectory = new Dir(realpath(__DIR__ . '/../../../../../module/'), true);
             $moduleDirectory = new Dir(realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules'), true);
-            $dirs = array_merge($systemDirectory->getFiles(), $moduleDirectory->getFiles());
+            $dirs = array_merge($systemDirectory->getFiles(), $systemModuleDirectory->getFiles(), $moduleDirectory->getFiles());
             sort($dirs);
 
             // Dir clean up

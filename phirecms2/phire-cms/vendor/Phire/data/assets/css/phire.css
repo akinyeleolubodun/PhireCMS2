@@ -74,10 +74,9 @@ fieldset {
 
 #main-nav-1 li > a {
     margin: 0;
-    padding: 10px 0 10px 0;
+    padding: 10px 30px 10px 30px;
     display: block;
     float: left;
-    width: 150px;
     height: 16px;
     color: #fff;
     text-align: center;
@@ -117,11 +116,11 @@ fieldset {
 
 #main-nav-1 li > ul > li > a {
     margin: 0;
-    padding: 10px 5px 5px 15px;
+    padding: 11px 5px 4px 15px;
     color: #fff;
     display: block;
-    width: 150px;
-    height: 20px;
+    width: 120px;
+    min-height: 20px;
     font-size: 0.9em;
     text-align: left;
     text-decoration: none;
@@ -139,7 +138,7 @@ fieldset {
     margin: 0;
     padding: 0;
     top: 0px;
-    left: 170px;
+    left: 140px;
     z-index: 100;
     background-color: #000;
 }

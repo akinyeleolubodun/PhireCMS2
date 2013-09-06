@@ -80,9 +80,12 @@ class Extension extends AbstractModel
         $modules = Table\Extensions::findAll('id ASC', array('type' => 1));
         $moduleRows = $modules->rows;
 
-        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules', false, false, false);
+        $moduleDir1 = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules', false, false, false);
+        $moduleDir2 = new Dir(__DIR__ . '/../../../../../module', false, false, false);
+
+        $dirs = array_merge($moduleDir1->getFiles(), $moduleDir2->getFiles());
         $moduleFiles = array();
-        foreach ($dir->getFiles() as $file) {
+        foreach ($dirs as $file) {
             if ($file != 'index.html') {
                 $moduleFiles[substr($file, 0, strpos($file, '.'))] = $file;
             }
@@ -232,17 +235,26 @@ class Extension extends AbstractModel
     /**
      * Install modules method
      *
+     * @throws \Phire\Exception
      * @return void
      */
     public function installModules()
     {
         try {
-            $modulePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
+            $modulePath1 = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
+            $modulePath2 = __DIR__ . '/../../../../../module';
+
             foreach ($this->data['new'] as $name => $module) {
-                $archive = new Archive($modulePath . '/' . $module);
-                $archive->extract($modulePath . '/');
-                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($modulePath . '/' . $name . '.tar'))) {
-                    unlink($modulePath . '/' . $name . '.tar');
+                $modPath = (file_exists($modulePath1 . '/' . $module)) ? $modulePath1 : $modulePath2;
+
+                if (!is_writable($modPath)) {
+                    throw new \Phire\Exception('The module folder is not writable.');
+                }
+
+                $archive = new Archive($modPath . '/' . $module);
+                $archive->extract($modPath . '/');
+                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($modPath . '/' . $name . '.tar'))) {
+                    unlink($modPath . '/' . $name . '.tar');
                 }
 
                 $dbType =  Table\Extensions::getSql()->getDbType();
@@ -254,15 +266,15 @@ class Extension extends AbstractModel
                     $type = 'mysql';
                 }
 
-                $sqlFile = $modulePath . '/' .
+                $sqlFile = $modPath . '/' .
                     $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
 
                 $tables = array();
                 $info = array();
 
                 // Check for a config and try to get info out of it
-                if (file_exists($modulePath . '/' . $name . '/config') && file_exists($modulePath . '/' . $name . '/config/module.config.php')) {
-                    $cfg = file_get_contents($modulePath . '/' . $name . '/config/module.config.php');
+                if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.config.php')) {
+                    $cfg = file_get_contents($modPath . '/' . $name . '/config/module.config.php');
                     if (strpos($cfg, '*/') !== false) {
                         $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
                         $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));
@@ -500,6 +512,18 @@ class Extension extends AbstractModel
                         if (file_exists($contentPath . '/extensions/modules/' . $ext->name . $e) &&
                             is_writable($contentPath . '/extensions/modules/' . $ext->name . $e)) {
                             unlink($contentPath . '/extensions/modules/' . $ext->name . $e);
+                        }
+                    }
+
+                    if (file_exists(__DIR__ . '/../../../../../module/' . $ext->name)) {
+                        $dir = new Dir(__DIR__ . '/../../../../../module/' . $ext->name);
+                        $dir->emptyDir(null, true);
+                    }
+
+                    foreach ($exts as $e) {
+                        if (file_exists(__DIR__ . '/../../../../../module/' . $ext->name . $e) &&
+                            is_writable(__DIR__ . '/../../../../../module/' . $ext->name . $e)) {
+                            unlink(__DIR__ . '/../../../../../module/' . $ext->name . $e);
                         }
                     }
 

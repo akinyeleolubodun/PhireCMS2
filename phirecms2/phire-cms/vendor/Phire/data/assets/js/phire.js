@@ -537,13 +537,14 @@ $(document).ready(function(){
     var nav = $('#main-nav-1').children();
     for (var i = 0; i < nav.length; i++) {
         if ((nav[i].nodeType == 1) && (nav[i].nodeName == 'LI')) {
+            var a = nav[i].getElementsByTagName('a');
             var navChildren = nav[i].childNodes;
             for (var j = 0; j < navChildren.length; j++) {
                 if ((navChildren[j].nodeType == 1) && (navChildren[j].nodeName == 'UL')) {
                     $(navChildren[j]).css('left', left + 'px');
                 }
             }
-            left += 150;
+            left += $(a[0]).width();
         }
     }
 });
