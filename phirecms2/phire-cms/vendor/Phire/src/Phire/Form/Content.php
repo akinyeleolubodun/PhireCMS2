@@ -212,7 +212,7 @@ class Content extends Form
         $fields1['content_title'] = array(
             'type'       => 'text',
             'label'      => 'Title:',
-            'required'   => true,
+            'required'   => (!$this->hasFile),
             'attributes' => $titleAttributes
         );
 

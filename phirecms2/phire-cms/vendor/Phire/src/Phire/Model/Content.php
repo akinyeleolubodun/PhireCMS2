@@ -624,10 +624,15 @@ class Content extends AbstractContentModel
             if (preg_match(self::$imageRegex, $fileName)) {
                 self::processMedia($fileName, $this->config);
             }
+
+            $title = ($fields['content_title'] != '') ?
+                $fields['content_title'] :
+                ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.'))));
             $uri = $fileName;
             $slug = $fileName;
         // Else, if the content is a regular content object
         } else {
+            $title = $fields['content_title'];
             $slug = $fields['uri'];
             $uri = $fields['uri'];
 
@@ -656,7 +661,7 @@ class Content extends AbstractContentModel
             'type_id'    => $fields['type_id'],
             'parent_id'  => $parentId,
             'template'   => ((isset($fields['template']) && ($fields['template'] != '0')) ? $fields['template'] : null),
-            'title'      => $fields['content_title'],
+            'title'      => $title,
             'uri'        => $uri,
             'slug'       => $slug,
             'order'      => (int)$fields['order'],
@@ -757,14 +762,20 @@ class Content extends AbstractContentModel
                 if (preg_match(self::$imageRegex, $fileName)) {
                     self::processMedia($fileName, $this->config);
                 }
+                $title = ($fields['content_title'] != '') ?
+                    $fields['content_title'] :
+                    ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.'))));
+
                 $uri = $fileName;
                 $slug = $fileName;
             } else {
+                $title = $content->title;
                 $uri = $content->uri;
                 $slug = $content->slug;
             }
         // Else, if the content is a regular content object
         } else {
+            $title = $fields['content_title'];
             $slug = $fields['uri'];
             $uri = $fields['uri'];
 
@@ -792,7 +803,7 @@ class Content extends AbstractContentModel
         $content->type_id    = $fields['type_id'];
         $content->parent_id  = $parentId;
         $content->template   = ((isset($fields['template']) && ($fields['template'] != '0')) ? $fields['template'] : null);
-        $content->title      = $fields['content_title'];
+        $content->title      = $title;
         $content->uri        = $uri;
         $content->slug       = $slug;
         $content->order      = (int)$fields['order'];
