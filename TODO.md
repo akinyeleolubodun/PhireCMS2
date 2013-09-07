@@ -1,7 +1,6 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- Upload assets while editing
 - In-Content Editor
 - System Theme
 - Language
