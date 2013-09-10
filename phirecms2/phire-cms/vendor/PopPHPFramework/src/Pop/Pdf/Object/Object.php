@@ -23,7 +23,7 @@ namespace Pop\Pdf\Object;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.4.0
+ * @version    1.5.0
  */
 class Object
 {
@@ -105,6 +105,10 @@ class Object
                 $this->setStream($str);
             } else {
                 $this->define($s);
+            }
+
+            if (stripos($this->def, '/flatedecode') !== false) {
+                $this->isCompressed = true;
             }
 
             if (stripos($this->def, '/xobject') !== false) {

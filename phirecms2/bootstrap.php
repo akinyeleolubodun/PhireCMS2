@@ -22,6 +22,6 @@ $autoloader->register('Phire', __DIR__ . APP_PATH . '/vendor/Phire/src');
 
 // Create the Phire project object
 $project = \Phire\Project::factory(
-    include __DIR__ . APP_PATH . '/config/project.config.php',
-    include __DIR__ . APP_PATH . '/vendor/Phire/config/module.config.php'
+    include __DIR__ . APP_PATH . '/config/project.php',
+    include __DIR__ . APP_PATH . '/vendor/Phire/config/module.php'
 );

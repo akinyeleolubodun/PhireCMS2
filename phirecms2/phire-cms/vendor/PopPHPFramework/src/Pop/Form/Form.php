@@ -25,7 +25,7 @@ use Pop\Dom\Child;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.4.0
+ * @version    1.5.0
  */
 class Form extends \Pop\Dom\Dom
 {
@@ -496,6 +496,16 @@ class Form extends \Pop\Dom\Dom
         }
 
         return $this;
+    }
+
+    /**
+     * Get the $hasFile property
+     *
+     * @return boolean
+     */
+    public function hasFile()
+    {
+        return $this->hasFile;
     }
 
     /**

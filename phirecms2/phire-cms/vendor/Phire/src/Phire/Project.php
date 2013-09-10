@@ -48,8 +48,8 @@ class Project extends P
 
         // Load Phire any overriding Phire configuration
         $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire');
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php')) {
-            $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.config.php';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
+            $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
             if (isset($phireCfg['Phire'])) {
                 // If the overriding config is set to allow changes, merge new nav with the original nav
                 // else, the entire original nav will be overwritten with the new nav.
@@ -72,23 +72,29 @@ class Project extends P
                     if (($d != 'PopPHPFramework') && ($d != 'Phire') && ($d != 'config') && ($d != 'vendor') && (is_dir($directory . $d))) {
                         $ext = Table\Extensions::findBy(array('name' => $d));
                         if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
+                            // Load assets
                             $this->loadAssets($directory . $d . '/data', $d);
-                            if (file_exists($directory . $d . '/src')) {
-                                $autoloader->register($d, $directory . $d . '/src');
-                            }
+
                             // Get module config
-                            if (file_exists($directory . $d . '/config/module.config.php')) {
-                                $moduleCfg = include $directory . $d . '/config/module.config.php';
+                            if (file_exists($directory . $d . '/config/module.php')) {
+                                $moduleCfg = include $directory . $d . '/config/module.php';
                             }
+
                             // Check for any module config overrides
                             if (file_exists($directory . '/config/' . strtolower($d) . '.config.php')) {
-                                $override = include $directory . '/config/' . strtolower($d) . '.config.php';
+                                $override = include $directory . '/config/' . strtolower($d) . '.php';
                                 if (isset($override[$d]) && (null !== $moduleCfg)) {
                                     $moduleCfg[$d]->merge($override[$d]);
                                 }
                             }
+
                             // Load module configs
                             if (null !== $moduleCfg) {
+                                // Register the module source
+                                if (file_exists($moduleCfg[$d]->src)) {
+                                    $autoloader->register($d, $moduleCfg[$d]->src);
+                                }
+
                                 // Attach any event hooks
                                 if (null !== $moduleCfg[$d]->events) {
                                     $events = $moduleCfg[$d]->events->asArray();

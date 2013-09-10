@@ -23,7 +23,7 @@ namespace Pop\Project\Install;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.4.0
+ * @version    1.5.0
  */
 class Base
 {
@@ -90,8 +90,8 @@ class Base
             $docroot = "__DIR__ . '/" . $dirs . "'";
         }
 
-        // Create project.config.php file
-        $projectCfg = new \Pop\Code\Generator($install->project->base . '/config/project.config.php');
+        // Create project.php file
+        $projectCfg = new \Pop\Code\Generator($install->project->base . '/config/project.php');
         $projectCfg->appendToBody('return new Pop\Config(array(', true)
                    ->appendToBody("    'base'      => " . $base . ",")
                    ->appendToBody("    'docroot'   => " . $docroot, false);
@@ -154,7 +154,7 @@ class Base
         $projectCfg->save();
 
         // Create the module config file
-        $moduleCfg = new \Pop\Code\Generator($install->project->base . '/module/' . $install->project->name . '/config/module.config.php');
+        $moduleCfg = new \Pop\Code\Generator($install->project->base . '/module/' . $install->project->name . '/config/module.php');
         $moduleCfg->appendToBody('return array(')
                   ->appendToBody("    '{$install->project->name}' => new Pop\Config(array(")
                   ->appendToBody("        'base'   => __DIR__ . '/../',")
