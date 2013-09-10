@@ -48,6 +48,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('category_totals', '
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('feed_type', '10');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('feed_limit', '20');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('open_authoring', '1');
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('incontent_editing', '0'),
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_limit', '25');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('pagination_range', '10');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('force_ssl', '0');

@@ -152,10 +152,17 @@ class IndexController extends C
 
                 if ($form->isValid()) {
                     $user->save($form);
-                    $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a>.</p>');
+                    $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '" target="_blank">here</a>.</p>');
                     Model\Install::send($form);
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
+
+                    $home = \Phire\Table\Content::findById(6001);
+                    if (isset($home->id)) {
+                        $home->created_by = $user->id;
+                        $home->update();
+                    }
+
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user);
                     $this->send();
                 } else {

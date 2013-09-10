@@ -10,8 +10,9 @@
 <?php endif; ?>
     <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
-<?php elseif (isset($table)):
-    echo $table;
+<?php elseif (isset($table)): ?>
+    <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><strong>Search:</strong> <input type="text" name="search_title" size="20" value="" /> <input type="submit" value="Search" name="submit" /> [ <a href="<?php echo substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')); ?>">Clear</a> ]</div></form>
+<?php echo $table;
 elseif (isset($types) && isset($types[0])): ?>
     <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
         <tr><th>Content Types</th></tr>

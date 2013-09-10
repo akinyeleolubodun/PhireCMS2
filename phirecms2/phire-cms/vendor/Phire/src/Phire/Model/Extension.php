@@ -277,8 +277,8 @@ class Extension extends AbstractModel
                 $info = array();
 
                 // Check for a config and try to get info out of it
-                if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.config.php')) {
-                    $cfg = file_get_contents($modPath . '/' . $name . '/config/module.config.php');
+                if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.php')) {
+                    $cfg = file_get_contents($modPath . '/' . $name . '/config/module.php');
                     if (strpos($cfg, '*/') !== false) {
                         $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
                         $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));

@@ -17,7 +17,7 @@
 <?php endforeach; ?>
 <?php foreach ($config['settings'] as $setting => $value): ?>
 <?php
-    $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting));
+    $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl', 'incontent'), array(' ', 'Date &amp; Time', 'SSL', 'In-Content'), $setting));
     switch ($setting):
         case 'site_title':
             echo '            <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#site_title\').toggle(\'table-row\'); $(\'#separator\').toggle(\'table-row\'); $(\'#default_language\').toggle(\'table-row\'); $(\'#error_message\').toggle(\'table-row\'); return false;">Default Site Settings</a></th></tr>' . PHP_EOL;

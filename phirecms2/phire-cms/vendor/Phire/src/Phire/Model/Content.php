@@ -141,11 +141,14 @@ class Content extends AbstractContentModel
 
         // Get the correct placeholder
         if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-            $placeholder = '$1';
+            $p1 = '$1';
+            $p2 = '$2';
         } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-            $placeholder = ':type_id';
+            $p1 = ':type_id';
+            $p2 = ':title';
         } else {
-            $placeholder = '?';
+            $p1 = '?';
+            $p2 = '?';
         }
 
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'content.id' : $order['field'];
@@ -167,9 +170,15 @@ class Content extends AbstractContentModel
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
           ->orderBy($order['field'], $order['order']);
 
-        $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', $placeholder);
+        $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', $p1);
+        $params = array('type_id' => $typeId);
 
-        $content = Table\Content::execute($sql->render(true), array('type_id' => $typeId));
+        if (isset($_GET['search_title']) && (!empty($_GET['search_title']))) {
+            $sql->select()->where()->like(DB_PREFIX . 'content.title', $p2);
+            $params['title'] = '%' . $_GET['search_title'] . '%';
+        }
+
+        $content = Table\Content::execute($sql->render(true), $params);
         $contentType = Table\ContentTypes::findById($typeId);
         $this->data['type'] = $contentType->name;
 
@@ -245,6 +254,11 @@ class Content extends AbstractContentModel
 
         foreach ($content->rows as $content) {
             $c = (array)$content;
+
+            // Add copy link
+            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'add'))) {
+                $c['copy'] = '[ <a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a> ]';
+            }
 
             // Track open authoring
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
@@ -475,6 +489,7 @@ class Content extends AbstractContentModel
             $contentValues = $content->getValues();
             $contentValues['type_name'] = (isset($type->id) ? $type->name : null);
             $contentValues['content_title'] = $contentValues['title'];
+            $contentValues['full_uri'] = $contentValues['uri'];
             $contentValues['uri'] = $contentValues['slug'];
             unset($contentValues['title']);
             unset($contentValues['slug']);
@@ -860,6 +875,99 @@ class Content extends AbstractContentModel
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             \Fields\Model\FieldValue::update($fields, $content->id);
+        }
+    }
+
+    /**
+     * Copy content
+     *
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function copy($isFields = false)
+    {
+        $id    = $this->data['id'];
+        $title = $this->data['content_title'] . ' (Copy ';
+        $uri   = $this->data['full_uri'];
+        $slug  = $this->data['uri'];
+
+        // Check for dupe uris
+        $i = 1;
+        $dupe = Table\Content::findBy(array('uri' => $uri . '-' . $i));
+        while (isset($dupe->id)) {
+            $i++;
+            $dupe = Table\Content::findBy(array('uri' => $uri . '-' . $i));
+        }
+
+        $title .= $i . ')';
+        $uri   .= '-' . $i;
+        $slug  .= '-' . $i;
+
+        $content = new Table\Content(array(
+            'type_id'    => $this->data['type_id'],
+            'parent_id'  => $this->data['parent_id'],
+            'template'   => $this->data['template'],
+            'title'      => $title,
+            'uri'        => $uri,
+            'slug'       => $slug,
+            'order'      => $this->data['order'],
+            'include'    => $this->data['include'],
+            'feed'       => $this->data['feed'],
+            'force_ssl'  => $this->data['force_ssl'],
+            'status'     => $this->data['status'],
+            'created'    => date('Y-m-d H:i:s'),
+            'updated'    => null,
+            'published'  => date('Y-m-d H:i:s'),
+            'expired'    => null,
+            'created_by' => ((isset($this->user) && isset($this->user->id)) ? $this->user->id : null),
+            'updated_by' => null
+        ));
+
+        $content->save();
+        $this->data['id'] = $content->id;
+
+        // Save any content categories
+        $cats = Table\ContentToCategories::findAll(null, array('content_id' => $id));
+        if (isset($cats->rows[0])) {
+            foreach ($cats->rows as $cat) {
+                $contentToCategory = new Table\ContentToCategories(array(
+                    'content_id'  => $content->id,
+                    'category_id' => $cat->category_id
+                ));
+                $contentToCategory->save();
+            }
+        }
+
+        // Save any content roles
+        $roles = Table\ContentToRoles::findAll(null, array('content_id' => $id));
+        if (isset($roles->rows[0])) {
+            foreach ($roles->rows as $role) {
+                $contentToRole = new Table\ContentToRoles(array(
+                    'content_id' => $content->id,
+                    'role_id'    => $role->role_id
+                ));
+                $contentToRole->save();
+            }
+        }
+
+        // If the Fields module is installed, and if there are fields for this form/model
+        if ($isFields) {
+            $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $id));
+            if (isset($values->rows[0])) {
+                foreach ($values->rows as $value) {
+                    $field = \Fields\Table\Fields::findById($value->field_id);
+                    if (isset($field->id) && ($field->type != 'file')) {
+                        $val = new \Fields\Table\FieldValues(array(
+                            'field_id'  => $value->field_id,
+                            'model_id'  => $content->id,
+                            'value'     => $value->value,
+                            'timestamp' => $value->timestamp,
+                            'history'   => $value->history
+                        ));
+                        $val->save();
+                    }
+                }
+            }
         }
     }
 

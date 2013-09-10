@@ -296,6 +296,7 @@ var processForm = function() {
  * @return Boolean
  */
 var updateForm = function(form, ret) {
+    submitted = true;
     if (ret) {
         if ($('#update_value').obj != null) {
             $('#update_value').val(1);

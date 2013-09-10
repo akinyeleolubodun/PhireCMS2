@@ -210,6 +210,12 @@ fieldset {
     text-decoration: underline;
 }
 
+#content-search-form {
+    margin: 0 0 10px 0;
+    padding: 0;
+    float: right;
+}
+
 .data-table {
     margin: 0 auto 10px auto;
     padding: 0;

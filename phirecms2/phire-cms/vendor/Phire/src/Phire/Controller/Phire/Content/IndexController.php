@@ -270,6 +270,27 @@ class IndexController extends C
     }
 
     /**
+     * Content copy method
+     *
+     * @return void
+     */
+    public function copy()
+    {
+        if (null === $this->request->getPath(1)) {
+            Response::redirect($this->request->getBasePath());
+        } else {
+            $content = new Model\Content();
+            $content->getById($this->request->getPath(1));
+            if (isset($content->id)) {
+                $content->copy($this->project->isLoaded('Fields'));
+                Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
+            } else {
+                Response::redirect($this->request->getBasePath());
+            }
+        }
+    }
+
+    /**
      * Content remove method
      *
      * @return void

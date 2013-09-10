@@ -81,7 +81,7 @@ class Project extends P
                             }
 
                             // Check for any module config overrides
-                            if (file_exists($directory . '/config/' . strtolower($d) . '.config.php')) {
+                            if (file_exists($directory . '/config/' . strtolower($d) . '.php')) {
                                 $override = include $directory . '/config/' . strtolower($d) . '.php';
                                 if (isset($override[$d]) && (null !== $moduleCfg)) {
                                     $moduleCfg[$d]->merge($override[$d]);

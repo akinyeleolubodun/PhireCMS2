@@ -40,6 +40,7 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('feed_type', '10'),
 ('feed_limit', '20'),
 ('open_authoring', '1'),
+('incontent_editing', '0'),
 ('pagination_limit', '25'),
 ('pagination_range', '10'),
 ('force_ssl', '0'),
