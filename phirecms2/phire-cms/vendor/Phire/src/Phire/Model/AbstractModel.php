@@ -84,6 +84,8 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                         ), 1);
                     }
                 }
+
+                $this->data['phireNav']->rebuild();
             }
         }
 
