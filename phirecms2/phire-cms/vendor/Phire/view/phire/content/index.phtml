@@ -1,5 +1,5 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $nav; ?>
+<?php echo $phireNav; ?>
     <h1 style="color: #00f;"><?php echo $title; ?></h1>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?>
     <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a></p>

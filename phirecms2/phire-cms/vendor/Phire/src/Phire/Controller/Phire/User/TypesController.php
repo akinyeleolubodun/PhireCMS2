@@ -54,10 +54,10 @@ class TypesController extends C
     public function index()
     {
         $type = new Model\UserType(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'User Types'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'User Types'
         ));
 
         $type->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -73,9 +73,9 @@ class TypesController extends C
     public function add()
     {
         $type = new Model\UserType(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $type->set('title', 'User Types ' . $type->config()->separator . ' Add');
@@ -136,9 +136,9 @@ class TypesController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $type = new Model\UserType(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
             $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
@@ -240,9 +240,9 @@ class TypesController extends C
     public function error()
     {
         $type = new Model\UserType(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');

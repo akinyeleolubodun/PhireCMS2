@@ -392,3 +392,25 @@ th.config-header > a:hover {
     color: #808080;
     text-decoration: underline;
 }
+
+.copy-link {
+    margin: 0 auto;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    width: 19px;
+    height: 21px;
+    background-image: url(../../../media/icons/25x25/copy.png);
+    text-indent: -1000px;
+}
+
+.download-link {
+    margin: 0 auto;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    width: 19px;
+    height: 21px;
+    background-image: url(../../../media/icons/25x25/download.png);
+    text-indent: -1000px;
+}

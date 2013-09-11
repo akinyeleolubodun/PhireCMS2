@@ -1,5 +1,5 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $nav; ?>
+<?php echo $phireNav; ?>
     <h1 style="color: #00f;"><?php echo $title; ?></h1>
 <?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'export'))): ?>
     <p style="float: right;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>">Export</a></a></p>

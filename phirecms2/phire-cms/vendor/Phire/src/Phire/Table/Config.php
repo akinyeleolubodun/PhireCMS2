@@ -67,6 +67,7 @@ class Config extends Record
             'feed_type',
             'feed_limit',
             'open_authoring',
+            'incontent_editing',
             'pagination_limit',
             'pagination_range',
             'force_ssl',

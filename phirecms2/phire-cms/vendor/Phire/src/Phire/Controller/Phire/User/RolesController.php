@@ -54,10 +54,10 @@ class RolesController extends C
     public function index()
     {
         $role = new Model\UserRole(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'User Roles'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'User Roles'
         ));
 
         $role->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -73,9 +73,9 @@ class RolesController extends C
     public function add()
     {
         $role = new Model\UserRole(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $role->set('title', 'User Roles ' . $role->config()->separator . ' Add');
@@ -136,9 +136,9 @@ class RolesController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $role = new Model\UserRole(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
             $role->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
@@ -274,9 +274,9 @@ class RolesController extends C
     public function error()
     {
         $role = new Model\UserRole(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');

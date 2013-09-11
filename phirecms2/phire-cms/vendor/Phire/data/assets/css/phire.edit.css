@@ -1,0 +1,123 @@
+/**
+ * Phire CMS 2.0 In-Content Edit Style Sheet
+ */
+
+#nav-gear {
+    display: block;
+    position: absolute;
+    z-index: 1500;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+    text-indent: 1000px;
+    background-image: url(../../../media/icons/25x25/gear.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #009dff;
+    background-size: 75%;
+}
+
+#main-nav-1 {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    margin: 0 auto;
+    padding: 0;
+    top: 0;
+    width: 100%;
+    height: 25px;
+    background-color: #009dff;
+}
+
+#main-nav-1 li {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline-block;
+}
+
+#main-nav-1 li > a {
+    margin: 0;
+    padding: 5px 30px 5px 30px;
+    display: block;
+    float: left;
+    height: 15px;
+    color: #fff;
+    font-size: 0.9em;
+    text-align: center;
+    text-decoration: none;
+}
+
+#main-nav-1 li > a:hover {
+    background-color: #015387;
+    text-decoration: underline;
+}
+
+#main-nav-1 li > ul {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 25px;
+    z-index: 100;
+    background-color: #000;
+}
+
+#main-nav-1 li:hover > ul {
+    display: block;
+}
+
+#main-nav-1 li > ul > li {
+    position: relative;
+    display: block;
+    clear: left;
+    float: none;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#main-nav-1 li > ul > li > a {
+    margin: 0;
+    padding: 7px 5px 3px 15px;
+    color: #fff;
+    display: block;
+    width: 100px;
+    min-height: 15px;
+    font-size: 0.825em;
+    font-weight: normal;
+    text-align: left;
+    text-decoration: none;
+}
+
+#main-nav-1 li > ul > li > a:hover {
+    text-align: left;
+    background-color: #333;
+    font-size: 0.825em;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+#main-nav-1 li > ul > li > ul {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0px;
+    left: 120px;
+    z-index: 100;
+    background-color: #000;
+}
+
+#main-nav-1 li > ul > li:hover > ul {
+    display: block;
+}
+

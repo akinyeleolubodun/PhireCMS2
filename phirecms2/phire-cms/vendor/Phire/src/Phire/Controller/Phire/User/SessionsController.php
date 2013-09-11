@@ -54,10 +54,10 @@ class SessionsController extends C
     public function index()
     {
         $session = new Model\UserSession(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'User Sessions'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'User Sessions'
         ));
 
         $session->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -96,9 +96,9 @@ class SessionsController extends C
     public function error()
     {
         $session = new Model\UserSession(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $session->set('title', '404 Error ' . $session->config()->separator . ' Page Not Found');

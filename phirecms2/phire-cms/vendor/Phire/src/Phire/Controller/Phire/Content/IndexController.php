@@ -55,10 +55,10 @@ class IndexController extends C
     public function index()
     {
         $content = new Model\Content(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Content'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Content'
         ));
 
         if ((null !== $this->request->getPath(1)) && is_numeric($this->request->getPath(1))) {
@@ -86,9 +86,9 @@ class IndexController extends C
             // Select content type
             if (null === $this->request->getPath(1)) {
                 $content = new Model\Content(array(
-                    'assets' => $this->project->getAssets(),
-                    'acl'    => $this->project->getService('acl'),
-                    'nav'    => $this->project->getService('nav')
+                    'assets'   => $this->project->getAssets(),
+                    'acl'      => $this->project->getService('acl'),
+                    'phireNav' => $this->project->getService('phireNav')
                 ));
 
                 $content->set('title', 'Content ' . $content->config()->separator . ' Select Type');
@@ -123,10 +123,10 @@ class IndexController extends C
                 // If content type is valid
                 if (isset($type->id)) {
                     $content = new Model\Content(array(
-                        'assets' => $this->project->getAssets(),
-                        'acl'    => $this->project->getService('acl'),
-                        'nav'    => $this->project->getService('nav'),
-                        'typeId' => $type->id
+                        'assets'   => $this->project->getAssets(),
+                        'acl'      => $this->project->getService('acl'),
+                        'phireNav' => $this->project->getService('phireNav'),
+                        'typeId'   => $type->id
                     ));
 
                     $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Add');
@@ -197,9 +197,9 @@ class IndexController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $content = new Model\Content(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
 
             $content->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
@@ -373,9 +373,9 @@ class IndexController extends C
     {
         $code = (null !== $msg) ? 200 : 404;
         $content = new Model\Content(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
 
         ));
 

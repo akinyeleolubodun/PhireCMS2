@@ -89,10 +89,10 @@ class IndexController extends C
     public function index()
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Home'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Home'
         ));
 
         $this->view = View::factory($this->viewPath . '/index.phtml', $user);
@@ -116,10 +116,10 @@ class IndexController extends C
         // Else, render the form
         } else {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav'),
-                'title'  => 'Login'
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav'),
+                'title'    => 'Login'
             ));
 
             // Set up 'forgot,' 'register' and 'unsubscribe' links
@@ -207,10 +207,10 @@ class IndexController extends C
         // Else render the registration form
         } else {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav'),
-                'title'  => 'Register'
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav'),
+                'title'    => 'Register'
             ));
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
@@ -259,10 +259,10 @@ class IndexController extends C
     public function profile($redirect = null)
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Profile'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Profile'
         ));
         $user->getById($this->sess->user->id, $this->project->isLoaded('Fields'));
 
@@ -320,10 +320,10 @@ class IndexController extends C
     public function unsubscribe($redirect = null)
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Unsubscribe'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Unsubscribe'
         ));
         $form = new Form\Unsubscribe($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
@@ -377,10 +377,10 @@ class IndexController extends C
     public function forgot($redirect = null)
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Forgot'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Forgot'
         ));
         $form = new Form\Forgot($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
@@ -430,10 +430,10 @@ class IndexController extends C
         // If the required user ID and hash is submitted
         if ((null !== $this->request->getPath(1)) && (null !== $this->request->getPath(2))) {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav'),
-                'title'  => 'Verify'
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav'),
+                'title'    => 'Verify'
             ));
             $user->getById($this->request->getPath(1));
 
@@ -478,9 +478,9 @@ class IndexController extends C
     public function error()
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');

@@ -52,22 +52,22 @@ abstract class AbstractModel extends \Pop\Mvc\Model
             $this->data['user'] = $sess->user;
             $this->data['role'] = \Phire\Table\UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
-            if (isset($this->data['nav']) && isset($this->data['acl']) && ($this->data['acl']->hasRole($this->data['role']->getName()))) {
-                $this->data['nav']->setConfig(array(
+            if (isset($this->data['phireNav']) && isset($this->data['acl']) && ($this->data['acl']->hasRole($this->data['role']->getName()))) {
+                $this->data['phireNav']->setConfig(array(
                     'parent' => array(
                         'node'  => 'ul',
                         'id'    => 'main-nav'
                     ),
                 ));
-                $this->data['nav']->setAcl($this->data['acl']);
-                $this->data['nav']->setRole($this->data['role']);
-                $this->data['nav']->nav()->setIndent('    ');
+                $this->data['phireNav']->setAcl($this->data['acl']);
+                $this->data['phireNav']->setRole($this->data['role']);
+                $this->data['phireNav']->nav()->setIndent('    ');
 
                 // And any content types to the main nav
                 $contentTypes = Table\ContentTypes::findAll('order ASC');
                 if (isset($contentTypes->rows)) {
                     foreach ($contentTypes->rows as $type) {
-                        $this->data['nav']->addLeaf('Content', array(
+                        $this->data['phireNav']->addLeaf('Content', array(
                             'name'     => $type->name,
                             'href'     => 'index/' . $type->id
                         ), 1);
@@ -78,7 +78,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 $userTypes = Table\UserTypes::findAll('id ASC');
                 if (isset($userTypes->rows)) {
                     foreach ($userTypes->rows as $type) {
-                        $this->data['nav']->addLeaf('Users', array(
+                        $this->data['phireNav']->addLeaf('Users', array(
                             'name'     => ucwords(str_replace('-', ' ', $type->type)),
                             'href'     => 'index/' . $type->id
                         ), 1);

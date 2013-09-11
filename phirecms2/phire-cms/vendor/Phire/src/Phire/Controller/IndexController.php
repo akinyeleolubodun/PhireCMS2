@@ -91,7 +91,11 @@ class IndexController extends C
      */
     public function index()
     {
-        $content = new Model\Content();
+        $content = new Model\Content(array(
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
+
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
         // If page found, but requires SSL
@@ -137,7 +141,10 @@ class IndexController extends C
      */
     public function category()
     {
-        $category = new Model\Category();
+        $category = new Model\Category(array(
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
         $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
@@ -156,7 +163,11 @@ class IndexController extends C
      */
     public function search()
     {
-        $content = new Model\Content(array('title' => 'Search'));
+        $content = new Model\Content(array(
+            'title'    => 'Search',
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
         $content->search($this->request, $this->project->isLoaded('Fields'));
         if (count($content->keys) == 0) {
             $content->set('error', 'No search keywords were passed. Please try again.');
@@ -176,7 +187,11 @@ class IndexController extends C
      */
     public function feed()
     {
-        $content = new Model\Content(array('title' => 'Feed'));
+        $content = new Model\Content(array(
+            'title'    => 'Feed',
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
 
         $lang = $content->config('default_language');
         if (strpos($lang, '_') !== false) {
@@ -209,7 +224,10 @@ class IndexController extends C
     public function error($msg = null)
     {
         $code = (null !== $msg) ? 200 : 404;
-        $content = new Model\Content();
+        $content = new Model\Content(array(
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
 
         $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
 

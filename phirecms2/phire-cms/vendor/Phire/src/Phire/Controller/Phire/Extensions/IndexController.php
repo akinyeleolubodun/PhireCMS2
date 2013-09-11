@@ -60,10 +60,10 @@ class IndexController extends C
     public function index()
     {
         $ext = new Model\Extension(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Extensions'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Extensions'
         ));
 
         $this->view = View::factory($this->viewPath . '/index.phtml', $ext);
@@ -78,9 +78,9 @@ class IndexController extends C
     public function themes()
     {
         $ext = new Model\Extension(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
         ));
 
         $ext->getThemes();
@@ -114,9 +114,9 @@ class IndexController extends C
     public function modules()
     {
         $ext = new Model\Extension(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $ext->getModules($this->project);
@@ -150,9 +150,9 @@ class IndexController extends C
     public function error()
     {
         $ext = new Model\Extension(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $ext->set('title', '404 Error ' . $ext->config()->separator . ' Page Not Found');

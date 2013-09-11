@@ -55,10 +55,10 @@ class TemplatesController extends C
     public function index()
     {
         $template = new Model\Template(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Templates'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Templates'
         ));
 
         $template->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -74,9 +74,9 @@ class TemplatesController extends C
     public function add()
     {
         $template = new Model\Template(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $template->set('title', 'Templates ' . $template->config()->separator . ' Add');
@@ -132,9 +132,9 @@ class TemplatesController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $template = new Model\Template(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
 
             $template->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
@@ -234,9 +234,9 @@ class TemplatesController extends C
     public function error()
     {
         $template = new Model\Template(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $template->set('title', '404 Error ' . $template->config()->separator . ' Page Not Found');

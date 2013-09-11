@@ -54,10 +54,10 @@ class IndexController extends C
     public function index()
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Users'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Users'
         ));
 
         // If type id is set, get users by type
@@ -84,9 +84,9 @@ class IndexController extends C
         // Select user type
         if (null === $this->request->getPath(1)) {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
 
             $user->set('title', 'Users ' . $user->config()->separator . ' Select Type');
@@ -125,9 +125,9 @@ class IndexController extends C
             // If user type is valid
             if (isset($type->id)) {
                 $user = new Model\User(array(
-                    'assets' => $this->project->getAssets(),
-                    'acl'    => $this->project->getService('acl'),
-                    'nav'    => $this->project->getService('nav')
+                    'assets'   => $this->project->getAssets(),
+                    'acl'      => $this->project->getService('acl'),
+                    'phireNav' => $this->project->getService('phireNav')
                 ));
 
                 $user->set('title', 'Users ' . $user->config()->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $user->config()->separator . ' Add');
@@ -192,9 +192,9 @@ class IndexController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
             $user->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
@@ -268,9 +268,9 @@ class IndexController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $user = new Model\User(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
             $user->getById($this->request->getPath(1));
 
@@ -329,9 +329,9 @@ class IndexController extends C
                 Response::redirect($this->request->getBasePath());
             } else {
                 $user = new Model\User(array(
-                    'assets' => $this->project->getAssets(),
-                    'acl'    => $this->project->getService('acl'),
-                    'nav'    => $this->project->getService('nav')
+                    'assets'   => $this->project->getAssets(),
+                    'acl'      => $this->project->getService('acl'),
+                    'phireNav' => $this->project->getService('phireNav')
                 ));
 
                 $user->getLoginsById($this->request->getPath(1), $this->project->isLoaded('Fields'));
@@ -411,9 +411,9 @@ class IndexController extends C
     public function error()
     {
         $user = new Model\User(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');

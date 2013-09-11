@@ -55,10 +55,10 @@ class CategoriesController extends C
     public function index()
     {
         $category = new Model\Category(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Categories'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Categories'
         ));
 
         $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -74,9 +74,9 @@ class CategoriesController extends C
     public function add()
     {
         $category = new Model\Category(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $category->set('title', 'Categories ' . $category->config()->separator . ' Add');
@@ -132,9 +132,9 @@ class CategoriesController extends C
             Response::redirect($this->request->getBasePath());
         } else {
             $category = new Model\Category(array(
-                'assets' => $this->project->getAssets(),
-                'acl'    => $this->project->getService('acl'),
-                'nav'    => $this->project->getService('nav')
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
             ));
 
             $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
@@ -266,9 +266,9 @@ class CategoriesController extends C
     public function error()
     {
         $category = new Model\Category(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $category->set('title', '404 Error ' . $category->config()->separator . ' Page Not Found');

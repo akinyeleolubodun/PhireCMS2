@@ -208,6 +208,7 @@ class Content extends AbstractContentModel
                 'status'       => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=status">Status</a>',
                 'uri'          => 'URI',
                 'username'     => 'Author',
+                'copy'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">Copy</span>',
                 'process'      => $removeCheckAll
             );
         } else {
@@ -255,10 +256,7 @@ class Content extends AbstractContentModel
         foreach ($content->rows as $content) {
             $c = (array)$content;
 
-            // Add copy link
-            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'add'))) {
-                $c['copy'] = '[ <a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a> ]';
-            }
+
 
             // Track open authoring
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
@@ -280,6 +278,10 @@ class Content extends AbstractContentModel
                 $c['uri'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
             }
             $c['created_date'] = $c['created'];
+            // Add copy link
+            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'add'))) {
+                $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a>';
+            }
             unset($c['created']);
             $contentAry[] = $c;
         }

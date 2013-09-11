@@ -55,10 +55,10 @@ class ConfigController extends C
     public function index()
     {
         $config = new Model\Config(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav'),
-            'title'  => 'Configuration'
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+            'title'    => 'Configuration'
         ));
 
         if ($this->request->isPost()) {
@@ -96,9 +96,9 @@ class ConfigController extends C
     public function error()
     {
         $config = new Model\Config(array(
-            'assets' => $this->project->getAssets(),
-            'acl'    => $this->project->getService('acl'),
-            'nav'    => $this->project->getService('nav')
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $config->set('title', '404 Error ' . $config->config()->separator . ' Page Not Found');

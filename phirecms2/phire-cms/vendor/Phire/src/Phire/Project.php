@@ -148,11 +148,11 @@ class Project extends P
         // Set the services
         $this->setService('acl', 'Phire\Auth\Acl');
         $this->setService('auth', 'Phire\Auth\Auth');
-        $this->setService('nav', 'Pop\Nav\Nav');
+        $this->setService('phireNav', 'Pop\Nav\Nav');
 
         // Get loaded modules and add their routes and nav
         $modules = $this->modules();
-        $nav = $this->getService('nav');
+        $nav = $this->getService('phireNav');
 
         // Load module routes and nav
         foreach ($modules as $name => $config) {
@@ -176,6 +176,23 @@ class Project extends P
         } else {
             $this->loadUserRoutes();
             $this->initAcl();
+
+            // Set up in-content editing on 'dispatch.send'
+            $this->attachEvent('dispatch.send', function($controller) {
+                if ((get_class($controller) == 'Phire\Controller\IndexController') &&
+                    ($controller->getView()->getModel()->config()->incontent_editing)) {
+                    if (null !== $controller->getView()->getModel()->phireNav->getAcl()) {
+                        $body = $controller->getResponse()->getBody();
+                        $phireNav = str_replace('<ul id="main-nav-1">', '<ul id="main-nav-1" style="display: none;">', $controller->getView()->getModel()->phireNav);
+                        if (strpos($body, 'jax.min.js') === false) {
+                            $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
+                        }
+                        $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
+                        $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#main-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
+                        $controller->getResponse()->setBody($body);
+                    }
+                }
+            });
 
             // Set the auth method to trigger on 'dispatch.pre'
             $this->attachEvent('dispatch.pre', function($router) {
@@ -403,7 +420,9 @@ class Project extends P
                             $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
                         } else if (($assetDir == 'css') && ($as->getExt() == 'css')) {
                             if (($as->getBasename() != 'phire.css') || (!$phireCss)) {
-                                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
+                                if ($as->getBasename() != 'phire.edit.css') {
+                                    $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
+                                }
                             }
                         }
                     }
