@@ -273,7 +273,7 @@ class Content extends AbstractContentModel
                 $c['uri'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $c['uri'] . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $c['uri'] . '</a>';
             } else {
                 $fileInfo = self::getFileIcon($c['uri']);
-                $c['status'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media' . $fileInfo['fileIcon'] . '" width="32" /></a>';
+                $c['status'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="32" /></a>';
                 $c['size'] = $fileInfo['fileSize'];
                 $c['uri'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
             }
@@ -1049,7 +1049,7 @@ class Content extends AbstractContentModel
 
         $dirs = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
         foreach ($dirs->getFiles() as $size) {
-            if (($size != 'icons') && is_dir($dir . $size)) {
+            if (is_dir($dir . $size)) {
                 $newFileName = $fileName . '.jpg';
                 if (file_exists($dir . $size . DIRECTORY_SEPARATOR . $fileName)) {
                     unlink($dir . $size . DIRECTORY_SEPARATOR . $fileName);
@@ -1068,7 +1068,8 @@ class Content extends AbstractContentModel
      */
     public static function getFileIcon($fileName)
     {
-        $mediaDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR;
+        $mediaDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/';
+        $iconDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/img/';
         $ext = strtolower(substr($fileName, (strrpos($fileName, '.') + 1)));
         if (($ext == 'docx') || ($ext == 'pptx') || ($ext == 'xlsx')) {
             $ext = substr($ext, 0, 3);
@@ -1087,7 +1088,7 @@ class Content extends AbstractContentModel
             $dirs = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media', true);
             $fileSizes = array();
             foreach ($dirs->getFiles() as $dir) {
-                if (is_dir($dir) && (strpos($dir, '/icons') === false)) {
+                if (is_dir($dir)) {
                     $f = $dir . $newFileName;
                     if (file_exists($f)) {
                         $fileSizes[filesize($f)] = substr($f, (strpos($f, '/media') + 6));
@@ -1100,33 +1101,33 @@ class Content extends AbstractContentModel
                 ksort($fileSizes);
                 $vals = array_values($fileSizes);
                 $smallest = array_shift($vals);
-                $fileIcon = $smallest;
+                $fileIcon = '/media' . $smallest;
             // Else, use filetype icon
-            } else if (file_exists($mediaDir . 'icons/50x50/' . $ext . '.png')) {
-                $fileIcon = '/icons/50x50/' . $ext . '.png';
+            } else if (file_exists($iconDir . 'icons/50x50/' . $ext . '.png')) {
+                $fileIcon = '/assets/img/icons/50x50/' . $ext . '.png';
             // Else, use generic file icon
             } else {
-                $fileIcon = '/icons/50x50/img.png';
+                $fileIcon = '/assets/img/icons/50x50/img.png';
             }
         // Else, if file type is a file type with an available icon
-        } else if (file_exists($mediaDir . 'icons/50x50/' . $ext . '.png')) {
-            $fileIcon = '/icons/50x50/' . $ext . '.png';
+        } else if (file_exists($iconDir . 'icons/50x50/' . $ext . '.png')) {
+            $fileIcon = '/assets/img/icons/50x50/' . $ext . '.png';
         // Else, if file type is an audio file type with an available icon
         } else if (($ext == 'wav') || ($ext == 'aif') || ($ext == 'aiff') ||
             ($ext == 'mp3') || ($ext == 'mp2') || ($ext == 'flac') ||
             ($ext == 'wma') || ($ext == 'aac') || ($ext == 'swa')) {
-            $fileIcon = '/icons/50x50/aud.png';
+            $fileIcon = '/assets/img/icons/50x50/aud.png';
         // Else, if file type is an video file type with an available icon
         } else if (($ext == '3gp') || ($ext == 'asf') || ($ext == 'avi') ||
             ($ext == 'mpg') || ($ext == 'm4v') || ($ext == 'mov') ||
             ($ext == 'mpeg') || ($ext == 'wmv')) {
-            $fileIcon = '/icons/50x50/vid.png';
+            $fileIcon = '/assets/img/icons/50x50/vid.png';
         // Else, if file type is a generic image file type with an available icon
         } else if (($ext == 'bmp') || ($ext == 'ico') || ($ext == 'tiff') || ($ext == 'tif')) {
-            $fileIcon = '/icons/50x50/img.png';
+            $fileIcon = '/assets/img/icons/50x50/img.png';
         // Else, use the generic file icon
         } else {
-            $fileIcon = '/icons/50x50/file.png';
+            $fileIcon = '/assets/img/icons/50x50/file.png';
         }
 
         // Get file size

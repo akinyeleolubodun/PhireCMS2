@@ -400,7 +400,7 @@ th.config-header > a:hover {
     overflow: hidden;
     width: 19px;
     height: 21px;
-    background-image: url(../../../media/icons/25x25/copy.png);
+    background-image: url(../../img/icons/25x25/copy.png);
     text-indent: -1000px;
 }
 
@@ -411,6 +411,6 @@ th.config-header > a:hover {
     overflow: hidden;
     width: 19px;
     height: 21px;
-    background-image: url(../../../media/icons/25x25/download.png);
+    background-image: url(../../img/icons/25x25/download.png);
     text-indent: -1000px;
 }

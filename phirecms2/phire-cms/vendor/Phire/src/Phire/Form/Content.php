@@ -193,7 +193,7 @@ class Content extends Form
                     $fileInfo = Model\Content::getFileIcon($content->uri);
                     $label = '<em>Replace?</em><br /><a href="' .
                         BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '"><img style="padding-top: 3px;" src="' .
-                        BASE_PATH . CONTENT_PATH . '/media' . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '">' .
+                        BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '">' .
                         $content->uri . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                     $required = false;
                 }

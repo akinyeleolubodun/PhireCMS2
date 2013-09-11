@@ -187,6 +187,7 @@ class Project extends P
                         if (strpos($body, 'jax.min.js') === false) {
                             $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
                         }
+                        $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
                         $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
                         $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#main-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
                         $controller->getResponse()->setBody($body);
@@ -443,7 +444,7 @@ class Project extends P
         if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
             if (!$suppress) {
-                throw new \Exception('Error: The application is not properly configured. Please check the config file or install the application.');
+                throw new \Exception('Error: The application is not properly configured. Please check the config file or <a href="' . BASE_PATH . '/phire/install">install</a> the application.');
             } else {
                 return false;
             }
