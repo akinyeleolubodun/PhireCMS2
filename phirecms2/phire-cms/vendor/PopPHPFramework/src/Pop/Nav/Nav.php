@@ -392,7 +392,6 @@ class Nav
             $allowed = true;
             if (isset($node['acl'])) {
                 if (null === $this->acl) {
-                    print_r($this->acl);
                     throw new Exception('The access control object is not set.');
                 }
                 if (null === $this->role) {
