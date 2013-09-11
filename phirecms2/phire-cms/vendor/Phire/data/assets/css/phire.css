@@ -55,7 +55,7 @@ fieldset {
     border: none;
 }
 
-#main-nav-1 {
+#phire-nav-1 {
     position: relative;
     z-index: 10;
     margin: 0 auto;
@@ -65,7 +65,7 @@ fieldset {
     background-color: #009dff;
 }
 
-#main-nav-1 li {
+#phire-nav-1 li {
     position: relative;
     margin: 0;
     padding: 0;
@@ -73,7 +73,7 @@ fieldset {
     display: inline-block;
 }
 
-#main-nav-1 li > a {
+#phire-nav-1 li > a {
     margin: 0;
     padding: 11px 30px 9px 30px;
     display: block;
@@ -84,12 +84,12 @@ fieldset {
     text-decoration: none;
 }
 
-#main-nav-1 li > a:hover {
+#phire-nav-1 li > a:hover {
     background-color: #015387;
     text-decoration: underline;
 }
 
-#main-nav-1 li > ul {
+#phire-nav-1 li > ul {
     display: none;
     position: absolute;
     margin: 0;
@@ -100,11 +100,11 @@ fieldset {
     background-color: #000;
 }
 
-#main-nav-1 li:hover > ul {
+#phire-nav-1 li:hover > ul {
     display: block;
 }
 
-#main-nav-1 li > ul > li {
+#phire-nav-1 li > ul > li {
     position: relative;
     display: block;
     clear: left;
@@ -116,7 +116,7 @@ fieldset {
     list-style-type: none;
 }
 
-#main-nav-1 li > ul > li > a {
+#phire-nav-1 li > ul > li > a {
     margin: 0;
     padding: 11px 5px 4px 15px;
     color: #fff;
@@ -128,13 +128,13 @@ fieldset {
     text-decoration: none;
 }
 
-#main-nav-1 li > ul > li > a:hover {
+#phire-nav-1 li > ul > li > a:hover {
     text-align: left;
     background-color: #333;
     text-decoration: underline;
 }
 
-#main-nav-1 li > ul > li > ul {
+#phire-nav-1 li > ul > li > ul {
     display: none;
     position: absolute;
     margin: 0;
@@ -145,7 +145,7 @@ fieldset {
     background-color: #000;
 }
 
-#main-nav-1 li > ul > li:hover > ul {
+#phire-nav-1 li > ul > li:hover > ul {
     display: block;
 }
 

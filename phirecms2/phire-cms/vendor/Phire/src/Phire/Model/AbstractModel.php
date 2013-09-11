@@ -56,7 +56,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 $this->data['phireNav']->setConfig(array(
                     'parent' => array(
                         'node'  => 'ul',
-                        'id'    => 'main-nav'
+                        'id'    => 'phire-nav'
                     ),
                 ));
                 $this->data['phireNav']->setAcl($this->data['acl']);

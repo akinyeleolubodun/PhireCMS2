@@ -371,6 +371,10 @@ class Content extends Form
                 'type'  => 'hidden',
                 'value' => 0
             ),
+            'live' => array(
+                'type'  => 'hidden',
+                'value' => (isset($_GET['live']) && ($_GET['live'] == 1)) ? 1 : 0
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',

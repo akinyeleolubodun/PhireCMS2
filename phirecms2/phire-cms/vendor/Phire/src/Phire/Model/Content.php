@@ -694,6 +694,7 @@ class Content extends AbstractContentModel
 
         $content->save();
         $this->data['id'] = $content->id;
+        $this->data['uri'] = $content->uri;
 
         // Save content categories
         if (isset($fields['category_id'])) {
@@ -833,6 +834,7 @@ class Content extends AbstractContentModel
 
         $content->update();
         $this->data['id'] = $content->id;
+        $this->data['uri'] = $content->uri;
 
         // Update content categories
         $contentToCategories = Table\ContentToCategories::findBy(array('content_id' => $content->id));

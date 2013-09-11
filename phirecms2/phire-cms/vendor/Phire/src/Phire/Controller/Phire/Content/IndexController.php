@@ -233,6 +233,8 @@ class IndexController extends C
                                     'updated' => '<strong>Updated:</strong> ' . date($content->config()->datetime_format, time()) . ' by <strong>' . $content->user->username . '</strong>',
                                     'form'    => 'content-form'
                                 ));
+                            } else if ((null !== $this->request->getPost('live')) && ($this->request->getPost('live') == 1)) {
+                                Response::redirect(BASE_PATH . $content->uri);
                             } else {
                                 Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
                             }
