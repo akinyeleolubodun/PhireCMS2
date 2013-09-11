@@ -1,7 +1,6 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- In-Content Editor
 - CLI Tool
 - System Theme
 - Language

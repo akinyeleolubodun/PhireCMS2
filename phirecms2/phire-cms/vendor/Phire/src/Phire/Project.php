@@ -177,24 +177,6 @@ class Project extends P
             $this->loadUserRoutes();
             $this->initAcl();
 
-            // Set up in-content editing on 'dispatch.send'
-            $this->attachEvent('dispatch.send', function($controller) {
-                if ((get_class($controller) == 'Phire\Controller\IndexController') &&
-                    ($controller->getView()->getModel()->config()->incontent_editing)) {
-                    if (null !== $controller->getView()->getModel()->phireNav->getAcl()) {
-                        $body = $controller->getResponse()->getBody();
-                        $phireNav = str_replace('<ul id="main-nav-1">', '<ul id="main-nav-1" style="display: none;">', $controller->getView()->getModel()->phireNav);
-                        if (strpos($body, 'jax.min.js') === false) {
-                            $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
-                        }
-                        $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
-                        $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
-                        $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#main-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
-                        $controller->getResponse()->setBody($body);
-                    }
-                }
-            });
-
             // Set the auth method to trigger on 'dispatch.pre'
             $this->attachEvent('dispatch.pre', function($router) {
                 $resource = $router->getControllerClass();
@@ -239,6 +221,34 @@ class Project extends P
                         ($router->project()->getService('acl')->isAuth($resource, $permission))) {
                         \Pop\Http\Response::redirect(BASE_PATH . (($uri == '') ? '/' : $uri));
                         return \Pop\Event\Manager::KILL;
+                    }
+                }
+            });
+
+            // Set up in-content editing on 'dispatch.send'
+            $this->attachEvent('dispatch.send', function($controller) {
+                if ((get_class($controller) == 'Phire\Controller\IndexController') &&
+                    ($controller->getView()->getModel()->config()->incontent_editing)) {
+                    if (null !== $controller->getView()->getModel()->phireNav) {
+                        $body = $controller->getResponse()->getBody();
+                        $phireNav = $controller->getView()->getModel()->phireNav;
+                        $phireNav->addBranch(array(
+                            'name' => 'Edit This Page',
+                            'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->getModel()->id,
+                            'acl'  => array(
+                                'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                                'permission' => 'edit'
+                            )
+                        ), true);
+                        $phireNav->rebuild();
+                        $phireNav = str_replace('<ul id="main-nav-1">', '<ul id="main-nav-1" style="display: none;">', $phireNav);
+                        if (strpos($body, 'jax.min.js') === false) {
+                            $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
+                        }
+                        $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
+                        $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
+                        $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#main-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
+                        $controller->getResponse()->setBody($body);
                     }
                 }
             });

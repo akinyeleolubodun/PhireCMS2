@@ -256,8 +256,6 @@ class Content extends AbstractContentModel
         foreach ($content->rows as $content) {
             $c = (array)$content;
 
-
-
             // Track open authoring
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
                 $ids[] = $c['id'];
@@ -279,7 +277,7 @@ class Content extends AbstractContentModel
             }
             $c['created_date'] = $c['created'];
             // Add copy link
-            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'add'))) {
+            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy'))) {
                 $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a>';
             }
             unset($c['created']);
@@ -916,7 +914,7 @@ class Content extends AbstractContentModel
             'include'    => $this->data['include'],
             'feed'       => $this->data['feed'],
             'force_ssl'  => $this->data['force_ssl'],
-            'status'     => $this->data['status'],
+            'status'     => 0,
             'created'    => date('Y-m-d H:i:s'),
             'updated'    => null,
             'published'  => date('Y-m-d H:i:s'),

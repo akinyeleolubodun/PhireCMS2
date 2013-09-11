@@ -142,7 +142,6 @@ class Nav
         $this->tree = $this->traverseTree($this->tree, $branch, $leaf, $pos, $prepend);
         $this->parentLevel = 1;
         $this->childLevel = 1;
-        $this->nav = $this->traverse($this->tree);
         return $this;
     }
 
@@ -244,6 +243,17 @@ class Nav
         if (null === $this->nav) {
             $this->nav = $this->traverse($this->tree);
         }
+        return $this;
+    }
+
+    /**
+     * Re-build the nav object
+     *
+     * @return \Pop\Nav\Nav
+     */
+    public function rebuild()
+    {
+        $this->nav = $this->traverse($this->tree);
         return $this;
     }
 
@@ -382,6 +392,7 @@ class Nav
             $allowed = true;
             if (isset($node['acl'])) {
                 if (null === $this->acl) {
+                    print_r($this->acl);
                     throw new Exception('The access control object is not set.');
                 }
                 if (null === $this->role) {

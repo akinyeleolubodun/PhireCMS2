@@ -91,10 +91,14 @@ class IndexController extends C
      */
     public function index()
     {
-        $content = new Model\Content(array(
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
+        if ($this->project->getService('acl')->isAuth()) {
+            $content = new Model\Content(array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $content = new Model\Content();
+        }
 
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
@@ -141,10 +145,15 @@ class IndexController extends C
      */
     public function category()
     {
-        $category = new Model\Category(array(
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
+        if ($this->project->getService('acl')->isAuth()) {
+            $category = new Model\Category(array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $category = new Model\Category();
+        }
+
         $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
@@ -163,11 +172,18 @@ class IndexController extends C
      */
     public function search()
     {
-        $content = new Model\Content(array(
-            'title'    => 'Search',
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
+        if ($this->project->getService('acl')->isAuth()) {
+            $content = new Model\Content(array(
+                'title'    => 'Search',
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $content = new Model\Content(array(
+                'title'    => 'Search'
+            ));
+        }
+
         $content->search($this->request, $this->project->isLoaded('Fields'));
         if (count($content->keys) == 0) {
             $content->set('error', 'No search keywords were passed. Please try again.');
@@ -187,11 +203,17 @@ class IndexController extends C
      */
     public function feed()
     {
-        $content = new Model\Content(array(
-            'title'    => 'Feed',
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
+        if ($this->project->getService('acl')->isAuth()) {
+            $content = new Model\Content(array(
+                'title'    => 'Feed',
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $content = new Model\Content(array(
+                'title'    => 'Feed'
+            ));
+        }
 
         $lang = $content->config('default_language');
         if (strpos($lang, '_') !== false) {
@@ -223,13 +245,17 @@ class IndexController extends C
      */
     public function error($msg = null)
     {
-        $code = (null !== $msg) ? 200 : 404;
-        $content = new Model\Content(array(
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
+        if ($this->project->getService('acl')->isAuth()) {
+            $content = new Model\Content(array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $content = new Model\Content();
+        }
 
         $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
+        $code = (null !== $msg) ? 200 : 404;
 
         $content->set('title', $title);
         $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
