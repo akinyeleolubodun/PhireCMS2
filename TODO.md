@@ -2,9 +2,9 @@ Phire CMS 2.0.0 TO-DO
 =====================
 
 - In-Content Editor
+- CLI Tool
 - System Theme
 - Language
-- CLI Tool
 - Modules
     + Fields
     + Sites
@@ -17,6 +17,7 @@ Phire CMS 2.0.0 TO-DO
     + Tags
     + Download
     + Forms
+    + Events
     + Mail
     + Polls
     + Stats
