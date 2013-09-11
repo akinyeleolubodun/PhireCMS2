@@ -236,7 +236,7 @@ class Project extends P
                         ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
                         ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
                         ($router->project()->getService('acl')->isAuth($resource, $permission))) {
-                        \Pop\Http\Response::redirect(BASE_PATH . $uri);
+                        \Pop\Http\Response::redirect(BASE_PATH . (($uri == '') ? '/' : $uri));
                         return \Pop\Event\Manager::KILL;
                     }
                 }
