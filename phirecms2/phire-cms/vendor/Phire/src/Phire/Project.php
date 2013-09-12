@@ -435,7 +435,7 @@ class Project extends P
                             $as->copy($newDir . '/' . $as->getBasename(), true);
                             $as->setPermissions(0777);
                         }
-                        if (($assetDir == 'js') && ($as->getExt() == 'js')) {
+                        if (($assetDir == 'js') && ($as->getExt() == 'js') && ($as->getBasename() != 'phire.edit.js')) {
                             $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
                         } else if (($assetDir == 'css') && ($as->getExt() == 'css')) {
                             if (($as->getBasename() != 'phire.css') || (!$phireCss)) {
