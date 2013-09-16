@@ -216,6 +216,12 @@ fieldset {
     float: right;
 }
 
+#batch-form-field-group-1 {
+    margin: 0 0 10px 0;
+    padding: 0 0 10px 0;
+    overflow: auto;
+}
+
 .data-table {
     margin: 0 auto 10px auto;
     padding: 0;
