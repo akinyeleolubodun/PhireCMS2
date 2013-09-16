@@ -138,19 +138,6 @@ class Content extends AbstractContentModel
         $order = $this->getSortOrder($sort, $page);
 
         $sql = Table\Content::getSql();
-
-        // Get the correct placeholder
-        if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-            $p1 = '$1';
-            $p2 = '$2';
-        } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-            $p1 = ':type_id';
-            $p2 = ':title';
-        } else {
-            $p1 = '?';
-            $p2 = '?';
-        }
-
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'content.id' : $order['field'];
 
         $sql->select(array(
@@ -170,11 +157,11 @@ class Content extends AbstractContentModel
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
           ->orderBy($order['field'], $order['order']);
 
-        $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', $p1);
+        $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', ':type_id');
         $params = array('type_id' => $typeId);
 
         if (isset($_GET['search_title']) && (!empty($_GET['search_title']))) {
-            $sql->select()->where()->like(DB_PREFIX . 'content.title', $p2);
+            $sql->select()->where()->like(DB_PREFIX . 'content.title', ':title');
             $params['title'] = '%' . $_GET['search_title'] . '%';
         }
 
@@ -384,17 +371,7 @@ class Content extends AbstractContentModel
             // If just a search by content title
             if (isset($search['title'])) {
                 $sql = Table\Content::getSql();
-
-                // Get the correct placeholder
-                if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-                    $placeholder = '$1';
-                } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-                    $placeholder = ':title';
-                } else {
-                    $placeholder = '?';
-                }
-
-                $sql->select()->where()->like('title', $placeholder);
+                $sql->select()->where()->like('title', ':title');
                 $content = Table\Content::execute($sql->render(true), array('title' => '%' . $search['title'] . '%'));
                 $results = $content->rows;
             }
@@ -406,24 +383,14 @@ class Content extends AbstractContentModel
                         $field = \Fields\Table\Fields::findBy(array('name' => $key));
                         if (isset($field->id)) {
                             $sql = \Fields\Table\FieldValues::getSql();
-                            // Get the correct placeholder
-                            if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-                                $p1 = '$1';
-                                $p2 = '$2';
-                            } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-                                $p1 = ':field_id';
-                                $p2 = ':value';
-                            } else {
-                                $p1 = '?';
-                                $p2 = '?';
-                            }
                             $sql->select(array(
                                 DB_PREFIX . 'field_values.field_id',
                                 DB_PREFIX . 'field_values.model_id',
                                 DB_PREFIX . 'field_values.value',
                                 DB_PREFIX . 'fields_to_models.model'
                             ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
-                            $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', $p1)->like('value', $p2);
+                            $sql->select()
+                                ->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id')->like('value', ':value');
 
                             // Execute field values SQL
                             $fieldValues = \Fields\Table\FieldValues::execute(

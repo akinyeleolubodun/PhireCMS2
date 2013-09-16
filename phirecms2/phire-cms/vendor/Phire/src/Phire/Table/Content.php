@@ -52,38 +52,18 @@ class Content extends Record
 
         // Create SQL object and build SQL statement
         $sql = static::getSql();
-
-        // Get the correct placeholder
-        if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-            $p1 = '$1';
-            $p2 = '$2';
-            $p3 = '$3';
-            $p4 = '$4';
-        } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-            $p1 = ':published1';
-            $p2 = ':published2';
-            $p3 = ':uri';
-            $p4 = ':status';
-        } else {
-            $p1 = '?';
-            $p2 = '?';
-            $p3 = '?';
-            $p4 = '?';
-        }
-
         $sql->select()
             ->where()
-            ->greaterThanOrEqualTo('published', $p1)
-            ->lessThanOrEqualTo('published', $p2);
+            ->greaterThanOrEqualTo('published', ':published1')
+            ->lessThanOrEqualTo('published', ':published2');
 
         // If there is a content URI
         if (!empty($date['uri'])) {
-            $sql->select()->where()->equalTo('uri', $p3);
-            $sql->select()->where()->equalTo('status', $p4);
+            $sql->select()->where()->equalTo('uri', ':uri');
+            $sql->select()->where()->equalTo('status', ':status');
             $content = static::execute($sql->render(true), array('published' => array($start, $end), 'uri' => $date['uri'], 'status' => 2));
         } else {
-            $p4 = ($p4 == '$4') ? '$3' : $p4;
-            $sql->select()->where()->equalTo('status', $p4);
+            $sql->select()->where()->equalTo('status', ':status');
             $content = static::execute($sql->render(true), array('published' => array($start, $end), 'status' => 2));
         }
 

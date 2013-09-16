@@ -144,16 +144,6 @@ class User extends AbstractModel
     {
         $order = $this->getSortOrder($sort, $page);
         $sql = Table\Users::getSql();
-
-        // Get the correct placeholder
-        if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-            $placeholder = '$1';
-        } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-            $placeholder = ':type_id';
-        } else {
-            $placeholder = '?';
-        }
-
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
 
         // Build the SQL statement to get users
@@ -170,7 +160,7 @@ class User extends AbstractModel
           ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
           ->orderBy($order['field'], $order['order']);
 
-        $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', $placeholder);
+        $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
 
         // Execute SQL query and get user type
         $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
@@ -267,16 +257,6 @@ class User extends AbstractModel
     {
         $order = $this->getSortOrder($sort, $page);
         $sql = Table\Users::getSql();
-
-        // Get the correct placeholder
-        if ($sql->getDbType() == \Pop\Db\Sql::PGSQL) {
-            $placeholder = '$1';
-        } else if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-            $placeholder = ':type_id';
-        } else {
-            $placeholder = '?';
-        }
-
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
 
         // Build the SQL statement to get users
@@ -287,7 +267,7 @@ class User extends AbstractModel
             DB_PREFIX . 'users.logins'
         ))->orderBy($order['field'], $order['order']);
 
-        $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', $placeholder);
+        $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
 
         // Execute SQL query and get user type
         $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
