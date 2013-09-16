@@ -67,6 +67,7 @@ class Template extends AbstractContentModel
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=id">#</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=name">Name</a>',
+                    'copy'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">Copy</span>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -90,6 +91,12 @@ class Template extends AbstractContentModel
                     $name = $t['name'];
                 }
 
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
+                    $t['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/templates/copy/' . $t['id'] .'">Copy</a>';
+                } else {
+                    unset($options['table']['headers']['copy']);
+                }
+
                 $t['name'] = $name;
                 $t['device'] = $devices[$t['device']];
                 $tmplAry[] = $t;
@@ -106,6 +113,9 @@ class Template extends AbstractContentModel
                         }
                         $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $name;
                         $c['device'] = $devices[$c['device']];
+                        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
+                            $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/templates/copy/' . $c['id'] .'">Copy</a>';
+                        }
                         $tmplAry[] = $c;
                     }
                 }
@@ -211,6 +221,110 @@ class Template extends AbstractContentModel
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             \Fields\Model\FieldValue::update($fields, $template->id);
+        }
+    }
+
+    /**
+     * Copy content
+     *
+     * @param  int     $tid
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function copy($tid, $isFields = false)
+    {
+        $template = Table\Templates::findById($tid);
+
+        if (isset($template->id)) {
+            // Check for dupe names
+            $i = 1;
+            $orgName = $template->name;
+            $name = $orgName . ' (Copy ' . $i . ')';
+
+            $dupe = Table\Templates::findBy(array('name' => $name));
+            while (isset($dupe->id)) {
+                $i++;
+                $name = $orgName . ' (Copy ' . $i . ')';
+                $dupe = Table\Templates::findBy(array('name' => $name));
+            }
+
+            $newTemplate = new Table\Templates(array(
+                'parent_id'    => $template->parent_id,
+                'name'         => $name,
+                'content_type' => $template->content_type,
+                'device'       => $template->device,
+                'template'     => $template->template
+            ));
+
+            $newTemplate->save();
+
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $template->id));
+                if (isset($values->rows[0])) {
+                    foreach ($values->rows as $value) {
+                        $field = \Fields\Table\Fields::findById($value->field_id);
+                        if (isset($field->id) && ($field->type != 'file')) {
+                            $val = new \Fields\Table\FieldValues(array(
+                                'field_id'  => $value->field_id,
+                                'model_id'  => $newTemplate->id,
+                                'value'     => $value->value,
+                                'timestamp' => $value->timestamp,
+                                'history'   => $value->history
+                            ));
+                            $val->save();
+                        }
+                    }
+                }
+            }
+
+            // Copy template children, if any
+            $children = Table\Templates::findAll(null, array('parent_id' => $template->id));
+            if (isset($children->rows[0])) {
+                foreach ($children->rows as $child) {
+                    // Check for dupe names
+                    $i = 1;
+                    $orgName = $child->name;
+                    $name = $orgName . ' (Copy ' . $i . ')';
+
+                    $dupe = Table\Templates::findBy(array('name' => $name));
+                    while (isset($dupe->id)) {
+                        $i++;
+                        $name = $orgName . ' (Copy ' . $i . ')';
+                        $dupe = Table\Templates::findBy(array('name' => $name));
+                    }
+
+                    $newChild = new Table\Templates(array(
+                        'parent_id'    => $newTemplate->id,
+                        'name'         => $name,
+                        'content_type' => $child->content_type,
+                        'device'       => $child->device,
+                        'template'     => $child->template
+                    ));
+
+                    $newChild->save();
+
+                    // If the Fields module is installed, and if there are fields for this form/model
+                    if ($isFields) {
+                        $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $child->id));
+                        if (isset($values->rows[0])) {
+                            foreach ($values->rows as $value) {
+                                $field = \Fields\Table\Fields::findById($value->field_id);
+                                if (isset($field->id) && ($field->type != 'file')) {
+                                    $val = new \Fields\Table\FieldValues(array(
+                                        'field_id'  => $value->field_id,
+                                        'model_id'  => $newChild->id,
+                                        'value'     => $value->value,
+                                        'timestamp' => $value->timestamp,
+                                        'history'   => $value->history
+                                    ));
+                                    $val->save();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

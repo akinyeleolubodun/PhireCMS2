@@ -32,27 +32,41 @@ form {
     clear: both;
 }
 
+dl {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+
 dt {
     clear: left;
     float: left;
     margin: 0;
     padding: 12px 3px 6px 3px;
-    width: 200px;
+    width: 150px;
     text-align: right;
-    line-height: 1.0em;
+    line-height: 1.2em;
+    font-size: 0.9em;
 }
 
 dd {
     float: left;
     margin: 0;
     padding: 6px 3px 9px 3px;
-    line-height: 1.0em;
+    line-height: 1.2em;
+    font-size: 0.9em;
 }
 
 fieldset {
     margin: 0;
     padding: 0 3px 6px 3px;
     border: none;
+}
+
+select {
+    margin: 0;
+    padding: 0;
+    font-size: 1.0em;
 }
 
 #phire-nav-1 {
@@ -147,6 +161,40 @@ fieldset {
 
 #phire-nav-1 li > ul > li:hover > ul {
     display: block;
+}
+
+#content-form-field-group-1 {
+    margin: 0 0 50px 10px;
+    padding: 0 0 50px 10px;
+    float: right;
+    width: 280px;
+    border-left: solid 1px #ccc;
+}
+
+#content-form-field-group-1 > dt {
+    margin: 0;
+    padding: 10px 3px 3px 3px;
+    width: 274px;
+    clear: left;
+    text-align: left;
+    display: block;
+    line-height: 1.0em;
+}
+
+#content-form-field-group-1 > dd {
+    margin: 0;
+    padding: 0 3px 3px 3px;
+    float: left;
+    line-height: 1.0em;
+}
+
+#batch-form-field-group-2 {
+    margin: 10px 0 10px 0;
+    padding: 10px 0 10px 0;
+    border-top: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    width: 100%;
+    overflow: auto;
 }
 
 #uri-span, #slug-span {

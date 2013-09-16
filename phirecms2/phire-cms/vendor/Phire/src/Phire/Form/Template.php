@@ -150,7 +150,7 @@ class Template extends Form
                 'label'      => 'Name:',
                 'required'   => true,
                 'attributes' => array(
-                    'size'    => 40
+                    'size'    => 80
                 )
             ),
             'content_type' => array(

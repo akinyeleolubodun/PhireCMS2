@@ -199,6 +199,22 @@ class TemplatesController extends C
     }
 
     /**
+     * Templates copy method
+     *
+     * @return void
+     */
+    public function copy()
+    {
+        if (null === $this->request->getPath(1)) {
+            Response::redirect($this->request->getBasePath());
+        } else {
+            $template = new Model\Template();
+            $template->copy($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            Response::redirect($this->request->getBasePath());
+        }
+    }
+
+    /**
      * Templates remove method
      *
      * @return void

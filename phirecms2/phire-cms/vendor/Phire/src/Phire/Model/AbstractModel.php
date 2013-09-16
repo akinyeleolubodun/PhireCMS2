@@ -61,7 +61,6 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 ));
                 $this->data['phireNav']->setAcl($this->data['acl']);
                 $this->data['phireNav']->setRole($this->data['role']);
-                $this->data['phireNav']->nav()->setIndent('    ');
 
                 // And any content types to the main nav
                 $contentTypes = Table\ContentTypes::findAll('order ASC');
@@ -86,6 +85,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 }
 
                 $this->data['phireNav']->rebuild();
+                $this->data['phireNav']->nav()->setIndent('    ');
             }
         }
 

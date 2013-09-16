@@ -48,13 +48,17 @@ class Content extends Form
                     'value' => 'Select'
                 )
             );
+            $id = 'content-select-form';
         // Else, generate fields for the content object
         } else {
             $this->initFieldsValues = $this->getInitFields($tid, $mid, $isFields, $cfg);
+            parent::__construct($action, $method, null, '    ');
+            $id = 'content-form';
         }
 
         parent::__construct($action, $method, null, '    ');
-        $this->setAttributes('id', 'content-form');
+        $this->setAttributes('id', $id);
+
     }
 
     /**
@@ -173,12 +177,12 @@ class Content extends Form
                 'type'       => 'text',
                 'label'      => 'URI:' . $viewLink,
                 'attributes' => array(
-                    'size'    => 40,
+                    'size'    => 80,
                     'onkeyup' => "slug(null, 'uri');"
                 )
             );
             $titleAttributes = array(
-                'size'    => 40,
+                'size'    => 80,
                 'style'   => 'display: block;',
                 'onkeyup' => "slug('content_title', 'uri');"
             );
@@ -202,10 +206,10 @@ class Content extends Form
                 'type'       => 'file',
                 'label'      => $label,
                 'required'   => $required,
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 80)
             );
             $titleAttributes = array(
-                'size'    => 40
+                'size'    => 80
             );
         }
 
@@ -389,18 +393,13 @@ class Content extends Form
             )
         );
 
-        $allFields = array($fields1);
+        $allFields = array();
+        $allFields[] = array_merge($fields4, $fields5, $fields3, $fields6);
+        $allFields[] = $fields1;
+
         if(count($fields2) > 0) {
             $allFields[] = $fields2;
         }
-        if(count($fields3) > 0) {
-            $allFields[] = $fields3;
-        }
-        if(count($fields4) > 0) {
-            $allFields[] = $fields4;
-        }
-        $allFields[] = $fields5;
-        $allFields[] = $fields6;
 
         return $allFields;
     }
