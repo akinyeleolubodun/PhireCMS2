@@ -4,6 +4,7 @@
  */
 namespace Phire\Model;
 
+use Pop\Archive\Archive;
 use Pop\Data\Type\Html;
 use Pop\File\Dir;
 use Pop\File\File;
@@ -145,8 +146,11 @@ class Content extends AbstractContentModel
             DB_PREFIX . 'content.parent_id',
             DB_PREFIX . 'content.type_id',
             DB_PREFIX . 'content_types.name',
+            'type_uri' => DB_PREFIX . 'content_types.uri',
             DB_PREFIX . 'content.title',
             DB_PREFIX . 'content.uri',
+            DB_PREFIX . 'content.published',
+            DB_PREFIX . 'content.expired',
             DB_PREFIX . 'content.created',
             DB_PREFIX . 'content.created_by',
             DB_PREFIX . 'content.order',
@@ -228,7 +232,7 @@ class Content extends AbstractContentModel
             ),
             'date' => 'M j, Y',
             'exclude' => array(
-                'parent_id', 'type_id', 'name', 'order', 'created_by', 'user_id'
+                'parent_id', 'type_id', 'type_uri', 'name', 'order', 'created_by', 'user_id', 'published', 'expired'
             )
         );
 
@@ -297,7 +301,32 @@ class Content extends AbstractContentModel
      */
     public function getByUri($uri, $isFields = false)
     {
-        $content = Table\Content::findBy(array('uri' => $uri));
+        $sql = Table\Content::getSql();
+        $sql->select(array(
+            0  => DB_PREFIX . 'content.id',
+            1  => DB_PREFIX . 'content.type_id',
+            2  => DB_PREFIX . 'content.parent_id',
+            3  => DB_PREFIX . 'content.template',
+            4  => DB_PREFIX . 'content.title',
+            5  => DB_PREFIX . 'content.uri',
+            6  => DB_PREFIX . 'content.slug',
+            7  => DB_PREFIX . 'content.order',
+            8  => DB_PREFIX . 'content.include',
+            9  => DB_PREFIX . 'content.feed',
+            10 => DB_PREFIX . 'content.force_ssl',
+            11 => DB_PREFIX . 'content.status',
+            12 => DB_PREFIX . 'content.created',
+            13 => DB_PREFIX . 'content.updated',
+            14 => DB_PREFIX . 'content.published',
+            15 => DB_PREFIX . 'content.expired',
+            16 => DB_PREFIX . 'content.created_by',
+            17 => DB_PREFIX . 'content.updated_by',
+            'type_uri' => DB_PREFIX . 'content_types.uri'
+        ))->where()->equalTo(DB_PREFIX . 'content.uri', ':uri');
+
+        $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+        $content = Table\Content::execute($sql->render(true), array(DB_PREFIX . 'content.uri' => $uri));
+
         if (isset($content->id)) {
             $this->getNav($content);
             $this->isAllowed($content);
@@ -605,7 +634,7 @@ class Content extends AbstractContentModel
                 $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                 $this->config->media_max_filesize, $this->config->media_allowed_types
             );
-            $upload->setPermissions(0777);
+            chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
             if (preg_match(self::$imageRegex, $fileName)) {
                 self::processMedia($fileName, $this->config);
             }
@@ -743,7 +772,7 @@ class Content extends AbstractContentModel
                     $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                     $this->config->media_max_filesize, $this->config->media_allowed_types
                 );
-                $upload->setPermissions(0777);
+                chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                 if (preg_match(self::$imageRegex, $fileName)) {
                     self::processMedia($fileName, $this->config);
                 }
@@ -974,8 +1003,69 @@ class Content extends AbstractContentModel
         if (count($batchErrors) == 0) {
             if ($_FILES) {
                 $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                if (!empty($_FILES['archive_file']) && ($_FILES['archive_file']['name'] != '')) {
+                    mkdir($dir . DIRECTORY_SEPARATOR . 'tmp');
+                    chmod($dir . DIRECTORY_SEPARATOR . 'tmp', 0777);
+
+                    $archive = Archive::upload(
+                        $_FILES['archive_file']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $_FILES['archive_file']['name'],
+                        $this->config->media_max_filesize, $this->config->media_allowed_types
+                    );
+                    $archive->setPermissions(0777);
+                    $archive->extract($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR);
+                    $archive->delete();
+
+                    if (stripos($_FILES['archive_file']['name'], '.tar') !== false) {
+                        $filename = substr($_FILES['archive_file']['name'], 0, (strpos($_FILES['archive_file']['name'], '.tar') + 4));
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename)) {
+                            unlink($dir . DIRECTORY_SEPARATOR . $filename);
+                        }
+                    } else if ((stripos($_FILES['archive_file']['name'], '.tgz') !== false) ||
+                               (stripos($_FILES['archive_file']['name'], '.tbz') !== false)) {
+                        $filename = substr($_FILES['archive_file']['name'], 0, strpos($_FILES['archive_file']['name'], '.t')) . '.tar';
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename)) {
+                            unlink($dir . DIRECTORY_SEPARATOR . $filename);
+                        }
+                    }
+
+                    $tmpDir = new Dir($dir . DIRECTORY_SEPARATOR . 'tmp', true, true, false);
+                    $allowed = $this->config->media_allowed_types;
+
+                    foreach ($tmpDir->getFiles() as $file) {
+                        $pathParts = pathinfo($file);
+                        if ((filesize($file) <= $this->config->media_max_filesize) && array_key_exists($pathParts['extension'], $allowed)) {
+                            $fileName = File::checkDupe($pathParts['basename'], $dir);
+                            copy($file, $dir . DIRECTORY_SEPARATOR . $fileName);
+                            chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
+                            if (preg_match(self::$imageRegex, $fileName)) {
+                                self::processMedia($fileName, $this->config);
+                            }
+                            $content = new Table\Content(array(
+                                'type_id'    => $_POST['type_id'],
+                                'title'      => ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.')))),
+                                'uri'        => $fileName,
+                                'slug'       => $fileName,
+                                'order'      => 0,
+                                'feed'       => 0,
+                                'force_ssl'  => null,
+                                'status'     => null,
+                                'created'    => date('Y-m-d H:i:s'),
+                                'updated'    => null,
+                                'published'  => date('Y-m-d H:i:s'),
+                                'expired'    => null,
+                                'created_by' => ((isset($this->user) && isset($this->user->id)) ? $this->user->id : null),
+                                'updated_by' => null
+                            ));
+
+                            $content->save();
+                        }
+                    }
+
+                    $tmpDir->emptyDir(null, true);
+                }
+
                 foreach ($_FILES as $key => $value) {
-                    if ($key != 'archive_file') {
+                    if (($key != 'archive_file') && ($value['name'] != '')) {
                         $id = substr($key, (strrpos($key, '_') + 1));
                         $fileName = File::checkDupe($value['name'], $dir);
                         $upload = File::upload(
@@ -1069,8 +1159,7 @@ class Content extends AbstractContentModel
                     }
                     $img = call_user_func_array(array($img, $action['action']), $params);
                     $img->save($mediaDir . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newFileName);
-
-                    $img->setPermissions(0777);
+                    chmod($mediaDir . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newFileName, 0777);
                 }
             }
         }

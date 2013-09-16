@@ -192,7 +192,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_types` (
 
 INSERT INTO `[{prefix}]content_types` (`id`, `name`, `uri`, `order`) VALUES
 (5001, 'Page', 1, 1),
-(5002, 'Media', 0, 2);
+(5002, 'Media', 0, 2),
+(5003, 'Event', 2, 3);
 
 -- --------------------------------------------------------
 

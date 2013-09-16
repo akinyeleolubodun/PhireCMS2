@@ -88,11 +88,12 @@ class ContentType extends Form
                 'attributes' => array('size' => 40)
             ),
             'uri' => array(
-                'type'   => 'radio',
-                'label'  => 'URI or File:',
+                'type'   => 'select',
+                'label'  => 'URI Type:',
                 'value'  => array(
                     '1' => 'URI',
-                    '0' => 'File'
+                    '0' => 'File',
+                    '2' => 'Event'
                 ),
                 'marked' => 1
             )

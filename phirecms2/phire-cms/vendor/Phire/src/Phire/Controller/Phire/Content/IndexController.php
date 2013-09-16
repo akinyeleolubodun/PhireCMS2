@@ -330,7 +330,7 @@ class IndexController extends C
                     $this->view = View::factory($this->viewPath . '/batch.phtml', $content);
                     $this->send();
                 }
-                // Else, redirect
+            // Else, redirect
             } else {
                 Response::redirect($this->request->getBasePath() . '/add');
             }

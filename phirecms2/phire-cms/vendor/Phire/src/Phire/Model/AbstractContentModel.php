@@ -78,7 +78,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                     if (($count) && ($this->config->category_totals)) {
                         $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
                     }
-                    if (isset($c->category) || (count($rolesAry) == 0) || ((count($rolesAry) > 0) && (isset($this->data['user'])) && in_array($this->data['user']['role_id'], $rolesAry))) {
+                    if (isset($c->category) || $this->isAllowed($c, true)) {
                         $p['children'] = $this->getChildren($content, $c->id, $count);
                         $children[] = $p;
                     }
@@ -126,7 +126,34 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
     protected function getNav($content = null)
     {
         // Get main nav
-        $allContent = Table\Content::findAll('order ASC', array('status' => self::PUBLISHED));
+        $sql = Table\Content::getSql();
+        $sql->select(array(
+            DB_PREFIX . 'content.id',
+            DB_PREFIX . 'content.type_id',
+            DB_PREFIX . 'content.parent_id',
+            DB_PREFIX . 'content.template',
+            DB_PREFIX . 'content.title',
+            DB_PREFIX . 'content.uri',
+            DB_PREFIX . 'content.slug',
+            DB_PREFIX . 'content.order',
+            DB_PREFIX . 'content.include',
+            DB_PREFIX . 'content.feed',
+            DB_PREFIX . 'content.force_ssl',
+            DB_PREFIX . 'content.status',
+            DB_PREFIX . 'content.created',
+            DB_PREFIX . 'content.updated',
+            DB_PREFIX . 'content.published',
+            DB_PREFIX . 'content.expired',
+            DB_PREFIX . 'content.created_by',
+            DB_PREFIX . 'content.updated_by',
+            'type_uri' => DB_PREFIX . 'content_types.uri'
+        ))->where()->equalTo(DB_PREFIX . 'content.status', self::PUBLISHED);
+
+        $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+        $sql->select()->orderBy(DB_PREFIX . 'content.order', 'ASC');
+        $allContent = Table\Content::execute($sql->render(true));
+
+        //$allContent = Table\Content::findAll('order ASC', array('status' => self::PUBLISHED));
         if (isset($allContent->rows[0])) {
             $navConfig = array(
                 'top' => array(
@@ -157,7 +184,8 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                 'top' => array(
                     'id'    => 'cat-nav'
                 ),
-                'parent' => array(
+                'parent' //if (isset($c->category) || (count($rolesAry) == 0) || ((count($rolesAry) > 0) && (isset($this->data['user'])) && in_array($this->data['user']['role_id'], $rolesAry))) {
+                    => array(
                     'class' => 'cat-nav-level'
                 )
             );
@@ -174,11 +202,14 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
      * Method to check is content object is allowed
      * and set model data accordingly
      *
-     * @param  mixed $content
-     * @return void
+     * @param  mixed   $content
+     * @param  boolean $ret
+     * @return mixed
      */
-    protected function isAllowed($content)
+    protected function isAllowed($content, $ret = false)
     {
+        $allowed = true;
+
         // Get any content roles
         $rolesAry = array();
         if (isset($content->title)) {
@@ -191,28 +222,51 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
 
         // If there are no roles, or the user's role is allowed
         if ((count($rolesAry) == 0) || ((count($rolesAry) > 0) && (isset($this->data['user'])) && in_array($this->data['user']['role_id'], $rolesAry))) {
-            $this->data['allowed'] = true;
-            // Else, not allowed
+            $allowed = true;
+        // Else, not allowed
         } else {
-            $this->data['allowed'] = false;
+            $allowed = false;
         }
 
         // Check if the content is published, a draft or expired
         if (isset($content->title) && (null !== $content->status)) {
             $sess = Session::getInstance();
-            if ((strtotime($content->published) >= time()) ||
-                ((null !== $content->expired) && ($content->expired != '0000-00-00 00:00:00') && (strtotime($content->expired) <= time()))) {
-                $this->data['allowed'] = false;
-            } else if ((int)$content->status == self::UNPUBLISHED) {
-                $this->data['allowed'] = false;
+
+            // If a regular URI type
+            if (($content->type_uri == 1) && ((strtotime($content->published) >= time()) ||
+                ((null !== $content->expired) && ($content->expired != '0000-00-00 00:00:00') && (strtotime($content->expired) <= time())))) {
+                $allowed = false;
+            // Else, if an event type
+            } else if ($content->type_uri == 2) {
+                // If no end date
+                if ((null === $content->expired) || ($content->expired == '0000-00-00 00:00:00')) {
+                    if (strtotime($content->published) < time()) {
+                        $allowed = false;
+                    }
+                } else {
+                    if (strtotime($content->expired) <= time()) {
+                        $allowed = false;
+                    }
+                }
+            }
+
+            // Published status override
+            if ((int)$content->status == self::UNPUBLISHED) {
+                $allowed = false;
             } else if ((int)$content->status == self::DRAFT) {
-                $this->data['allowed'] = (isset($sess->user) && (strtolower($sess->user->type) == 'user'));
+                $allowed = (isset($sess->user) && (strtolower($sess->user->type) == 'user'));
             }
         }
 
         // Check is the site is live
         if (!$this->config->live) {
-            $this->data['allowed'] = false;
+            $allowed = false;
+        }
+
+        if (!$ret) {
+            $this->data['allowed'] = $allowed;
+        } else {
+            return $allowed;
         }
 
     }
