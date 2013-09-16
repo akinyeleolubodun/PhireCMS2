@@ -728,7 +728,7 @@ class Content extends AbstractContentModel
                 $fields['expired_day'] . ' ' . $fields['expired_hour'] . ':' . $fields['expired_minute'] . ':00';
         } else if (isset($fields['expired_year']) && ($fields['expired_year'] == '----') && ($fields['expired_month'] == '--') &&
             ($fields['expired_day'] == '--') && ($fields['expired_hour'] == '--') && ($fields['expired_minute'] == '--')) {
-            $expired = '0000-00-00 00:00:00';
+            $expired = null;
         }
 
         // If content is a file
