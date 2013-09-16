@@ -235,6 +235,7 @@ class Content extends AbstractContentModel
         $this->data['title'] .= (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;
         $this->data['content'] = $content->rows;
         $this->data['contentTree'] = $this->getChildren($content->rows, 0);
+        $this->data['typeUri'] = $contentType->uri;
 
         $status = array('Unpublished', 'Draft', 'Published');
         $contentAry = array();
@@ -513,6 +514,9 @@ class Content extends AbstractContentModel
                 $contentValues['updated'] = '<strong>Updated:</strong> Never';
             }
 
+
+            $contentValues['typeUri'] = $type->uri;
+
             // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
                 $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($id));
@@ -560,11 +564,10 @@ class Content extends AbstractContentModel
      * Save content
      *
      * @param \Pop\Form\Form $form
-     * @param  array         $cfg
      * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, array $cfg = null, $isFields = false)
+    public function save(\Pop\Form\Form $form, $isFields = false)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -695,11 +698,10 @@ class Content extends AbstractContentModel
      * Update content
      *
      * @param \Pop\Form\Form $form
-     * @param  array         $cfg
      * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, array $cfg = null, $isFields = false)
+    public function update(\Pop\Form\Form $form, $isFields = false)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -937,6 +939,40 @@ class Content extends AbstractContentModel
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Process batch
+     *
+     * @return void
+     */
+    public function batch()
+    {
+        $batchErrors = array();
+
+        // Check for global file setting configurations
+        if ($_FILES) {
+            $config = \Phire\Table\Config::getSystemConfig();
+            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
+
+            foreach ($_FILES as $key => $value) {
+                if (!empty($value['name'])) {
+                    if ($value['size'] > $config->media_max_filesize) {
+                        $batchErrors[] = 'The file \'' . $value['name'] . '\' must be less than ' . $config->media_max_filesize_formatted . '.';
+                    }
+                    if (preg_match($regex, $value['name']) == 0) {
+                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
+                        $batchErrors[] = 'The ' . $type . ' file type is not allowed.';
+                    }
+                }
+            }
+        }
+
+        $this->data['batchErrors'] = $batchErrors;
+
+        if (count($batchErrors) == 0) {
+
         }
     }
 

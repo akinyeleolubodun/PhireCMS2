@@ -126,7 +126,8 @@ class IndexController extends C
                         'assets'   => $this->project->getAssets(),
                         'acl'      => $this->project->getService('acl'),
                         'phireNav' => $this->project->getService('phireNav'),
-                        'typeId'   => $type->id
+                        'typeId'   => $type->id,
+                        'typeUri'  => $type->uri
                     ));
 
                     $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Add');
@@ -145,9 +146,8 @@ class IndexController extends C
 
                         // If form is valid, save new content
                         if ($form->isValid()) {
-                            $cfg = $this->project->module('Phire');
                             try {
-                                $content->save($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
+                                $content->save($form, $this->project->isLoaded('Fields'));
                                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                                 } else if (null !== $this->request->getQuery('update')) {
@@ -223,9 +223,8 @@ class IndexController extends C
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $cfg = $this->project->module('Phire');
                         try {
-                            $content->update($form, $cfg->asArray(), $this->project->isLoaded('Fields'));
+                            $content->update($form, $this->project->isLoaded('Fields'));
                             if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                             } else if (null !== $this->request->getQuery('update')) {
@@ -288,6 +287,52 @@ class IndexController extends C
                 Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
             } else {
                 Response::redirect($this->request->getBasePath());
+            }
+        }
+    }
+
+    /**
+     * Content batch add method
+     *
+     * @return void
+     */
+    public function batch()
+    {
+        if (null === $this->request->getPath(1)) {
+            Response::redirect($this->request->getBasePath());
+        } else {
+            $type = Table\ContentTypes::findById($this->request->getPath(1));
+
+            // If content type is valid
+            if (isset($type->id)) {
+                $content = new Model\Content(array(
+                    'assets'   => $this->project->getAssets(),
+                    'acl'      => $this->project->getService('acl'),
+                    'phireNav' => $this->project->getService('phireNav'),
+                    'typeId'   => $type->id,
+                    'typeUri'  => $type->uri
+                ));
+
+                $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Batch');
+                $form = new Form\Batch();
+
+                if ($this->request->isPost()) {
+                    $content->batch();
+                    if (count($content->batchErrors) > 0) {
+                        $content->set('form', $form);
+                        $this->view = View::factory($this->viewPath . '/batch.phtml', $content);
+                        $this->send();
+                    } else {
+                        // Success
+                    }
+                } else {
+                    $content->set('form', $form);
+                    $this->view = View::factory($this->viewPath . '/batch.phtml', $content);
+                    $this->send();
+                }
+                // Else, redirect
+            } else {
+                Response::redirect($this->request->getBasePath() . '/add');
             }
         }
     }

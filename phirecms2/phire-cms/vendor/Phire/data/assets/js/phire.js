@@ -3,6 +3,7 @@
  */
 
 var resourceCount = 1;
+var batchCount = 1;
 var actions = [];
 var contentForm;
 var categoryForm;
@@ -330,7 +331,7 @@ var updateForm = function(form, ret) {
 var clearStatus = function() {
     $fx('#result').fade(0, 10, 20);
     clearTimeout(clr);
-}
+};
 
 /**
  * Function to clear the status
@@ -347,7 +348,28 @@ var wipeErrors = function(a, hgt) {
         $(a).val('Hide');
         $fx('#errors').wipeUp(hgt, 10, 20);
     }
-}
+};
+
+/**
+ * Function to add batch fields
+ *
+ * @return void
+ */
+var addBatchFields = function() {
+    batchCount++;
+
+    // Add file name field
+    $($('#file_name_1').parent()).clone(
+        '#file_name_1',
+        [['name', 'file_name_' + batchCount], ['id', 'file_name_' + batchCount]]
+    );
+
+    // Add file title field
+    $($('#file_title_1').parent()).clone(
+        '#file_title_1',
+        [['name', 'file_title_' + batchCount], ['id', 'file_title_' + batchCount]]
+    );
+};
 
 /**
  * Document ready function to load the correct URI string into the URI span

@@ -80,7 +80,7 @@ class IndexController extends C
         $ext = new Model\Extension(array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
         $ext->getThemes();
