@@ -754,7 +754,7 @@ class Content extends AbstractContentModel
                 $uri = $fileName;
                 $slug = $fileName;
             } else {
-                $title = $content->title;
+                $title = $fields['content_title'];
                 $uri = $content->uri;
                 $slug = $content->slug;
             }
@@ -972,7 +972,46 @@ class Content extends AbstractContentModel
         $this->data['batchErrors'] = $batchErrors;
 
         if (count($batchErrors) == 0) {
+            if ($_FILES) {
+                $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                foreach ($_FILES as $key => $value) {
+                    if ($key != 'archive_file') {
+                        $id = substr($key, (strrpos($key, '_') + 1));
+                        $fileName = File::checkDupe($value['name'], $dir);
+                        $upload = File::upload(
+                            $value['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
+                            $this->config->media_max_filesize, $this->config->media_allowed_types
+                        );
+                        $upload->setPermissions(0777);
+                        if (preg_match(self::$imageRegex, $fileName)) {
+                            self::processMedia($fileName, $this->config);
+                        }
 
+                        $title = ($_POST['file_title_' . $id] != '') ?
+                            $_POST['file_title_' . $id] :
+                            ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.'))));
+
+                        $content = new Table\Content(array(
+                            'type_id'    => $_POST['type_id'],
+                            'title'      => $title,
+                            'uri'        => $fileName,
+                            'slug'       => $fileName,
+                            'order'      => 0,
+                            'feed'       => 0,
+                            'force_ssl'  => null,
+                            'status'     => null,
+                            'created'    => date('Y-m-d H:i:s'),
+                            'updated'    => null,
+                            'published'  => date('Y-m-d H:i:s'),
+                            'expired'    => null,
+                            'created_by' => ((isset($this->user) && isset($this->user->id)) ? $this->user->id : null),
+                            'updated_by' => null
+                        ));
+
+                        $content->save();
+                    }
+                }
+            }
         }
     }
 

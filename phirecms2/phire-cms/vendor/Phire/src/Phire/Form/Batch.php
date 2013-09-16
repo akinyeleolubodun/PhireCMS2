@@ -15,9 +15,10 @@ class Batch extends Form
      *
      * @param  string $action
      * @param  string $method
+     * @param  int $tid
      * @return self
      */
-    public function __construct($action = null, $method = 'post')
+    public function __construct($action = null, $method = 'post', $tid = 0)
     {
         $this->initFieldsValues = array(
             'file_name_1' => array(
@@ -39,6 +40,10 @@ class Batch extends Form
                 'type'       => 'file',
                 'label'      => 'Archive File (Multiple Files):<br /><span style="display: block; margin: 1px 0 0 0; font-size: 0.9em;"><strong>Supported Archive Types</strong><br />' . implode(', ', array_keys(\Pop\Archive\Archive::formats())) . '</span>',
                 'attributes' => array('size' => 30)
+            ),
+            'type_id' => array(
+                'type'  => 'hidden',
+                'value' => $tid
             ),
             'submit' => array(
                 'type'  => 'submit',

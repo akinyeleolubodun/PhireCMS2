@@ -314,7 +314,7 @@ class IndexController extends C
                 ));
 
                 $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Batch');
-                $form = new Form\Batch();
+                $form = new Form\Batch($this->request->getBasePath() . $this->request->getRequestUri(), 'post', $this->request->getPath(1));
 
                 if ($this->request->isPost()) {
                     $content->batch();
@@ -323,7 +323,7 @@ class IndexController extends C
                         $this->view = View::factory($this->viewPath . '/batch.phtml', $content);
                         $this->send();
                     } else {
-                        // Success
+                        Response::redirect($this->request->getBasePath() . '/index/' . $type->id);
                     }
                 } else {
                     $content->set('form', $form);
