@@ -194,8 +194,12 @@ class Project extends P
                         }
                     }
 
+                    if ((null !== $permission) && (null !== $resource) && !method_exists($resource, $permission)) {
+                        $permission = 'error';
+                    }
+
                     // Get the user URI
-                    $uri = (strtolower($router->project()->getService('acl')->getType()->type) == 'user') ?
+                    $uri = ((APP_URI == '') || (strtolower($router->project()->getService('acl')->getType()->type) == 'user')) ?
                         APP_URI :
                         '/' . strtolower($router->project()->getService('acl')->getType()->type);
 
