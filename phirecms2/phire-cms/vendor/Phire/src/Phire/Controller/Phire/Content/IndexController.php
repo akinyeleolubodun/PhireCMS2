@@ -148,7 +148,9 @@ class IndexController extends C
                         if ($form->isValid()) {
                             try {
                                 $content->save($form, $this->project->isLoaded('Fields'));
-                                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                                if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
+                                    Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
+                                } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                                 } else if (null !== $this->request->getQuery('update')) {
                                     $this->sendJson(array(
@@ -225,7 +227,9 @@ class IndexController extends C
                     if ($form->isValid()) {
                         try {
                             $content->update($form, $this->project->isLoaded('Fields'));
-                            if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
+                            if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
+                                Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
+                            } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time());
                             } else if (null !== $this->request->getQuery('update')) {
                                 $this->sendJson(array(

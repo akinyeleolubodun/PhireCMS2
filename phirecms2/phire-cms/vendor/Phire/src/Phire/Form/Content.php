@@ -165,17 +165,9 @@ class Content extends Form
                 )
             );
 
-            $viewLink = null;
-            if ($mid != 0) {
-                $c = Table\Content::findById($mid);
-                if (isset($c->id)) {
-                    $viewLink = "<br /><span style=\"font-size: 0.9em;\">[ <a href=\"#\" onclick=\"window.open('" . BASE_PATH . "' + $('#uri-span').val()); return false;\">View</a> ]</span>";
-                }
-            }
-
             $uri = array(
                 'type'       => 'text',
-                'label'      => 'URI:' . $viewLink,
+                'label'      => 'URI:',
                 'attributes' => array(
                     'size'    => 80,
                     'onkeyup' => "slug(null, 'uri');"
@@ -392,6 +384,16 @@ class Content extends Form
                 )
             )
         );
+
+        if (($type->uri == 1) || ($type->uri == 2)) {
+            $fields6['preview'] = array(
+                'type'       => 'button',
+                'value'      => 'Preview',
+                'attributes' => array(
+                    'onclick' => "return updateForm('#content-form', true, true);"
+                )
+            );
+        }
 
         $allFields = array();
         $allFields[] = array_merge($fields4, $fields5, $fields3, $fields6);

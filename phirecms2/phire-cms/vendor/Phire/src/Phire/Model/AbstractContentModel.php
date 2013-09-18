@@ -149,11 +149,16 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             'type_uri' => DB_PREFIX . 'content_types.uri'
         ))->where()->equalTo(DB_PREFIX . 'content.status', self::PUBLISHED);
 
+        // If it's a draft and a user is logged in
+        if (isset($this->data['acl']) && ($this->data['acl']->isAuth())) {
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', self::DRAFT, 'OR');
+        }
+
         $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
         $sql->select()->orderBy(DB_PREFIX . 'content.order', 'ASC');
+
         $allContent = Table\Content::execute($sql->render(true));
 
-        //$allContent = Table\Content::findAll('order ASC', array('status' => self::PUBLISHED));
         if (isset($allContent->rows[0])) {
             $navConfig = array(
                 'top' => array(

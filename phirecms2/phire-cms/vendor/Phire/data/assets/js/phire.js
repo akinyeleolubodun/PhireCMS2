@@ -294,13 +294,23 @@ var processForm = function() {
  *
  * @param  String  form
  * @param  Boolean ret
+ * @param  Boolean prev
  * @return Boolean
  */
-var updateForm = function(form, ret) {
+var updateForm = function(form, ret, prev) {
     submitted = true;
     if (ret) {
-        if ($('#update_value').obj != null) {
-            $('#update_value').val(1);
+        if (prev != null) {
+            if ($('#status').obj != null) {
+                $('#status').val(1);
+            }
+            if ($('#update_value').obj != null) {
+                $('#update_value').val(2);
+            }
+        } else {
+            if ($('#update_value').obj != null) {
+                $('#update_value').val(1);
+            }
         }
         return true;
     } else {
@@ -421,6 +431,17 @@ $(document).ready(function(){
                     val = '/';
                 }
                 $($('#uri').parent()).append('span', ['id', 'uri-span'], (val.substring(0, 2) == '//') ? val.substring(1) : val);
+            }
+
+            // Check preview timestamp to determine if a preview window should be opened
+            if ($().get('preview') != undefined) {
+                var ts = Math.round(new Date().getTime() / 1000);
+                var diff = Math.abs($().get('preview') - ts);
+                if (diff < 40) {
+                    if ($('#uri-span').obj != null) {
+                        window.open(decodeURIComponent($().get('base_path')) + $('#uri-span').val());
+                    }
+                }
             }
         }
 

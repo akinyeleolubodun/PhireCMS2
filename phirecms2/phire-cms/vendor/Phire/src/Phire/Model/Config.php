@@ -24,9 +24,7 @@ class Config extends AbstractContentModel
         $formattedConfig = array();
 
         foreach ($cfg->rows as $c) {
-            if ($c->value == '0000-00-00 00:00:00') {
-                $value = 'N/A';
-            } else if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
+            if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
                 $value = unserialize($c->value);
             } else {
                 $value = htmlentities($c->value, ENT_QUOTES, 'UTF-8');
@@ -43,8 +41,9 @@ class Config extends AbstractContentModel
             'server_software'         => $config['server_software'],
             'database_version'        => $config['database_version'],
             'php_version'             => $config['php_version'],
-            'installed_on'            => $config['installed_on'],
-            'updated_on'              => $config['updated_on']
+            'installed_on'            => date($this->config->datetime_format, strtotime($config['installed_on'])),
+            'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
+                date($this->config->datetime_format, strtotime($config['updated_on'])) : 'N/A'
         );
 
         // Set site title form element
@@ -203,6 +202,9 @@ class Config extends AbstractContentModel
         $cfg = Table\Config::findById('media_image_adapter');
         $cfg->value = $post['media_image_adapter'];
         $cfg->update();
+
+        // Reset base config settings
+        Table\Config::setConfig();
     }
 
     /**
@@ -274,7 +276,7 @@ class Config extends AbstractContentModel
         foreach ($actions as $size => $action) {
             $mediaSizes .= '                        <input type="text" name="media_size_' . $i . '" id="media_size_' . $i . '" value="' . $size . '" style="display: block;" size="3" />' . PHP_EOL;
             $actionSelect = new Element\Select('media_action_' . $i, $actionOptions, $action['action'], '                        ');
-            $actionSelect->setAttributes('style', 'display: block;');
+            $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 2px 0 2px 0;');
             $mediaActions .= (string)$actionSelect;
             $mediaParams .= '                        <input type="text" name="media_params_' . $i . '" id="media_params_' . $i . '" value="' . $action['params'] . '" style="display: block;" size="3" />' . PHP_EOL;
             $mediaQuality .= '                        <input type="text" name="media_quality_' . $i . '" id="media_quality_' . $i . '" value="' . $action['quality'] . '" style="display: block;" size="3" />' . PHP_EOL;
