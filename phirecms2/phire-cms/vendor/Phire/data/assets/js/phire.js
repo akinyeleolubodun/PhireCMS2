@@ -385,9 +385,6 @@ var addBatchFields = function() {
  * Document ready function to load the correct URI string into the URI span
  */
 $(document).ready(function(){
-    if (!$().browser.msie) {
-        $('html').css('box-shadow', 'inset 0px 0px 100px 40px #cec7c2');
-    }
     // Check saved timestamp to determine if the saved div should display
     if ($().get('saved') != undefined) {
         var ts = Math.round(new Date().getTime() / 1000);

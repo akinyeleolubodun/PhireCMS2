@@ -11,6 +11,7 @@ html  {
     font-size: 0.75em;
     color: #606060;
     background-color: #fcf9f9;
+    box-shadow: inset 0px 0px 100px 40px #cec7c2;
     min-height: 100%;
 }
 
@@ -227,10 +228,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 50px;
     width: 350px;
     background-color: #fff;
-    border: solid 1px #ccc;
     border-radius: 20px;
-    box-shadow: 0px 0px 20px 10px #ccc;
-
+    box-shadow: 0px 0px 15px 5px #d3cac6;
 }
 
 #login-form input[type=text], #login-form input[type=password], #forgot-form input[type=text] {
