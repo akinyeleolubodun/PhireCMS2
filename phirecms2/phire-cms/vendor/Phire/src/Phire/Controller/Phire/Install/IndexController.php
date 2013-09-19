@@ -152,7 +152,7 @@ class IndexController extends C
 
                 if ($form->isValid()) {
                     $user->save($form);
-                    $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">Thank you. The system has been successfully installed.<br />You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '" target="_blank">here</a>.</p>' . PHP_EOL);
+                    $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">Thank you. The system has been successfully installed.<br />You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '/" target="_blank">here</a>.</p>' . PHP_EOL);
                     Model\Install::send($form);
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
