@@ -48,11 +48,13 @@ class Config extends AbstractContentModel
 
         // Set site title form element
         $siteTitle = new Element('text', 'site_title', html_entity_decode($config['site_title'], ENT_QUOTES, 'UTF-8'));
-        $siteTitle->setAttributes('size', 40);
+        $siteTitle->setAttributes('size', 40)
+                  ->setAttributes('style', 'padding: 5px;');
 
         // Set separator form element
         $separator = new Element('text', 'separator', html_entity_decode($config['separator'], ENT_QUOTES, 'UTF-8'));
-        $separator->setAttributes('size', 3);
+        $separator->setAttributes('size', 10)
+                  ->setAttributes('style', 'padding: 5px;');
 
         // Set default language form element
         $langs = I18n::getLanguages();
@@ -71,19 +73,23 @@ class Config extends AbstractContentModel
 
         // Set max media size form element
         $maxSize = new Element('text', 'media_max_filesize', $this->getMaxSize($config['media_max_filesize']));
-        $maxSize->setAttributes('size', 3);
+        $maxSize->setAttributes('size', 10)
+                ->setAttributes('style', 'padding: 3px;');
 
         // Set feed limit form element
         $feedLimit = new Element('text', 'feed_limit', $config['feed_limit']);
-        $feedLimit->setAttributes('size', 3);
+        $feedLimit->setAttributes('size', 10)
+                  ->setAttributes('style', 'padding: 3px;');
 
         // Set page limit form element
         $pageLimit = new Element('text', 'pagination_limit', $config['pagination_limit']);
-        $pageLimit->setAttributes('size', 3);
+        $pageLimit->setAttributes('size', 10)
+                  ->setAttributes('style', 'padding: 3px;');
 
         // Set page range form element
         $pageRange = new Element('text', 'pagination_range', $config['pagination_range']);
-        $pageRange->setAttributes('size', 3);
+        $pageRange->setAttributes('size', 10)
+                  ->setAttributes('style', 'padding: 3px;');
 
         // Set media actions and media types form elements
         $mediaConfig = $this->getMediaConfig($config['media_actions']);
@@ -228,10 +234,10 @@ class Config extends AbstractContentModel
 
         if (array_key_exists($datetime, $dateTimeOptions)) {
             $dateTimeValue = $datetime;
-            $dateTimeOptions['custom'] = '<input type="text" name="custom_datetime" onkeyup="customDatetime(this.value);" size="3" value="" /> <span id="custom-datetime"></span>';
+            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="customDatetime(this.value);" size="10" value="" /> <span id="custom-datetime"></span>';
         } else {
             $dateTimeValue = 'custom';
-            $dateTimeOptions['custom'] = '<input type="text" name="custom_datetime" onkeyup="customDatetime(this.value);" size="3" value="' . $datetime . '" /> <span id="custom-datetime">(' . date($datetime) . ')</span>';
+            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="customDatetime(this.value);" size="10" value="' . $datetime . '" /> <span id="custom-datetime">(' . date($datetime) . ')</span>';
         }
 
         $datetime = new Element\Radio('datetime_format', $dateTimeOptions, $dateTimeValue, '                    ');
@@ -274,22 +280,22 @@ class Config extends AbstractContentModel
         $i = 1;
         $actionOptions = array_merge(array('0' => '----'), Content::getMediaActions());
         foreach ($actions as $size => $action) {
-            $mediaSizes .= '                        <input type="text" name="media_size_' . $i . '" id="media_size_' . $i . '" value="' . $size . '" style="display: block;" size="3" />' . PHP_EOL;
+            $mediaSizes .= '                        <input type="text" name="media_size_' . $i . '" id="media_size_' . $i . '" value="' . $size . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $actionSelect = new Element\Select('media_action_' . $i, $actionOptions, $action['action'], '                        ');
-            $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 2px 0 2px 0;');
+            $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 3px 0 3px 0;');
             $mediaActions .= (string)$actionSelect;
-            $mediaParams .= '                        <input type="text" name="media_params_' . $i . '" id="media_params_' . $i . '" value="' . $action['params'] . '" style="display: block;" size="3" />' . PHP_EOL;
-            $mediaQuality .= '                        <input type="text" name="media_quality_' . $i . '" id="media_quality_' . $i . '" value="' . $action['quality'] . '" style="display: block;" size="3" />' . PHP_EOL;
+            $mediaParams .= '                        <input type="text" name="media_params_' . $i . '" id="media_params_' . $i . '" value="' . $action['params'] . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
+            $mediaQuality .= '                        <input type="text" name="media_quality_' . $i . '" id="media_quality_' . $i . '" value="' . $action['quality'] . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $mediaRemove .= '                        <input type="checkbox" class="rm-media" name="rm_media[]" value="' . $size . '" style="display: block;" />' . PHP_EOL;
             $i++;
         }
 
-        $mediaSizes .= '                        <input type="text" name="media_size_new_1" id="media_size_new_1" value="" style="display: block;" size="3" />' . PHP_EOL;
+        $mediaSizes .= '                        <input type="text" name="media_size_new_1" id="media_size_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
         $actionSelect = new Element\Select('media_action_new_1', $actionOptions, null, '                        ');
-        $actionSelect->setAttributes('style', 'display: block;');
+        $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 3px 0 3px 0;');
         $mediaActions .= (string)$actionSelect;
-        $mediaParams .= '                        <input type="text" name="media_params_new_1" id="media_params_new_1" value="" style="display: block;" size="3" />' . PHP_EOL;
-        $mediaQuality .= '                        <input type="text" name="media_quality_new_1" id="media_quality_new_1" value="" style="display: block;" size="3" />' . PHP_EOL;
+        $mediaParams .= '                        <input type="text" name="media_params_new_1" id="media_params_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
+        $mediaQuality .= '                        <input type="text" name="media_quality_new_1" id="media_quality_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
 
         $mediaSizes  .= '                    </div>' . PHP_EOL;
         $mediaActions .= '                    </div>' . PHP_EOL;

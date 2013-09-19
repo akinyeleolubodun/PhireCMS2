@@ -16,7 +16,7 @@ elseif (isset($table)):
     echo $table;
 elseif (isset($types) && isset($types[0])): ?>
         <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
-            <tr><th>User Types</th></tr>
+            <tr><th class="single-header">User Types</th></tr>
         <?php foreach ($types as $type): ?>
                 <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/index/<?php echo $type->id; ?>"><?php echo $type->type;?></a></td></tr>
         <?php endforeach; ?>

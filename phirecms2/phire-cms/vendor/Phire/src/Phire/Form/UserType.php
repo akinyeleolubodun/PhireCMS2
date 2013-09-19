@@ -102,6 +102,72 @@ class UserType extends Form
                 'label'  => 'Default Role:',
                 'value'  => $rolesAry
             ),
+            'allowed_attempts' => array(
+                'type'       => 'text',
+                'label'      => 'Allowed Attempts:',
+                'attributes' => array('size' => 10),
+                'value'      => '0'
+            ),
+            'session_expiration' => array(
+                'type'       => 'text',
+                'label'      => 'Session Expiration:',
+                'attributes' => array('size' => 10),
+                'value'      => '0'
+            ),
+            'password_encryption' => array(
+                'type'  => 'select',
+                'label' => 'Password Encryption:',
+                'value' => array(
+                    '3' => 'Crypt',
+                    '2' => 'SHA1',
+                    '1' => 'MD5',
+                    '0' => 'None'
+                ),
+                'marked' => '2'
+            ),
+            'password_salt' => array(
+                'type'       => 'text',
+                'label'      => 'Password Salt:',
+                'attributes' => array('size' => 40)
+            ),
+            'ip_allowed' => array(
+                'type'       => 'text',
+                'label'      => 'IPs Allowed:',
+                'attributes' => array('size' => 40)
+            ),
+            'ip_blocked' => array(
+                'type'       => 'text',
+                'label'      => 'IPs Blocked:',
+                'attributes' => array('size' => 40)
+            ),
+            'log_emails' => array(
+                'type'       => 'text',
+                'label'      => 'Log Emails:',
+                'attributes' => array('size' => 40)
+            ),
+            'log_exclude' => array(
+                'type'       => 'text',
+                'label'      => 'Log Exclude:',
+                'attributes' => array('size' => 40)
+            ),
+            'controller' => array(
+                'type'       => 'text',
+                'label'      => 'Controller:',
+                'attributes' => array('size' => 40)
+            ),
+            'sub_controllers' => array(
+                'type'       => 'text',
+                'label'      => 'Sub Controllers:',
+                'attributes' => array('size' => 40)
+            )
+        );
+        $fields2 = array(
+            'global_access' => array(
+                'type'   => 'radio',
+                'label'  => 'Allow Global Access:',
+                'value'  => $yesNo,
+                'marked' => '0'
+            ),
             'login' => array(
                 'type'   => 'radio',
                 'label'  => 'Allow Login:',
@@ -167,74 +233,10 @@ class UserType extends Form
                 'label'  => 'Require Login for Unsubscribe:',
                 'value'  => $yesNo,
                 'marked' => '1'
-            ),
-            'global_access' => array(
-                'type'   => 'radio',
-                'label'  => 'Allow Global Access:',
-                'value'  => $yesNo,
-                'marked' => '0'
-            ),
-            'allowed_attempts' => array(
-                'type'       => 'text',
-                'label'      => 'Allowed Attempts:',
-                'attributes' => array('size' => 10),
-                'value'      => '0'
-            ),
-            'session_expiration' => array(
-                'type'       => 'text',
-                'label'      => 'Session Expiration:',
-                'attributes' => array('size' => 10),
-                'value'      => '0'
-            ),
-            'password_encryption' => array(
-                'type'  => 'select',
-                'label' => 'Password Encryption:',
-                'value' => array(
-                    '3' => 'Crypt',
-                    '2' => 'SHA1',
-                    '1' => 'MD5',
-                    '0' => 'None'
-                ),
-                'marked' => '2'
-            ),
-            'password_salt' => array(
-                'type'       => 'text',
-                'label'      => 'Password Salt:',
-                'attributes' => array('size' => 40)
-            ),
-            'ip_allowed' => array(
-                'type'       => 'text',
-                'label'      => 'IPs Allowed:',
-                'attributes' => array('size' => 40)
-            ),
-            'ip_blocked' => array(
-                'type'       => 'text',
-                'label'      => 'IPs Blocked:',
-                'attributes' => array('size' => 40)
-            ),
-            'log_emails' => array(
-                'type'       => 'text',
-                'label'      => 'Log Emails:',
-                'attributes' => array('size' => 40)
-            ),
-            'log_exclude' => array(
-                'type'       => 'text',
-                'label'      => 'Log Exclude:',
-                'attributes' => array('size' => 40)
-            ),
-            'controller' => array(
-                'type'       => 'text',
-                'label'      => 'Controller:',
-                'attributes' => array('size' => 40)
-            ),
-            'sub_controllers' => array(
-                'type'       => 'text',
-                'label'      => 'Sub Controllers:',
-                'attributes' => array('size' => 40)
             )
         );
 
-        $fields2 = array();
+        $fields3 = array();
         $dynamicFields = false;
 
         // If the Fields module is installed, and if there are fields for this form/model
@@ -243,7 +245,7 @@ class UserType extends Form
             $newFields = \Fields\Model\Field::getByModel($model, 0, $tid);
             if (count($newFields) > 0) {
                 foreach ($newFields as $key => $value) {
-                    $fields2[$key] = $value;
+                    $fields3[$key] = $value;
                     if ($value['type'] == 'file') {
                         $this->hasFile = true;
                     }
@@ -254,15 +256,15 @@ class UserType extends Form
             }
         }
 
-        $fields2['id'] = array(
+        $fields1['id'] = array(
             'type'  => 'hidden',
             'value' => 0
         );
-        $fields2['update_value'] = array(
+        $fields1['update_value'] = array(
             'type'  => 'hidden',
             'value' => 0
         );
-        $fields2['submit'] = array(
+        $fields1['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
             'value' => 'SAVE',
@@ -270,7 +272,7 @@ class UserType extends Form
                 'class'   => 'save-btn'
             )
         );
-        $fields2['update'] = array(
+        $fields1['update'] = array(
             'type'       => 'button',
             'value'      => 'UPDATE',
             'attributes' => array(
@@ -279,7 +281,7 @@ class UserType extends Form
             )
         );
 
-        return array($fields1, $fields2);
+        return array($fields2, $fields1, $fields3);
     }
 
 }
