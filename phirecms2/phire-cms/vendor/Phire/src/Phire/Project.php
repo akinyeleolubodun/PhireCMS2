@@ -466,7 +466,11 @@ class Project extends P
         if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
             ((DB_INTERFACE == '') || (DB_NAME == ''))) {
             if (!$suppress) {
-                throw new \Exception('Error: The application is not properly configured. Please check the config file or <a href="' . BASE_PATH . '/phire/install">install</a> the application.');
+                $error = '<strong>Error:</strong> Phire CMS 2.0 is not properly configured. Please check the config file or <a href="' . BASE_PATH . '/phire/install">install</a> the application.';
+                ob_start();
+                include __DIR__ . '/../../view/phire/install/not.phtml';
+                $output = ob_get_clean();
+                throw new \Exception($output);
             } else {
                 return false;
             }
