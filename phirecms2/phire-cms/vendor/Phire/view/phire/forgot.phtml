@@ -1,5 +1,21 @@
-<?php include __DIR__ . '/header.phtml'; ?>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>Phire CMS 2.0 : <?php echo $title; ?></title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire.ico" type="image/ico" />
+    <?php echo ((isset($assets)) ? $assets : null); ?>
+</head>
+<body>
+
+<div id="login">
+        <div id="login-header">
+            <h2><?php echo $title; ?></h2>
+            <img style="margin: 0; display: block; float: left;" src="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire-logo-lg.png" width="400" height="80" alt="Phire CMS 2.0 Installation" />
+        </div>
 <?php echo $form; ?>
-    <p style="clear: left;"><a href="./login">Login</a></p>
+         <div id="forgot-div"><a href="./login">Login</a></div>
 <?php include __DIR__ . '/footer.phtml'; ?>

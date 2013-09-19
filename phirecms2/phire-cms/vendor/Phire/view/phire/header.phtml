@@ -3,24 +3,31 @@
 <html>
 
 <head>
-    <title><?php echo $title; ?></title>
+    <title>Phire CMS 2.0 : <?php echo $title; ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
+    <link rel="shortcut icon" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire.ico" type="image/ico" />
 <?php echo ((isset($assets)) ? $assets : null); ?>
 </head>
 <body>
+    <div id="phire-header">
+        <a class="home-logo" href="<?php echo BASE_PATH . APP_URI; ?>">Home</a>
 <?php if (isset($user) && isset($user->username)): ?>
-    <p>
-        <strong>Logged in as:</strong> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/profile"><?php echo $user->username; ?></a> | <a href="<?php echo ((BASE_PATH . APP_URI) != '') ? BASE_PATH . APP_URI : '/'; ?>">Dashboard</a> | <a href="<?php echo BASE_PATH . $user->typeUri; ?>/logout">Logout</a><br />
-        <span style="font-size: 0.9em;"><strong>Last Login:</strong><?php echo $user->last; ?></span>
-    </p>
+        <div id="logged-in">
+            <strong>Logged in as:</strong> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/profile"><?php echo $user->username; ?></a> <span class="pad">|</span> <a href="<?php echo ((BASE_PATH . APP_URI) != '') ? BASE_PATH . APP_URI : '/'; ?>">Dashboard</a> <span class="pad">|</span> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/logout">Logout</a><br />
+            <span style="font-size: 0.9em;"><strong>Last Login:</strong><?php echo $user->last; ?></span>
+        </div>
 <?php endif; ?>
 <?php if (isset($errors) && ($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/login')): ?>
-    <div id="errors">
-        <p><strong>Some of the content folders are not writable. This may cause the system to not function properly.</strong> <a href="#" onclick="wipeErrors(this, <?php echo (50 + (substr_count($errors, '<br />') * 20)); ?>); return false;">Show</a> which folders are not writable. [ <a href="#" onclick="$fx('#errors').fade(0, 15, 30); return false;">Dismiss</a> ]</p>
-        <p>
+        <div id="errors">
+            <p><strong>Some of the content folders are not writable. This may cause the system to not function properly.</strong> <a href="#" onclick="wipeErrors(this, <?php echo (50 + (substr_count($errors, '<br />') * 20)); ?>); return false;">Show</a> which folders are not writable. [ <a href="#" onclick="$fx('#errors').fade(0, 15, 30); return false;">Dismiss</a> ]</p>
+            <p>
 <?php echo $errors; ?>
-        </p>
-    </div>
+            </p>
+        </div>
 <?php endif; ?>
+    </div>
+<?php if (isset($role)): ?>
+<?php echo $phireNav; ?>
+<?php endif; ?>
+    <div id="phire-content">

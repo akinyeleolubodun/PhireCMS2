@@ -3,14 +3,27 @@
 <html>
 
 <head>
-    <title><?php echo $title; ?></title>
+    <title>Phire CMS 2.0 : <?php echo $title; ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="../install/css" />
+    <link rel="shortcut icon" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire.ico" type="image/ico" />
 
+    <style type="text/css">
+        #user-form {
+            margin: 0 auto;
+            padding: 0;
+            width: 350px;
+        }
+    </style>
 </head>
 <body>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+    <div id="install">
+        <div id="install-header">
+            <h2><?php echo $title; ?></h2>
+            <img style="margin: 0; display: block; float: left;" src="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire-logo-lg.png" width="400" height="80" alt="Phire CMS 2.0 Installation" />
+        </div>
 <?php echo $form; ?>
+    </div>
 </body>
 </html>

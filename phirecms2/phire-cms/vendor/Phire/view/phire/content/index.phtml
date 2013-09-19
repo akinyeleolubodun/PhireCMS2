@@ -1,28 +1,27 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $phireNav; ?>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+        <h1><?php echo $title; ?></h1>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?>
-    <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' | <a href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?></p>
+        <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' | <a href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?></p>
 <?php endif; ?>
 <?php if (isset($form)): ?>
 <?php if (isset($updated)): ?>
-    <div id="updated"><?php echo $updated; ?></div>
+        <div id="updated"><?php echo $updated; ?></div>
 <?php endif; ?>
-    <div id="result" style="display: none;"></div>
+        <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php elseif (isset($table)): ?>
-    <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><strong>Search:</strong> <input type="text" name="search_title" size="20" value="" /> <input type="submit" value="Search" name="submit" /> [ <a href="<?php echo substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')); ?>">Clear</a> ]</div></form>
+        <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><strong>Search:</strong> <input type="text" name="search_title" id="search-title" size="20" value="" /> <input type="submit" value="Search" id="submit" name="submit" /> [ <a href="<?php echo substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')); ?>">Clear</a> ]</div></form>
 <?php echo $table;
 elseif (isset($types) && isset($types[0])): ?>
-    <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
-        <tr><th>Content Types</th></tr>
+        <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
+            <tr><th>Content Types</th></tr>
 <?php foreach ($types as $type): ?>
-        <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo $type->id; ?>"><?php echo $type->name;?></a></td></tr>
+            <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo $type->id; ?>"><?php echo $type->name;?></a></td></tr>
 <?php endforeach; ?>
-    </table>
+        </table>
 <?php elseif (isset($type)): ?>
-    <p>There is currently no content under the <strong><?php echo $type; ?></strong> content type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
+        <p>There is currently no content under the <strong><?php echo $type; ?></strong> content type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
 <?php else: ?>
-    <p>There is currently no content. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
+        <p>There is currently no content. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/add">new content here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/content/types/add">a new content type here</a>.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

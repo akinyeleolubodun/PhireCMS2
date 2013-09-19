@@ -25,7 +25,7 @@ class Category extends Form
     public function __construct($action = null, $method = 'post', $cid = 0, $isFields = false)
     {
         $this->initFieldsValues = $this->getInitFields($cid, $isFields);
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'category-form');
     }
 
@@ -161,13 +161,17 @@ class Category extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Save'
+                'value' => 'SAVE',
+                'attributes' => array(
+                    'class' => 'save-btn'
+                )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'Update',
+                'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#category-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");"
+                    'onclick' => "return updateForm('#category-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'class' => 'update-btn'
                 )
             )
         );

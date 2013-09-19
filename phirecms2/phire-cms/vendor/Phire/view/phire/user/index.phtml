@@ -1,30 +1,29 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $phireNav; ?>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+        <h1><?php echo $title; ?></h1>
 <?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'export'))): ?>
-    <p style="float: right;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>">Export</a></a></p>
+        <p style="float: right;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>">Export</a></a></p>
 <?php endif; ?>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'add')): ?>
-    <p><a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a></a></p>
+        <p><a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a></a></p>
 <?php endif; ?>
 <?php
 if (isset($form)):
     if (isset($error))
-        echo '    <h4 class="error">' . $error . '</h4>' . PHP_EOL;
-    echo '    <div id="result" style="display: none;"></div>' . PHP_EOL;
+        echo '        <h4 class="error">' . $error . '</h4>' . PHP_EOL;
+    echo '        <div id="result" style="display: none;"></div>' . PHP_EOL;
     echo $form;
 elseif (isset($table)):
     echo $table;
 elseif (isset($types) && isset($types[0])): ?>
-    <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
-        <tr><th>User Types</th></tr>
+        <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-bottom: solid 1px #ccc;">
+            <tr><th>User Types</th></tr>
         <?php foreach ($types as $type): ?>
-            <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/index/<?php echo $type->id; ?>"><?php echo $type->type;?></a></td></tr>
+                <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/users/index/<?php echo $type->id; ?>"><?php echo $type->type;?></a></td></tr>
         <?php endforeach; ?>
-    </table>
+        </table>
 <?php elseif (isset($type)): ?>
-    <p>There are currently no users under the <strong><?php echo ucwords(str_replace('-', ' ', $type)); ?></strong> user type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
+        <p>There are currently no users under the <strong><?php echo ucwords(str_replace('-', ' ', $type)); ?></strong> user type. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
 <?php else: ?>
-    <p>There are currently no users. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
+        <p>There are currently no users. You can add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/add">a new user here</a> or add <a href="<?php echo BASE_PATH . APP_URI; ?>/users/types/add">a new user type here</a>.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

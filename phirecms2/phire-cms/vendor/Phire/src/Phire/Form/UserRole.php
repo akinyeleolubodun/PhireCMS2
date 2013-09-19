@@ -26,7 +26,7 @@ class UserRole extends Form
     public function __construct($action = null, $method = 'post', $rid = 0, $config = null, $isFields = false)
     {
         $this->initFieldsValues = $this->getInitFields($rid, $config, $isFields);
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'user-role-form');
     }
 
@@ -198,13 +198,17 @@ class UserRole extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Save'
+                'value' => 'SAVE',
+                'attributes' => array(
+                    'class'   => 'save-btn'
+                )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'Update',
+                'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#user-role-form', true);"
+                    'onclick' => "return updateForm('#user-role-form', true);",
+                    'class'   => 'update-btn'
                 )
             )
         );

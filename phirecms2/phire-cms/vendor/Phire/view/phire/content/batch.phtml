@@ -1,11 +1,10 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $phireNav; ?>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+        <h1><?php echo $title; ?></h1>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?>
-    <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' | <a href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?></p>
+        <p><a href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">[+] Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' | <a href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?></p>
 <?php endif; ?>
 <?php if (isset($batchErrors) && (count($batchErrors) > 0)): ?>
-    <h4 class="error"><?php echo implode('<br />', $batchErrors); ?></h4>
+        <h4 class="error"><?php echo implode('<br />', $batchErrors); ?></h4>
 <?php endif; ?>
 <?php if (isset($form)): ?>
 <?php echo $form; ?>

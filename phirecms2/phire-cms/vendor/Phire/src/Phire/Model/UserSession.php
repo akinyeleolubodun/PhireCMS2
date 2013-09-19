@@ -97,7 +97,8 @@ class UserSession extends AbstractModel
             'exclude' => array(
                 'type_id', 'user_id', 'start', 'process' => array('id' => $this->data['user']->sess_id)
             ),
-            'username' => $username
+            'username' => $username,
+            'indent'   => '        '
         );
 
         $sessAry = array();

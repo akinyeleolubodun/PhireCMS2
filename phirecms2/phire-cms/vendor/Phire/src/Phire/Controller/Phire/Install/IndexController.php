@@ -64,7 +64,7 @@ class IndexController extends C
             Response::redirect(BASE_PATH . APP_URI);
         } else {
             $install = new Model\Install(array(
-                'title' => 'Phire CMS 2.0 Installation'
+                'title' => 'Installation'
             ));
 
             $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
@@ -111,7 +111,7 @@ class IndexController extends C
         // Else, display config to be copied and pasted
         } else {
             $install = new Model\Install(array(
-                'title'  => 'Phire CMS 2.0 Configuration',
+                'title'  => 'Configuration',
                 'config' => unserialize($this->sess->config),
                 'uri'    => BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user'
             ));
@@ -140,7 +140,7 @@ class IndexController extends C
         // Else, install the first system user
         } else {
             $user = new Model\User(array(
-                'title' => 'Phire CMS 2.0 Initial User Setup'
+                'title' => 'User Setup'
             ));
             $form = new Form\User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', 2001, true);
             if ($this->request->isPost()) {
@@ -152,7 +152,7 @@ class IndexController extends C
 
                 if ($form->isValid()) {
                     $user->save($form);
-                    $user->set('form', '    <p>Thank you. The system has successfully been installed. You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '" target="_blank">here</a>.</p>');
+                    $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">Thank you. The system has been successfully installed.<br />You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '" target="_blank">here</a>.</p>' . PHP_EOL);
                     Model\Install::send($form);
                     unset($this->sess->config);
                     unset($this->sess->app_uri);

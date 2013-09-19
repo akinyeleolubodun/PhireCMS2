@@ -40,7 +40,10 @@ class User extends Form
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => 'Select'
+                    'value' => 'SELECT',
+                    'attributes' => array(
+                        'class'   => 'save-btn'
+                    )
                 )
             );
         // Else, create initial user fields
@@ -48,7 +51,7 @@ class User extends Form
             $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields);
         }
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'user-form');
     }
 
@@ -170,7 +173,7 @@ class User extends Form
             'type'       => 'text',
             'label'      => 'Email:',
             'required'   => true,
-            'attributes' => array('size' => 40),
+            'attributes' => array('size' => 30),
             'validators' => new Validator\Email()
         );
         if ($type->email_verification) {
@@ -178,7 +181,7 @@ class User extends Form
                 'type'       => 'text',
                 'label'      => 'Re-Type Email:',
                 'required'   => true,
-                'attributes' => array('size' => 40),
+                'attributes' => array('size' => 30),
                 'validators' => new Validator\Email()
             );
         }
@@ -190,7 +193,7 @@ class User extends Form
                     'type'       => 'text',
                     'label'      => 'Username:',
                     'required'   => true,
-                    'attributes' => array('size' => 40),
+                    'attributes' => array('size' => 30),
                     'validators' => array(
                         new Validator\AlphaNumeric(),
                         new Validator\LengthGte(4)
@@ -208,14 +211,14 @@ class User extends Form
                     'type'       => 'password',
                     'label'      => 'Enter Password:',
                     'required'   => true,
-                    'attributes' => array('size' => 20),
+                    'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
                 ),
                 'password2' => array(
                     'type'       => 'password',
                     'label'      => 'Re-Type Password:',
                     'required'   => true,
-                    'attributes' => array('size' => 20),
+                    'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
                 )
             );
@@ -277,7 +280,10 @@ class User extends Form
         $fields3['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
-            'value' => 'Save'
+            'value' => 'SAVE',
+            'attributes' => array(
+                'class' => 'save-btn'
+            )
         );
 
         if (!$profile) {
@@ -285,7 +291,8 @@ class User extends Form
                 'type'       => 'button',
                 'value'      => 'Update',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");"
+                    'onclick' => "return updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'class' => 'update-btn'
                 )
             );
         }

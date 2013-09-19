@@ -3,21 +3,27 @@
 <html>
 
 <head>
-    <title><?php echo $title; ?></title>
+    <title>Phire CMS 2.0 : <?php echo $title; ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="../install/css" />
+    <link rel="shortcut icon" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire.ico" type="image/ico" />
 
 </head>
 <body>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
-    <p>
-        The configuration file is not writable and the configuration has not been written to the file.<br />
-        You will have to copy the code below and paste it into the 'config.php' file to continue.
-    </p>
-<textarea id="config" rows="25" cols="120" onfocus="this.select();">
+    <div id="install">
+        <div id="install-header">
+            <h2><?php echo $title; ?></h2>
+            <img style="margin: 0; display: block; float: left;" src="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire-logo-lg.png" width="400" height="80" alt="Phire CMS 2.0 Installation" />
+        </div>
+        <p>
+            The configuration file is not writable and the configuration has not been written to the file.<br />
+            You will have to copy the code below and paste it into the 'config.php' file to continue.
+        </p>
+<textarea id="config" rows="25" cols="110" onfocus="this.select();">
 <?php echo $config; ?>
 </textarea>
-    <p><a href="<?php echo $uri; ?>">Continue</a></p>
+        <p><a class="save-btn" style="text-decoration: none; font-weight: normal; color: #fff;" href="<?php echo $uri; ?>">Continue</a></p>
+    </div>
 </body>
 </html>

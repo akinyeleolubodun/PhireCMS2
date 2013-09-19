@@ -31,11 +31,15 @@ class Forgot extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Submit'
+                'value' => 'SUBMIT',
+                'attributes' => array(
+                    'class' => 'save-btn',
+                    'style' => 'float: right; margin: 0 10px 0 0;'
+                )
             )
         );
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'forgot-form');
     }
 

@@ -31,11 +31,14 @@ class Unsubscribe extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Unsubscribe'
+                'value' => 'UNSUBSCRIBE',
+                'attributes' => array(
+                    'class'   => 'save-btn'
+                )
             )
         );
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'unsubscribe-form');
     }
 

@@ -45,18 +45,20 @@ class Content extends Form
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => 'Select'
+                    'value' => 'SELECT',
+                    'attributes' => array(
+                        'class' => 'save-btn'
+                    )
                 )
             );
             $id = 'content-select-form';
         // Else, generate fields for the content object
         } else {
             $this->initFieldsValues = $this->getInitFields($tid, $mid, $isFields, $cfg);
-            parent::__construct($action, $method, null, '    ');
             $id = 'content-form';
         }
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', $id);
 
     }
@@ -374,13 +376,17 @@ class Content extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Save'
+                'value' => 'SAVE',
+                'attributes' => array(
+                    'class'   => 'save-btn'
+                )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'Update',
+                'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");"
+                    'onclick' => "return updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'class'   => 'update-btn'
                 )
             )
         );
@@ -388,9 +394,10 @@ class Content extends Form
         if (($type->uri == 1) || ($type->uri == 2)) {
             $fields6['preview'] = array(
                 'type'       => 'button',
-                'value'      => 'Preview',
+                'value'      => 'PREVIEW',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#content-form', true, true);"
+                    'onclick' => "return updateForm('#content-form', true, true);",
+                    'class'   => 'process-btn'
                 )
             );
         }

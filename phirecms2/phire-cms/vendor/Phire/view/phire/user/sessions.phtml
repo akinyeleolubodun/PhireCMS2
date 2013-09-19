@@ -1,11 +1,10 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
-<?php echo $phireNav; ?>
-    <h1 style="color: #00f;"><?php echo $title; ?></h1>
+        <h1><?php echo $title; ?></h1>
 <?php
 if (isset($table)):
     echo $table;
 else:
 ?>
-    <p>There are currently no sessions.</p>
+        <p>There are currently no sessions.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

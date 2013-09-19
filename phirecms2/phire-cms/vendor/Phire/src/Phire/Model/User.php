@@ -236,7 +236,8 @@ class User extends AbstractModel
             ),
             'exclude' => array(
                 'type_id', 'type', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
-            )
+            ),
+            'indent'  => '        '
         );
 
         if (isset($userRows[0])) {

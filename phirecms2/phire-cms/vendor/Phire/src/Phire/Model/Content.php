@@ -233,7 +233,8 @@ class Content extends AbstractContentModel
             'date' => 'M j, Y',
             'exclude' => array(
                 'parent_id', 'type_id', 'type_uri', 'name', 'order', 'created_by', 'user_id', 'published', 'expired'
-            )
+            ),
+            'indent' => '        '
         );
 
         $this->data['title'] .= (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;

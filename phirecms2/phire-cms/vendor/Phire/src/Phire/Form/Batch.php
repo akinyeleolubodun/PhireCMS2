@@ -26,14 +26,14 @@ class Batch extends Form
                 'label'      => '<a href="#" onclick="addBatchFields(); return false;">[+]</a> File / Title:',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 5px 0; padding: 0 0 5px 0;'
+                    'style' => 'display: block; margin: 0 0 10px 0;'
                 )
             ),
             'file_title_1' => array(
                 'type'       => 'text',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 5px 0; padding: 0 0 5px 0;'
+                    'style' => 'display: block; margin: 0 0 10px 0;'
                 )
             )
         );
@@ -44,7 +44,7 @@ class Batch extends Form
             $fields2 = array(
                 'archive_file' => array(
                     'type'       => 'file',
-                    'label'      => 'Archive of Multiple Files:<br /><span style="width: 100px; float: right; display: block; margin: 5px 0 0 0; font-size: 0.9em;"><strong>Supported Types</strong><br />' . implode(', ', array_keys($formats)) . '</span>',
+                    'label'      => 'Archive of Multiple Files:<br /><span style="display: block; margin: 5px 0 0 0; font-size: 0.9em;"><strong>Supported Types:</strong> ' . implode(', ', array_keys($formats)) . '</span>',
                     'attributes' => array('size' => 40)
                 )
             );
@@ -56,7 +56,10 @@ class Batch extends Form
                 'submit' => array(
                     'type'  => 'submit',
                     'label' => '&nbsp;',
-                    'value' => 'Upload'
+                    'value' => 'UPLOAD',
+                    'attributes' => array(
+                        'class' => 'save-btn'
+                    )
                 )
             );
             $this->initFieldsValues = array($fields1, $fields2, $fields3);
@@ -68,12 +71,15 @@ class Batch extends Form
             $fields1['submit'] = array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Upload'
+                'value' => 'UPLOAD',
+                'attributes' => array(
+                    'class' => 'save-btn'
+                )
             );
             $this->initFieldsValues = $fields1;
         }
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'batch-form');
     }
 

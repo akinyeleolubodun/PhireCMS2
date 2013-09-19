@@ -39,7 +39,7 @@ class Install extends Form
     public function __construct($action = null, $method = 'post')
     {
         $this->initFieldsValues = $this->getInitFields();
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'install-form');
     }
 
@@ -182,42 +182,42 @@ class Install extends Form
             'db_name' => array (
                 'type' => 'text',
                 'label' => 'DB Name:',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 30)
             ),
             'db_username' => array (
                 'type' => 'text',
                 'label' => 'DB Username:',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 30)
             ),
             'db_password' => array (
                 'type' => 'text',
                 'label' => 'DB Password:',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 30)
             ),
             'db_host' => array (
                 'type' => 'text',
                 'label' => 'DB Host:',
-                'attributes' => array('size' => 40),
+                'attributes' => array('size' => 30),
                 'value' => 'localhost'
             ),
             'db_prefix' => array (
                 'type' => 'text',
                 'name' => 'db_prefix',
                 'label' => 'DB Table Prefix:',
-                'attributes' => array('size' => 40),
+                'attributes' => array('size' => 30),
                 'value' => 'ph_'
             ),
             'app_uri' => array (
                 'type' => 'text',
                 'label' => 'Application URI:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(How you will access the system)</em>',
-                'attributes' => array('size' => 40),
+                'attributes' => array('size' => 30),
                 'value' => APP_URI
             ),
             'content_path' => array (
                 'type' => 'text',
                 'label' => 'Content Path:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Where assets will be located)</em>',
                 'required' => true,
-                'attributes' => array('size' => 40),
+                'attributes' => array('size' => 30),
                 'value' => CONTENT_PATH
             ),
             'password_encryption' => array (
@@ -234,17 +234,19 @@ class Install extends Form
             'password_salt' => array (
                 'type' => 'text',
                 'label' => 'Password Salt:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Required for \'Crypt\')</em>',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 30)
             ),
             'submit' => array (
                 'type' => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'NEXT'
+                'value' => 'NEXT',
+                'attributes' => array(
+                    'class' => 'save-btn'
+                )
             )
         );
 
         return $fields;
-
     }
 
 }

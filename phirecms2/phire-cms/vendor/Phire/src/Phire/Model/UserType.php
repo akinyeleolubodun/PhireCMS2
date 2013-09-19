@@ -73,7 +73,8 @@ class UserType extends AbstractModel
             'exclude' => array(
                 'process' => array('id' => $this->data['user']->type_id)
             ),
-            'type' => $type
+            'type'   => $type,
+            'indent' => '        '
         );
 
         if (isset($types->rows[0])) {

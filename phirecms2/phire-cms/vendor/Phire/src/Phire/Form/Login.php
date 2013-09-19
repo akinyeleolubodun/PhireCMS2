@@ -34,11 +34,15 @@ class Login extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'Login'
+                'value' => 'LOGIN',
+                'attributes' => array(
+                    'class' => 'save-btn',
+                    'style' => 'float: right; margin: 0 10px 0 0;'
+                )
             )
         );
 
-        parent::__construct($action, $method, null, '    ');
+        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'login-form');
     }
 
