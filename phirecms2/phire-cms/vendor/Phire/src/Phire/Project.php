@@ -178,92 +178,10 @@ class Project extends P
             $this->initAcl();
 
             // Set the auth method to trigger on 'dispatch.pre'
-            $this->attachEvent('dispatch.pre', function($router) {
-                $resource = $router->getControllerClass();
-                $permission = $router->getAction();
-                $isFrontController = (substr_count($resource, '\\') == 2);
-
-                // Check for the resource and permission
-                if (!($isFrontController) && ($resource != 'Phire\Controller\Phire\Install\IndexController')) {
-                    if (null === $router->project()->getService('acl')->getResource($resource)) {
-                        if ($resource != 'Phire\Controller\Phire\IndexController') {
-                            $router->project()->getService('acl')->addResource($resource);
-                        } else {
-                            $resource = null;
-                            $permission = null;
-                        }
-                    }
-
-                    if ((null !== $permission) && (null !== $resource) && !method_exists($resource, $permission)) {
-                        $permission = 'error';
-                    }
-
-                    // Get the user URI
-                    $uri = ((APP_URI == '') || (strtolower($router->project()->getService('acl')->getType()->type) == 'user')) ?
-                        APP_URI :
-                        '/' . strtolower($router->project()->getService('acl')->getType()->type);
-
-                    // If not logged in for unsubscribe and required, redirect to the system login
-                    if (($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/unsubscribe') &&
-                        ($router->project()->getService('acl')->getType()->unsubscribe_login) &&
-                        (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                        \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
-                        return \Pop\Event\Manager::KILL;
-                    // Else, if not logged in or allowed, redirect to the system login
-                    } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
-                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
-                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
-                        ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
-                        (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
-                        (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                        \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
-                        return \Pop\Event\Manager::KILL;
-                    // Else, if logged in and allowed, and a system access URI, redirect back to the system
-                    } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
-                        ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
-                        ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
-                        ($router->project()->getService('acl')->isAuth($resource, $permission))) {
-                        \Pop\Http\Response::redirect(BASE_PATH . (($uri == '') ? '/' : $uri));
-                        return \Pop\Event\Manager::KILL;
-                    }
-                }
-            });
+            $this->attachEvent('dispatch.pre', 'Phire\Project::auth');
 
             // Set up in-content editing on 'dispatch.send'
-            $this->attachEvent('dispatch.send', function($controller) {
-                if ((get_class($controller) == 'Phire\Controller\IndexController') &&
-                    ($controller->getView()->getModel()->config()->incontent_editing)) {
-                    if (null !== $controller->getView()->getModel()->phireNav) {
-                        $body = $controller->getResponse()->getBody();
-                        $phireNav = $controller->getView()->getModel()->phireNav;
-                        $phireNav->addBranch(array(
-                            'name' => 'Edit This Page',
-                            'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->getModel()->id . '?live=1',
-                            'acl'  => array(
-                                'resource'   => 'Phire\Controller\Phire\Content\IndexController',
-                                'permission' => 'edit'
-                            )
-                        ), true);
-                        $phireNav->setConfig(array(
-                            'top' => array(
-                                'id'         => 'phire-nav-1',
-                                'attributes' => array('style' => 'display: none;')
-                            ),
-                            'parent' => array(
-                                'id' => 'phire-nav'
-                            )
-                        ));
-                        $phireNav->rebuild();
-                        if (strpos($body, 'jax.min.js') === false) {
-                            $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
-                        }
-                        $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
-                        $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
-                        $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#phire-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
-                        $controller->getResponse()->setBody($body);
-                    }
-                }
-            });
+            $this->attachEvent('dispatch.send', 'Phire\Project::editor');
 
             // If SSL is required for this user type, and not SSL,
             // redirect to SSL, else, just run
@@ -271,6 +189,106 @@ class Project extends P
                 \Pop\Http\Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
             } else {
                 parent::run();
+            }
+        }
+    }
+
+    /**
+     * Event-based auth check
+     *
+     * @param  \Pop\Mvc\Router $router
+     * @return mixed
+     */
+    public static function auth($router)
+    {
+        $resource = $router->getControllerClass();
+        $permission = $router->getAction();
+        $isFrontController = (substr_count($resource, '\\') == 2);
+
+        // Check for the resource and permission
+        if (!($isFrontController) && ($resource != 'Phire\Controller\Phire\Install\IndexController')) {
+            if (null === $router->project()->getService('acl')->getResource($resource)) {
+                if ($resource != 'Phire\Controller\Phire\IndexController') {
+                    $router->project()->getService('acl')->addResource($resource);
+                } else {
+                    $resource = null;
+                    $permission = null;
+                }
+            }
+
+            if ((null !== $permission) && (null !== $resource) && !method_exists($resource, $permission)) {
+                $permission = 'error';
+            }
+
+            // Get the user URI
+            $uri = ((APP_URI == '') || (strtolower($router->project()->getService('acl')->getType()->type) == 'user')) ?
+                APP_URI :
+                '/' . strtolower($router->project()->getService('acl')->getType()->type);
+
+            // If not logged in for unsubscribe and required, redirect to the system login
+            if (($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/unsubscribe') &&
+                ($router->project()->getService('acl')->getType()->unsubscribe_login) &&
+                (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
+                \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                return \Pop\Event\Manager::KILL;
+                // Else, if not logged in or allowed, redirect to the system login
+            } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
+                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
+                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
+                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
+                (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
+                (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
+                \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                return \Pop\Event\Manager::KILL;
+                // Else, if logged in and allowed, and a system access URI, redirect back to the system
+            } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
+                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
+                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
+                ($router->project()->getService('acl')->isAuth($resource, $permission))) {
+                \Pop\Http\Response::redirect(BASE_PATH . (($uri == '') ? '/' : $uri));
+                return \Pop\Event\Manager::KILL;
+            }
+        }
+    }
+
+    /**
+     * Event-based in-content editing trigger
+     *
+     * @param  \Pop\Mvc\Controller $controller
+     * @return void
+     */
+    public static function editor($controller)
+    {
+        if ((get_class($controller) == 'Phire\Controller\IndexController') &&
+            ($controller->getView()->getModel()->config()->incontent_editing)) {
+            if (null !== $controller->getView()->getModel()->phireNav) {
+                $body = $controller->getResponse()->getBody();
+                $phireNav = $controller->getView()->getModel()->phireNav;
+                $phireNav->addBranch(array(
+                    'name' => 'Edit This Page',
+                    'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->getModel()->id . '?live=1',
+                    'acl'  => array(
+                        'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                        'permission' => 'edit'
+                    )
+                ), true);
+                $phireNav->setConfig(array(
+                    'top' => array(
+                        'id'         => 'phire-nav-1',
+                        'attributes' => array('style' => 'display: none;')
+                    ),
+                    'parent' => array(
+                        'id' => 'phire-nav'
+                    )
+                ));
+                $phireNav->rebuild();
+                if (strpos($body, 'jax.min.js') === false) {
+                    $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.min.js"></script>' . PHP_EOL . '</head>', $body);
+                }
+                $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
+                $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
+                $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#phire-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
+                $controller->getResponse()->setBody($body);
             }
         }
     }
