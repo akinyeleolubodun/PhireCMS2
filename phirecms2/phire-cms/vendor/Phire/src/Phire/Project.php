@@ -418,15 +418,6 @@ class Project extends P
             );
         }
 
-        // Add Phire CSS override file if it exists
-        $phireCss = false;
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
-            $phireCss = true;
-            if (strpos($this->assets['css'], '/phire.css') === false) {
-                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css" />' . PHP_EOL;
-            }
-        }
-
         $newModuleDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName);
         if (!file_exists($newModuleDir)) {
             mkdir($newModuleDir);
@@ -460,15 +451,18 @@ class Project extends P
                         if (($assetDir == 'js') && ($as->getExt() == 'js') && ($as->getBasename() != 'phire.edit.js')) {
                             $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
                         } else if (($assetDir == 'css') && ($as->getExt() == 'css')) {
-                            if (($as->getBasename() != 'phire.css') || (!$phireCss)) {
-                                if ($as->getBasename() != 'phire.edit.css') {
-                                    $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
-                                }
+                            if ($as->getBasename() != 'phire.edit.css') {
+                                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
                             }
                         }
                     }
                 }
             }
+        }
+
+        // Add Phire CSS override file if it exists
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
+            $this->assets['css'] .= '    <style type="text/css">@import "' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css";</style>' . PHP_EOL;
         }
     }
 
