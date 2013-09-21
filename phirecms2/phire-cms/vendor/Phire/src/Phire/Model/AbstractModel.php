@@ -59,7 +59,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
         if (isset($sess->user)) {
             if (isset($this->data['assets'])) {
                 // Set the timeout warning, giving a 30 second buffer to act
-                if (isset($this->data['acl']) && ($this->data['acl']->getType()->timeout_warning)) {
+                if (isset($this->data['acl']) && ($this->data['acl']->getType()->session_expiration > 0) && ($this->data['acl']->getType()->timeout_warning)) {
                     $exp = ($this->data['acl']->getType()->session_expiration * 60) - 30;
                     $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode(BASE_PATH . APP_URI);
                 }
