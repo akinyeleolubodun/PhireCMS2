@@ -14,6 +14,7 @@ var categoryParentUri = '';
 var curErrors = 0;
 var submitted = false;
 var clr;
+var curForm;
 var phireTimeout;
 
 /**
@@ -383,11 +384,52 @@ var addBatchFields = function() {
 };
 
 /**
+ * Function to check if form values have changed before leaving the page
+ *
+ * @return void
+ */
+var checkFormChange = function() {
+    if (!submitted) {
+        var change = false;
+        var f = $(curForm).obj;
+        for (var i = 0; i < f.elements.length; i++) {
+            if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
+                if (f.elements[i].value != f.elements[i].defaultValue) {
+                    change = true;
+                }
+            }
+        }
+        if (typeof CKEDITOR !== 'undefined') {
+            for (ed in CKEDITOR.instances) {
+                if (CKEDITOR.instances[ed].getData() != f.elements[ed].defaultValue) {
+                    change = true;
+                }
+            }
+        } else if (typeof tinymce !== 'undefined') {
+            for (ed in tinymce.editors) {
+                if (ed.indexOf('field_') != -1) {
+                    if (tinymce.editors[ed].getContent() != f.elements[ed].defaultValue) {
+                        change = true;
+                    }
+                }
+            }
+        }
+        if (change) {
+            return 'You are about to leave this page and have unsaved changes. Are you sure?';
+        } else {
+            return;
+        }
+    } else {
+        return;
+    }
+};
+
+/**
  * Document ready function to load the correct URI string into the URI span
  */
 $(document).ready(function(){
     if (typeof _exp != 'undefined') {
-        var phireTimeout = setTimeout(function() {
+        var phireTimeout = setInterval(function() {
             var url = decodeURIComponent(_base);
             if (confirm('Your session is about to end. Do you wish to logout?')) {
                 window.location = url + '/logout';
@@ -458,41 +500,8 @@ $(document).ready(function(){
             }
         }
 
-        $().beforeunload(function() {
-            if (!submitted) {
-                var change = false;
-                var f = $('#content-form').obj;
-                for (var i = 0; i < f.elements.length; i++) {
-                    if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
-                        if (f.elements[i].value != f.elements[i].defaultValue) {
-                            change = true;
-                        }
-                    }
-                }
-                if (typeof CKEDITOR !== 'undefined') {
-                    for (ed in CKEDITOR.instances) {
-                        if (CKEDITOR.instances[ed].getData() != f.elements[ed].defaultValue) {
-                            change = true;
-                        }
-                    }
-                } else if (typeof tinymce !== 'undefined') {
-                    for (ed in tinymce.editors) {
-                        if (ed.indexOf('field_') != -1) {
-                            if (tinymce.editors[ed].getContent() != f.elements[ed].defaultValue) {
-                                change = true;
-                            }
-                        }
-                    }
-                }
-                if (change) {
-                    return 'You are about to leave this page and have unsaved changes. Are you sure?';
-                } else {
-                    return;
-                }
-            } else {
-                return;
-            }
-        });
+        curForm = '#content-form';
+        $().beforeunload(checkFormChange);
     }
 
     // For category form
