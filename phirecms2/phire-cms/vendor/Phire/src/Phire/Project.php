@@ -122,6 +122,11 @@ class Project extends P
             }
         }
 
+        // Add Phire CSS override file if it exists
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
+            $this->assets['css'] .= '    <style type="text/css">@import "' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css";</style>' . PHP_EOL;
+        }
+
         // Initiate the router object
         $this->loadRouter(new \Pop\Mvc\Router(array(), new \Pop\Http\Request(null, BASE_PATH)));
 
@@ -458,11 +463,6 @@ class Project extends P
                     }
                 }
             }
-        }
-
-        // Add Phire CSS override file if it exists
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
-            $this->assets['css'] .= '    <style type="text/css">@import "' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css";</style>' . PHP_EOL;
         }
     }
 
