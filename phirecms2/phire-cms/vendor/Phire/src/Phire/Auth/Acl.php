@@ -67,7 +67,7 @@ class Acl extends A
         if (($this->type->track_sessions) && ((isset($this->sess->user->sess_id) && null !== $this->sess->user->sess_id))) {
             $session = Table\UserSessions::findById($this->sess->user->sess_id);
             if (!isset($session->id) || (($this->type->session_expiration != 0) && $session->hasExpired($this->type->session_expiration))) {
-                $this->sess->lastUrl = $_SERVER['REQUEST_URI'];
+                $this->sess->lastUrl = (strpos($_SERVER['REQUEST_URI'], '/users/sessions/json') === false) ? $_SERVER['REQUEST_URI'] : BASE_PATH . APP_URI . '/';
                 $this->sess->expired = true;
                 $this->logout();
             } else if (isset($this->sess->user->id)) {
