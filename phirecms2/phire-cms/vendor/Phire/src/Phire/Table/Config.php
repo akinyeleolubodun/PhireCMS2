@@ -54,6 +54,7 @@ class Config extends Record
     public static function getSystemConfig()
     {
         $settings = array(
+            'system_title',
             'site_title',
             'separator',
             'default_language',

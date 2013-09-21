@@ -12,8 +12,9 @@ var contentParentUri = '';
 var categoryParentId = 0;
 var categoryParentUri = '';
 var curErrors = 0;
-var clr;
 var submitted = false;
+var clr;
+var phireTimeout;
 
 /**
  * Function to get resource permission actions
@@ -385,6 +386,18 @@ var addBatchFields = function() {
  * Document ready function to load the correct URI string into the URI span
  */
 $(document).ready(function(){
+    if (typeof _exp != 'undefined') {
+        var phireTimeout = setTimeout(function() {
+            var url = decodeURIComponent(_base);
+            if (confirm('Your session is about to end. Do you wish to logout?')) {
+                window.location = url + '/logout';
+            } else {
+                $xmlHttp().get(url + '/users/sessions/json');
+            }
+
+        }, _exp * 1000);
+    }
+
     // Check saved timestamp to determine if the saved div should display
     if ($().get('saved') != undefined) {
         var ts = Math.round(new Date().getTime() / 1000);

@@ -42,7 +42,7 @@ class UserType extends Form
         if ($_POST) {
             if ($this->id == 2001) {
                 $this->getElement('type')
-                     ->addValidator(new Validator\Equal('User', "The type name for this user type cannot change and must be 'User'."));
+                     ->addValidator(new Validator\Equal('user', "The type name for this user type cannot change and must be 'user'."));
             }
             if ($this->password_encryption == 3) {
                 $this->getElement('password_salt')
@@ -185,6 +185,12 @@ class UserType extends Form
                 'label'  => 'Allow Multiple Sessions:',
                 'value'  => $yesNo,
                 'marked' => '1'
+            ),
+            'timeout_warning' => array(
+                'type'   => 'radio',
+                'label'  => 'Session Timeout Warning:',
+                'value'  => $yesNo,
+                'marked' => '0'
             ),
             'mobile_access' => array(
                 'type'   => 'radio',

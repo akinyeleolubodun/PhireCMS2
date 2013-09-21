@@ -46,6 +46,11 @@ class Config extends AbstractContentModel
                 date($this->config->datetime_format, strtotime($config['updated_on'])) : 'N/A'
         );
 
+        // Set system title form element
+        $systemTitle = new Element('text', 'system_title', html_entity_decode($config['system_title'], ENT_QUOTES, 'UTF-8'));
+        $systemTitle->setAttributes('size', 40)
+                    ->setAttributes('style', 'padding: 5px;');
+
         // Set site title form element
         $siteTitle = new Element('text', 'site_title', html_entity_decode($config['site_title'], ENT_QUOTES, 'UTF-8'));
         $siteTitle->setAttributes('size', 40)
@@ -101,6 +106,7 @@ class Config extends AbstractContentModel
         }
 
         $formattedConfig['settings'] = array(
+            'system_title'        => $systemTitle,
             'site_title'          => $siteTitle,
             'separator'           => $separator,
             'default_language'    => $lang,

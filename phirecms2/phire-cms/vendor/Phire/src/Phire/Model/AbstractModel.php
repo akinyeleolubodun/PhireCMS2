@@ -48,7 +48,26 @@ abstract class AbstractModel extends \Pop\Mvc\Model
             $this->data['phireFooter'] = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/footer.phtml';
         }
 
+        $jsVars = null;
+
+        // Set config object and system/site default data
+        $this->config = \Phire\Table\Config::getSystemConfig();
+        if (isset($this->data['assets'])) {
+            $jsVars = '?_lang=' . $this->config->default_language;
+        }
+
         if (isset($sess->user)) {
+            if (isset($this->data['assets'])) {
+                // Set the timeout warning, giving a 30 second buffer to act
+                if (isset($this->data['acl']) && ($this->data['acl']->getType()->timeout_warning)) {
+                    $exp = ($this->data['acl']->getType()->session_expiration * 60) - 30;
+                    $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode(BASE_PATH . APP_URI);
+                }
+
+                $this->data['assets'] = str_replace('jax.min.js', 'jax.min.js' . $jsVars, $this->data['assets']);
+            }
+
+
             $this->data['user'] = $sess->user;
             $this->data['role'] = \Phire\Table\UserRoles::getRole($sess->user->role_id);
             $this->data['globalAccess'] = $sess->user->global_access;
@@ -87,10 +106,14 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                 $this->data['phireNav']->rebuild();
                 $this->data['phireNav']->nav()->setIndent('    ');
             }
+        } else {
+            if (isset($this->data['assets'])) {
+                $this->data['assets'] = str_replace('jax.min.js', 'jax.min.js' . $jsVars, $this->data['assets']);
+            }
         }
 
         // Set config object and system/site default data
-        $this->config = \Phire\Table\Config::getSystemConfig();
+        $this->data['system_title']     = $this->config->system_title;
         $this->data['site_title']       = $this->config->site_title;
         $this->data['separator']        = $this->config->separator;
         $this->data['default_language'] = $this->config->default_language;

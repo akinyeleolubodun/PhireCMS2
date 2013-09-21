@@ -27,6 +27,7 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('php_version', ''),
 ('installed_on', '0000-00-00 00:00:00'),
 ('updated_on', '0000-00-00 00:00:00'),
+('system_title', 'Phire CMS 2.0'),
 ('site_title', 'Default Site Title'),
 ('separator', '&gt;'),
 ('default_language', 'en_US'),
@@ -70,6 +71,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
   `global_access` int(1),
   `allowed_attempts` int(16),
   `session_expiration` int(16),
+  `timeout_warning` int(1),
   `password_encryption` int(1),
   `password_salt` text,
   `ip_allowed` text,
@@ -85,8 +87,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
 -- Dumping data for table `user_types`
 --
 
-INSERT INTO `[{prefix}]user_types` (`id`, `type`, `default_role_id`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `email_verification`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`, `controller`, `sub_controllers`) VALUES
-(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 2, '', '', '', '', '', '', '');
+INSERT INTO `[{prefix}]user_types` (`id`, `type`, `default_role_id`, `login`, `registration`, `multiple_sessions`, `mobile_access`, `email_as_username`, `email_verification`, `force_ssl`, `track_sessions`, `verification`, `approval`, `unsubscribe_login`, `global_access`, `allowed_attempts`, `session_expiration`, `timeout_warning`, `password_encryption`, `password_salt`, `ip_allowed`, `ip_blocked`, `log_emails`, `log_exclude`, `controller`, `sub_controllers`) VALUES
+(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
