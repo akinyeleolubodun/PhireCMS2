@@ -648,6 +648,9 @@ th.vert-top, td.vert-top {
 }
 
 tr.table-bottom-row, td.table-bottom-row {
+    margin: 0;
+    padding: 7px 0 7px 0;
+    font-size: 1.0em;
     text-align: right;
     background: transparent;
 }
@@ -662,12 +665,6 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .border-right {
     border-right: solid 1px #ccc;
-}
-
-.page-links {
-    margin: 0;
-    padding: 5px;
-    float: right;
 }
 
 .save-btn {
@@ -699,7 +696,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .remove-btn {
-    margin: 0 0 0 10px;
+    margin: 0;
     padding: 6px 15px 6px 15px;
     color: #fff;
     text-align: center;
@@ -725,6 +722,13 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     text-transform: uppercase;
     background-color: #7a716f;
     background: #7a716f linear-gradient(to bottom, #968d8b, #38302e);
+}
+
+.page-links {
+    margin: 5px 0 0 0;
+    padding: 0;
+    font-size: 0.9em;
+    float: left;
 }
 
 .radio-btn {
