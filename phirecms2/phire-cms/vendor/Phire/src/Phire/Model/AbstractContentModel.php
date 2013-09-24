@@ -273,7 +273,6 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
         } else {
             return $allowed;
         }
-
     }
 
 }

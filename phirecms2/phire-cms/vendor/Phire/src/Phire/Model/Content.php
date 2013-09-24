@@ -304,29 +304,29 @@ class Content extends AbstractContentModel
     {
         $sql = Table\Content::getSql();
         $sql->select(array(
-            0  => DB_PREFIX . 'content.id',
-            1  => DB_PREFIX . 'content.type_id',
-            2  => DB_PREFIX . 'content.parent_id',
-            3  => DB_PREFIX . 'content.template',
-            4  => DB_PREFIX . 'content.title',
-            5  => DB_PREFIX . 'content.uri',
-            6  => DB_PREFIX . 'content.slug',
-            7  => DB_PREFIX . 'content.order',
-            8  => DB_PREFIX . 'content.include',
-            9  => DB_PREFIX . 'content.feed',
-            10 => DB_PREFIX . 'content.force_ssl',
-            11 => DB_PREFIX . 'content.status',
-            12 => DB_PREFIX . 'content.created',
-            13 => DB_PREFIX . 'content.updated',
-            14 => DB_PREFIX . 'content.published',
-            15 => DB_PREFIX . 'content.expired',
-            16 => DB_PREFIX . 'content.created_by',
-            17 => DB_PREFIX . 'content.updated_by',
+            0          => DB_PREFIX . 'content.id',
+            1          => DB_PREFIX . 'content.type_id',
+            2          => DB_PREFIX . 'content.parent_id',
+            3          => DB_PREFIX . 'content.template',
+            4          => DB_PREFIX . 'content.title',
+            'uri'      => DB_PREFIX . 'content.uri',
+            6          => DB_PREFIX . 'content.slug',
+            7          => DB_PREFIX . 'content.order',
+            8          => DB_PREFIX . 'content.include',
+            9          => DB_PREFIX . 'content.feed',
+            10         => DB_PREFIX . 'content.force_ssl',
+            11         => DB_PREFIX . 'content.status',
+            12         => DB_PREFIX . 'content.created',
+            13         => DB_PREFIX . 'content.updated',
+            14         => DB_PREFIX . 'content.published',
+            15         => DB_PREFIX . 'content.expired',
+            16         => DB_PREFIX . 'content.created_by',
+            17         => DB_PREFIX . 'content.updated_by',
             'type_uri' => DB_PREFIX . 'content_types.uri'
         ))->where()->equalTo(DB_PREFIX . 'content.uri', ':uri');
 
         $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
-        $content = Table\Content::execute($sql->render(true), array(DB_PREFIX . 'content.uri' => $uri));
+        $content = Table\Content::execute($sql->render(true), array('uri' => $uri));
 
         if (isset($content->id)) {
             $this->getNav($content);
