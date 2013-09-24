@@ -1223,6 +1223,7 @@ class Content extends AbstractContentModel
                 if (is_dir($dir)) {
                     $f = $dir . $newFileName;
                     if (file_exists($f)) {
+                        $f = str_replace('\\', '//', $f);
                         $fileSizes[filesize($f)] = substr($f, (strpos($f, '/media') + 6));
                     }
                 }
