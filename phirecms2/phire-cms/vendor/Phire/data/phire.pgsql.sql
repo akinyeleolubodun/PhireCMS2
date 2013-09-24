@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "global_access" integer,
   "allowed_attempts" integer,
   "session_expiration" integer,
-  "session_timeout_warning" integer,
+  "timeout_warning" integer,
   "password_encryption" integer,
   "password_salt" text,
   "ip_allowed" text,

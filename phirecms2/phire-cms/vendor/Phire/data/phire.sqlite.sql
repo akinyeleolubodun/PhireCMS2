@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "global_access" integer,
   "allowed_attempts" integer,
   "session_expiration" integer,
-  "session_timeout_warning" integer,
+  "timeout_warning" integer,
   "password_encryption" integer,
   "password_salt" text,
   "ip_allowed" text,
@@ -98,7 +98,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_types', 2000
 --
 
 INSERT INTO "[{prefix}]user_types" ("id", "type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "email_verification", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "timeout_warning", "password_encryption", "password_salt", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 0, 2, '', '', '', '', '', '', '');;
+(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 0, 2, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
