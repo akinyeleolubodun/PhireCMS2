@@ -50,8 +50,8 @@ class User extends Form
             $id = 'user-select-form';
         // Else, create initial user fields
         } else {
-            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields);
-            $id = 'user-form';
+            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields, $action);
+            $id = (strpos($action, '/install/user') !== false) ? 'user-install-form' : 'user-form';
         }
 
         parent::__construct($action, $method, null, '        ');
@@ -143,9 +143,10 @@ class User extends Form
      * @param  boolean $profile
      * @param  int     $uid
      * @param  boolean $isFields
+     * @param  string  $action
      * @return array
      */
-    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $isFields = false)
+    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $isFields = false, $action)
     {
         $type = Table\UserTypes::findById($tid);
         $fields1 = array();
@@ -302,7 +303,9 @@ class User extends Form
             );
         }
 
-        return array($fields4, $fields1, $fields2, $fields3);
+        $allFields = (strpos($action, '/install/user') !== false) ?  array($fields1, $fields2, $fields3, $fields4) : array($fields4, $fields1, $fields2, $fields3);
+
+        return $allFields;
     }
 
 }
