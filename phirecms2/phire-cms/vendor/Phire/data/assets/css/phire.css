@@ -412,7 +412,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 2px 5px 3px 5px;
 }
 
-#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form {
+#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form {
     margin: 20px 0 20px 0;
     padding: 0;
 }
