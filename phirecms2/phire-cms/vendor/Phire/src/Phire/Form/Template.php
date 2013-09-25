@@ -192,8 +192,8 @@ class Template extends Form
                 'label'      => 'Template:',
                 'required'   => true,
                 'attributes' => array(
-                    'rows'    => 20,
-                    'cols'    => 100
+                    'rows'    => 25,
+                    'cols'    => 120
                 )
             )
         );

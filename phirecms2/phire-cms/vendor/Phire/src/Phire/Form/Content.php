@@ -48,7 +48,7 @@ class Content extends Form
                     'value' => 'SELECT',
                     'attributes' => array(
                         'class' => 'save-btn',
-                        'style' => 'padding: 6px; width: 100px;'
+                        'style' => 'padding: 5px 6px 6px 6px; width: 100px;'
                     )
                 )
             );

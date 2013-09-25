@@ -10,6 +10,7 @@
 <?php echo ((isset($assets)) ? $assets : null); ?>
 </head>
 <body>
+<div id="phire-container">
     <div id="phire-header">
         <a class="home-logo" href="<?php echo ((BASE_PATH . APP_URI) != '') ? BASE_PATH . APP_URI : '/'; ?>">Home</a>
 <?php if (isset($user) && isset($user->username)): ?>

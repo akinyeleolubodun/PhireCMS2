@@ -367,6 +367,7 @@ class User extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'          => '#',
+                    'ip_address'  => 'IP Address',
                     'process'     => '&nbsp;'
                 ),
                 'class'       => 'data-table',

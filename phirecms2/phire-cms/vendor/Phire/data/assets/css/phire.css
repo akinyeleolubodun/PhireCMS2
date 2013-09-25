@@ -11,12 +11,13 @@ html  {
     font-size: 0.75em;
     color: #606060;
     background-color: #fcf9f9;
-    min-height: 100%;
+    height: 100%;
 }
 
 body {
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 h1 {
@@ -147,6 +148,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 /* ID Definitions */
 
+#phire-container {
+    position: relative;
+    min-height: 100%;
+}
+
 #install {
     margin: 0 auto;
     padding: 25px 0 0 0;
@@ -166,8 +172,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
     width: 100%;
     height: 160px;
-    background-color: #d22414;
-    box-shadow: inset 0px 0px 60px 20px #992b21;
+    background-color: #211f1e;
+    box-shadow: inset 0px 0px 60px 20px #000;
 }
 
 #install-header h2, #login-header h2 {
@@ -273,18 +279,21 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 100%;
     height: 100px;
     overflow: auto;
-    color: #dedede;
+    color: #ccc;
     background-image: url(../img/phire-logo-sm.png);
     background-position: 25px center;
     background-repeat: no-repeat;
-    background-color: #d22414;
-    box-shadow: inset 0px 0px 20px 2px #992b21;
+    background-color: #211f1e;
+    box-shadow: inset 0px 0px 20px 2px #000;
     border-bottom: solid 1px #353331;
 }
 
 #phire-header a {
-    color: #fff;
-    text-decoration: underline;
+    color: #3FB8FF;
+}
+
+#phire-header a:hover {
+    color: #FF681F;
 }
 
 #logged-in {
@@ -368,15 +377,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     text-align: left;
     text-decoration: none;
     background-color: #000;
-    /*border-left: solid 1px #666;
-    border-bottom: solid 1px #666;
-    border-right: solid 1px #666; */
 }
 
 #phire-nav-1 li > ul > li > a:hover {
     text-align: left;
-    color: #BCE6FF;
-    background-color: #1392DB;
+    color: #bce6ff;
+    background-color: #1392db;
     text-decoration: underline;
 }
 
@@ -397,13 +403,18 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #phire-content {
     margin: 0 auto;
-    padding: 20px 0 20px 0;
+    padding: 20px 0 35px 0;
     width: 95%;
     overflow: auto;
 }
 
 #search-title {
     padding: 2px 5px 3px 5px;
+}
+
+#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form {
+    margin: 20px 0 20px 0;
+    padding: 0;
 }
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
@@ -498,6 +509,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 200px;
     border-top: solid 1px #ccc;
 }
+
 #user-type-form-field-group-3 dd, #user-type-form-field-group-4 dd {
     float: left;
     display: block;
@@ -575,6 +587,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #content-search-form {
     margin: 0 0 10px 0;
     padding: 0;
+    overflow: auto;
     float: right;
 }
 
@@ -582,6 +595,30 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     margin: 0 0 10px 0;
     padding: 0 0 10px 0;
     overflow: auto;
+}
+
+#add-nav {
+    float: left;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    clear: both;
+    margin: 0 auto;
+    padding: 12px 0 8px 0;
+    text-align: center;
+    font-size: 0.9em;
+    width: 100%;
+    height: 15px;
+    background-color: #ddd;
+}
+
+#footer a {
+    font-weight: normal;
 }
 
 /* Class Definitions */
@@ -780,11 +817,72 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #918582;
 }
 
+.search-btn {
+    float: right;
+    margin: 0 0 0 5px;
+    padding: 3px 0 4px 0;
+    width: 70px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #5a8c1d;
+}
+
+.search-btn:hover {
+    background-color: #75b724;
+}
+
+.add-btn {
+    margin: 4px 5px 5px 0;
+    padding: 5px 8px 5px 8px;
+    display: block;
+    float: left;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #1481bc;
+}
+
+.add-btn:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #37ade8;
+}
+
 .page-links {
     margin: 5px 0 0 0;
     padding: 0;
     font-size: 0.9em;
     float: left;
+}
+
+.export-btn {
+    float: right;
+    margin: 4px 0 5px 0;
+    padding: 6px 8px 4px 8px;
+    display: block;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #5a8c1d;
+}
+
+.export-btn:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #75b724;
 }
 
 .radio-btn {
