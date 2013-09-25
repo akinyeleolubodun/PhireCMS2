@@ -137,14 +137,6 @@ class ContentType extends Form
 
         // Create remaining fields
         $fields3 = array(
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
-            'update_value' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
@@ -160,10 +152,18 @@ class ContentType extends Form
                     'onclick' => "return updateForm('#content-type-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
                 )
+            ),
+            'id' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
             )
         );
 
-        return array($fields1, $fields2, $fields3);
+        return array($fields3, $fields1, $fields2);
     }
 
 }

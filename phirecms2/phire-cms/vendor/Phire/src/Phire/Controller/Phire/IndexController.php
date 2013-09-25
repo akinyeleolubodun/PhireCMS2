@@ -112,7 +112,7 @@ class IndexController extends C
             $this->error();
         // If login is not allowed
         } else if (!$this->type->login) {
-            Response::redirect(BASE_PATH);
+            Response::redirect(BASE_PATH . '/');
         // Else, render the form
         } else {
             $user = new Model\User(array(
@@ -142,43 +142,29 @@ class IndexController extends C
                 $form->setFieldValues(
                     $this->request->getPost(),
                     array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(null, array(ENT_QUOTES, 'UTF-8')),
+                    $this->project->getService('auth')->config($this->type, $this->request->getPost('username')),
+                    $this->type, $user
                 );
 
                 $user->set('form', $form);
 
                 // If form is valid, authenticate the user
                 if ($form->isValid()) {
-                    // Create Auth object and attempt to authenticate
-                    $auth = $this->project->getService('auth')->config($this->type, $form->username);
-                    $auth->authenticate($form->username, $form->password);
-
-                    // Get the auth result
-                    $result = $auth->getAuthResult($this->type, $form->username);
-
-                    // If error, record failed attempt and display error
-                    if (null !== $result) {
-                        $user->login($form->username, $this->type, false);
-                        $user->set('error', $result);
-                        $this->view = View::factory($this->viewPath . '/login.phtml', $user);
-                        $this->send();
-                    // Else, login
+                    $user->login($form->username, $this->type);
+                    if (isset($this->sess->lastUrl)) {
+                        $url = $this->sess->lastUrl;
                     } else {
-                        $user->login($form->username, $this->type);
-                        if (isset($this->sess->lastUrl)) {
-                            $url = $this->sess->lastUrl;
-                        } else {
-                            $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
-                        }
-                        unset($this->sess->expired);
-                        unset($this->sess->authError);
-                        unset($this->sess->lastUrl);
-
-                        if ($url == '') {
-                            $url = '/';
-                        }
-                        Response::redirect($url);
+                        $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
                     }
+                    unset($this->sess->expired);
+                    unset($this->sess->authError);
+                    unset($this->sess->lastUrl);
+
+                    if ($url == '') {
+                        $url = '/';
+                    }
+                    Response::redirect($url);
                 // Else, re-render the form
                 } else {
                     $this->view = View::factory($this->viewPath . '/login.phtml', $user);

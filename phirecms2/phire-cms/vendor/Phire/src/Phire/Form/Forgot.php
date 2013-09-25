@@ -25,7 +25,10 @@ class Forgot extends Form
                 'type'       => 'text',
                 'label'      => 'Email:',
                 'required'   => true,
-                'attributes' => array('size' => 40),
+                'attributes' => array(
+                    'size'  => 30,
+                    'style' => 'display: block; width: 288px; margin: 0 auto;'
+                ),
                 'validators' => new Validator\Email()
             ),
             'submit' => array(
@@ -34,7 +37,7 @@ class Forgot extends Form
                 'value' => 'SUBMIT',
                 'attributes' => array(
                     'class' => 'save-btn',
-                    'style' => 'float: right; margin: 0 10px 0 0;'
+                    'style' => 'display: block; width: 300px; margin: 0 auto;'
                 )
             )
         );

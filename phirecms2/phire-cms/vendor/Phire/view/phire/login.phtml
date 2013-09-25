@@ -10,11 +10,10 @@
     <?php echo ((isset($assets)) ? $assets : null); ?>
 </head>
 <body>
-
-<div id="login">
-        <div id="login-header">
-            <h2><?php echo $title; ?></h2>
-        </div>
+    <div id="login-header">
+        <h2><?php echo $title; ?></h2>
+    </div>
+    <div id="login">
 <?php if (isset($error)): ?>
         <h4 class="error"><?php echo $error; ?></h4>
 <?php endif; ?>

@@ -102,12 +102,18 @@ class Category extends Form
                     'onchange' => "catSlug(null, 'slug');"
                 )
             ),
+            'order' => array(
+                'type'       => 'text',
+                'label'      => 'Order:',
+                'attributes' => array('size' => 3),
+                'value'      => 0
+            ),
             'category' => array(
                 'type'       => 'text',
                 'label'      => 'Category:',
                 'required'   => true,
                 'attributes' => array(
-                    'size'    => 40,
+                    'size'    => 80,
                     'onkeyup' => "catSlug('category', 'slug');"
                 )
             ),
@@ -116,7 +122,7 @@ class Category extends Form
                 'label'      => 'Slug:',
                 'required'   => true,
                 'attributes' => array(
-                    'size' => 40,
+                    'size' => 80,
                     'onkeyup' => "catSlug(null, 'slug');"
                 )
             )
@@ -144,20 +150,6 @@ class Category extends Form
 
         // Create remaining fields
         $fields3 = array(
-            'order' => array(
-                'type'       => 'text',
-                'label'      => 'Order:',
-                'attributes' => array('size' => 3),
-                'value'      => 0
-            ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
-            'update_value' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
@@ -173,10 +165,18 @@ class Category extends Form
                     'onclick' => "return updateForm('#category-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class' => 'update-btn'
                 )
+            ),
+            'id' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
             )
         );
 
-        return array($fields1, $fields2, $fields3);
+        return array($fields3, $fields1, $fields2);
     }
 
     /**

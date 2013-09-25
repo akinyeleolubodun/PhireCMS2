@@ -92,7 +92,7 @@ class UserRole extends Form
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 55)
             )
         );
 
@@ -170,31 +170,25 @@ class UserRole extends Form
                 'label'      => '<a href="#" onclick="addResource(); return false;">[+]</a> Resource / Permission:',
                 'attributes' => array(
                     'onchange' => 'changePermissions(this);',
-                    'style' => 'display: block;'
+                    'style' => 'display: block; margin: 3px 0 3px 0;'
                 ),
                 'value'      => $classes
             ),
             'permission_new_1' => array(
                 'type'       => 'select',
-                'attributes' => array('style' => 'display: block; min-width: 150px;'),
+                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array('0' => '(All)')
             ),
             'allow_new_1' => array(
                 'type'       => 'select',
-                'attributes' => array('style' => 'display: block; min-width: 150px;'),
+                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array(
                     '1' => 'allow',
                     '0' => 'deny'
                 )
             ),
-            'id' => array(
-                'type' => 'hidden',
-                'value' => 0
-            ),
-            'update_value' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
+        );
+        $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
@@ -210,10 +204,18 @@ class UserRole extends Form
                     'onclick' => "return updateForm('#user-role-form', true);",
                     'class'   => 'update-btn'
                 )
+            ),
+            'id' => array(
+                'type' => 'hidden',
+                'value' => 0
+            ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
             )
         );
 
-        return array($fields1, $fields2, $fields3);
+        return array($fields4, $fields1, $fields2, $fields3);
     }
 }
 

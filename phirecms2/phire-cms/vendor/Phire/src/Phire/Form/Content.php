@@ -47,7 +47,8 @@ class Content extends Form
                     'type'  => 'submit',
                     'value' => 'SELECT',
                     'attributes' => array(
-                        'class' => 'save-btn'
+                        'class' => 'save-btn',
+                        'style' => 'padding: 6px; width: 100px;'
                     )
                 )
             );
@@ -225,8 +226,20 @@ class Content extends Form
             )
         );
 
+        $fields4 = array();
+
         // Add nav include and roles
         if (!$this->hasFile) {
+            $fields4['status'] = array(
+                'type'   => 'select',
+                'label'  => 'Status:',
+                'value'  => array(
+                    0 => 'Unpublished',
+                    1 => 'Draft',
+                    2 => 'Published'
+                ),
+                'marked' => 0
+            );
             $fields5['include'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Nav:',
@@ -243,16 +256,6 @@ class Content extends Form
                 'type'   => 'radio',
                 'label'  => 'Force SSL:',
                 'value'  => array(1 => 'Yes', 0 => 'No'),
-                'marked' => 0
-            );
-            $fields5['status'] = array(
-                'type'   => 'select',
-                'label'  => 'Status:',
-                'value'  => array(
-                    0 => 'Unpublished',
-                    1 => 'Draft',
-                    2 => 'Published'
-                ),
                 'marked' => 0
             );
             $rolesAry = array();
@@ -304,7 +307,6 @@ class Content extends Form
             );
         }
 
-        $fields4 = array();
         // Create pub/exp date fields for a URI-based content object
         if ($type->uri) {
             $fields4['published_month'] = array(
@@ -357,22 +359,6 @@ class Content extends Form
         }
 
         $fields6 = array(
-            'type_id' => array(
-                'type'  => 'hidden',
-                'value' => $tid
-            ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
-            'update_value' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
-            'live' => array(
-                'type'  => 'hidden',
-                'value' => (isset($_GET['live']) && ($_GET['live'] == 1)) ? 1 : 0
-            ),
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
@@ -402,8 +388,25 @@ class Content extends Form
             );
         }
 
+        $fields6['type_id'] = array(
+            'type'  => 'hidden',
+            'value' => $tid
+        );
+        $fields6['id'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
+        $fields6['update_value'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
+        $fields6['live'] = array(
+            'type'  => 'hidden',
+            'value' => (isset($_GET['live']) && ($_GET['live'] == 1)) ? 1 : 0
+        );
+
         $allFields = array();
-        $allFields[] = array_merge($fields4, $fields5, $fields3, $fields6);
+        $allFields[] = array_merge($fields6, $fields4, $fields5, $fields3);
         $allFields[] = $fields1;
 
         if(count($fields2) > 0) {

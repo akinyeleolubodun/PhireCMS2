@@ -42,17 +42,20 @@ class User extends Form
                     'type'  => 'submit',
                     'value' => 'SELECT',
                     'attributes' => array(
-                        'class'   => 'save-btn'
+                        'class'   => 'save-btn',
+                        'style' => 'padding: 6px; width: 100px;'
                     )
                 )
             );
+            $id = 'user-select-form';
         // Else, create initial user fields
         } else {
             $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields);
+            $id = 'user-form';
         }
 
         parent::__construct($action, $method, null, '        ');
-        $this->setAttributes('id', 'user-form');
+        $this->setAttributes('id', $id);
     }
 
     /**
@@ -260,24 +263,10 @@ class User extends Form
             );
         }
 
+        $fields4 = array();
+
         // Finish the initial fields
-        $fields3['type_id'] = array(
-            'type'  => 'hidden',
-            'value' => $tid
-        );
-        $fields3['id'] = array(
-            'type'  => 'hidden',
-            'value' => 0
-        );
-
-        if (!$profile) {
-            $fields3['update_value'] = array(
-                'type'  => 'hidden',
-                'value' => 0
-            );
-        }
-
-        $fields3['submit'] = array(
+        $fields4['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
             'value' => 'SAVE',
@@ -287,7 +276,7 @@ class User extends Form
         );
 
         if (!$profile) {
-            $fields3['update'] = array(
+            $fields4['update'] = array(
                 'type'       => 'button',
                 'value'      => 'Update',
                 'attributes' => array(
@@ -297,7 +286,23 @@ class User extends Form
             );
         }
 
-        return array($fields1, $fields2, $fields3);
+        $fields4['type_id'] = array(
+            'type'  => 'hidden',
+            'value' => $tid
+        );
+        $fields4['id'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
+
+        if (!$profile) {
+            $fields4['update_value'] = array(
+                'type'  => 'hidden',
+                'value' => 0
+            );
+        }
+
+        return array($fields4, $fields1, $fields2, $fields3);
     }
 
 }

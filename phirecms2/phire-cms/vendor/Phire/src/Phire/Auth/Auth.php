@@ -29,7 +29,7 @@ class Auth extends A\Auth
      * Config the auth object
      *
      * @param  \Phire\Table\UserTypes $type
-     * @param  string                   $username
+     * @param  string                 $username
      * @return \Phire\Auth\Auth
      */
     public function config($type, $username = null)

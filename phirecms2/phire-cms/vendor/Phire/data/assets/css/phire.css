@@ -23,21 +23,21 @@ h1 {
     margin: 0 0 10px 0;
     padding: 0;
     font-weight: normal;
-    font-size: 2.8em;
+    font-size: 2.4em;
 }
 
 h2 {
     margin: 0 0 8px 0;
     padding: 0;
     font-weight: normal;
-    font-size: 2.4em;
+    font-size: 2.0em;
 }
 
 h3 {
     margin: 0 0 6px 0;
     padding: 0;
     font-weight: normal;
-    font-size: 2.0em;
+    font-size: 1.6em;
 }
 
 p {
@@ -98,7 +98,7 @@ fieldset {
 
 input[type=text], input[type=password] {
     margin: 0;
-    padding: 8px 5px 8px 5px;
+    padding: 6px 4px 6px 4px;
     border-radius: 4px;
     border: solid 1px #d3d3d3;
     background-color: #d3d3d3;
@@ -107,7 +107,7 @@ input[type=text], input[type=password] {
 
 input[type=file] {
     margin: 0;
-    padding: 4px 5px 4px 5px;
+    padding: 2px;
     border-radius: 4px;
     width: 300px;
     border: solid 1px #d3d3d3;
@@ -116,7 +116,7 @@ input[type=file] {
 }
 
 select {
-    margin: 0 0 4px 0;
+    margin: 0;
     padding: 4px;
     font-size: 1.1em;
     border: solid 1px #d3d3d3;
@@ -160,21 +160,26 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     line-height: 1.5em;
 }
 
-#install-header {
+#install-header, #login-header {
     margin: 0 0 10px 0;
-    padding: 0 0 10px 10px;
-    border-bottom: solid 1px #ccc;
+    padding: 0;
     overflow: auto;
+    width: 100%;
+    height: 160px;
+    background-color: #d22414;
+    box-shadow: inset 0px 0px 60px 20px #992b21;
+}
+
+#install-header h2, #login-header h2 {
+    color: #fff;
+    margin: 0 auto;
+    padding: 80px 0 0 0;
+    width: 850px;
+    height: 80px;
+    text-align: right;
     background-image: url(../img/phire-logo-lg.png);
     background-position: left center;
     background-repeat: no-repeat;
-}
-
-#install h2 {
-    color: #999;
-    margin: 40px 20px 0 0;
-    padding: 0;
-    float: right;
 }
 
 #install-form {
@@ -193,8 +198,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     clear: left;
     float: left;
     margin: 0;
-    padding: 14px 3px 6px 3px;
-    width: 150px;
+    padding: 10px 3px 4px 3px;
+    width: 170px;
     text-align: right;
     line-height: 1.2em;
 }
@@ -202,38 +207,21 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #install-form > dl > dd {
     float: left;
     margin: 0;
-    padding: 6px 3px 9px 3px;
+    padding: 4px 3px 6px 3px;
     line-height: 1.2em;
 }
 
 #login {
     margin: 0 auto;
-    padding: 120px 0 0 0;
+    padding: 40px 0 0 0;
     width: 850px;
     overflow: auto;
 }
 
-#login-header {
-    margin: 0 0 10px 0;
-    padding: 0 0 10px 10px;
-    border-bottom: solid 1px #ccc;
-    overflow: auto;
-    background-image: url(../img/phire-logo-lg.png);
-    background-position: left center;
-    background-repeat: no-repeat;
-}
-
-#login h2 {
-    color: #999;
-    margin: 40px 20px 0 0;
-    padding: 0;
-    float: right;
-}
-
 #login-form, #forgot-form {
-    margin: 50px auto 50px auto;
-    padding: 50px;
-    width: 350px;
+    margin: 30px auto 30px auto;
+    padding: 80px 100px 80px 100px;
+    width: 310px;
     background-color: #fff;
     border-radius: 20px;
     box-shadow: 0px 0px 15px 5px #d3cac6;
@@ -245,12 +233,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #forgot-div {
     clear: both;
-    margin: 25px auto 0 auto;
-    padding: 10px 60px 0 60px;
-    width: 340px;
+    margin: 0 auto;
+    padding: 0;
+    width: 450px;
     font-size: 0.9em;
     text-align: right;
-    border-top: solid 1px #ccc;
 }
 
 #forgot-div a {
@@ -272,14 +259,25 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #phire-header {
+    position: relative;
+    z-index: 1000;
     margin: 0 auto;
     padding: 0;
     width: 100%;
     height: 100px;
     overflow: auto;
+    color: #dedede;
     background-image: url(../img/phire-logo-sm.png);
     background-position: 25px center;
     background-repeat: no-repeat;
+    background-color: #d22414;
+    box-shadow: inset 0px 0px 20px 2px #992b21;
+    border-bottom: solid 1px #353331;
+}
+
+#phire-header a {
+    color: #fff;
+    text-decoration: underline;
 }
 
 #logged-in {
@@ -297,8 +295,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 0;
     width: 100%;
     height: 36px;
-    background-color: #015887;
-    background: linear-gradient(to bottom, #0286ce, #063a56);
+    background-color: #514e4c;
+    border-bottom: solid 1px #353331;
 }
 
 #phire-nav-1 li {
@@ -321,7 +319,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #phire-nav-1 li > a:hover {
-    background-color: #015387;
+    background-color: #000;
     text-decoration: underline;
 }
 
@@ -333,7 +331,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     left: 0;
     top: 36px;
     z-index: 100;
-    background-color: #999;
+    background-color: #000;
 }
 
 #phire-nav-1 li:hover > ul {
@@ -354,24 +352,24 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #phire-nav-1 li > ul > li > a {
     margin: 0;
-    padding: 7px 5px 0 15px;
+    padding: 8px 5px 0 15px;
     color: #fff;
     display: block;
     width: 120px;
-    min-height: 20px;
+    min-height: 22px;
     font-size: 0.9em;
     text-align: left;
     text-decoration: none;
-    background-color: #999;
-    border-left: solid 1px #666;
+    background-color: #000;
+    /*border-left: solid 1px #666;
     border-bottom: solid 1px #666;
-    border-right: solid 1px #666;
+    border-right: solid 1px #666; */
 }
 
 #phire-nav-1 li > ul > li > a:hover {
     text-align: left;
-    color: #444;
-    background-color: #ccc;
+    color: #BCE6FF;
+    background-color: #1392DB;
     text-decoration: underline;
 }
 
@@ -381,7 +379,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     margin: 0;
     padding: 0;
     top: 0px;
-    left: 141px;
+    left: 140px;
     z-index: 100;
     background-color: #000;
 }
@@ -401,11 +399,13 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 2px 5px 3px 5px;
 }
 
-#content-form-field-group-1 {
+#content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
+#content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1 {
     margin: 0 0 40px 10px;
     padding: 0 0 40px 10px;
     float: right;
     width: 290px;
+    min-height: 400px;
     border-left: solid 1px #ccc;
 }
 
@@ -452,40 +452,56 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #user-type-form {
     margin: 0;
     padding: 0;
-    width: 800px;
     overflow: auto;
 }
 
 #user-type-form-field-group-1 {
-    margin: 0 0 0 20px;
-    padding: 10px 0 0 0;
-    width: 400px;
+    margin: 0 0 40px 10px;
+    padding: 0 0 40px 10px;
     float: right;
-    overflow: auto;
-}
-
-#user-type-form-field-group-1 dt {
-    clear: left;
-    display: block;
-    margin: 0;
-    padding: 5px  0 3px 0;
-    font-weight: bold;
-    width: 200px;
-    border-top: solid 1px #ccc;
-}
-#user-type-form-field-group-1 dd {
-    float: left;
-    display: block;
-    width: 200px;
-    margin: 0 0 5px 0;
-    padding: 0 0 5px 0;
+    width: 290px;
+    min-height: 750px;
+    border-left: solid 1px #ccc;
 }
 
 #user-type-form-field-group-2 {
     margin: 0;
-    padding: 0 10px 0 0;
+    padding: 0;
     overflow: auto;
-    border-right: solid 1px #ccc;
+    width: 380px;
+    min-height: 750px;
+    float: left;
+}
+
+#user-type-form-field-group-3, #user-type-form-field-group-4 {
+    margin: 0 0 0 5px;
+    padding: 10px 0 0 30px;
+    width: 220px;
+    float: left;
+    overflow: auto;
+    border-left: solid 1px #ccc;
+}
+
+#user-type-form-field-group-3 dt, #user-type-form-field-group-4 dt {
+    clear: left;
+    display: block;
+    margin: 0;
+    padding: 12px 0 2px 0;
+    font-weight: bold;
+    width: 200px;
+    border-top: solid 1px #ccc;
+}
+#user-type-form-field-group-3 dd, #user-type-form-field-group-4 dd {
+    float: left;
+    display: block;
+    width: 200px;
+    margin: 0 0 3px 0;
+    padding: 0;
+}
+
+#user-role-form-field-group-3 dt, #user-role-form-field-group-4 dt {
+    margin: 0;
+    padding: 0;
 }
 
 #uri-span, #slug-span {
@@ -521,7 +537,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #result {
-    margin: 0 auto 5px auto;
+    margin: 5px auto 5px auto;
     padding: 1%;
     width: 98%;
     display: none;
@@ -667,61 +683,94 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     border-right: solid 1px #ccc;
 }
 
-.save-btn {
+.install-btn {
     margin: 0;
-    padding: 6px 15px 6px 15px;
+    padding: 8px 0 8px 0;
+    width: 260px;
     color: #fff;
     text-align: center;
+    font-weight: bold;
     border: none;
-    border-radius: 25px;
-    font-size: 1.0em;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    background-color: #487a07;
-    background: linear-gradient(to bottom, #6da327, #2f4c06);
+    border-radius: 4px;
+    font-size: 1.2em;
+    background-color: #1481bc;
+}
+
+.install-btn:hover {
+    background-color: #37ade8;
+}
+
+.save-btn {
+    margin: 0;
+    padding: 8px 0 8px 0;
+    width: 260px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 1.2em;
+    background-color: #1481bc;
+}
+
+.save-btn:hover {
+    background-color: #37ade8;
 }
 
 .update-btn {
     margin: 0;
-    padding: 6px 15px 6px 15px;
+    padding: 8px 0 8px 0;
+    width: 260px;
     color: #fff;
     text-align: center;
+    font-weight: bold;
     border: none;
-    border-radius: 25px;
-    font-size: 1.0em;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    background-color: #1481bc;
-    background: linear-gradient(to bottom, #40b0ed, #054260);
+    border-radius: 4px;
+    font-size: 1.2em;
+    background-color: #5a8c1d;
+}
+
+.update-btn:hover {
+    background-color: #75b724;
 }
 
 .remove-btn {
     margin: 0;
-    padding: 6px 15px 6px 15px;
+    padding: 8px 0 8px 0;
+    width: 130px;
     color: #fff;
     text-align: center;
+    font-weight: bold;
     border: none;
-    border-radius: 25px;
-    float: right;
-    font-size: 1.0em;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    background-color: #7f1e1d;
-    background: #7f1e1d linear-gradient(to bottom, #c4201d, #4f100f);
+    border-radius: 4px;
+    font-size: 1.2em;
+    background-color: #a51212;
+}
+
+.remove-btn:hover {
+    background-color: #c91414;
 }
 
 .process-btn {
     margin: 0;
-    padding: 6px 15px 6px 15px;
+    padding: 8px 0 8px 0;
+    width: 260px;
     color: #fff;
     text-align: center;
+    font-weight: bold;
     border: none;
-    border-radius: 25px;
-    font-size: 1.0em;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    background-color: #7a716f;
-    background: #7a716f linear-gradient(to bottom, #968d8b, #38302e);
+    border-radius: 4px;
+    font-size: 1.2em;
+    background-color: #665d5b;
+}
+
+.process-btn:hover {
+    background-color: #918582;
 }
 
 .page-links {

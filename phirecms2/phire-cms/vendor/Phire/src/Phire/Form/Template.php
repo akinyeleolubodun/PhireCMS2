@@ -195,15 +195,10 @@ class Template extends Form
                     'rows'    => 20,
                     'cols'    => 100
                 )
-            ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
-            'update_value' => array(
-                'type'  => 'hidden',
-                'value' => 0
-            ),
+            )
+        );
+
+        $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
@@ -219,10 +214,18 @@ class Template extends Form
                     'onclick' => "return updateForm('#template-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
                 )
-            )
+            ),
+            'id' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
+            'update_value' => array(
+                'type'  => 'hidden',
+                'value' => 0
+            ),
         );
 
-        return array($fields1, $fields2, $fields3);
+        return array($fields4, $fields1, $fields2, $fields3);
     }
 
     /**

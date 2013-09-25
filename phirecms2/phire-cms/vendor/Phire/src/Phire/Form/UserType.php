@@ -102,6 +102,12 @@ class UserType extends Form
                 'label'  => 'Default Role:',
                 'value'  => $rolesAry
             ),
+            'global_access' => array(
+                'type'   => 'select',
+                'label'  => 'Allow Global Access:',
+                'value'  => $yesNo,
+                'marked' => '0'
+            ),
             'allowed_attempts' => array(
                 'type'       => 'text',
                 'label'      => 'Allowed Attempts:',
@@ -161,13 +167,7 @@ class UserType extends Form
                 'attributes' => array('size' => 40)
             )
         );
-        $fields2 = array(
-            'global_access' => array(
-                'type'   => 'radio',
-                'label'  => 'Allow Global Access:',
-                'value'  => $yesNo,
-                'marked' => '0'
-            ),
+        $fields2a = array(
             'login' => array(
                 'type'   => 'radio',
                 'label'  => 'Allow Login:',
@@ -204,6 +204,8 @@ class UserType extends Form
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
+        );
+        $fields2b = array(
             'email_verification' => array(
                 'type'   => 'radio',
                 'label'  => 'User Email Verification:',
@@ -262,15 +264,9 @@ class UserType extends Form
             }
         }
 
-        $fields1['id'] = array(
-            'type'  => 'hidden',
-            'value' => 0
-        );
-        $fields1['update_value'] = array(
-            'type'  => 'hidden',
-            'value' => 0
-        );
-        $fields1['submit'] = array(
+        $fields4 = array();
+
+        $fields4['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
             'value' => 'SAVE',
@@ -278,7 +274,7 @@ class UserType extends Form
                 'class'   => 'save-btn'
             )
         );
-        $fields1['update'] = array(
+        $fields4['update'] = array(
             'type'       => 'button',
             'value'      => 'UPDATE',
             'attributes' => array(
@@ -286,8 +282,16 @@ class UserType extends Form
                 'class'   => 'update-btn'
             )
         );
+        $fields4['id'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
+        $fields4['update_value'] = array(
+            'type'  => 'hidden',
+            'value' => 0
+        );
 
-        return array($fields2, $fields1, $fields3);
+        return array($fields4, $fields1, $fields2a, $fields2b, $fields3);
     }
 
 }

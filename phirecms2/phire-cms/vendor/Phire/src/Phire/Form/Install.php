@@ -169,7 +169,6 @@ class Install extends Form
             'language' => array (
                 'type' => 'select',
                 'label' => 'Language:',
-                'required' => true,
                 'value' => $langs,
                 'marked' => 'en_US'
             ),
@@ -241,7 +240,7 @@ class Install extends Form
                 'label' => '&nbsp;',
                 'value' => 'NEXT',
                 'attributes' => array(
-                    'class' => 'save-btn'
+                    'class' => 'install-btn'
                 )
             )
         );

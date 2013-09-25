@@ -10,11 +10,10 @@
     <?php echo ((isset($assets)) ? $assets : null); ?>
 </head>
 <body>
-
-<div id="login">
-        <div id="login-header">
-            <h2><?php echo $title; ?></h2>
-        </div>
+    <div id="login-header">
+        <h2><?php echo $title; ?></h2>
+    </div>
+    <div id="login">
 <?php echo $form; ?>
          <div id="forgot-div"><a href="./login">Login</a></div>
 <?php include __DIR__ . '/footer.phtml'; ?>
