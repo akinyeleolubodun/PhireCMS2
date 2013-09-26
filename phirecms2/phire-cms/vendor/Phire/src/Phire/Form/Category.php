@@ -92,6 +92,25 @@ class Category extends Form
             }
         }
 
+        // Get parents and children, if applicable
+        $parents = array(0 => '----');
+
+        // Prevent the object's children or itself from being in the parent drop down
+        $content = Table\Categories::findAll('order ASC');
+        foreach ($content->rows as $c) {
+            if (($c->parent_id == 0) && ($c->id != $cid)) {
+                $parents[$c->id] = $c->category;
+                $children = $this->children($c->id);
+                if (count($children) > 0) {
+                    foreach ($children as $id => $child) {
+                        if ($id != $cid) {
+                            $parents[$id] = $child;
+                        }
+                    }
+                }
+            }
+        }
+
         // Create initial fields
         $fields1 = array(
             'parent_id' => array(
@@ -184,18 +203,20 @@ class Category extends Form
      *
      * @param  int   $pid
      * @param  array $children
+     * @param  int   $depth
      * @return array
      */
-    protected function children($pid, $children = array())
+    protected function children($pid, $children = array(), $depth = 0)
     {
         $c = Table\Categories::findBy(array('parent_id' => $pid));
 
         if (isset($c->rows[0])) {
             foreach ($c->rows as $child) {
-                $children[] = $child->id;
+                $children[$child->id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ($depth + 1)) . '&gt; ' . $child->category;
                 $c = Table\Categories::findBy(array('parent_id' => $child->id));
                 if (isset($c->rows[0])) {
-                    $children = $this->children($child->id, $children);
+                    $d = $depth + 1;
+                    $children = $this->children($child->id, $children, $d);
                 }
             }
         }

@@ -132,15 +132,22 @@ class Content extends Form
 
         $type = Table\ContentTypes::findById($tid);
 
-        // Get children, if applicable
-        $children = ($mid != 0) ? $this->children($mid) : array();
+        // Get parents and children, if applicable
         $parents = array(0 => '----');
 
         // Prevent the object's children or itself from being in the parent drop down
         $content = Table\Content::findAll('order ASC');
         foreach ($content->rows as $c) {
-            if (($c->id != $mid) && (!in_array($c->id, $children)) && (in_array($c->type_id, $typesAry))) {
+            if (($c->parent_id == 0) && ($c->id != $mid)) {
                 $parents[$c->id] = $c->title;
+                $children = $this->children($c->id);
+                if (count($children) > 0) {
+                    foreach ($children as $cid => $child) {
+                        if ($cid != $mid) {
+                            $parents[$cid] = $child;
+                        }
+                    }
+                }
             }
         }
 
@@ -537,18 +544,20 @@ class Content extends Form
      *
      * @param  int   $pid
      * @param  array $children
+     * @param  int   $depth
      * @return array
      */
-    protected function children($pid, $children = array())
+    protected function children($pid, $children = array(), $depth = 0)
     {
         $c = Table\Content::findBy(array('parent_id' => $pid));
 
         if (isset($c->rows[0])) {
             foreach ($c->rows as $child) {
-                $children[] = $child->id;
+                $children[$child->id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ($depth + 1)) . '&gt; ' . $child->title;
                 $c = Table\Content::findBy(array('parent_id' => $child->id));
                 if (isset($c->rows[0])) {
-                    $children = $this->children($child->id, $children);
+                    $d = $depth + 1;
+                    $children = $this->children($child->id, $children, $d);
                 }
             }
         }
