@@ -7,8 +7,15 @@ namespace Phire\Model;
 use Pop\Web\Session;
 use Phire\Table;
 
-abstract class AbstractModel extends \Pop\Mvc\Model
+abstract class AbstractModel
 {
+
+    /**
+     * Model data
+     *
+     * @var array
+     */
+    protected $data = array();
 
     /**
      * System config
@@ -20,13 +27,14 @@ abstract class AbstractModel extends \Pop\Mvc\Model
     /**
      * Instantiate the model object.
      *
-     * @param  mixed  $data
-     * @param  string $name
+     * @param  array $data
      * @return self
      */
-    public function __construct($data = null, $name = null)
+    public function __construct(array $data = null)
     {
-        parent::__construct($data, $name);
+        if (null !== $data) {
+            $this->data = $data;
+        }
 
         $sess = \Pop\Web\Session::getInstance();
 
@@ -64,7 +72,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
                     $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode(BASE_PATH . APP_URI);
                 }
 
-                $this->data['assets'] = str_replace('jax.min.js', 'jax.min.js' . $jsVars, $this->data['assets']);
+                $this->data['assets'] = str_replace('jax.3.0.0.min.js', 'jax.3.0.0.min.js' . $jsVars, $this->data['assets']);
             }
 
 
@@ -108,7 +116,7 @@ abstract class AbstractModel extends \Pop\Mvc\Model
             }
         } else {
             if (isset($this->data['assets'])) {
-                $this->data['assets'] = str_replace('jax.min.js', 'jax.min.js' . $jsVars, $this->data['assets']);
+                $this->data['assets'] = str_replace('jax.3.0.0.min.js', 'jax.3.0.0.min.js' . $jsVars, $this->data['assets']);
             }
         }
 
@@ -191,6 +199,21 @@ abstract class AbstractModel extends \Pop\Mvc\Model
         $sess->lastPage = $page;
 
         return $order;
+    }
+
+    /**
+     * Get model data
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function getData($key = null)
+    {
+        if (null !== $key) {
+            return (isset($this->data[$key])) ? $this->data[$key] : null;
+        } else {
+            return $this->data;
+        }
     }
 
 }

@@ -62,7 +62,7 @@ class TemplatesController extends C
         ));
 
         $template->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+        $this->view = View::factory($this->viewPath . '/templates.phtml', $template->getData());
         $this->send();
     }
 
@@ -110,13 +110,13 @@ class TemplatesController extends C
                     $this->sendJson($form->getErrors());
                 } else {
                     $template->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+                    $this->view = View::factory($this->viewPath . '/templates.phtml', $template->getData());
                     $this->send();
                 }
             }
         } else {
             $template->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+            $this->view = View::factory($this->viewPath . '/templates.phtml', $template->getData());
             $this->send();
         }
     }
@@ -174,7 +174,7 @@ class TemplatesController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $template->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+                            $this->view = View::factory($this->viewPath . '/templates.phtml', $template->getData());
                             $this->send();
                         }
                     }
@@ -188,7 +188,7 @@ class TemplatesController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $template->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/templates.phtml', $template);
+                    $this->view = View::factory($this->viewPath . '/templates.phtml', $template->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -256,7 +256,7 @@ class TemplatesController extends C
         ));
 
         $template->set('title', '404 Error ' . $template->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $template);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $template->getData());
         $this->send(404);
     }
 

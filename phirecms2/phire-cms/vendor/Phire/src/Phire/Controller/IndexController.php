@@ -108,7 +108,7 @@ class IndexController extends C
         // Else, if page found and allowed
         } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
-            $this->view = View::factory($template, $content);
+            $this->view = View::factory($template, $content->getData());
             $this->send();
         // Else, check for date-based URI
         } else {
@@ -121,12 +121,12 @@ class IndexController extends C
                 $content->getByDate($date, $this->project->isLoaded('Fields'));
                 if (isset($content->id) && ($content->allowed)) {
                     $template = $this->getTemplate($content->template, 'index');
-                    $this->view = View::factory($template, $content);
+                    $this->view = View::factory($template, $content->getData());
                     $this->send();
                 } else if (isset($content->rows[0])) {
                     $content->set('title', $date['match']);
                     $template = $this->getTemplate($content->template, 'date');
-                    $this->view = View::factory($template, $content);
+                    $this->view = View::factory($template, $content->getData());
                     $this->send();
                 } else {
                     $this->error();
@@ -158,7 +158,7 @@ class IndexController extends C
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
             $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
-            $this->view = View::factory($template, $category);
+            $this->view = View::factory($template, $category->getData());
             $this->send();
         } else {
             $this->error();
@@ -192,7 +192,7 @@ class IndexController extends C
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
 
-        $this->view = View::factory($template, $content);
+        $this->view = View::factory($template, $content->getData());
         $this->send();
     }
 
@@ -262,7 +262,7 @@ class IndexController extends C
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
-        $this->view = View::factory($template, $content);
+        $this->view = View::factory($template, $content->getData());
         $this->send($code);
     }
 

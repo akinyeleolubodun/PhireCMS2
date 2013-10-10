@@ -62,7 +62,7 @@ class CategoriesController extends C
         ));
 
         $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
+        $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
         $this->send();
     }
 
@@ -110,13 +110,13 @@ class CategoriesController extends C
                     $this->sendJson($form->getErrors());
                 } else {
                     $category->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
+                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
                     $this->send();
                 }
             }
         } else {
             $category->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
+            $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
             $this->send();
         }
     }
@@ -174,7 +174,7 @@ class CategoriesController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $category->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
+                            $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
                             $this->send();
                         }
                     }
@@ -188,7 +188,7 @@ class CategoriesController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $category->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category);
+                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -272,7 +272,7 @@ class CategoriesController extends C
         ));
 
         $category->set('title', '404 Error ' . $category->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $category);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $category->getData());
         $this->send(404);
     }
 

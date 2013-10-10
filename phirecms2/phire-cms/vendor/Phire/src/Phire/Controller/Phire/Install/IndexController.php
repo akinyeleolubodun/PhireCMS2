@@ -84,12 +84,12 @@ class IndexController extends C
                     Response::redirect($url);
                 } else {
                     $install->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $install);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $install->getData());
                     $this->send();
                 }
             } else {
                 $install->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/index.phtml', $install);
+                $this->view = View::factory($this->viewPath . '/index.phtml', $install->getData());
                 $this->send();
             }
         }
@@ -115,7 +115,7 @@ class IndexController extends C
                 'config' => unserialize($this->sess->config),
                 'uri'    => BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user'
             ));
-            $this->view = View::factory($this->viewPath . '/config.phtml', $install);
+            $this->view = View::factory($this->viewPath . '/config.phtml', $install->getData());
             $this->send();
         }
     }
@@ -163,16 +163,16 @@ class IndexController extends C
                         $home->update();
                     }
 
-                    $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
                     $this->send();
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
                     $this->send();
                 }
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/user.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
                 $this->send();
             }
         }
@@ -203,7 +203,7 @@ class IndexController extends C
             'title' => '404 Error &gt; Page Not Found'
         ));
 
-        $this->view = View::factory($this->viewPath . '/error.phtml', $install);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $install->getData());
         $this->send(404);
     }
 

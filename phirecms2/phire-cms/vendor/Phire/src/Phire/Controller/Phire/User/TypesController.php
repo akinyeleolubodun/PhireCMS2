@@ -61,7 +61,7 @@ class TypesController extends C
         ));
 
         $type->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+        $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
         $this->send();
     }
 
@@ -113,14 +113,14 @@ class TypesController extends C
                     $this->sendJson($form->getErrors());
                 } else {
                     $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+                    $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
                     $this->send();
                 }
             }
         // Else, render the form
         } else {
             $type->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+            $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
             $this->send();
         }
     }
@@ -177,7 +177,7 @@ class TypesController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $type->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+                            $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
                             $this->send();
                         }
                     }
@@ -191,7 +191,7 @@ class TypesController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/types.phtml', $type);
+                    $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -246,7 +246,7 @@ class TypesController extends C
         ));
 
         $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $type);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $type->getData());
         $this->send(404);
     }
 

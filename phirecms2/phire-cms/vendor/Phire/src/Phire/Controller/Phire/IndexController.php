@@ -95,7 +95,7 @@ class IndexController extends C
             'title'    => 'Home'
         ));
 
-        $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
         $this->send();
     }
 
@@ -167,13 +167,13 @@ class IndexController extends C
                     Response::redirect($url);
                 // Else, re-render the form
                 } else {
-                    $this->view = View::factory($this->viewPath . '/login.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/login.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/login.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/login.phtml', $user->getData());
                 $this->send();
             }
         }
@@ -218,19 +218,19 @@ class IndexController extends C
                         Response::redirect($redirect);
                     } else {
                         $user->set('form', '    <p>Thank you for registering.</p>');
-                        $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                        $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                         $this->send();
                     }
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                 $this->send();
             }
         }
@@ -278,7 +278,7 @@ class IndexController extends C
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
@@ -291,7 +291,7 @@ class IndexController extends C
                     array(null, array(ENT_QUOTES, 'UTF-8'))
                 );
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                 $this->send();
             }
         }
@@ -334,13 +334,13 @@ class IndexController extends C
                         'title' => 'Unsubscribe',
                         'form'  => '    <p>Thank you. You have been unsubscribed from this website.</p>'
                     ));
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                     $this->send();
                 }
             // Else, re-render the form with errors
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
                 $this->send();
             }
         // Else, render the form
@@ -349,7 +349,7 @@ class IndexController extends C
                 $form->setFieldValues(array('email' => $this->sess->user->email));
             }
             $user->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/profile.phtml', $user);
+            $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
             $this->send();
         }
     }
@@ -385,13 +385,13 @@ class IndexController extends C
                     Response::redirect($redirect);
                 } else {
                     $user->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
-                    $this->view = View::factory($this->viewPath . '/forgot.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
                     $this->send();
                 }
             // Else, re-render the form with errors
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/forgot.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
                 $this->send();
             }
         // Else, render the form
@@ -400,7 +400,7 @@ class IndexController extends C
                 $form->setFieldValues(array('email' => $this->sess->user->email));
             }
             $user->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/forgot.phtml', $user);
+            $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
             $this->send();
         }
     }
@@ -435,7 +435,7 @@ class IndexController extends C
                 Response::redirect($redirect);
             } else {
                 $user->set('message', $message);
-                $this->view = View::factory($this->viewPath . '/verify.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/verify.phtml', $user->getData());
                 $this->send();
             }
         // Else, redirect
@@ -470,7 +470,7 @@ class IndexController extends C
         ));
 
         $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $user->getData());
         $this->send(404);
     }
 

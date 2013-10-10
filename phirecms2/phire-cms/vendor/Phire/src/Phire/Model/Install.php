@@ -12,8 +12,56 @@ use Pop\Project\Install\Dbs;
 use Pop\Web\Server;
 use Pop\Web\Session;
 
-class Install extends \Pop\Mvc\Model
+class Install
 {
+
+    /**
+     * Model data
+     *
+     * @var array
+     */
+    protected $data = array();
+
+    /**
+     * Instantiate the model object.
+     *
+     * @param  array $data
+     * @return self
+     */
+    public function __construct(array $data = null)
+    {
+        if (null !== $data) {
+            $this->data = $data;
+        }
+    }
+
+    /**
+     * Get model data
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function getData($key = null)
+    {
+        if (null !== $key) {
+            return (isset($this->data[$key])) ? $this->data[$key] : null;
+        } else {
+            return $this->data;
+        }
+    }
+
+    /**
+     * Set model data
+     *
+     * @param  string $name,
+     * @param  mixed $value
+     * @return self
+     */
+    public function set($name, $value)
+    {
+        $this->data[$name] = $value;
+        return $this;
+    }
 
     /**
      * Install config method

@@ -66,7 +66,7 @@ class ConfigController extends C
             Response::redirect($this->request->getBasePath() . '?saved=' . time());
         } else {
             $config->getAll();
-            $this->view = View::factory($this->viewPath . '/config.phtml', $config);
+            $this->view = View::factory($this->viewPath . '/config.phtml', $config->getData());
             $this->send();
         }
     }
@@ -102,7 +102,7 @@ class ConfigController extends C
         ));
 
         $config->set('title', '404 Error ' . $config->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $config);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $config->getData());
         $this->send(404);
     }
 

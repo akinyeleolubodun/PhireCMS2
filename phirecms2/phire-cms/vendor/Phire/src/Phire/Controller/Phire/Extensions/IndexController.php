@@ -66,7 +66,7 @@ class IndexController extends C
             'title'    => 'Extensions'
         ));
 
-        $this->view = View::factory($this->viewPath . '/index.phtml', $ext);
+        $this->view = View::factory($this->viewPath . '/index.phtml', $ext->getData());
         $this->send();
     }
 
@@ -87,13 +87,13 @@ class IndexController extends C
 
         if (null === $this->request->getPath(1)) {
             $ext->set('title', 'Extensions ' . $ext->config()->separator . ' Themes');
-            $this->view = View::factory($this->viewPath . '/themes.phtml', $ext);
+            $this->view = View::factory($this->viewPath . '/themes.phtml', $ext->getData());
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installThemes();
             if (null !== $ext->error) {
                 $ext->set('title', 'Extensions ' . $ext->config()->separator . ' Themes ' . $ext->config()->separator . ' Installation Error');
-                $this->view = View::factory($this->viewPath . '/themes.phtml', $ext);
+                $this->view = View::factory($this->viewPath . '/themes.phtml', $ext->getData());
                 $this->send();
             } else {
                 Response::redirect($this->request->getBasePath() . '/themes');
@@ -123,13 +123,13 @@ class IndexController extends C
 
         if (null === $this->request->getPath(1)) {
             $ext->set('title', 'Extensions ' . $ext->config()->separator . ' Modules');
-            $this->view = View::factory($this->viewPath . '/modules.phtml', $ext);
+            $this->view = View::factory($this->viewPath . '/modules.phtml', $ext->getData());
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installModules();
             if (null !== $ext->error) {
                 $ext->set('title', 'Extensions ' . $ext->config()->separator . ' Modules ' . $ext->config()->separator . ' Installation Error');
-                $this->view = View::factory($this->viewPath . '/modules.phtml', $ext);
+                $this->view = View::factory($this->viewPath . '/modules.phtml', $ext->getData());
                 $this->send();
             } else {
                 Response::redirect($this->request->getBasePath() . '/modules');
@@ -156,7 +156,7 @@ class IndexController extends C
         ));
 
         $ext->set('title', '404 Error ' . $ext->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $ext);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $ext->getData());
         $this->send();
     }
 

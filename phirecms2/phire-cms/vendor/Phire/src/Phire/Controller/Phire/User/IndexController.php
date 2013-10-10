@@ -70,7 +70,7 @@ class IndexController extends C
             $user->set('typeId', null);
         }
 
-        $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
         $this->send();
     }
 
@@ -109,13 +109,13 @@ class IndexController extends C
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                 $this->send();
             }
         // Else, add user
@@ -164,14 +164,14 @@ class IndexController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                            $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -233,7 +233,7 @@ class IndexController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                            $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                             $this->send();
                         }
                     }
@@ -247,7 +247,7 @@ class IndexController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                     $this->send();
                 }
             // Else redirect
@@ -293,14 +293,14 @@ class IndexController extends C
                     // Else, re-render the form with errors
                     } else {
                         $user->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                         $this->send();
                     }
                 // Else, render the form
                 } else {
                     $form->setFieldValues(array('type_id' => $user->type_id));
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user);
+                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
                     $this->send();
                 }
             // Else redirect
@@ -335,7 +335,7 @@ class IndexController extends C
                 ));
 
                 $user->getLoginsById($this->request->getPath(1), $this->project->isLoaded('Fields'));
-                $this->view = View::factory($this->viewPath . '/logins.phtml', $user);
+                $this->view = View::factory($this->viewPath . '/logins.phtml', $user->getData());
                 $this->send();
             }
         }
@@ -417,7 +417,7 @@ class IndexController extends C
         ));
 
         $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $user->getData());
         $this->send(404);
     }
 

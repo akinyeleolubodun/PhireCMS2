@@ -61,7 +61,7 @@ class RolesController extends C
         ));
 
         $role->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+        $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
         $this->send();
     }
 
@@ -113,14 +113,14 @@ class RolesController extends C
                     $this->sendJson($form->getErrors());
                 } else {
                     $role->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
                     $this->send();
                 }
             }
         // Else, render the form
         } else {
             $role->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+            $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
             $this->send();
         }
     }
@@ -177,7 +177,7 @@ class RolesController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $role->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+                            $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
                             $this->send();
                         }
                     }
@@ -191,7 +191,7 @@ class RolesController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $role->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role);
+                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -280,7 +280,7 @@ class RolesController extends C
         ));
 
         $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $role);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $role->getData());
         $this->send(404);
     }
 

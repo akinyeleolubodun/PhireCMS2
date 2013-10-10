@@ -61,7 +61,7 @@ class SessionsController extends C
         ));
 
         $session->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/sessions.phtml', $session);
+        $this->view = View::factory($this->viewPath . '/sessions.phtml', $session->getData());
         $this->send();
     }
 
@@ -121,7 +121,7 @@ class SessionsController extends C
         ));
 
         $session->set('title', '404 Error ' . $session->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $session);
+        $this->view = View::factory($this->viewPath . '/error.phtml', $session->getData());
         $this->send(404);
     }
 
