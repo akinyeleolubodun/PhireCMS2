@@ -45,7 +45,6 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('media_allowed_types
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('media_max_filesize', '25000000');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('media_actions', 'a:4:{s:5:"large";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:720;s:7:"quality";i:60;}s:6:"medium";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:480;s:7:"quality";i:60;}s:5:"small";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:240;s:7:"quality";i:60;}s:5:"thumb";a:3:{s:6:"action";s:9:"cropThumb";s:6:"params";i:60;s:7:"quality";i:60;}}');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('media_image_adapter', 'Gd');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('category_totals', '1');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('feed_type', '10');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('feed_limit', '20');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('open_authoring', '1');
@@ -265,6 +264,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "uri" varchar NOT NULL,
   "slug" varchar NOT NULL,
   "order" integer NOT NULL,
+  "total" integer NOT NULL,
   UNIQUE ("id"),
   CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;

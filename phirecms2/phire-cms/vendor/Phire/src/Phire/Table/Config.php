@@ -64,7 +64,6 @@ class Config extends Record
             'media_max_filesize',
             'media_actions',
             'media_image_adapter',
-            'category_totals',
             'feed_type',
             'feed_limit',
             'open_authoring',

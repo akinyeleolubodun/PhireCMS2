@@ -181,7 +181,7 @@ class TypesController extends C
                     }
                 // Else, render form
                 } else {
-                    $typeValues = $type->asArray();
+                    $typeValues = $type->getData();
                     unset($typeValues['acl']);
                     $form->setFieldValues(
                         $typeValues,

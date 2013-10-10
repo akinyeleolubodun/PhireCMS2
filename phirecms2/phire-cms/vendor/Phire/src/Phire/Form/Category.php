@@ -121,12 +121,6 @@ class Category extends Form
                     'onchange' => "catSlug(null, 'slug');"
                 )
             ),
-            'order' => array(
-                'type'       => 'text',
-                'label'      => 'Order:',
-                'attributes' => array('size' => 3),
-                'value'      => 0
-            ),
             'category' => array(
                 'type'       => 'text',
                 'label'      => 'Category:',
@@ -144,6 +138,21 @@ class Category extends Form
                     'size' => 80,
                     'onkeyup' => "catSlug(null, 'slug');"
                 )
+            ),
+            'order' => array(
+                'type'       => 'text',
+                'label'      => 'Order:',
+                'attributes' => array('size' => 3),
+                'value'      => 0
+            ),
+            'total' => array(
+                'type'       => 'radio',
+                'label'      => 'Show Total:',
+                'value'      => array(
+                    '1' => 'Yes',
+                    '0' => 'No'
+                ),
+                'marked' => '1'
             )
         );
 

@@ -256,7 +256,7 @@ class IndexController extends C
                     }
                 // Else, render form
                 } else {
-                    $contentValues = $content->asArray();
+                    $contentValues = $content->getData();
                     unset($contentValues['acl']);
                     $form->setFieldValues(
                         $contentValues,

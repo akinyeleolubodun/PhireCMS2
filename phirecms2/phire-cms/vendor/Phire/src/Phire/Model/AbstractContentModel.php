@@ -75,7 +75,7 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                     $p['href'] = $p['uri'];
                     $p['name'] = (isset($c->category)) ? $c->category : $c->title;
 
-                    if (($count) && ($this->config->category_totals)) {
+                    if (($count) && ($c->total)) {
                         $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
                     }
                     if (isset($c->category) || $this->isAllowed($c, true)) {

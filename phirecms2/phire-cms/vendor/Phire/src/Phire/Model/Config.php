@@ -120,7 +120,6 @@ class Config extends AbstractContentModel
             'feed_limit'          => '                    ' . $feedLimit,
             'pagination_limit'    => '                    ' . $pageLimit,
             'pagination_range'    => '                    ' . $pageRange,
-            'category_totals'     => new Element\Radio('category_totals', array('1' => 'Yes', '0' => 'No'), $config['category_totals'], '                    '),
             'open_authoring'      => new Element\Radio('open_authoring', array('1' => 'Yes', '0' => 'No'), $config['open_authoring'], '                    '),
             'incontent_editing'   => new Element\Radio('incontent_editing', array('1' => 'Yes', '0' => 'No'), $config['incontent_editing'], '                    '),
             'force_ssl'           => new Element\Radio('force_ssl', array('1' => 'Yes', '0' => 'No'), $config['force_ssl'], '                    '),

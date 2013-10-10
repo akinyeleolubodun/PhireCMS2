@@ -244,7 +244,8 @@ class Category extends AbstractContentModel
             'category'  => $fields['category'],
             'uri'       => $uri,
             'slug'      => $fields['slug'],
-            'order'     => (int)$fields['order']
+            'order'     => (int)$fields['order'],
+            'total'     => (int)$fields['total']
         ));
 
         $category->save();
@@ -293,6 +294,7 @@ class Category extends AbstractContentModel
         $category->uri       = $uri;
         $category->slug      = $fields['slug'];
         $category->order     = (int)$fields['order'];
+        $category->total     = (int)$fields['total'];
         $category->update();
 
         $this->data['id'] = $category->id;

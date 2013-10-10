@@ -71,6 +71,7 @@ class Categories extends Record
             DB_PREFIX . 'content_categories.uri',
             DB_PREFIX . 'content_categories.slug',
             DB_PREFIX . 'content_categories.order',
+            DB_PREFIX . 'content_categories.total',
             'cat_count.num'
         ))->join($secondSql, array('id', 'category_id'), 'LEFT JOIN')
           ->orderBy('order', 'ASC');

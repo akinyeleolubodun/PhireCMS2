@@ -422,7 +422,8 @@ $(document).ready(function(){
                 var parent = $('#parent_id').val();
                 if (parent != contentParentId) {
                     contentParentId = parent;
-                    $().ajax('../json/' + parent, {status : {200 : getParentUri}});
+                    var j = $().json.parse('../json/' + parent);
+                    contentParentUri = j.uri;
                     val = contentParentUri + $('#uri').val();
                 } else {
                     val = $('#uri').val();
@@ -463,7 +464,8 @@ $(document).ready(function(){
                 if (parent != categoryParentId) {
                     categoryParentId = parent;
                     var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-                    $().ajax(jsonLoc + parent, {status : {200 : getCatParentUri}});
+                    var j = $().json.parse(jsonLoc + parent);
+                    categoryParentUri = j.uri;
                     val = categoryParentUri + $('#slug').val();
                 } else {
                     val = $('#slug').val();

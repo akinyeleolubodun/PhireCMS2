@@ -180,7 +180,7 @@ class CategoriesController extends C
                     }
                 // Else, render form
                 } else {
-                    $categoryValues = $category->asArray();
+                    $categoryValues = $category->getData();
                     unset($categoryValues['acl']);
                     $form->setFieldValues(
                         $categoryValues,

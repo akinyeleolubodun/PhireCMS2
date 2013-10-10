@@ -1,6 +1,9 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
+- Multiple navigation
+- Get categories in views
+- Clean up CSS, box around save area
 - CLI Tool
 - System Theme
 - Language

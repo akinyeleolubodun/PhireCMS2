@@ -37,7 +37,6 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('media_max_filesize', '25000000'),
 ('media_actions', 'a:4:{s:5:"large";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:720;s:7:"quality";i:60;}s:6:"medium";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:480;s:7:"quality";i:60;}s:5:"small";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:240;s:7:"quality";i:60;}s:5:"thumb";a:3:{s:6:"action";s:9:"cropThumb";s:6:"params";i:60;s:7:"quality";i:60;}}'),
 ('media_image_adapter', 'Gd'),
-('category_totals', '1'),
 ('feed_type', '10'),
 ('feed_limit', '20'),
 ('open_authoring', '1'),
@@ -249,6 +248,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_categories` (
   `uri` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
   `order` int(16) NOT NULL,
+  `total` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_category_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;

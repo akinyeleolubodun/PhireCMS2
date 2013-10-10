@@ -180,7 +180,7 @@ class TemplatesController extends C
                     }
                 // Else, render form
                 } else {
-                    $templateValues = $template->asArray();
+                    $templateValues = $template->getData();
                     unset($templateValues['acl']);
                     $form->setFieldValues(
                         $templateValues,
