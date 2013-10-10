@@ -26,7 +26,7 @@
     <div id="phire-content">
 <?php if (isset($errors) && ($_SERVER['REQUEST_URI'] != BASE_PATH . APP_URI . '/login')): ?>
         <div id="errors">
-            <p><strong>Some of the content folders are not writable. This may cause the system to not function properly.</strong> <a href="#" onclick="wipeErrors(this, <?php echo (50 + (substr_count($errors, '<br />') * 20)); ?>); return false;">Show</a> which folders are not writable. [ <a href="#" onclick="$fx('#errors').fade(0, 15, 30); return false;">Dismiss</a> ]</p>
+            <p><strong>Some of the content folders are not writable. This may cause the system to not function properly.</strong> <a href="#" onclick="wipeErrors(this, <?php echo (50 + (substr_count($errors, '<br />') * 20)); ?>); return false;">Show</a> which folders are not writable. [ <a href="#" onclick="$('#errors').fade(0, {$tween : 15, speed : 300}); return false;">Dismiss</a> ]</p>
             <p>
                 <?php echo $errors; ?>
             </p>

@@ -264,11 +264,12 @@ class Project extends P
      */
     public static function editor($controller)
     {
+        $model = $controller->getView()->getData();
         if ((get_class($controller) == 'Phire\Controller\IndexController') &&
-            ($controller->getView()->getModel()->config()->incontent_editing)) {
-            if (null !== $controller->getView()->getModel()->phireNav) {
+            ($model['incontent_editing'])) {
+            if (isset($model['phireNav'])) {
                 $body = $controller->getResponse()->getBody();
-                $phireNav = $controller->getView()->getModel()->phireNav;
+                $phireNav = $model['phireNav'];
                 $phireNav->addBranch(array(
                     'name' => 'Edit This Page',
                     'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->getModel()->id . '?live=1',
@@ -418,7 +419,7 @@ class Project extends P
 
         if (null === $this->assets) {
             $this->assets = array(
-                'js'  => PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.0.0.min.js"></script>' . PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.form.min.js"></script>',
+                'js'  => PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.0.0.min.js"></script>' . PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.form.min.js"></script>' . PHP_EOL,
                 'css' => PHP_EOL
             );
         }

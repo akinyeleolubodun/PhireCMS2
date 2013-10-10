@@ -143,7 +143,7 @@ class RolesController extends C
             $role->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If role is found and valid
-            if (null !== $role->name) {
+            if (isset($role->name)) {
                 $role->set('title', 'User Roles ' . $role->config()->separator . ' ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -183,7 +183,7 @@ class RolesController extends C
                     }
                 // Else, render form
                 } else {
-                    $roleValues = $role->asArray();
+                    $roleValues = $role->getData();
                     unset($roleValues['acl']);
                     $form->setFieldValues(
                         $roleValues,

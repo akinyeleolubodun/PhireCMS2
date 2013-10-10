@@ -159,7 +159,7 @@ class IndexController extends C
 
                     $home = \Phire\Table\Content::findById(6001);
                     if (isset($home->id)) {
-                        $home->created_by = $user->id;
+                        $home->created_by = $user->getData('id');
                         $home->update();
                     }
 

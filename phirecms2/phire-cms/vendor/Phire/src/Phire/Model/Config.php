@@ -334,7 +334,7 @@ class Config extends AbstractContentModel
         }
 
         $mediaTypes .= '                    </div>' . PHP_EOL;
-        $mediaTypes .= '                    <div style="clear: left;"><a href="#" onclick="$form(\'#config-form\').checkAll(\'media_allowed_types\'); return false;">Check All</a> | <a href="#" onclick="$form(\'#config-form\').uncheckAll(\'media_allowed_types\'); return false;">Uncheck All</a> | <a href="#" onclick="$form(\'#config-form\').checkInverse(\'media_allowed_types\'); return false;">Inverse</a> <em>(Uncheck all to allow any file type.)</em></div>' . PHP_EOL;
+        $mediaTypes .= '                    <div style="clear: left;"><a href="#" onclick="$(\'#config-form\').checkAll(\'media_allowed_types\'); return false;">Check All</a> | <a href="#" onclick="$(\'#config-form\').uncheckAll(\'media_allowed_types\'); return false;">Uncheck All</a> | <a href="#" onclick="$(\'#config-form\').checkInverse(\'media_allowed_types\'); return false;">Inverse</a> <em>(Uncheck all to allow any file type.)</em></div>' . PHP_EOL;
 
         return $mediaTypes;
     }

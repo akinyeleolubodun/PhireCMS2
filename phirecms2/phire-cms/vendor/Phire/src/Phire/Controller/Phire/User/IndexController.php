@@ -239,7 +239,7 @@ class IndexController extends C
                     }
                 // Else, render the form
                 } else {
-                    $userValues = $user->asArray();
+                    $userValues = $user->getData();
                     unset($userValues['acl']);
                     $form->setFieldValues(
                         $userValues,
