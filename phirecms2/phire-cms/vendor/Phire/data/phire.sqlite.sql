@@ -262,15 +262,17 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
   "top_node" varchar,
   "top_id" varchar,
   "top_class" varchar,
-  "top_attributes" varchar(255),
+  "top_attributes" varchar,
   "parent_node" varchar,
   "parent_id" varchar,
   "parent_class" varchar,
-  "parent_attributes" varchar(255),
+  "parent_attributes" varchar,
   "child_node" varchar,
   "child_id" varchar,
   "child_class" varchar,
-  "child_attributes" varchar(255),
+  "child_attributes" varchar,
+  "on_class" varchar,
+  "off_class" varchar,
   UNIQUE ("id")
 ) ;
 

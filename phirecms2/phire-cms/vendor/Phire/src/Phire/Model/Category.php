@@ -151,6 +151,9 @@ class Category extends AbstractContentModel
                         }
                         $c['category_title'] = $category->category;
                         $c['category_uri'] = $category->uri;
+                        if ($isFields) {
+                            $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
+                        }
                         $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
@@ -174,6 +177,9 @@ class Category extends AbstractContentModel
                             }
                             $c['category_title'] = $childCat->category;
                             $c['category_uri'] = $childCat->uri;
+                            if ($isFields) {
+                                $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
+                            }
                             $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
                         }
                     }

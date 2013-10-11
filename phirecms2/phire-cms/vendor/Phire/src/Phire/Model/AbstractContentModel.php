@@ -261,11 +261,12 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             // Get category nav
             $catConfig = array(
                 'top' => array(
-                    'id'    => 'cat-nav'
+                    'id'    => 'category-nav'
                 ),
                 'parent' => array(
-                    'class' => 'cat-nav-level'
-                )
+                    'class' => 'category-nav-level'
+                ),
+                'on' => 'category-nav-on'
             );
             $this->data['categories'] = $categories->rows;
             $navChildren = $this->getChildren($categories->rows, 0, true);

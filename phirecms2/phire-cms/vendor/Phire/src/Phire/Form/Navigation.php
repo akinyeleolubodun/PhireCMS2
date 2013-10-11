@@ -56,14 +56,16 @@ class Navigation extends Form
             $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
 
             foreach ($_FILES as $key => $value) {
-                if ($value['size'] > $config->media_max_filesize) {
-                    $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
-                }
-                if (preg_match($regex, $value['name']) == 0) {
-                    $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
-                    $this->getElement($key)
-                         ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
+                if ($value['error'] != 4) {
+                    if ($value['size'] > $config->media_max_filesize) {
+                        $this->getElement($key)
+                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
+                    }
+                    if (preg_match($regex, $value['name']) == 0) {
+                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
+                        $this->getElement($key)
+                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
+                    }
                 }
             }
         }
@@ -172,6 +174,20 @@ class Navigation extends Form
                 'type'       => 'text',
                 'attributes' => array(
                     'size'    => 40
+                )
+            ),
+            'on_class' => array(
+                'type'       => 'text',
+                'label'      => '&quot;On&quot; Class:',
+                'attributes' => array(
+                    'size'    => 20
+                )
+            ),
+            'off_class' => array(
+                'type'       => 'text',
+                'label'      => '&quot;Off&quot; Class:',
+                'attributes' => array(
+                    'size'    => 20
                 )
             )
         );

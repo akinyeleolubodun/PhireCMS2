@@ -281,6 +281,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
   "child_id" varchar(255),
   "child_class" varchar(255),
   "child_attributes" varchar(255),
+  "on_class" varchar(255),
+  "off_class" varchar(255),
   PRIMARY KEY ("id")
 ) ;
 
