@@ -445,6 +445,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     line-height: 1.0em;
 }
 
+#content-process {
+    margin: 6px 6px 2px 6px;
+    padding: 2px;
+    float: right;
+}
+
 #batch-form-field-group-1 dt {
     clear: left;
     margin: 0;

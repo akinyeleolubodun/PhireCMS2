@@ -8,6 +8,7 @@ use Pop\Archive\Archive;
 use Pop\Data\Type\Html;
 use Pop\File\Dir;
 use Pop\File\File;
+use Pop\Web\Session;
 use Phire\Table;
 
 class Content extends AbstractContentModel
@@ -116,6 +117,110 @@ class Content extends AbstractContentModel
     }
 
     /**
+     * Static method to parse placeholders within string content
+     *
+     * @param  string $c
+     * @param  mixed  $id
+     * @param  mixed  $pid
+     * @return string
+     */
+    public static function parse($c, $id = null, $pid = null)
+    {
+        // Parse any date placeholders
+        $dates = array();
+        preg_match_all('/\[\{date.*\}\]/', $c, $dates);
+        if (isset($dates[0]) && isset($dates[0][0])) {
+            foreach ($dates[0] as $date) {
+                $pattern = str_replace('}]', '', substr($date, (strpos($date, '_') + 1)));
+                $c = str_replace($date, date($pattern), $c);
+            }
+        }
+
+        // Parse any template placeholders
+        $tmpls = array();
+        preg_match_all('/\[\{template_.*\}\]/', $c, $tmpls);
+        if (isset($tmpls[0]) && isset($tmpls[0][0])) {
+            foreach ($tmpls[0] as $tmpl) {
+                $t = str_replace('}]', '', substr($tmpl, (strpos($tmpl, '_') + 1)));
+                if (($t != $id) && ($t != $pid)) {
+                    $template = (is_numeric($t)) ? Table\Templates::findById($t) : Table\Templates::findBy(array('name' => $t));
+                    if (isset($template->id)) {
+                        $t = self::parse($template->template, $template->id, $id);
+                        $c = str_replace($tmpl, $t, $c);
+                    } else {
+                        $c = str_replace($tmpl, '', $c);
+                    }
+                } else {
+                    $c = str_replace($tmpl, '', $c);
+                }
+            }
+        }
+
+        // Parse any session placeholder
+        $open  = array();
+        $close = array();
+        $merge = array();
+        $sess  = array();
+        preg_match_all('/\[\{sess\}\]/msi', $c, $open, PREG_OFFSET_CAPTURE);
+        preg_match_all('/\[\{\/sess\}\]/msi', $c, $close, PREG_OFFSET_CAPTURE);
+
+        // If matches are found, format and merge the results.
+        if ((isset($open[0][0])) && (isset($close[0][0]))) {
+            foreach ($open[0] as $key => $value) {
+                $merge[] = array($open[0][$key][0] => $open[0][$key][1], $close[0][$key][0] => $close[0][$key][1]);
+            }
+        }
+        foreach ($merge as $match) {
+            $sess[] = substr($c, $match['[{sess}]'], (($match['[{/sess}]'] - $match['[{sess}]']) + 9));
+        }
+
+        if (count($sess) > 0) {
+            $session = Session::getInstance();
+            foreach ($sess as $s) {
+                $sessString = str_replace(array('[{sess}]', '[{/sess}]'), array('', ''), $s);
+
+                if (strpos($sessString, '[{or}]') !== false) {
+                    $sessValues = explode('[{or}]', $sessString);
+                    if (isset($sessValues[0]) && isset($sessValues[1])) {
+                        $sessValues[0] = str_replace(array('[{', '}]'), array('', ''), $sessValues[0]);
+                        if (strpos($sessValues[0], '->') !== false) {
+                            $sV = explode('->', $sessValues[0]);
+                            if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
+                                $c = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $c);
+                            } else {
+                                $c = str_replace($s, $sessValues[1], $c);
+                            }
+                        } else if (isset($session->{$sessValues[0]})) {
+                            $c = str_replace($s, $session->{$sessValues[0]}, $c);
+                        } else {
+                            $c = str_replace($s, $sessValues[1], $c);
+                        }
+                    } else {
+                        $c = str_replace($s, '', $c);
+                    }
+                } else {
+                    $sessValue = str_replace(array('[{', '}]'), array('', ''), $sessString);
+                    if (strpos($sessValue, '->') !== false) {
+                        $sV = explode('->', $sessValue);
+                        if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
+                            $c = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $c);
+                        } else {
+                            $c = str_replace($s, '', $c);
+                        }
+                    } else if (isset($session->{$sessValue})) {
+                        $c = str_replace($s, $session->{$sessValue}, $c);
+                    } else {
+                        $c = str_replace($s, '', $c);
+                    }
+                }
+            }
+        }
+
+
+        return $c;
+    }
+
+    /**
      * Get all content types method
      *
      * @return void
@@ -173,18 +278,19 @@ class Content extends AbstractContentModel
         $this->data['type'] = $contentType->name;
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'remove')) {
-            $removeCheckbox = '<input type="checkbox" name="remove_content[]" value="[{id}]" id="remove_content[{i}]" />';
-            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_content" />';
+            $removeCheckbox = '<input type="checkbox" name="process_content[]" value="[{id}]" id="process_content[{i}]" />';
+            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="process_content" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => 'Process',
+                'style' => 'float: right;'
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => 'Process',
                 'style' => 'display: none;'
             );
         }
@@ -217,7 +323,7 @@ class Content extends AbstractContentModel
         $options = array(
             'form' => array(
                 'id'      => 'content-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/content/remove',
+                'action'  => BASE_PATH . APP_URI . '/content/process',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
@@ -282,13 +388,14 @@ class Content extends AbstractContentModel
                 // If there are open authoring ids, remove "remove" checkbox
                 if (count($ids) > 0) {
                     foreach ($ids as $id) {
-                        $rm = substr($table, strpos($table, '<input type="checkbox" name="remove_content[]" value="' . $id . '" id="remove_content'));
+                        $rm = substr($table, strpos($table, '<input type="checkbox" name="process_content[]" value="' . $id . '" id="process_content'));
                         $rm = substr($rm, 0, (strpos($rm, ' />') + 3));
                         $table = str_replace($rm, '&nbsp;', $table);
                     }
                 }
             }
-            $this->data['table'] = $table;
+            $select = '<select name="content_process" id="content-process"><option value="-1">Remove</option><option value="2">Publish</option><option value="1">Draft</option><option value="0">Unpublish</option></select>';
+            $this->data['table'] = str_replace('value="Process" style="float: right;" />', 'value="Process" style="float: right;" />' . $select, $table);
         }
     }
 

@@ -232,11 +232,17 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                     $child['attributes'] = $attribs;
                 }
 
+                $on  = (null !== $nav->on_class) ? $nav->on_class : null;
+                $off = (null !== $nav->off_class) ? $nav->off_class : null;
+
                 $navConfig = array(
                     'top'    => $top,
                     'parent' => $parent,
-                    'child'  => $child
+                    'child'  => $child,
+                    'on'     => $on,
+                    'off'    => $off
                 );
+
                 if (isset($allContent->rows[0])) {
                     $navChildren = $this->getChildren($allContent->rows, 0);
                     if (count($navChildren) > 0) {

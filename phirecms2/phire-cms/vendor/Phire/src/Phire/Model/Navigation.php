@@ -171,7 +171,7 @@ class Navigation extends AbstractContentModel
         $navigation->child_node        = (($fields['child_node'] != '') ? $fields['child_node'] : null);
         $navigation->child_id          = (($fields['child_id'] != '') ? $fields['child_id'] : null);
         $navigation->child_class       = (($fields['child_class'] != '') ? $fields['child_class'] : null);
-        $navigation->child_attributes  = (($fields['child_attributes'] != '') ? $fields['child_attributes'] : null);,
+        $navigation->child_attributes  = (($fields['child_attributes'] != '') ? $fields['child_attributes'] : null);
         $navigation->on_class          = (($fields['on_class'] != '') ? $fields['on_class'] : null);
         $navigation->off_class         = (($fields['off_class'] != '') ? $fields['off_class'] : null);
         $navigation->update();

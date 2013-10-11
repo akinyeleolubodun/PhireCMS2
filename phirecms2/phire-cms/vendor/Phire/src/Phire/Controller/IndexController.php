@@ -107,6 +107,18 @@ class IndexController extends C
         // Else, if page found and allowed
         } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
+            if (strpos($template, '[{category_') !== false) {
+                // Parse any template placeholders
+                $cats = array();
+                preg_match_all('/\[\{category_.*\}\]/', $template, $cats);
+                if (isset($cats[0]) && isset($cats[0][0])) {
+                    foreach ($cats[0] as $cat) {
+                        $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
+                        $cont = $content->getByCategory($c, $this->project->isLoaded('Fields'));
+                        $content->set('category_' . $c, $cont);
+                    }
+                }
+            }
             $this->view = View::factory($template, $content->getData());
             $this->send();
         // Else, check for date-based URI
@@ -339,6 +351,7 @@ class IndexController extends C
                             $this->response->setHeader('Content-Type', $tmpl[$device]['content_type']);
                         }
                     }
+                    $t = Model\Content::parse($t, $template);
                 }
             // Else, if the template is a file
             } else {
