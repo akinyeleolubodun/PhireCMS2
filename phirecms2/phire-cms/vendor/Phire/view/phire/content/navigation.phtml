@@ -1,0 +1,19 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+        <h1><?php echo $title; ?></h1>
+
+<?php if (isset($form)): ?>
+        <div id="result" style="display: none;"></div>
+<?php echo $form;
+elseif (isset($table)): ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Content\NavigationController', 'add')): ?>
+        <div id="add-nav"><a class="add-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/navigation/add">+ Add</a></div>
+<?php endif; ?>
+<?php echo $table;
+else:
+?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Content\NavigationController', 'add')): ?>
+    <div id="add-nav"><a class="add-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/navigation/add">+ Add</a></div>
+<?php endif; ?>
+        <p style="clear: left; padding: 15px 0 0 0;">There is currently no navigation.</p>
+<?php endif; ?>
+<?php include __DIR__ . '/../footer.phtml'; ?>

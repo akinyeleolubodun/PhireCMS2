@@ -136,7 +136,7 @@ class Content extends Form
         $parents = array(0 => '----');
 
         // Prevent the object's children or itself from being in the parent drop down
-        $content = Table\Content::findAll('order ASC');
+        $content = Table\Content::findAll('id ASC');
         foreach ($content->rows as $c) {
             if (($c->parent_id == 0) && ($c->id != $mid)) {
                 $parents[$c->id] = $c->title;
@@ -224,15 +224,6 @@ class Content extends Form
 
         $fields1['uri'] =  $uri;
 
-        $fields5 = array(
-            'order' => array(
-                'type'       => 'text',
-                'label'      => 'Order:',
-                'attributes' => array('size' => 3),
-                'value'      => 0
-            )
-        );
-
         $fields4 = array();
 
         // Add nav include and roles
@@ -247,11 +238,28 @@ class Content extends Form
                 ),
                 'marked' => 0
             );
-            $fields5['include'] = array(
-                'type'   => 'radio',
-                'label'  => 'Include in Nav:',
-                'value'  => array(1 => 'Yes', 0 => 'No'),
-                'marked' => (int)(!($type->uri == 2))
+
+            $navOrder = array();
+            $navsMarked = array();
+            if ($mid != 0) {
+                $navs = Table\ContentToNavigation::findAll(null, array('content_id' => $mid));
+                if (isset($navs->rows[0])) {
+                    foreach ($navs->rows as $nav) {
+                        $navsMarked[] = $nav->navigation_id;
+                        $navOrder[$nav->navigation_id] = $nav->order;
+                    }
+                }
+            }
+            $navsAry = array();
+            $navs = \Phire\Table\Navigation::findAll('id ASC');
+            foreach ($navs->rows as $nav) {
+                $navsAry[$nav->id] = '<strong style="display: block; float: left; width: 90px; font-size: 0.9em;">' . $nav->navigation . '</strong> <input style="margin: -4px 0 0 10px; padding: 2px; font-size: 0.9em;" type="text" name="navigation_order_' . $nav->id . '" value="' . (isset($navOrder[$nav->id]) ? $navOrder[$nav->id] : 0) . '" size="3" />';
+            }
+            $fields5['navigation_id'] = array(
+                'type'   => 'checkbox',
+                'label'  => '<span class="label-pad-1">Navigation:</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>Order:</span>',
+                'value'  => $navsAry,
+                'marked' => $navsMarked
             );
             $fields5['feed'] = array(
                 'type'   => 'radio',

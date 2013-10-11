@@ -210,8 +210,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `title` varchar(255) NOT NULL,
   `uri` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
-  `order` int(16) NOT NULL,
-  `include` int(1),
   `feed` int(1),
   `force_ssl` int(1),
   `status` int(1),
@@ -232,8 +230,62 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
 -- Dumping data for table `content`
 --
 
-INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `order`, `include`, `feed`, `force_ssl`, `status`) VALUES
-(6001, 5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
+INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `feed`, `force_ssl`, `status`) VALUES
+(6001, 5001, 'Home Page', '/', '', 1, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `content_navigation`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]content_navigation` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `navigation` varchar(255) NOT NULL,
+  `spaces` int(16),
+  `top_node` varchar(255),
+  `top_id` varchar(255),
+  `top_class` varchar(255),
+  `top_attributes` varchar(255),
+  `parent_node` varchar(255),
+  `parent_id` varchar(255),
+  `parent_class` varchar(255),
+  `parent_attributes` varchar(255),
+  `child_node` varchar(255),
+  `child_id` varchar(255),
+  `child_class` varchar(255),
+  `child_attributes` varchar(255),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;
+
+--
+-- Dumping data for table `content_navigation`
+--
+
+INSERT INTO `[{prefix}]content_navigation` (`id`, `navigation`, `spaces`, `top_node`, `top_id`) VALUES
+(7001, 'Main Nav', 4, 'ul', 'main-nav');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `content_to_navigation`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]content_to_navigation` (
+  `content_id` int(16) NOT NULL,
+  `navigation_id` int(16) NOT NULL,
+  `order` int(16) NOT NULL,
+  UNIQUE (`content_id`, `navigation_id`),
+  CONSTRAINT `fk_navigation_content_id` FOREIGN KEY (`content_id`) REFERENCES `[{prefix}]content` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_content_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `[{prefix}]content_navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+--
+-- Dumping data for table `content_to_navigation`
+--
+
+INSERT INTO `[{prefix}]content_to_navigation` (`content_id`, `navigation_id`, `order`) VALUES
+(6001, 7001, 1);
 
 -- --------------------------------------------------------
 
@@ -251,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_categories` (
   `total` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_category_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
 
 -- --------------------------------------------------------
 
@@ -297,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_templates` (
   `template` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_template_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_templates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
 
 -- --------------------------------------------------------
 
@@ -312,5 +364,5 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   `active` int(1) NOT NULL,
   `assets` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
 

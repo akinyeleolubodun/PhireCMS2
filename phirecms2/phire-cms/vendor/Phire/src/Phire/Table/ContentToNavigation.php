@@ -6,18 +6,18 @@ namespace Phire\Table;
 
 use Pop\Db\Record;
 
-class ContentToCategories extends Record
+class ContentToNavigation extends Record
 {
 
     /**
      * @var   string
      */
-    protected $tableName = 'content_to_categories';
+    protected $tableName = 'content_to_navigation';
 
     /**
      * @var   string
      */
-    protected $primaryId = array('content_id', 'category_id');
+    protected $primaryId = array('content_id', 'navigation_id');
 
     /**
      * @var   boolean

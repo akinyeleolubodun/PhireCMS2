@@ -489,6 +489,15 @@ $(document).ready(function(){
             }
         });
     }
+    if ($('#navigation-remove-form')[0] != undefined) {
+        $('#checkall').click(function(){
+            if (this.checked) {
+                $('#navigation-remove-form').checkAll(this.value);
+            } else {
+                $('#navigation-remove-form').uncheckAll(this.value);
+            }
+        });
+    }
     if ($('#category-remove-form')[0] != undefined) {
         $('#checkall').click(function(){
             if (this.checked) {

@@ -16,6 +16,7 @@ return array(
                 '/content'  => array(
                     '/'           => 'Phire\Controller\Phire\Content\IndexController',
                     '/categories' => 'Phire\Controller\Phire\Content\CategoriesController',
+                    '/navigation' => 'Phire\Controller\Phire\Content\NavigationController',
                     '/templates'  => 'Phire\Controller\Phire\Content\TemplatesController',
                     '/types'      => 'Phire\Controller\Phire\Content\TypesController'
                 ),
@@ -51,6 +52,14 @@ return array(
                         'href' => 'types',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\TypesController',
+                            'permission' => 'index'
+                        )
+                    ),
+                    array(
+                        'name' => 'Navigation',
+                        'href' => 'navigation',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Content\NavigationController',
                             'permission' => 'index'
                         )
                     ),

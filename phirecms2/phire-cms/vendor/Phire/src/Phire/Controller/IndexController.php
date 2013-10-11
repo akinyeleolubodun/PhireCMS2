@@ -99,7 +99,6 @@ class IndexController extends C
         } else {
             $content = new Model\Content();
         }
-
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
         // If page found, but requires SSL

@@ -418,7 +418,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
-#content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1 {
+#content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
+#navigation-form-field-group-1 {
     margin: 0 0 40px 10px;
     padding: 0 0 40px 10px;
     float: right;
@@ -742,6 +743,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .install-btn:hover {
+    cursor: pointer;
     background-color: #37ade8;
 }
 
@@ -760,6 +762,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .save-btn:hover {
+    cursor: pointer;
     background-color: #37ade8;
 }
 
@@ -778,6 +781,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .update-btn:hover {
+    cursor: pointer;
     background-color: #75b724;
 }
 
@@ -796,6 +800,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .remove-btn:hover {
+    cursor: pointer;
     background-color: #c91414;
 }
 
@@ -814,6 +819,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .process-btn:hover {
+    cursor: pointer;
     background-color: #918582;
 }
 
@@ -833,6 +839,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .search-btn:hover {
+    cursor: pointer;
     background-color: #75b724;
 }
 
@@ -852,6 +859,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .add-btn:hover {
+    cursor: pointer;
     color: #fff;
     text-decoration: none;
     background-color: #37ade8;
@@ -880,6 +888,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .export-btn:hover {
+    cursor: pointer;
     color: #fff;
     text-decoration: none;
     background-color: #75b724;
@@ -988,4 +997,10 @@ th.config-header > a:hover {
     height: 21px;
     background-image: url(../../img/icons/25x25/download.png);
     text-indent: -1000px;
+}
+
+.label-pad-1 {
+    display: block;
+    float: left;
+    width: 108px;
 }

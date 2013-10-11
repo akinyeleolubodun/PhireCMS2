@@ -225,8 +225,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "title" varchar NOT NULL,
   "uri" varchar NOT NULL,
   "slug" varchar NOT NULL,
-  "order" integer NOT NULL,
-  "include" integer,
   "feed" integer,
   "force_ssl" integer,
   "status" integer,
@@ -249,7 +247,61 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "order", "include", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Home Page', '/', '', 1, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "content_navigation"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "navigation" varchar NOT NULL,
+  "spaces" integer,
+  "top_node" varchar,
+  "top_id" varchar,
+  "top_class" varchar,
+  "top_attributes" varchar(255),
+  "parent_node" varchar,
+  "parent_id" varchar,
+  "parent_class" varchar,
+  "parent_attributes" varchar(255),
+  "child_node" varchar,
+  "child_id" varchar,
+  "child_class" varchar,
+  "child_attributes" varchar(255),
+  UNIQUE ("id")
+) ;
+
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_navigation', 7000);
+
+--
+-- Dumping data for table "content_navigation"
+--
+
+INSERT INTO "[{prefix}]content_navigation" ("id", "navigation", "spaces", "top_node", "top_id") VALUES (7001, 'Main Nav', 4, 'ul', 'main-nav');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "content_to_navigation"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
+  "content_id" integer NOT NULL,
+  "navigation_id" integer NOT NULL,
+  "order" integer NOT NULL,
+  UNIQUE ("content_id", "navigation_id"),
+  CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]content_navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+--
+-- Dumping data for table "content_to_navigation"
+--
+
+INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES (6001, 7001, 1);
 
 -- --------------------------------------------------------
 
@@ -269,7 +321,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_categories', 7000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_categories', 8000);
 
 -- --------------------------------------------------------
 
@@ -316,7 +368,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
   CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_templates', 8000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_templates', 9000);
 
 -- --------------------------------------------------------
 
@@ -333,4 +385,4 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]extensions', 9000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]extensions', 10000);

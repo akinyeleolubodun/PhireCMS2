@@ -232,8 +232,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "title" varchar(255) NOT NULL,
   "uri" varchar(255) NOT NULL,
   "slug" varchar(255) NOT NULL,
-  "order" integer NOT NULL,
-  "include" integer,
   "feed" integer,
   "force_ssl" integer,
   "status" integer,
@@ -256,8 +254,64 @@ ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "order", "include", "feed", "force_ssl", "status") VALUES
-(5001, 'Home Page', '/', '', 0, 1, 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES
+(5001, 'Home Page', '/', '', 1, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "content_navigation"
+--
+
+CREATE SEQUENCE navigation_id_seq START 7001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
+  "id" integer NOT NULL DEFAULT nextval('navigation_id_seq'),
+  "navigation" varchar(255) NOT NULL,
+  "spaces" integer,
+  "top_node" varchar(255),
+  "top_id" varchar(255),
+  "top_class" varchar(255),
+  "top_attributes" varchar(255),
+  "parent_node" varchar(255),
+  "parent_id" varchar(255),
+  "parent_class" varchar(255),
+  "parent_attributes" varchar(255),
+  "child_node" varchar(255),
+  "child_id" varchar(255),
+  "child_class" varchar(255),
+  "child_attributes" varchar(255),
+  PRIMARY KEY ("id")
+) ;
+
+--
+-- Dumping data for table "content_navigation"
+--
+
+INSERT INTO "[{prefix}]content_navigation" ("navigation", "spaces", "top_node", "top_id") VALUES
+('Main Nav', 4, 'ul', 'main-nav');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "content_to_navigation"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
+  "content_id" integer NOT NULL,
+  "navigation_id" integer NOT NULL,
+  "order" integer NOT NULL,
+  UNIQUE ("content_id", "navigation_id"),
+  CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_content_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]content_navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+--
+-- Dumping data for table "content_to_navigation"
+--
+
+INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES
+(6001, 7001, 1);
 
 -- --------------------------------------------------------
 
@@ -265,7 +319,7 @@ INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "order", "in
 -- Table structure for table "content_categories"
 --
 
-CREATE SEQUENCE category_id_seq START 7001;
+CREATE SEQUENCE category_id_seq START 8001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "id" integer NOT NULL DEFAULT nextval('category_id_seq'),
@@ -316,7 +370,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_roles" (
 -- Table structure for table "content_templates"
 --
 
-CREATE SEQUENCE template_id_seq START 8001;
+CREATE SEQUENCE template_id_seq START 9001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
   "id" integer NOT NULL DEFAULT nextval('template_id_seq'),
@@ -337,7 +391,7 @@ ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]content_templates"."id";
 -- Table structure for table "extensions"
 --
 
-CREATE SEQUENCE extension_id_seq START 9001;
+CREATE SEQUENCE extension_id_seq START 10001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
   "id" integer NOT NULL DEFAULT nextval('extension_id_seq'),

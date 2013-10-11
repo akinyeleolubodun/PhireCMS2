@@ -153,7 +153,6 @@ class Content extends AbstractContentModel
             DB_PREFIX . 'content.expired',
             DB_PREFIX . 'content.created',
             DB_PREFIX . 'content.created_by',
-            DB_PREFIX . 'content.order',
             'user_id' => DB_PREFIX . 'users.id',
             DB_PREFIX . 'users.username',
             DB_PREFIX . 'content.status'
@@ -311,8 +310,6 @@ class Content extends AbstractContentModel
             4          => DB_PREFIX . 'content.title',
             'uri'      => DB_PREFIX . 'content.uri',
             6          => DB_PREFIX . 'content.slug',
-            7          => DB_PREFIX . 'content.order',
-            8          => DB_PREFIX . 'content.include',
             9          => DB_PREFIX . 'content.feed',
             10         => DB_PREFIX . 'content.force_ssl',
             11         => DB_PREFIX . 'content.status',
@@ -341,6 +338,67 @@ class Content extends AbstractContentModel
 
             $this->data = array_merge($this->data, $contentValues);
         }
+    }
+
+    /**
+     * Get content by category method
+     *
+     * @param  mixed   $cat
+     * @param  boolean $isFields
+     * @return array
+     */
+    public function getByCategory($cat, $isFields = false)
+    {
+        if (!is_numeric($cat)) {
+            $c = Table\Categories::findBy(array('category' => $cat));
+        } else {
+            $c = Table\Categories::findById($cat);
+        }
+
+        $contentAry = array();
+        if (isset($c->id)) {
+            $sql = Table\Content::getSql();
+            $sql->select(array(
+                0          => DB_PREFIX . 'content.id',
+                1          => DB_PREFIX . 'content.type_id',
+                2          => DB_PREFIX . 'content.parent_id',
+                3          => DB_PREFIX . 'content.template',
+                4          => DB_PREFIX . 'content.title',
+                'uri'      => DB_PREFIX . 'content.uri',
+                6          => DB_PREFIX . 'content.slug',
+                9          => DB_PREFIX . 'content.feed',
+                10         => DB_PREFIX . 'content.force_ssl',
+                11         => DB_PREFIX . 'content.status',
+                12         => DB_PREFIX . 'content.created',
+                13         => DB_PREFIX . 'content.updated',
+                14         => DB_PREFIX . 'content.published',
+                15         => DB_PREFIX . 'content.expired',
+                16         => DB_PREFIX . 'content.created_by',
+                17         => DB_PREFIX . 'content.updated_by',
+                'type_uri' => DB_PREFIX . 'content_types.uri'
+            ));
+
+            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_to_categories', array('id', 'content_id'), 'LEFT JOIN');
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_categories.category_id', ':category_id');
+            $content = Table\Content::execute($sql->render(true), array('category_id' => $c->id));
+
+            if (isset($content->rows[0])) {
+                foreach ($content->rows as $cont) {
+                    if ($this->isAllowed($cont, true)) {
+                        $contentValues = (array)$cont;
+
+                        // If the Fields module is installed, and if there are fields for this form/model
+                        if ($isFields) {
+                            $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($cont->id, true));
+                        }
+                        $contentAry[] = new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
+                    }
+                }
+            }
+        }
+
+        return $contentAry;
     }
 
     /**
@@ -679,8 +737,6 @@ class Content extends AbstractContentModel
             'title'      => $title,
             'uri'        => $uri,
             'slug'       => $slug,
-            'order'      => (int)$fields['order'],
-            'include'    => ((isset($fields['include']) ? (int)$fields['include'] : null)),
             'feed'       => (int)$fields['feed'],
             'force_ssl'  => ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null)),
             'status'     => ((isset($fields['status']) ? (int)$fields['status'] : null)),
@@ -695,6 +751,18 @@ class Content extends AbstractContentModel
         $content->save();
         $this->data['id'] = $content->id;
         $this->data['uri'] = $content->uri;
+
+        // Save content navs
+        if (isset($fields['navigation_id'])) {
+            foreach ($fields['navigation_id'] as $nav) {
+                $contentToNav = new Table\ContentToNavigation(array(
+                    'content_id'    => $content->id,
+                    'navigation_id' => $nav,
+                    'order'         => (int)$_POST['navigation_order_' . $nav]
+                ));
+                $contentToNav->save();
+            }
+        }
 
         // Save content categories
         if (isset($fields['category_id'])) {
@@ -821,8 +889,6 @@ class Content extends AbstractContentModel
         $content->title      = $title;
         $content->uri        = $uri;
         $content->slug       = $slug;
-        $content->order      = (int)$fields['order'];
-        $content->include    = ((isset($fields['include']) ? (int)$fields['include'] : null));
         $content->feed       = (int)$fields['feed'];
         $content->force_ssl  = ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null));
         $content->status     = ((isset($fields['status']) ? (int)$fields['status'] : null));
@@ -835,6 +901,26 @@ class Content extends AbstractContentModel
         $this->data['id'] = $content->id;
         $this->data['uri'] = $content->uri;
 
+        // Update content navs
+        $contentToNavigation = Table\ContentToNavigation::findBy(array('content_id' => $content->id));
+        foreach ($contentToNavigation->rows as $nav) {
+            $contentToNav = Table\ContentToNavigation::findById(array($content->id, $nav->navigation_id));
+            if (isset($contentToNav->content_id)) {
+                $contentToNav->delete();
+            }
+        }
+
+        if (isset($_POST['navigation_id'])) {
+            foreach ($_POST['navigation_id'] as $nav) {
+                $contentToNav = new Table\ContentToNavigation(array(
+                    'content_id'    => $content->id,
+                    'navigation_id' => $nav,
+                    'order'         => (int)$_POST['navigation_order_' . $nav]
+                ));
+                $contentToNav->save();
+            }
+        }
+
         // Update content categories
         $contentToCategories = Table\ContentToCategories::findBy(array('content_id' => $content->id));
         foreach ($contentToCategories->rows as $cat) {
@@ -844,8 +930,8 @@ class Content extends AbstractContentModel
             }
         }
 
-        if (isset($fields['category_id'])) {
-            foreach ($fields['category_id'] as $cat) {
+        if (isset($_POST['category_id'])) {
+            foreach ($_POST['category_id'] as $cat) {
                 $contentToCategory = new Table\ContentToCategories(array(
                     'content_id'  => $content->id,
                     'category_id' => $cat
@@ -863,8 +949,8 @@ class Content extends AbstractContentModel
             }
         }
 
-        if (isset($fields['roles'])) {
-            foreach ($fields['roles'] as $role) {
+        if (isset($_POST['roles'])) {
+            foreach ($_POST['roles'] as $role) {
                 $contentToRole = new Table\ContentToRoles(array(
                     'content_id' => $content->id,
                     'role_id'    => $role
@@ -911,8 +997,6 @@ class Content extends AbstractContentModel
             'title'      => $title,
             'uri'        => $uri,
             'slug'       => $slug,
-            'order'      => $this->data['order'],
-            'include'    => $this->data['include'],
             'feed'       => $this->data['feed'],
             'force_ssl'  => $this->data['force_ssl'],
             'status'     => 0,

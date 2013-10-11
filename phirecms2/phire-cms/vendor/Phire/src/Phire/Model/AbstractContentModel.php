@@ -4,6 +4,7 @@
  */
 namespace Phire\Model;
 
+use Pop\Filter\String;
 use Pop\Nav\Nav;
 use Pop\Web\Session;
 use Phire\Table;
@@ -125,54 +126,127 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
      */
     protected function getNav($content = null)
     {
-        // Get main nav
-        $sql = Table\Content::getSql();
-        $sql->select(array(
-            DB_PREFIX . 'content.id',
-            DB_PREFIX . 'content.type_id',
-            DB_PREFIX . 'content.parent_id',
-            DB_PREFIX . 'content.template',
-            DB_PREFIX . 'content.title',
-            DB_PREFIX . 'content.uri',
-            DB_PREFIX . 'content.slug',
-            DB_PREFIX . 'content.order',
-            DB_PREFIX . 'content.include',
-            DB_PREFIX . 'content.feed',
-            DB_PREFIX . 'content.force_ssl',
-            DB_PREFIX . 'content.status',
-            DB_PREFIX . 'content.created',
-            DB_PREFIX . 'content.updated',
-            DB_PREFIX . 'content.published',
-            DB_PREFIX . 'content.expired',
-            DB_PREFIX . 'content.created_by',
-            DB_PREFIX . 'content.updated_by',
-            'type_uri' => DB_PREFIX . 'content_types.uri'
-        ))->where()->equalTo(DB_PREFIX . 'content.status', self::PUBLISHED);
+        // Get main navs
+        $navs = Table\Navigation::findAll();
 
-        // If it's a draft and a user is logged in
-        if (isset($this->data['acl']) && ($this->data['acl']->isAuth())) {
-            $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', self::DRAFT, 'OR');
-        }
+        foreach ($navs->rows as $nav) {
+            $sql = Table\Content::getSql();
+            $sql->select(array(
+                DB_PREFIX . 'content.id',
+                DB_PREFIX . 'content.type_id',
+                DB_PREFIX . 'content.parent_id',
+                DB_PREFIX . 'content.template',
+                DB_PREFIX . 'content.title',
+                DB_PREFIX . 'content.uri',
+                DB_PREFIX . 'content.slug',
+                DB_PREFIX . 'content.feed',
+                DB_PREFIX . 'content.force_ssl',
+                DB_PREFIX . 'content.status',
+                DB_PREFIX . 'content.created',
+                DB_PREFIX . 'content.updated',
+                DB_PREFIX . 'content.published',
+                DB_PREFIX . 'content.expired',
+                DB_PREFIX . 'content.created_by',
+                DB_PREFIX . 'content.updated_by',
+                'type_uri' => DB_PREFIX . 'content_types.uri',
+                DB_PREFIX . 'content_to_navigation.navigation_id',
+            ));
 
-        $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
-        $sql->select()->orderBy(DB_PREFIX . 'content.order', 'ASC');
+            // If it's a draft and a user is logged in
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth())) {
+                $sql->select()->where()->notEqualTo(DB_PREFIX . 'content.status', 0, 'AND');
+            } else {
+                $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', self::PUBLISHED, 'AND');
+            }
 
-        $allContent = Table\Content::execute($sql->render(true));
+            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_to_navigation', array('id', 'content_id'), 'LEFT JOIN');
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_navigation.navigation_id', $nav->id, 'AND');
 
-        if (isset($allContent->rows[0])) {
-            $navConfig = array(
-                'top' => array(
-                    'id'    => 'main-nav'
-                ),
-                'parent' => array(
-                    'class' => 'main-nav-level'
-                )
-            );
+            $sql->select()->orderBy(DB_PREFIX . 'content_to_navigation.order', 'ASC');
+
+            $allContent = Table\Content::execute($sql->render(true));
+
             if (isset($allContent->rows[0])) {
-                $navChildren = $this->getChildren($allContent->rows, 0);
-                if (count($navChildren) > 0) {
-                    $this->data['nav'] = new Nav($navChildren, $navConfig);
-                    $this->data['nav']->nav()->setIndent('    ');
+                $top = array(
+                    'node' => (null !== $nav->top_node) ? $nav->top_node : 'ul',
+                    'id'   => (null !== $nav->top_id) ? $nav->top_id : String::slug($nav->navigation)
+                );
+                $parent = array();
+                $child  = array();
+
+                if (null !== $nav->top_class) {
+                    $top['class'] = $nav->top_class;
+                }
+                if (null !== $nav->top_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->top_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $top['attributes'] = $attribs;
+                }
+
+                if (null !== $nav->parent_node) {
+                    $parent['node'] = $nav->parent_node;
+                }
+                if (null !== $nav->parent_id) {
+                    $parent['id'] = $nav->parent_id;
+                }
+                if (null !== $nav->parent_class) {
+                    $parent['class'] = $nav->parent_class;
+                }
+                if (null !== $nav->parent_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->parent_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $parent['attributes'] = $attribs;
+                }
+
+                if (null !== $nav->child_node) {
+                    $child['node'] = $nav->child_node;
+                }
+                if (null !== $nav->child_id) {
+                    $child['id'] = $nav->child_id;
+                }
+                if (null !== $nav->child_class) {
+                    $child['class'] = $nav->child_class;
+                }
+                if (null !== $nav->child_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->child_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $child['attributes'] = $attribs;
+                }
+
+                $navConfig = array(
+                    'top'    => $top,
+                    'parent' => $parent,
+                    'child'  => $child
+                );
+                if (isset($allContent->rows[0])) {
+                    $navChildren = $this->getChildren($allContent->rows, 0);
+                    if (count($navChildren) > 0) {
+                        $navName = str_replace('-', '_', String::slug($nav->navigation));
+                        echo
+                        $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
+                        $newNav = new Nav($navChildren, $navConfig);
+                        $newNav->nav()->setIndent($indent);
+                        $this->data[$navName] = $newNav;
+                    }
                 }
             }
         }
@@ -189,18 +263,22 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
                 'top' => array(
                     'id'    => 'cat-nav'
                 ),
-                'parent' //if (isset($c->category) || (count($rolesAry) == 0) || ((count($rolesAry) > 0) && (isset($this->data['user'])) && in_array($this->data['user']['role_id'], $rolesAry))) {
-                    => array(
+                'parent' => array(
                     'class' => 'cat-nav-level'
                 )
             );
             $this->data['categories'] = $categories->rows;
             $navChildren = $this->getChildren($categories->rows, 0, true);
             if (count($navChildren) > 0) {
-                $this->data['categoryNav'] = new Nav($navChildren, $catConfig);
-                $this->data['categoryNav']->nav()->setIndent('    ');
+                $this->data['category_nav'] = new Nav($navChildren, $catConfig);
+                $this->data['category_nav']->nav()->setIndent('    ');
             }
         }
+
+        $this->data['get_category'] = function($cat, $fields = false) {
+            $content = new \Phire\Model\Content();
+            return $content->getByCategory($cat, $fields);
+        };
     }
 
     /**
