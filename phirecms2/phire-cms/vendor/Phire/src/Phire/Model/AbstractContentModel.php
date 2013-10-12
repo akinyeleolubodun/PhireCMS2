@@ -286,6 +286,102 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             $content = new \Phire\Model\Content();
             return $content->getByCategory($cat, $fields);
         };
+
+        $this->data['get_categories'] = function($cat, $fields = false) {
+            $category = new \Phire\Model\Category();
+            return $category->getChildCategories($cat, $fields);
+        };
+    }
+
+    /**
+     * Set content by category method
+     *
+     * @param  mixed   $content
+     * @param  boolean $isFields
+     * @return array
+     */
+    public function setByCategory($content, $isFields = false)
+    {
+        $cats = array();
+        preg_match_all('/\[\{category_.*\}\]/', $content, $cats);
+        if (isset($cats[0]) && isset($cats[0][0])) {
+            foreach ($cats[0] as $cat) {
+                $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
+                $cont = $this->getByCategory($c, $isFields);
+                $this->set('category_' . $c, $cont);
+            }
+        }
+
+        $cats = array();
+        preg_match_all('/\[\{categories_.*\}\]/', $content, $cats);
+        if (isset($cats[0]) && isset($cats[0][0])) {
+            foreach ($cats[0] as $cat) {
+                $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
+                $category = new \Phire\Model\Category();
+                $this->set('categories_' . $c, $category->getChildCategories($c, $isFields));
+            }
+        }
+    }
+
+    /**
+     * Get content by category method
+     *
+     * @param  mixed   $cat
+     * @param  boolean $isFields
+     * @return array
+     */
+    public function getByCategory($cat, $isFields = false)
+    {
+        if (!is_numeric($cat)) {
+            $c = Table\Categories::findBy(array('category' => $cat));
+        } else {
+            $c = Table\Categories::findById($cat);
+        }
+
+        $contentAry = array();
+        if (isset($c->id)) {
+            $sql = Table\Content::getSql();
+            $sql->select(array(
+                0          => DB_PREFIX . 'content.id',
+                1          => DB_PREFIX . 'content.type_id',
+                2          => DB_PREFIX . 'content.parent_id',
+                3          => DB_PREFIX . 'content.template',
+                4          => DB_PREFIX . 'content.title',
+                'uri'      => DB_PREFIX . 'content.uri',
+                6          => DB_PREFIX . 'content.slug',
+                9          => DB_PREFIX . 'content.feed',
+                10         => DB_PREFIX . 'content.force_ssl',
+                11         => DB_PREFIX . 'content.status',
+                12         => DB_PREFIX . 'content.created',
+                13         => DB_PREFIX . 'content.updated',
+                14         => DB_PREFIX . 'content.published',
+                15         => DB_PREFIX . 'content.expired',
+                16         => DB_PREFIX . 'content.created_by',
+                17         => DB_PREFIX . 'content.updated_by',
+                'type_uri' => DB_PREFIX . 'content_types.uri'
+            ));
+
+            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_to_categories', array('id', 'content_id'), 'LEFT JOIN');
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_categories.category_id', ':category_id');
+            $content = Table\Content::execute($sql->render(true), array('category_id' => $c->id));
+
+            if (isset($content->rows[0])) {
+                foreach ($content->rows as $cont) {
+                    if ($this->isAllowed($cont, true)) {
+                        $contentValues = (array)$cont;
+
+                        // If the Fields module is installed, and if there are fields for this form/model
+                        if ($isFields) {
+                            $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($cont->id, true));
+                        }
+                        $contentAry[] = new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
+                    }
+                }
+            }
+        }
+
+        return $contentAry;
     }
 
     /**

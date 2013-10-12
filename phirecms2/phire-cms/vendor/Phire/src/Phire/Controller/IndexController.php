@@ -107,17 +107,8 @@ class IndexController extends C
         // Else, if page found and allowed
         } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
-            if (strpos($template, '[{category_') !== false) {
-                // Parse any template placeholders
-                $cats = array();
-                preg_match_all('/\[\{category_.*\}\]/', $template, $cats);
-                if (isset($cats[0]) && isset($cats[0][0])) {
-                    foreach ($cats[0] as $cat) {
-                        $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
-                        $cont = $content->getByCategory($c, $this->project->isLoaded('Fields'));
-                        $content->set('category_' . $c, $cont);
-                    }
-                }
+            if (strpos($template, '[{categor') !== false) {
+                $content->setByCategory($template, $this->project->isLoaded('Fields'));
             }
             $this->view = View::factory($template, $content->getData());
             $this->send();
@@ -169,6 +160,9 @@ class IndexController extends C
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
             $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
+            if (strpos($template, '[{categor') !== false) {
+                $category->setByCategory($template, $this->project->isLoaded('Fields'));
+            }
             $this->view = View::factory($template, $category->getData());
             $this->send();
         } else {
@@ -202,6 +196,9 @@ class IndexController extends C
 
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
+        if (strpos($template, '[{categor') !== false) {
+            $content->setByCategory($template, $this->project->isLoaded('Fields'));
+        }
 
         $this->view = View::factory($template, $content->getData());
         $this->send();
@@ -273,6 +270,9 @@ class IndexController extends C
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
+        if (strpos($template, '[{categor') !== false) {
+            $content->setByCategory($template, $this->project->isLoaded('Fields'));
+        }
         $this->view = View::factory($template, $content->getData());
         $this->send($code);
     }
