@@ -50,7 +50,7 @@ var addResource = function() {
 /**
  * Function to change permissions
  *
- * @param  Mixed sel
+ * @param  mixed sel
  * @return void
  */
 var changePermissions = function(sel) {
@@ -295,7 +295,7 @@ var clearStatus = function() {
 /**
  * Function to clear the status
  *
- * @param  Object a
+ * @param  object a
  * @param  int    hgt
  * @return void
  */
