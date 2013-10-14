@@ -699,6 +699,7 @@ class Content extends AbstractContentModel
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
+     * @throws \Pop\File\Exception
      * @return void
      */
     public function save(\Pop\Form\Form $form, $isFields = false)
@@ -730,8 +731,10 @@ class Content extends AbstractContentModel
                 $fields['expired_day'] . ' ' . $fields['expired_hour'] . ':' . $fields['expired_minute'] . ':00';
         }
 
+        if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['error'] == 1)) {
+            throw new \Pop\File\Exception("The file exceeds the PHP 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . ".");
         // If content is a file
-        if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
+        } else if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
             $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
             $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
 
@@ -843,6 +846,7 @@ class Content extends AbstractContentModel
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
+     * @throws \Pop\File\Exception
      * @return void
      */
     public function update(\Pop\Form\Form $form, $isFields = false)
@@ -879,7 +883,10 @@ class Content extends AbstractContentModel
 
         // If content is a file
         if (!isset($fields['parent_id'])) {
-            if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
+            if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['error'] == 1)) {
+                throw new \Pop\File\Exception("The file exceeds the PHP 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . ".");
+            // If content is a file
+            } else if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
                 $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
                 self::removeMedia($content->uri);
                 $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
@@ -1105,6 +1112,7 @@ class Content extends AbstractContentModel
     /**
      * Process batch
      *
+     * @throws \Pop\File\Exception
      * @return void
      */
     public function batch()
@@ -1117,7 +1125,9 @@ class Content extends AbstractContentModel
             $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
 
             foreach ($_FILES as $key => $value) {
-                if (!empty($value['name'])) {
+                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
+                    throw new \Pop\File\Exception("A file exceeds the PHP 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . ".");
+                } else if (!empty($value['name'])) {
                     if ($value['size'] > $config->media_max_filesize) {
                         $batchErrors[] = 'The file \'' . $value['name'] . '\' must be less than ' . $config->media_max_filesize_formatted . '.';
                     }
@@ -1134,7 +1144,9 @@ class Content extends AbstractContentModel
         if (count($batchErrors) == 0) {
             if ($_FILES) {
                 $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
-                if (!empty($_FILES['archive_file']) && ($_FILES['archive_file']['name'] != '')) {
+                if (($_FILES) && isset($_FILES['archive_file']) && ($_FILES['archive_file']['error'] == 1)) {
+                    throw new \Pop\File\Exception("The archive file exceeds the PHP 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . ".");
+                } else if (!empty($_FILES['archive_file']) && ($_FILES['archive_file']['name'] != '')) {
                     mkdir($dir . DIRECTORY_SEPARATOR . 'tmp');
                     chmod($dir . DIRECTORY_SEPARATOR . 'tmp', 0777);
 
@@ -1148,13 +1160,13 @@ class Content extends AbstractContentModel
 
                     if (stripos($_FILES['archive_file']['name'], '.tar') !== false) {
                         $filename = substr($_FILES['archive_file']['name'], 0, (strpos($_FILES['archive_file']['name'], '.tar') + 4));
-                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename)) {
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename) && !is_dir($dir . DIRECTORY_SEPARATOR . $filename)) {
                             unlink($dir . DIRECTORY_SEPARATOR . $filename);
                         }
                     } else if ((stripos($_FILES['archive_file']['name'], '.tgz') !== false) ||
                                (stripos($_FILES['archive_file']['name'], '.tbz') !== false)) {
                         $filename = substr($_FILES['archive_file']['name'], 0, strpos($_FILES['archive_file']['name'], '.t')) . '.tar';
-                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename)) {
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $filename) && !is_dir($dir . DIRECTORY_SEPARATOR . $filename)) {
                             unlink($dir . DIRECTORY_SEPARATOR . $filename);
                         }
                     }
@@ -1303,7 +1315,7 @@ class Content extends AbstractContentModel
     public static function removeMedia($fileName)
     {
         $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR;
-        if (file_exists($dir . $fileName)) {
+        if (file_exists($dir . $fileName) && !is_dir($dir . $fileName)) {
             unlink($dir . $fileName);
         }
 
@@ -1311,9 +1323,9 @@ class Content extends AbstractContentModel
         foreach ($dirs->getFiles() as $size) {
             if (is_dir($dir . $size)) {
                 $newFileName = $fileName . '.jpg';
-                if (file_exists($dir . $size . DIRECTORY_SEPARATOR . $fileName)) {
+                if (file_exists($dir . $size . DIRECTORY_SEPARATOR . $fileName) && !is_dir($dir . $size . DIRECTORY_SEPARATOR . $fileName)) {
                     unlink($dir . $size . DIRECTORY_SEPARATOR . $fileName);
-                } else if (file_exists($dir . $size . DIRECTORY_SEPARATOR . $newFileName)) {
+                } else if (file_exists($dir . $size . DIRECTORY_SEPARATOR . $newFileName) && !is_dir($dir . $size . DIRECTORY_SEPARATOR . $newFileName)) {
                     unlink($dir . $size . DIRECTORY_SEPARATOR . $newFileName);
                 }
             }

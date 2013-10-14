@@ -105,6 +105,13 @@ class Config extends AbstractContentModel
             $imageAdapters['Imagick'] = 'Imagick';
         }
 
+        $phpMax = strtoupper(ini_get('upload_max_filesize'));
+        if (strpos($phpMax, 'M') !== false) {
+            $phpMax = str_replace('M', ' MB', $phpMax);
+        } else if (strpos($phpMax, 'K') !== false) {
+            $phpMax = str_replace('K', ' KB', $phpMax);
+        }
+
         $formattedConfig['settings'] = array(
             'system_title'        => $systemTitle,
             'site_title'          => $siteTitle,
@@ -113,7 +120,7 @@ class Config extends AbstractContentModel
             'error_message'       => '                    ' . $error,
             'datetime_format'     => $datetime,
             'media_allowed_types' => $mediaTypes,
-            'media_max_filesize'  => '                    ' . $maxSize,
+            'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; (PHP Default: ' . $phpMax . ')',
             'media_actions'       => $mediaConfig,
             'media_image_adapter' => new Element\Select('media_image_adapter', $imageAdapters, $config['media_image_adapter'], '                    '),
             'feed_type'           => new Element\Select('feed_type', array('10' => 'Atom','9' => 'RSS'), $config['feed_type'], '                    '),

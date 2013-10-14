@@ -89,25 +89,30 @@ abstract class AbstractModel
                 $this->data['phireNav']->setAcl($this->data['acl']);
                 $this->data['phireNav']->setRole($this->data['role']);
 
-                // And any content types to the main nav
-                $contentTypes = Table\ContentTypes::findAll('order ASC');
-                if (isset($contentTypes->rows)) {
-                    foreach ($contentTypes->rows as $type) {
-                        $this->data['phireNav']->addLeaf('Content', array(
-                            'name'     => $type->name,
-                            'href'     => 'index/' . $type->id
-                        ), 1);
-                    }
-                }
+                $tree = $this->data['phireNav']->getTree();
 
-                // And any user types to the main nav
-                $userTypes = Table\UserTypes::findAll('id ASC');
-                if (isset($userTypes->rows)) {
-                    foreach ($userTypes->rows as $type) {
-                        $this->data['phireNav']->addLeaf('Users', array(
-                            'name'     => ucwords(str_replace('-', ' ', $type->type)),
-                            'href'     => 'index/' . $type->id
-                        ), 1);
+                // If the sub-children haven't been added yet
+                if (isset($tree[0]) && isset($tree[0]['children']) && isset($tree[0]['children'][0]) && !isset($tree[0]['children'][0]['children'])) {
+                    // And any content types to the main nav
+                    $contentTypes = Table\ContentTypes::findAll('order ASC');
+                    if (isset($contentTypes->rows)) {
+                        foreach ($contentTypes->rows as $type) {
+                            $this->data['phireNav']->addLeaf('Content', array(
+                                'name'     => $type->name,
+                                'href'     => 'index/' . $type->id
+                            ), 1);
+                        }
+                    }
+
+                    // And any user types to the main nav
+                    $userTypes = Table\UserTypes::findAll('id ASC');
+                    if (isset($userTypes->rows)) {
+                        foreach ($userTypes->rows as $type) {
+                            $this->data['phireNav']->addLeaf('Users', array(
+                                'name'     => ucwords(str_replace('-', ' ', $type->type)),
+                                'href'     => 'index/' . $type->id
+                            ), 1);
+                        }
                     }
                 }
 

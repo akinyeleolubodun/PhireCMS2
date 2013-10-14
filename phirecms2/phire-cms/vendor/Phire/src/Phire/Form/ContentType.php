@@ -56,7 +56,10 @@ class ContentType extends Form
             $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
 
             foreach ($_FILES as $key => $value) {
-                if ($value['error'] != 4) {
+                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
+                    $this->getElement($key)
+                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
+                } else if ($value['error'] != 4) {
                     if ($value['size'] > $config->media_max_filesize) {
                         $this->getElement($key)
                              ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
