@@ -22,7 +22,7 @@ foreach ($themes as $theme):
 ?>
                 <tr><td class="first-td vert-top"><?php echo $theme->id; ?></td><td class="vert-top" style="text-align: center;"><?php echo $theme->screenshot; ?></td><td class="vert-top"><h3 class="theme-header"><?php echo $theme->name; ?></h3></td><td class="vert-top"><?php echo $theme->desc; ?></td><td class="vert-top"><?php echo $theme->author; ?></td><td style="text-align: center;" class="vert-top"><?php echo $theme->version; ?></td><td style="text-align: center;" class="vert-top"><input type="radio" class="radio-btn" name="theme_active" value="<?php echo $theme->id; ?>" <?php echo $yesChecked; ?>/></td><td class="last-td vert-top"><input type="checkbox" name="remove_themes[]" value="<?php echo $theme->id; ?>" /></td></tr>
 <?php endforeach; ?>
-                <tr><td colspan="8" class="table-bottom-row"><input type="submit" name="submit" id="submit" class="remove-btn" value="Process" /></td></tr>
+                <tr class="table-bottom-row"><td colspan="8" class="table-bottom-row"><input type="submit" name="submit" id="submit" class="remove-btn" value="Process" /></td></tr>
             </table>
         </form>
 <?php else: ?>
