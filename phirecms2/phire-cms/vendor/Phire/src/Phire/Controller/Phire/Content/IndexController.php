@@ -108,12 +108,12 @@ class IndexController extends C
                         Response::redirect($this->request->getBasePath() . $this->request->getRequestUri() . '/' . $form->type_id);
                     } else {
                         $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                        $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
                         $this->send();
                     }
                 } else {
                     $content->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                    $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
                     $this->send();
                 }
             // Else, add content
@@ -170,14 +170,14 @@ class IndexController extends C
                                 $this->sendJson($form->getErrors());
                             } else {
                                 $content->set('form', $form);
-                                $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                                $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
                                 $this->send();
                             }
                         }
                     // Else, render form
                     } else {
                         $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                        $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
                         $this->send();
                     }
                 // Else, redirect
@@ -250,7 +250,7 @@ class IndexController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $content->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                            $this->view = View::factory($this->viewPath . '/edit.phtml', $content->getData());
                             $this->send();
                         }
                     }
@@ -264,7 +264,7 @@ class IndexController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $content->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
+                    $this->view = View::factory($this->viewPath . '/edit.phtml', $content->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -406,7 +406,7 @@ class IndexController extends C
 
         $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
         $content->set('title', $title);
-        $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
+        $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message));
         $this->view = View::factory($this->viewPath . '/error.phtml', $content->getData());
         $this->send($code);
     }

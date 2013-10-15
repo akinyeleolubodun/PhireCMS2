@@ -207,6 +207,10 @@ class User extends AbstractModel
                 $userRows[$key]->username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">' . $userRows[$key]->username . '</a>';
             }
 
+            if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'type')) {
+                $userRows[$key]->type = '<a href="' . BASE_PATH . APP_URI . '/users/type/' . $userRows[$key]->id . '">' . $userRows[$key]->type . '</a>';
+            }
+
             $userRows[$key]->name = (null !== $value->name) ? $value->name : '(Blocked)';
             $userRows[$key]->last_login = $last;
             $userRows[$key]->login_count = $count;
@@ -235,7 +239,7 @@ class User extends AbstractModel
                 'border'      => 0
             ),
             'exclude' => array(
-                'type_id', 'type', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
+                'type_id', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
             ),
             'indent'  => '        '
         );

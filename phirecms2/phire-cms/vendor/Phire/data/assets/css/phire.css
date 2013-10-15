@@ -604,6 +604,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
 }
 
+#updated {
+    clear: left;
+    margin: 0;
+    padding: 10px 0 0 2px;
+}
+
 #add-nav {
     float: left;
     margin: 0;

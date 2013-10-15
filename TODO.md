@@ -1,11 +1,12 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- Refactor models more, break out view templates more, add, edit, etc
-- Clean up CSS, box around save area
-- CLI Tool
+- Refactor models more
 - System Theme
+    + Create dashboard
+    + Clean up CSS, box around save area
 - Language
+- CLI Tool
 - Modules
     + Fields
     + Sites

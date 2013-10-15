@@ -1,0 +1,13 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+        <h1><?php echo $title; ?></h1>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?>
+        <div id="add-nav"><a class="add-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' <a class="add-btn" href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?></div>
+<?php endif; ?>
+<?php if (isset($form)): ?>
+<?php if (isset($updated)): ?>
+        <div id="updated"><?php echo $updated; ?></div>
+<?php endif; ?>
+        <div id="result" style="display: none;"></div>
+<?php echo $form; ?>
+<?php endif; ?>
+<?php include __DIR__ . '/../footer.phtml'; ?>

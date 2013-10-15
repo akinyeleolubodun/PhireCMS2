@@ -1,0 +1,10 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+        <h1><?php echo $title; ?></h1>
+<?php if (isset($form)): ?>
+<?php if (isset($updated)): ?>
+        <div id="updated"><?php echo $updated; ?></div>
+<?php endif; ?>
+        <div id="result" style="display: none;"></div>
+<?php echo $form; ?>
+<?php endif; ?>
+<?php include __DIR__ . '/../footer.phtml'; ?>

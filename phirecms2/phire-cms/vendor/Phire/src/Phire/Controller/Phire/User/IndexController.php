@@ -109,13 +109,13 @@ class IndexController extends C
                 // Else, re-render the form with errors
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                    $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
             } else {
                 $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
                 $this->send();
             }
         // Else, add user
@@ -164,14 +164,14 @@ class IndexController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                            $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                    $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
                     $this->send();
                 }
             // Else, redirect
@@ -233,7 +233,7 @@ class IndexController extends C
                             $this->sendJson($form->getErrors());
                         } else {
                             $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                            $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
                             $this->send();
                         }
                     }
@@ -247,7 +247,7 @@ class IndexController extends C
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                    $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
                     $this->send();
                 }
             // Else redirect
@@ -264,6 +264,7 @@ class IndexController extends C
      */
     public function type()
     {
+
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
@@ -293,14 +294,14 @@ class IndexController extends C
                     // Else, re-render the form with errors
                     } else {
                         $user->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                        $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
                         $this->send();
                     }
                 // Else, render the form
                 } else {
                     $form->setFieldValues(array('type_id' => $user->type_id));
                     $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
+                    $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
                     $this->send();
                 }
             // Else redirect

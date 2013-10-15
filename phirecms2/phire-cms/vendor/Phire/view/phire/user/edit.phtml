@@ -1,0 +1,16 @@
+<?php include __DIR__ . '/../header.phtml'; ?>
+        <h1><?php echo $title; ?></h1>
+<?php if ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'add')): ?>
+        <div id="add-nav"><a class="add-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a></a></div>
+<?php endif; ?>
+<?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'export'))): ?>
+        <div style="float: right;"><a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>">Export</a></a></div>
+<?php endif; ?>
+<?php
+if (isset($form)):
+    if (isset($error))
+        echo '        <h4 class="error">' . $error . '</h4>' . PHP_EOL;
+    echo '        <div id="result" style="display: none;"></div>' . PHP_EOL;
+    echo $form;
+endif; ?>
+<?php include __DIR__ . '/../footer.phtml'; ?>
