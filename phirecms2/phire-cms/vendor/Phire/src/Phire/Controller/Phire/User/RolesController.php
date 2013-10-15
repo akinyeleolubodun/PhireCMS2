@@ -210,29 +210,8 @@ class RolesController extends C
     {
         // Loop through and delete the roles
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_roles'])) {
-                foreach ($post['remove_roles'] as $id) {
-                    $role = Table\UserRoles::findById($id);
-                    if (isset($role->id)) {
-                        $role->delete();
-                    }
-
-                    $sql = Table\UserTypes::getSql();
-
-                    if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
-                        $sql->update(array(
-                            'default_role_id' => null
-                        ))->where()->equalTo('default_role_id', $role->id);
-                        Table\UserTypes::execute($sql->render(true));
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $role = new Model\UserRole();
+            $role->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

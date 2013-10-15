@@ -151,5 +151,38 @@ class ContentType extends AbstractContentModel
         }
     }
 
+    /**
+     * Remove content type
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_types'])) {
+            foreach ($post['remove_types'] as $id) {
+                $type = Table\ContentTypes::findById($id);
+                if (isset($type->id)) {
+                    if (!$type->uri) {
+                        $content = Table\Content::findBy(array('type_id' => $type->id));
+                        foreach ($content->rows as $c) {
+                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $c->uri) &&
+                                !is_dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $c->uri)) {
+                                \Phire\Model\Content::removeMedia($c->uri);
+                            }
+                        }
+                    }
+                    $type->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
 }
 

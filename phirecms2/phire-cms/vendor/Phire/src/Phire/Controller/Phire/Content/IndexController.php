@@ -348,41 +348,10 @@ class IndexController extends C
      */
     public function process()
     {
-        $typeId = null;
-
-        // Loop through and delete the fields
+        $typeId = (null !== $this->request->getPath(1)) ? '/index/' . $this->request->getPath(1) : null;
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            $process = (int)$post['content_process'];
-            if (isset($post['process_content'])) {
-                $model = new Model\Content();
-                $open = $model->config('open_authoring');
-                foreach ($post['process_content'] as $id) {
-                    $content = Table\Content::findById($id);
-                    $createdBy = null;
-                    if (isset($content->id)) {
-                        $typeId = '/index/' . $content->type_id;
-                        $createdBy = $content->created_by;
-                        if (!((!$open) && ($content->created_by != $model->user->id))) {
-                            if ($process < 0) {
-                                $type = Table\ContentTypes::findById($content->type_id);
-                                if (isset($type->id) && (!$type->uri)) {
-                                    Model\Content::removeMedia($content->uri);
-                                }
-                                $content->delete();
-                            } else {
-                                $content->status = $process;
-                                $content->update();
-                            }
-                        }
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if (($process < 0) && ($this->project->isLoaded('Fields') && !((!$open) && ($createdBy != $model->user->id)))) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $content = new Model\Content();
+            $content->process($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath() . $typeId);

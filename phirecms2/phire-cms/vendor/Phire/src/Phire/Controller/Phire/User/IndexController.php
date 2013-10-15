@@ -348,25 +348,12 @@ class IndexController extends C
      */
     public function remove()
     {
-        $typeId = null;
+        $typeId = (null !== $this->request->getPath(1)) ? '/index/' . $this->request->getPath(1) : null;
 
         // Loop through the users to delete
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_users'])) {
-                foreach ($post['remove_users'] as $id) {
-                    $user = Table\Users::findById($id);
-                    if (isset($user->id)) {
-                        $typeId = '/index/' . $user->type_id;
-                        $user->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $user = new Model\User();
+            $user->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath() . $typeId);

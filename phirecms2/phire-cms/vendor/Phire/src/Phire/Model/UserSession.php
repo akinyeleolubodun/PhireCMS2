@@ -112,5 +112,23 @@ class UserSession extends AbstractModel
         }
     }
 
+    /**
+     * Remove content navigation
+     *
+     * @param  array   $post
+     * @return void
+     */
+    public function remove(array $post)
+    {
+        if (isset($post['remove_sessions'])) {
+            foreach ($post['remove_sessions'] as $id) {
+                $session = Table\UserSessions::findById($id);
+                if (isset($session->id)) {
+                    $session->delete();
+                }
+            }
+        }
+    }
+
 }
 

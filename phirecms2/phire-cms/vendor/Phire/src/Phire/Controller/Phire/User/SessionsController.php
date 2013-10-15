@@ -72,17 +72,9 @@ class SessionsController extends C
      */
     public function remove()
     {
-        // Loop through and delete the sessions
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_sessions'])) {
-                foreach ($post['remove_sessions'] as $id) {
-                    $session = Table\UserSessions::findById($id);
-                    if (isset($session->id)) {
-                        $session->delete();
-                    }
-                }
-            }
+            $session = new Model\UserSession();
+            $session->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

@@ -329,5 +329,29 @@ class Template extends AbstractContentModel
         }
     }
 
+    /**
+     * Remove content template
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_templates'])) {
+            foreach ($post['remove_templates'] as $id) {
+                $template = Table\Templates::findById($id);
+                if (isset($template->id)) {
+                    $template->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
 }
 

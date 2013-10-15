@@ -207,20 +207,8 @@ class CategoriesController extends C
     {
         // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_categories'])) {
-                foreach ($post['remove_categories'] as $id) {
-                    $category = Table\Categories::findById($id);
-                    if (isset($category->id)) {
-                        $category->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $category = new Model\Category();
+            $category->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

@@ -205,22 +205,9 @@ class NavigationController extends C
      */
     public function remove()
     {
-        // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_navigation'])) {
-                foreach ($post['remove_navigation'] as $id) {
-                    $navigation = Table\Navigation::findById($id);
-                    if (isset($navigation->id)) {
-                        $navigation->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $navigation = new Model\Navigation();
+            $navigation->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

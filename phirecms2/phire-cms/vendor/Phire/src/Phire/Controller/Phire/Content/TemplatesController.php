@@ -221,22 +221,9 @@ class TemplatesController extends C
      */
     public function remove()
     {
-        // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_templates'])) {
-                foreach ($post['remove_templates'] as $id) {
-                    $template = Table\Templates::findById($id);
-                    if (isset($template->id)) {
-                        $template->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $template = new Model\Template();
+            $template->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

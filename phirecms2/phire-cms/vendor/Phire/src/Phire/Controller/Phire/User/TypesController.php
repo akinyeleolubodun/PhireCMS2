@@ -208,25 +208,9 @@ class TypesController extends C
      */
     public function remove()
     {
-        // Loop through and delete the roles
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_types'])) {
-                foreach ($post['remove_types'] as $id) {
-                    $type = Table\UserTypes::findById($id);
-                    if (isset($type->id)) {
-                        $type->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this model type
-                    if ($this->project->isLoaded('Fields')) {
-                        $fields = new \Fields\Table\FieldsToModels();
-                        $fields->delete(array('type_id' => $id));
-
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $type = new Model\UserType();
+            $type->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

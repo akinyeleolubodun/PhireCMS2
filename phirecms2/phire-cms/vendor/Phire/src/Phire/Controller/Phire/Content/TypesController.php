@@ -206,30 +206,9 @@ class TypesController extends C
      */
     public function remove()
     {
-        // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $post = $this->request->getPost();
-            if (isset($post['remove_types'])) {
-                foreach ($post['remove_types'] as $id) {
-                    $type = Table\ContentTypes::findById($id);
-                    if (isset($type->id)) {
-                        if (!$type->uri) {
-                            $content = Table\Content::findBy(array('type_id' => $type->id));
-                            foreach ($content->rows as $c) {
-                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri)) {
-                                    Model\Content::removeMedia($content->uri);
-                                }
-                            }
-                        }
-                        $type->delete();
-                    }
-
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($this->project->isLoaded('Fields')) {
-                        \Fields\Model\FieldValue::remove($id);
-                    }
-                }
-            }
+            $type = new Model\ContentType();
+            $type->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

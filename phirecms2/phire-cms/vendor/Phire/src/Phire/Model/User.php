@@ -215,7 +215,7 @@ class User extends AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'user-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/users/remove',
+                'action'  => BASE_PATH . APP_URI . '/users/remove/' . $typeId,
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
@@ -577,6 +577,30 @@ class User extends AbstractModel
                 $user->type_id = $type->id;
                 $user->role_id = null;
                 $user->update();
+            }
+        }
+    }
+
+    /**
+     * Remove user
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_users'])) {
+            foreach ($post['remove_users'] as $id) {
+                $user = Table\Users::findById($id);
+                if (isset($user->id)) {
+                    $user->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
             }
         }
     }

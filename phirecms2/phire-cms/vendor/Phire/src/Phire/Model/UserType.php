@@ -228,5 +228,32 @@ class UserType extends AbstractModel
         }
     }
 
+    /**
+     * Remove user type
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_types'])) {
+            foreach ($post['remove_types'] as $id) {
+                $type = Table\UserTypes::findById($id);
+                if (isset($type->id)) {
+                    $type->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this model type
+                if ($isFields) {
+                    $fields = new \Fields\Table\FieldsToModels();
+                    $fields->delete(array('type_id' => $id));
+
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
 }
 

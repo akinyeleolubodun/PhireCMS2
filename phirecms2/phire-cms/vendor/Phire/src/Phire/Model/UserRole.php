@@ -306,5 +306,38 @@ class UserRole extends AbstractModel
         }
     }
 
+    /**
+     * Remove user role
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_roles'])) {
+            foreach ($post['remove_roles'] as $id) {
+                $role = Table\UserRoles::findById($id);
+                if (isset($role->id)) {
+                    $role->delete();
+                }
+
+                $sql = Table\UserTypes::getSql();
+
+                if ($sql->getDbType() == \Pop\Db\Sql::SQLITE) {
+                    $sql->update(array(
+                        'default_role_id' => null
+                    ))->where()->equalTo('default_role_id', $role->id);
+                    Table\UserTypes::execute($sql->render(true));
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
 }
 

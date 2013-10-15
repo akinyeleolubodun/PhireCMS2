@@ -184,5 +184,29 @@ class Navigation extends AbstractContentModel
         }
     }
 
+    /**
+     * Remove content navigation
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_navigation'])) {
+            foreach ($post['remove_navigation'] as $id) {
+                $navigation = Table\Navigation::findById($id);
+                if (isset($navigation->id)) {
+                    $navigation->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
 }
 

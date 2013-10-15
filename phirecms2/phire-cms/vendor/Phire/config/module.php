@@ -56,18 +56,18 @@ return array(
                         )
                     ),
                     array(
-                        'name' => 'Navigation',
-                        'href' => 'navigation',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\NavigationController',
-                            'permission' => 'index'
-                        )
-                    ),
-                    array(
                         'name' => 'Categories',
                         'href' => 'categories',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Content\CategoriesController',
+                            'permission' => 'index'
+                        )
+                    ),
+                    array(
+                        'name' => 'Navigation',
+                        'href' => 'navigation',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Content\NavigationController',
                             'permission' => 'index'
                         )
                     ),

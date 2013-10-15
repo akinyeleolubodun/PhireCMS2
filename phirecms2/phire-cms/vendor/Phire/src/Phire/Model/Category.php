@@ -344,6 +344,30 @@ class Category extends AbstractContentModel
     }
 
     /**
+     * Remove content categories
+     *
+     * @param  array   $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function remove(array $post, $isFields = false)
+    {
+        if (isset($post['remove_categories'])) {
+            foreach ($post['remove_categories'] as $id) {
+                $category = Table\Categories::findById($id);
+                if (isset($category->id)) {
+                    $category->delete();
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if ($isFields) {
+                    \Fields\Model\FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
+    /**
      * Recursive function to get a formatted array of nested categories id => category
      *
      * @param  array $categories

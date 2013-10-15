@@ -323,7 +323,7 @@ class Content extends AbstractContentModel
         $options = array(
             'form' => array(
                 'id'      => 'content-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/content/process',
+                'action'  => BASE_PATH . APP_URI . '/content/process/' . $typeId,
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
@@ -1241,6 +1241,45 @@ class Content extends AbstractContentModel
 
                         $content->save();
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Process batch
+     *
+     * @param  array $post
+     * @param  boolean $isFields
+     * @return void
+     */
+    public function process(array $post, $isFields = false)
+    {
+        $process = (int)$post['content_process'];
+        if (isset($post['process_content'])) {
+            $open = $this->config('open_authoring');
+            foreach ($post['process_content'] as $id) {
+                $content = Table\Content::findById($id);
+                $createdBy = null;
+                if (isset($content->id)) {
+                    $createdBy = $content->created_by;
+                    if (!((!$open) && ($content->created_by != $this->user->id))) {
+                        if ($process < 0) {
+                            $type = Table\ContentTypes::findById($content->type_id);
+                            if (isset($type->id) && (!$type->uri)) {
+                                self::removeMedia($content->uri);
+                            }
+                            $content->delete();
+                        } else {
+                            $content->status = $process;
+                            $content->update();
+                        }
+                    }
+                }
+
+                // If the Fields module is installed, and if there are fields for this form/model
+                if (($process < 0) && ($isFields) && !((!$open) && ($createdBy != $this->user->id))) {
+                    \Fields\Model\FieldValue::remove($id);
                 }
             }
         }
