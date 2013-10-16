@@ -195,10 +195,11 @@ class Category extends AbstractContentModel
      * Get child categories
      *
      * @param  mixed   $cat
+     * @param  int     $limit
      * @param  boolean $isFields
      * @return array
      */
-    public function getChildCategories($cat, $isFields = false)
+    public function getChildCategories($cat, $limit = null, $isFields = false)
     {
         if (!is_numeric($cat)) {
             $c = Table\Categories::findBy(array('category' => $cat));
@@ -208,7 +209,8 @@ class Category extends AbstractContentModel
 
         $categoryAry = array();
         if (isset($c->id)) {
-            $children = Table\Categories::findBy(array('parent_id' => $c->id), 'order ASC');
+            $limit = (null !== $limit) ? (int)$limit : null;
+            $children = Table\Categories::findBy(array('parent_id' => $c->id), 'order ASC', $limit);
             if (isset($children->rows[0])) {
                 foreach ($children->rows as $child) {
                     $child = (array)$child;

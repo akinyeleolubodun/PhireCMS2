@@ -282,14 +282,14 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             }
         }
 
-        $this->data['get_category'] = function($cat, $fields = false) {
+        $this->data['get_category'] = function($cat, $orderBy = 'id ASC', $limit = null, $fields = false) {
             $content = new \Phire\Model\Content();
-            return $content->getByCategory($cat, $fields);
+            return $content->getByCategory($cat, $orderBy, $limit, $fields);
         };
 
-        $this->data['get_categories'] = function($cat, $fields = false) {
+        $this->data['get_categories'] = function($cat, $limit = null, $fields = false) {
             $category = new \Phire\Model\Category();
-            return $category->getChildCategories($cat, $fields);
+            return $category->getChildCategories($cat, $limit, $fields);
         };
     }
 
@@ -307,8 +307,18 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
         if (isset($cats[0]) && isset($cats[0][0])) {
             foreach ($cats[0] as $cat) {
                 $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
-                $cont = $this->getByCategory($c, $isFields);
-                $this->set('category_' . $c, $cont);
+                if ($c != 'nav') {
+                    if (strpos($c, '_') !== false) {
+                        $cAry = explode('_', $c);
+                        $ct = $cAry[0];
+                        $orderBy = (isset($cAry[1])) ? $cAry[1] : 'id ASC';
+                        $limit = (isset($cAry[2])) ? $cAry[2] : null;
+                        $cont = $this->getByCategory($ct, $orderBy, $limit, $isFields);
+                    } else {
+                        $cont = $this->getByCategory($c, 'id ASC', null, $isFields);
+                    }
+                    $this->set('category_' . $c, $cont);
+                }
             }
         }
 
@@ -318,7 +328,14 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             foreach ($cats[0] as $cat) {
                 $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
                 $category = new \Phire\Model\Category();
-                $this->set('categories_' . $c, $category->getChildCategories($c, $isFields));
+                if (strpos($c, '_') !== false) {
+                    $cAry = explode('_', $c);
+                    $ct = $cAry[0];
+                    $limit = (isset($cAry[1])) ? $cAry[1] : null;
+                    $this->set('categories_' . $c, $category->getChildCategories($ct, $limit, $isFields));
+                } else {
+                    $this->set('categories_' . $c, $category->getChildCategories($c, null, $isFields));
+                }
             }
         }
     }
@@ -326,11 +343,13 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
     /**
      * Get content by category method
      *
-     * @param  mixed   $cat
+     * @param  mixed  $cat
+     * @param  string  $orderBy
+     * @param  int     $limit
      * @param  boolean $isFields
      * @return array
      */
-    public function getByCategory($cat, $isFields = false)
+    public function getByCategory($cat, $orderBy = 'id ASC', $limit = null, $isFields = false)
     {
         if (!is_numeric($cat)) {
             $c = Table\Categories::findBy(array('category' => $cat));
@@ -364,6 +383,11 @@ abstract class AbstractContentModel extends \Phire\Model\AbstractModel
             $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
             $sql->select()->join(DB_PREFIX . 'content_to_categories', array('id', 'content_id'), 'LEFT JOIN');
             $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_categories.category_id', ':category_id');
+            $order = explode(' ', $orderBy);
+            $sql->select()->orderBy($order[0], $order[1]);
+            if (null !== $limit) {
+                $sql->select()->limit((int)$limit);
+            }
             $content = Table\Content::execute($sql->render(true), array('category_id' => $c->id));
 
             if (isset($content->rows[0])) {
