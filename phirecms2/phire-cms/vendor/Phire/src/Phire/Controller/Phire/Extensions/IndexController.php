@@ -81,7 +81,7 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $ext = new Model\Extension();
+        $ext = new Model\Extension(array('acl' => $this->project->getService('acl')));
         $ext->getThemes();
 
         if (null === $this->request->getPath(1)) {
@@ -118,7 +118,7 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $ext = new Model\Extension();
+        $ext = new Model\Extension(array('acl' => $this->project->getService('acl')));
         $ext->getModules($this->project);
 
         if (null === $this->request->getPath(1)) {
