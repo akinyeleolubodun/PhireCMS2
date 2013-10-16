@@ -7,15 +7,15 @@ namespace Phire\Controller\Phire;
 use Pop\Auth;
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class IndexController extends C
+class IndexController extends AbstractController
 {
 
     /**
@@ -88,14 +88,12 @@ class IndexController extends C
      */
     public function index()
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Home'
         ));
-
-        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
         $this->send();
     }
 

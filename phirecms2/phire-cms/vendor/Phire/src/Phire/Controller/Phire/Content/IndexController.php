@@ -6,15 +6,15 @@ namespace Phire\Controller\Phire\Content;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class IndexController extends C
+class IndexController extends AbstractController
 {
 
     /**
@@ -54,7 +54,8 @@ class IndexController extends C
      */
     public function index()
     {
-        $content = new Model\Content(array(
+        $content = new Model\Content(array('acl' => $this->project->getService('acl')));
+        $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -63,13 +64,17 @@ class IndexController extends C
 
         if ((null !== $this->request->getPath(1)) && is_numeric($this->request->getPath(1))) {
             $content->getAll($this->request->getPath(1), $this->request->getQuery('sort'), $this->request->getQuery('page'));
-            $content->set('typeId', $this->request->getPath(1));
+            $this->view->set('typeId', $this->request->getPath(1))
+                       ->set('table', $content->table)
+                       ->set('title', $this->view->title . $content->title)
+                       ->set('content', $content->content)
+                       ->set('contentTree', $content->contentTree)
+                       ->set('typeUri', $content->typeUri);
         } else {
-            $content->getContentTypes();
-            $content->set('typeId', null);
+            $this->view->set('typeId', null)
+                       ->set('types', $content->getContentTypes());
         }
 
-        $this->view = View::factory($this->viewPath . '/index.phtml', $content->getData());
         $this->send();
     }
 

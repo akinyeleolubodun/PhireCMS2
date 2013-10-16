@@ -223,20 +223,20 @@ class Content extends AbstractContentModel
     /**
      * Get all content types method
      *
-     * @return void
+     * @return array
      */
     public function getContentTypes()
     {
         $types = Table\ContentTypes::findAll('order ASC');
-        $this->data['types'] = $types->rows;
+        return $types->rows;
     }
 
     /**
      * Get all content method
      *
-     * @param  int    $typeId
-     * @param  string $sort
-     * @param  string $page
+     * @param  int     $typeId
+     * @param  string  $sort
+     * @param  string  $page
      * @return void
      */
     public function getAll($typeId, $sort = null, $page = null)
@@ -342,7 +342,7 @@ class Content extends AbstractContentModel
             'indent' => '        '
         );
 
-        $this->data['title'] .= (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;
+        $this->data['title'] = (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;
         $this->data['content'] = $content->rows;
         $this->data['contentTree'] = $this->getChildren($content->rows, 0);
         $this->data['typeUri'] = $contentType->uri;
