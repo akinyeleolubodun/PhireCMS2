@@ -6,15 +6,15 @@ namespace Phire\Controller\Phire\Content;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class CategoriesController extends C
+class CategoriesController extends AbstractController
 {
 
     /**
@@ -54,15 +54,15 @@ class CategoriesController extends C
      */
     public function index()
     {
-        $category = new Model\Category(array(
+        $this->prepareView($this->viewPath . '/categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Categories'
         ));
-
+        $category = new Model\Category(array('acl' => $this->project->getService('acl')));
         $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
+        $this->view->set('table', $category->table);
         $this->send();
     }
 
@@ -73,13 +73,13 @@ class CategoriesController extends C
      */
     public function add()
     {
-        $category = new Model\Category(array(
+        $this->prepareView($this->viewPath . '/categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $category->set('title', 'Categories ' . $category->config()->separator . ' Add');
+        $this->view->set('title', 'Categories ' . $this->view->separator . ' Add');
         $form = new Form\Category(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
@@ -93,10 +93,11 @@ class CategoriesController extends C
             );
 
             if ($form->isValid()) {
+                $category = new Model\Category();
                 $category->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
-                } else if (null !== $this->request->getQuery('update')) {
+                } else if (null !==         $this->request->getQuery('update')) {
                     $this->sendJson(array(
                         'redirect' => $this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time(),
                         'updated'  => '',
@@ -109,14 +110,12 @@ class CategoriesController extends C
                 if (null !== $this->request->getQuery('update')) {
                     $this->sendJson($form->getErrors());
                 } else {
-                    $category->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             }
         } else {
-            $category->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -131,17 +130,18 @@ class CategoriesController extends C
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $category = new Model\Category(array(
+            $this->prepareView($this->viewPath . '/categories.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
+            $category = new Model\Category();
             $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
             if (isset($category->id)) {
-                $category->set('title', 'Categories ' . $category->config()->separator . ' ' . $category->category);
+                $this->view->set('title', 'Categories ' . $this->view->separator . ' ' . $category->category);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $category->id, $this->project->isLoaded('Fields')
@@ -173,22 +173,18 @@ class CategoriesController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $category->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $categoryValues = $category->getData();
-                    unset($categoryValues['acl']);
                     $form->setFieldValues(
-                        $categoryValues,
+                        $category->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $category->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/categories.phtml', $category->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -253,14 +249,13 @@ class CategoriesController extends C
      */
     public function error()
     {
-        $category = new Model\Category(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
-
-        $category->set('title', '404 Error ' . $category->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $category->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

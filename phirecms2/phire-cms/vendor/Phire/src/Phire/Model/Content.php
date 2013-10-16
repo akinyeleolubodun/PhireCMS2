@@ -342,9 +342,8 @@ class Content extends AbstractContentModel
             'indent' => '        '
         );
 
-        $this->data['title'] = (isset($contentType->id)) ? ' ' . $this->config->separator . ' ' . $contentType->name : null;
-        $this->data['content'] = $content->rows;
-        $this->data['contentTree'] = $this->getChildren($content->rows, 0);
+        $this->data['title']   = (isset($contentType->id)) ? $contentType->name : null;
+        $this->data['type']    = $contentType->name;
         $this->data['typeUri'] = $contentType->uri;
 
         $status = array('Unpublished', 'Draft', 'Published');

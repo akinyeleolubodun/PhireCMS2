@@ -54,7 +54,6 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $content = new Model\Content(array('acl' => $this->project->getService('acl')));
         $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
@@ -62,13 +61,14 @@ class IndexController extends AbstractController
             'title'    => 'Content'
         ));
 
+        $content = new Model\Content(array('acl' => $this->project->getService('acl')));
+
         if ((null !== $this->request->getPath(1)) && is_numeric($this->request->getPath(1))) {
             $content->getAll($this->request->getPath(1), $this->request->getQuery('sort'), $this->request->getQuery('page'));
             $this->view->set('typeId', $this->request->getPath(1))
                        ->set('table', $content->table)
-                       ->set('title', $this->view->title . $content->title)
-                       ->set('content', $content->content)
-                       ->set('contentTree', $content->contentTree)
+                       ->set('title', $this->view->title . ' '. $this->view->separator . ' '. $content->title)
+                       ->set('type', $content->type)
                        ->set('typeUri', $content->typeUri);
         } else {
             $this->view->set('typeId', null)
@@ -88,15 +88,15 @@ class IndexController extends AbstractController
         if (count(Table\ContentTypes::findAll()->rows) == 0) {
             Response::redirect($this->request->getBasePath() . '/types/add?redirect=1');
         } else {
+            $this->prepareView($this->viewPath . '/add.phtml', array(
+                'assets'   => $this->project->getAssets(),
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+
             // Select content type
             if (null === $this->request->getPath(1)) {
-                $content = new Model\Content(array(
-                    'assets'   => $this->project->getAssets(),
-                    'acl'      => $this->project->getService('acl'),
-                    'phireNav' => $this->project->getService('phireNav')
-                ));
-
-                $content->set('title', 'Content ' . $content->config()->separator . ' Select Type');
+                $this->view->set('title', 'Content ' . $this->view->separator . ' Select Type');
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
@@ -112,13 +112,11 @@ class IndexController extends AbstractController
                     if ($form->isValid()) {
                         Response::redirect($this->request->getBasePath() . $this->request->getRequestUri() . '/' . $form->type_id);
                     } else {
-                        $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
+                        $this->view->set('form', $form);
                         $this->send();
                     }
                 } else {
-                    $content->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, add content
@@ -127,15 +125,10 @@ class IndexController extends AbstractController
 
                 // If content type is valid
                 if (isset($type->id)) {
-                    $content = new Model\Content(array(
-                        'assets'   => $this->project->getAssets(),
-                        'acl'      => $this->project->getService('acl'),
-                        'phireNav' => $this->project->getService('phireNav'),
-                        'typeId'   => $type->id,
-                        'typeUri'  => $type->uri
-                    ));
+                    $this->view->set('typeId', $type->id)
+                               ->set('typeUri', $type->uri)
+                               ->set('title', 'Content ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' Add');
 
-                    $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Add');
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                         $type->id, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
@@ -152,6 +145,7 @@ class IndexController extends AbstractController
                         // If form is valid, save new content
                         if ($form->isValid()) {
                             try {
+                                $content = new Model\Content();
                                 $content->save($form, $this->project->isLoaded('Fields'));
                                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
@@ -174,15 +168,13 @@ class IndexController extends AbstractController
                             if (null !== $this->request->getQuery('update')) {
                                 $this->sendJson($form->getErrors());
                             } else {
-                                $content->set('form', $form);
-                                $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
+                                $this->view->set('form', $form);
                                 $this->send();
                             }
                         }
                     // Else, render form
                     } else {
-                        $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/add.phtml', $content->getData());
+                        $this->view->set('form', $form);
                         $this->send();
                     }
                 // Else, redirect
@@ -203,18 +195,19 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $content = new Model\Content(array(
+            $this->prepareView($this->viewPath . '/add.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
+            $content = new Model\Content();
             $content->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If content object is found and valid
             if (isset($content->id)) {
-                $content->set('title', 'Content ' . $content->config()->separator . ' ' . $content->type_name . ' ' . $content->config()->separator . ' ' . $content->content_title);
-                $content->set('typeId', $content->type_id);
+                $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
+                           ->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $content->type_id, $content->id, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
@@ -254,22 +247,18 @@ class IndexController extends AbstractController
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $content->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/edit.phtml', $content->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $contentValues = $content->getData();
-                    unset($contentValues['acl']);
                     $form->setFieldValues(
-                        $contentValues,
+                        $content->getData(),
                         array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $content->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/edit.phtml', $content->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -314,7 +303,7 @@ class IndexController extends AbstractController
 
             // If content type is valid
             if (isset($type->id)) {
-                $content = new Model\Content(array(
+                $this->prepareView($this->viewPath . '/batch.phtml', array(
                     'assets'   => $this->project->getAssets(),
                     'acl'      => $this->project->getService('acl'),
                     'phireNav' => $this->project->getService('phireNav'),
@@ -322,26 +311,26 @@ class IndexController extends AbstractController
                     'typeUri'  => $type->uri
                 ));
 
-                $content->set('title', 'Content ' . $content->config()->separator . ' ' . $type->name . ' ' . $content->config()->separator . ' Batch');
+                $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' Batch');
+
                 $form = new Form\Batch($this->request->getBasePath() . $this->request->getRequestUri(), 'post', $this->request->getPath(1));
 
                 if ($this->request->isPost()) {
+                    $content = new Model\Content();
                     $content->batch();
                     if (count($content->batchErrors) > 0) {
-                        $content->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/batch.phtml', $content->getData());
+                        $this->view->set('form', $form);
                         $this->send();
                     } else {
                         Response::redirect($this->request->getBasePath() . '/index/' . $type->id);
                     }
                 } else {
-                    $content->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/batch.phtml', $content->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
             } else {
-                Response::redirect($this->request->getBasePath() . '/add');
+                Response::redirect($this->request->getBasePath());
             }
         }
     }
@@ -403,16 +392,16 @@ class IndexController extends AbstractController
     public function error($msg = null)
     {
         $code = (null !== $msg) ? 200 : 404;
-        $content = new Model\Content(array(
+
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
+            'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
-        $content->set('title', $title);
-        $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message));
-        $this->view = View::factory($this->viewPath . '/error.phtml', $content->getData());
+        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
+        $this->view->set('title', $title);
+        $this->view->set('msg', ((null !== $msg) ? $msg : $this->view->error_message));
         $this->send($code);
     }
 

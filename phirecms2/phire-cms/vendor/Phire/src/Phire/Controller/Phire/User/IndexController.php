@@ -6,14 +6,14 @@ namespace Phire\Controller\Phire\User;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class IndexController extends C
+class IndexController extends AbstractController
 {
 
     /**
@@ -53,24 +53,27 @@ class IndexController extends C
      */
     public function index()
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Users'
         ));
 
+        $user = new Model\User(array('acl' => $this->project->getService('acl')));
+
         // If type id is set, get users by type
         if ((null !== $this->request->getPath(1)) && is_numeric($this->request->getPath(1))) {
             $user->getAll($this->request->getPath(1), $this->request->getQuery('sort'), $this->request->getQuery('page'));
-            $user->set('typeId', $this->request->getPath(1));
+            $this->view->set('typeId', $this->request->getPath(1))
+                       ->set('table', $user->table)
+                       ->set('title', $this->view->title . ' '. $this->view->separator . ' '. $user->title);
         // Else, list user types to choose from
         } else {
-            $user->getUserTypes();
-            $user->set('typeId', null);
+            $this->view->set('typeId', null)
+                       ->set('types', $user->getUserTypes());
         }
 
-        $this->view = View::factory($this->viewPath . '/index.phtml', $user->getData());
         $this->send();
     }
 
@@ -81,15 +84,15 @@ class IndexController extends C
      */
     public function add()
     {
+        $this->prepareView($this->viewPath . '/add.phtml', array(
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
+
         // Select user type
         if (null === $this->request->getPath(1)) {
-            $user = new Model\User(array(
-                'assets'   => $this->project->getAssets(),
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-
-            $user->set('title', 'Users ' . $user->config()->separator . ' Select Type');
+            $this->view->set('title', 'Users ' . $this->view->separator . ' Select Type');
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                 '0', false, 0, $this->project->isLoaded('Fields')
@@ -108,14 +111,12 @@ class IndexController extends C
                     Response::redirect($this->request->getBasePath() . $this->request->getRequestUri() . '/' . $form->type_id);
                 // Else, re-render the form with errors
                 } else {
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, render the form
             } else {
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         // Else, add user
@@ -124,13 +125,7 @@ class IndexController extends C
 
             // If user type is valid
             if (isset($type->id)) {
-                $user = new Model\User(array(
-                    'assets'   => $this->project->getAssets(),
-                    'acl'      => $this->project->getService('acl'),
-                    'phireNav' => $this->project->getService('phireNav')
-                ));
-
-                $user->set('title', 'Users ' . $user->config()->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $user->config()->separator . ' Add');
+                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $this->view->separator . ' Add');
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $type->id, false, 0, $this->project->isLoaded('Fields')
@@ -146,6 +141,7 @@ class IndexController extends C
 
                     // If form is valid, save new user
                     if ($form->isValid()) {
+                        $user = new Model\User();
                         $user->save($form, $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
@@ -163,15 +159,13 @@ class IndexController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/add.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -191,16 +185,18 @@ class IndexController extends C
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $user = new Model\User(array(
+            $this->prepareView($this->viewPath . '/edit.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
+
+            $user = new Model\User();
             $user->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If user is found and valid
             if (null !== $user->id) {
-                $user->set('title', 'Users ' . $user->config()->separator . ' ' . $user->type_name . ' ' . $user->config()->separator . ' ' . $user->username);
+                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $user->type_id, false, $user->id, $this->project->isLoaded('Fields')
@@ -232,22 +228,18 @@ class IndexController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $user->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render the form
                 } else {
-                    $userValues = $user->getData();
-                    unset($userValues['acl']);
                     $form->setFieldValues(
-                        $userValues,
+                        $user->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else redirect
@@ -264,20 +256,21 @@ class IndexController extends C
      */
     public function type()
     {
-
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $user = new Model\User(array(
+            $this->prepareView($this->viewPath . '/edit.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
+
+            $user = new Model\User();
             $user->getById($this->request->getPath(1));
 
             // If user is found and valid
             if (null !== $user->id) {
-                $user->set('title', 'Users ' . $user->config()->separator . ' Type ' . $user->config()->separator . ' ' . $user->username);
+                $this->view->set('title', 'Users ' . $this->view->separator . ' Type ' . $this->view->separator . ' ' . $user->username);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, false, 0, $this->project->isLoaded('Fields')
@@ -293,15 +286,13 @@ class IndexController extends C
                         Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {
-                        $user->set('form', $form);
-                        $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
+                        $this->view->set('form', $form);
                         $this->send();
                     }
                 // Else, render the form
                 } else {
                     $form->setFieldValues(array('type_id' => $user->type_id));
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/edit.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else redirect
@@ -327,16 +318,19 @@ class IndexController extends C
                     $user->logins = null;
                     $user->update();
                 }
-                Response::redirect($this->request->getBasePath());
+                $typeId = (null !== $this->request->getQuery('type_id')) ? '/index/' . $this->request->getQuery('type_id') : null;
+                Response::redirect($this->request->getBasePath() . $typeId);
             } else {
-                $user = new Model\User(array(
+                $this->prepareView($this->viewPath . '/logins.phtml', array(
                     'assets'   => $this->project->getAssets(),
                     'acl'      => $this->project->getService('acl'),
                     'phireNav' => $this->project->getService('phireNav')
                 ));
 
+                $user = new Model\User();
                 $user->getLoginsById($this->request->getPath(1), $this->project->isLoaded('Fields'));
-                $this->view = View::factory($this->viewPath . '/logins.phtml', $user->getData());
+                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' Logins ' . $this->view->separator . ' ' . $user->username)
+                           ->set('table', $user->table);
                 $this->send();
             }
         }
@@ -398,14 +392,14 @@ class IndexController extends C
      */
     public function error()
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

@@ -6,14 +6,14 @@ namespace Phire\Controller\Phire\User;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class SessionsController extends C
+class SessionsController extends AbstractController
 {
 
     /**
@@ -53,15 +53,16 @@ class SessionsController extends C
      */
     public function index()
     {
-        $session = new Model\UserSession(array(
+        $this->prepareView($this->viewPath . '/sessions.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'User Sessions'
         ));
 
+        $session = new Model\UserSession(array('acl' => $this->project->getService('acl')));
         $session->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/sessions.phtml', $session->getData());
+        $this->view->set('table', $session->table);
         $this->send();
     }
 
@@ -106,14 +107,14 @@ class SessionsController extends C
      */
     public function error()
     {
-        $session = new Model\UserSession(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $session->set('title', '404 Error ' . $session->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $session->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

@@ -6,14 +6,14 @@ namespace Phire\Controller\Phire\User;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class TypesController extends C
+class TypesController extends AbstractController
 {
 
     /**
@@ -53,15 +53,16 @@ class TypesController extends C
      */
     public function index()
     {
-        $type = new Model\UserType(array(
+        $this->prepareView($this->viewPath . '/types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'User Types'
         ));
 
+        $type = new Model\UserType(array('acl' => $this->project->getService('acl')));
         $type->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
+        $this->view->set('table', $type->table);
         $this->send();
     }
 
@@ -72,13 +73,13 @@ class TypesController extends C
      */
     public function add()
     {
-        $type = new Model\UserType(array(
+        $this->prepareView($this->viewPath . '/types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $type->set('title', 'User Types ' . $type->config()->separator . ' Add');
+        $this->view->set('title', 'User Types ' . $this->view->separator . ' Add');
 
         $form = new Form\UserType(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -95,6 +96,7 @@ class TypesController extends C
 
             // If form is valid, save new type
             if ($form->isValid()) {
+                $type = new Model\UserType();
                 $type->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
@@ -112,15 +114,13 @@ class TypesController extends C
                 if (null !== $this->request->getQuery('update')) {
                     $this->sendJson($form->getErrors());
                 } else {
-                    $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             }
         // Else, render the form
         } else {
-            $type->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -135,16 +135,18 @@ class TypesController extends C
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $type = new Model\UserType(array(
+            $this->prepareView($this->viewPath . '/types.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
+
+            $type = new Model\UserType();
             $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If type is found and valid
             if (null !== $type->type) {
-                $type->set('title', 'User Types ' . $type->config()->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)));
+                $this->view->set('title', 'User Types ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)));
                 $form = new Form\UserType(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $this->request->getPath(1), $this->project->isLoaded('Fields')
@@ -176,22 +178,18 @@ class TypesController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $type->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $typeValues = $type->getData();
-                    unset($typeValues['acl']);
                     $form->setFieldValues(
-                        $typeValues,
+                        $type->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $type->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/types.phtml', $type->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -223,14 +221,14 @@ class TypesController extends C
      */
     public function error()
     {
-        $type = new Model\UserType(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $type->set('title', '404 Error ' . $type->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $type->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

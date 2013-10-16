@@ -36,10 +36,7 @@ class Category extends AbstractContentModel
     {
         $order = $this->getSortOrder($sort, $page);
         $categories = Table\Categories::findAll($order['field'] . ' ' . $order['order']);
-
-        $this->data['categories'] = $categories->rows;
-        $this->data['categoryTree'] = $this->getChildren($categories->rows, 0);
-        $this->getCategories($this->data['categoryTree']);
+        $this->getCategories($this->getChildren($categories->rows, 0));
 
         if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'remove'))) {
             $removeCheckbox = '<input type="checkbox" name="remove_categories[]" id="remove_categories[{i}]" value="[{id}]" />';

@@ -6,14 +6,14 @@ namespace Phire\Controller\Phire\User;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class RolesController extends C
+class RolesController extends AbstractController
 {
 
     /**
@@ -53,15 +53,16 @@ class RolesController extends C
      */
     public function index()
     {
-        $role = new Model\UserRole(array(
+        $this->prepareView($this->viewPath . '/roles.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'User Roles'
         ));
 
+        $role = new Model\UserRole(array('acl' => $this->project->getService('acl')));
         $role->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
+        $this->view->set('table', $role->table);
         $this->send();
     }
 
@@ -72,13 +73,13 @@ class RolesController extends C
      */
     public function add()
     {
-        $role = new Model\UserRole(array(
+        $this->prepareView($this->viewPath . '/roles.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $role->set('title', 'User Roles ' . $role->config()->separator . ' Add');
+        $this->view->set('title', 'User Roles ' . $this->view->separator . ' Add');
 
         $form = new Form\UserRole(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -95,6 +96,7 @@ class RolesController extends C
 
             // If form is valid, save new role
             if ($form->isValid()) {
+                $role = new Model\UserRole();
                 $role->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
@@ -112,15 +114,13 @@ class RolesController extends C
                 if (null !== $this->request->getQuery('update')) {
                     $this->sendJson($form->getErrors());
                 } else {
-                    $role->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             }
         // Else, render the form
         } else {
-            $role->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -135,16 +135,18 @@ class RolesController extends C
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $role = new Model\UserRole(array(
+            $this->prepareView($this->viewPath . '/roles.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
+
+            $role = new Model\UserRole();
             $role->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If role is found and valid
             if (isset($role->name)) {
-                $role->set('title', 'User Roles ' . $role->config()->separator . ' ' . $role->name);
+                $this->view->set('title', 'User Roles ' . $this->view->separator . ' ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $role->id, $this->project->module('Phire'), $this->project->isLoaded('Fields')
@@ -176,22 +178,18 @@ class RolesController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $role->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $roleValues = $role->getData();
-                    unset($roleValues['acl']);
                     $form->setFieldValues(
-                        $roleValues,
+                        $role->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $role->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/roles.phtml', $role->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -252,14 +250,14 @@ class RolesController extends C
      */
     public function error()
     {
-        $role = new Model\UserRole(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $role->set('title', '404 Error ' . $role->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $role->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

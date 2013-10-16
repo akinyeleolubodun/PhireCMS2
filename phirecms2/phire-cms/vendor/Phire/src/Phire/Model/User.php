@@ -119,7 +119,7 @@ class User extends AbstractModel
     /**
      * Get all user types method
      *
-     * @return void
+     * @return array
      */
     public function getUserTypes()
     {
@@ -129,7 +129,7 @@ class User extends AbstractModel
             $type->type = ucwords(str_replace('-', ' ', $type->type));
             $typeRows[] = $type;
         }
-        $this->data['types'] = $typeRows;
+        return $typeRows;
     }
 
     /**
@@ -166,7 +166,7 @@ class User extends AbstractModel
         $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
         $userType = Table\UserTypes::findById($typeId);
 
-        $this->data['title'] .= (isset($userType->id)) ? ' ' . $this->config->separator . ' ' . ucwords(str_replace('-', ' ', $userType->type)) : null;
+        $this->data['title'] = (isset($userType->id)) ? ucwords(str_replace('-', ' ', $userType->type)) : null;
         $this->data['type'] = $userType->type;
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'remove')) {
@@ -360,7 +360,7 @@ class User extends AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'user-login-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/users/logins/' . $this->id,
+                'action'  => BASE_PATH . APP_URI . '/users/logins/' . $this->id . '?type_id=' . $this->type_id,
                 'method'  => 'post',
                 'process' => '&nbsp;',
                 'submit'  => array(
@@ -381,8 +381,7 @@ class User extends AbstractModel
             )
         );
 
-        $this->data['title'] = 'Users ' . $this->config->separator . ' ' . $this->type_name . ' ' . $this->config->separator . ' Logins ' . $this->config->separator . ' ' . $this->data['username'];
-        $this->data['table'] = Html::encode($loginsAry, $options, $this->config()->pagination_limit, $this->config()->pagination_range);
+        $this->data['table']  = Html::encode($loginsAry, $options, $this->config()->pagination_limit, $this->config()->pagination_range);
     }
 
     /**

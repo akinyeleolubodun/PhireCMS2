@@ -113,7 +113,7 @@ class IndexController extends AbstractController
             Response::redirect(BASE_PATH . '/');
         // Else, render the form
         } else {
-            $user = new Model\User(array(
+            $this->prepareView($this->viewPath . '/login.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -125,18 +125,19 @@ class IndexController extends AbstractController
             $forgot = '<a href="' . BASE_PATH . $uri . '/forgot">Forgot</a>';
             $forgot .= (($this->type->registration) ? ' | <a href="' . BASE_PATH . $uri . '/register">Register</a>' : null);
             $forgot .= (!($this->type->unsubscribe_login) ? ' | <a href="' . BASE_PATH . $uri . '/unsubscribe">Unsubscribe</a>' : null);
-            $user->set('forgot', $forgot);
+            $this->view->set('forgot', $forgot);
 
             if (isset($this->sess->expired)) {
-                $user->set('error', 'Your session has expired.');
+                $this->view->set('error', 'Your session has expired.');
             } else if (isset($this->sess->authError)) {
-                $user->set('error', 'The user is not allowed in this area.');
+                $this->view->set('error', 'The user is not allowed in this area.');
             }
 
             $form = new Form\Login($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
             // If form is submitted
             if ($this->request->isPost()) {
+                $user = new Model\User();
                 $form->setFieldValues(
                     $this->request->getPost(),
                     array('strip_tags', 'htmlentities'),
@@ -145,7 +146,7 @@ class IndexController extends AbstractController
                     $this->type, $user
                 );
 
-                $user->set('form', $form);
+                $this->view->set('form', $form);
 
                 // If form is valid, authenticate the user
                 if ($form->isValid()) {
@@ -165,13 +166,11 @@ class IndexController extends AbstractController
                     Response::redirect($url);
                 // Else, re-render the form
                 } else {
-                    $this->view = View::factory($this->viewPath . '/login.phtml', $user->getData());
                     $this->send();
                 }
             // Else, render the form
             } else {
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/login.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         }
@@ -190,12 +189,13 @@ class IndexController extends AbstractController
             Response::redirect($this->request->getBasePath());
         // Else render the registration form
         } else {
-            $user = new Model\User(array(
+            $this->prepareView($this->viewPath . '/profile.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
                 'title'    => 'Register'
             ));
+
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
                 'post', $this->type->id, true, 0, $this->project->isLoaded('Fields')
@@ -211,24 +211,22 @@ class IndexController extends AbstractController
 
                 // If form is valid, save the user
                 if ($form->isValid()) {
+                    $user = new Model\User();
                     $user->save($form, $this->project->isLoaded('Fields'));
                     if (null !== $redirect) {
                         Response::redirect($redirect);
                     } else {
-                        $user->set('form', '    <p>Thank you for registering.</p>');
-                        $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                        $this->view->set('form', '    <p>Thank you for registering.</p>');
                         $this->send();
                     }
                 // Else, re-render the form with errors
                 } else {
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, render the form
             } else {
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         }
@@ -242,12 +240,14 @@ class IndexController extends AbstractController
      */
     public function profile($redirect = null)
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/profile.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Profile'
         ));
+
+        $user = new Model\User();
         $user->getById($this->sess->user->id, $this->project->isLoaded('Fields'));
 
         // If user is found and valid
@@ -275,21 +275,17 @@ class IndexController extends AbstractController
                     Response::redirect($url);
                 // Else, re-render the form with errors
                 } else {
-                    $user->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, render the form
             } else {
-                $userValues = $user->getData();
-                unset($userValues['acl']);
                 $form->setFieldValues(
-                    $userValues,
+                    $user->getData(),
                     array('strip_tags', 'htmlentities'),
                     array(null, array(ENT_QUOTES, 'UTF-8'))
                 );
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         }
@@ -303,12 +299,13 @@ class IndexController extends AbstractController
      */
     public function unsubscribe($redirect = null)
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/profile.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Unsubscribe'
         ));
+
         $form = new Form\Unsubscribe($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
         // If form is submitted
@@ -321,6 +318,7 @@ class IndexController extends AbstractController
 
             // If form is valid, unsubscribe the user
             if ($form->isValid()) {
+                $user = new Model\User();
                 $user->unsubscribe($form);
                 if ($this->project->getService('acl')->isAuth()) {
                     $this->logout(false);
@@ -328,17 +326,12 @@ class IndexController extends AbstractController
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
-                    $user = new Model\User(array(
-                        'title' => 'Unsubscribe',
-                        'form'  => '    <p>Thank you. You have been unsubscribed from this website.</p>'
-                    ));
-                    $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                    $this->view->set('form', '    <p>Thank you. You have been unsubscribed from this website.</p>');
                     $this->send();
                 }
             // Else, re-render the form with errors
             } else {
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         // Else, render the form
@@ -346,8 +339,7 @@ class IndexController extends AbstractController
             if ($this->project->getService('acl')->isAuth()) {
                 $form->setFieldValues(array('email' => $this->sess->user->email));
             }
-            $user->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/profile.phtml', $user->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -360,12 +352,13 @@ class IndexController extends AbstractController
      */
     public function forgot($redirect = null)
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/forgot.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Forgot'
         ));
+
         $form = new Form\Forgot($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
         // If form is submitted
@@ -378,18 +371,17 @@ class IndexController extends AbstractController
 
             // If form is valid, send reminder
             if ($form->isValid()) {
+                $user = new Model\User();
                 $user->sendReminder($form);
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
-                    $user->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
-                    $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
+                    $this->view->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
                     $this->send();
                 }
             // Else, re-render the form with errors
             } else {
-                $user->set('form', $form);
-                $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
+                $this->view->set('form', $form);
                 $this->send();
             }
         // Else, render the form
@@ -397,8 +389,7 @@ class IndexController extends AbstractController
             if ($this->project->getService('acl')->isAuth()) {
                 $form->setFieldValues(array('email' => $this->sess->user->email));
             }
-            $user->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/forgot.phtml', $user->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -413,12 +404,14 @@ class IndexController extends AbstractController
     {
         // If the required user ID and hash is submitted
         if ((null !== $this->request->getPath(1)) && (null !== $this->request->getPath(2))) {
-            $user = new Model\User(array(
+            $this->prepareView($this->viewPath . '/verify.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
                 'title'    => 'Verify'
             ));
+
+            $user = new Model\User();
             $user->getById($this->request->getPath(1));
 
             // If the user was found, verify and save
@@ -432,15 +425,13 @@ class IndexController extends AbstractController
             if (null !== $redirect) {
                 Response::redirect($redirect);
             } else {
-                $user->set('message', $message);
-                $this->view = View::factory($this->viewPath . '/verify.phtml', $user->getData());
+                $this->view->set('message', $message);
                 $this->send();
             }
         // Else, redirect
         } else {
             Response::redirect($this->request->getBasePath());
         }
-
     }
 
     /**
@@ -461,14 +452,13 @@ class IndexController extends AbstractController
      */
     public function error()
     {
-        $user = new Model\User(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $user->set('title', '404 Error ' . $user->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $user->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found');
         $this->send(404);
     }
 

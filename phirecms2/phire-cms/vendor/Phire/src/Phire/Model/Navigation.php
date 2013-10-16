@@ -22,8 +22,6 @@ class Navigation extends AbstractContentModel
         $order = $this->getSortOrder($sort, $page);
         $navigation = Table\Navigation::findAll($order['field'] . ' ' . $order['order']);
 
-        $this->data['navigation'] = $navigation->rows;
-
         if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\NavigationController', 'remove'))) {
             $removeCheckbox = '<input type="checkbox" name="remove_navigation[]" id="remove_navigation[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_navigation" />';
@@ -64,8 +62,7 @@ class Navigation extends AbstractContentModel
         );
 
         $navAry = array();
-        $navs = $this->navigation;
-        foreach ($navs as $id => $nav) {
+        foreach ($navigation->rows as $id => $nav) {
             if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\NavigationController', 'edit'))) {
                 $nv = '<a href="' . BASE_PATH . APP_URI . '/content/navigation/edit/' . $nav->id . '">' . $nav->navigation . '</a>';
             } else {

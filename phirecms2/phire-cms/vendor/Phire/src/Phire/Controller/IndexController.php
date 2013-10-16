@@ -6,16 +6,16 @@ namespace Phire\Controller;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Mobile;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class IndexController extends C
+class IndexController extends AbstractController
 {
 
     /**
@@ -91,14 +91,12 @@ class IndexController extends C
      */
     public function index()
     {
+        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $content = new Model\Content(array(
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-        } else {
-            $content = new Model\Content();
+            $this->view->set('acl', $this->project->getService('acl'))
+                       ->set('phireNav', $this->project->getService('phireNav'));
         }
+        $content = new Model\Content();
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
 
         // If page found, but requires SSL
@@ -110,7 +108,8 @@ class IndexController extends C
             if (strpos($template, '[{categor') !== false) {
                 $content->setByCategory($template, $this->project->isLoaded('Fields'));
             }
-            $this->view = View::factory($template, $content->getData());
+            $this->view->setTemplate($template);
+            $this->view->merge($content->getData());
             $this->send();
         // Else, check for date-based URI
         } else {
@@ -123,12 +122,14 @@ class IndexController extends C
                 $content->getByDate($date, $this->project->isLoaded('Fields'));
                 if (isset($content->id) && ($content->allowed)) {
                     $template = $this->getTemplate($content->template, 'index');
-                    $this->view = View::factory($template, $content->getData());
+                    $this->view->setTemplate($template);
+                    $this->view->merge($content->getData());
                     $this->send();
                 } else if (isset($content->rows[0])) {
                     $content->set('title', $date['match']);
                     $template = $this->getTemplate($content->template, 'date');
-                    $this->view = View::factory($template, $content->getData());
+                    $this->view->setTemplate($template);
+                    $this->view->merge($content->getData());
                     $this->send();
                 } else {
                     $this->error();
@@ -147,15 +148,13 @@ class IndexController extends C
      */
     public function category()
     {
+        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $category = new Model\Category(array(
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-        } else {
-            $category = new Model\Category();
+            $this->view->set('acl', $this->project->getService('acl'))
+                       ->set('phireNav', $this->project->getService('phireNav'));
         }
 
+        $category = new Model\Category();
         $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
@@ -163,7 +162,8 @@ class IndexController extends C
             if (strpos($template, '[{categor') !== false) {
                 $category->setByCategory($template, $this->project->isLoaded('Fields'));
             }
-            $this->view = View::factory($template, $category->getData());
+            $this->view->setTemplate($template);
+            $this->view->merge($category->getData());
             $this->send();
         } else {
             $this->error();
@@ -177,21 +177,18 @@ class IndexController extends C
      */
     public function search()
     {
+        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $content = new Model\Content(array(
-                'title'    => 'Search',
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-        } else {
-            $content = new Model\Content(array(
-                'title'    => 'Search'
-            ));
+            $this->view->set('acl', $this->project->getService('acl'))
+                       ->set('phireNav', $this->project->getService('phireNav'));
         }
 
+        $this->view->set('title', 'Search');
+
+        $content = new Model\Content();
         $content->search($this->request, $this->project->isLoaded('Fields'));
         if (count($content->keys) == 0) {
-            $content->set('error', 'No search keywords were passed. Please try again.');
+            $this->view->set('error', 'No search keywords were passed. Please try again.');
         }
 
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
@@ -200,7 +197,8 @@ class IndexController extends C
             $content->setByCategory($template, $this->project->isLoaded('Fields'));
         }
 
-        $this->view = View::factory($template, $content->getData());
+        $this->view->setTemplate($template);
+        $this->view->merge($content->getData());
         $this->send();
     }
 
@@ -211,19 +209,15 @@ class IndexController extends C
      */
     public function feed()
     {
+        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $content = new Model\Content(array(
-                'title'    => 'Feed',
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-        } else {
-            $content = new Model\Content(array(
-                'title'    => 'Feed'
-            ));
+            $this->view->set('acl', $this->project->getService('acl'))
+                       ->set('phireNav', $this->project->getService('phireNav'));
         }
 
-        $lang = $content->config('default_language');
+        $this->view->set('title', 'Feed');
+
+        $lang = $this->view->default_language;
         if (strpos($lang, '_') !== false) {
             $lang = substr($lang, 0, strpos($lang, '_'));
         }
@@ -238,10 +232,12 @@ class IndexController extends C
             'author'    => 'Phire CMS Feed Generator'
         );
 
+        $content = new Model\Content();
         $feed = new \Pop\Feed\Writer(
             $headers, $content->getFeed((int)$content->config('feed_limit')),
             (int)$content->config('feed_type')
         );
+
         echo $feed->render(true);
     }
 
@@ -253,33 +249,35 @@ class IndexController extends C
      */
     public function error($msg = null)
     {
+        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $content = new Model\Content(array(
-                'acl'      => $this->project->getService('acl'),
-                'phireNav' => $this->project->getService('phireNav')
-            ));
-        } else {
-            $content = new Model\Content();
+            $this->view->set('acl', $this->project->getService('acl'))
+                       ->set('phireNav', $this->project->getService('phireNav'));
         }
 
-        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $content->config()->separator . ' Page Not Found';
+        $content = new Model\Content();
+        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
         $code = (null !== $msg) ? 200 : 404;
 
-        $content->set('title', $title);
-        $content->set('msg', ((null !== $msg) ? $msg : $content->config()->error_message) . PHP_EOL);
+        $this->view->set('title', $title);
+        $this->view->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL);
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
         if (strpos($template, '[{categor') !== false) {
             $content->setByCategory($template, $this->project->isLoaded('Fields'));
         }
-        $this->view = View::factory($template, $content->getData());
+
+        $this->view->setTemplate($template);
+        $this->view->merge($content->getData());
         $this->send($code);
     }
 
     /**
      * Method to determine the mobile device
      *
+        $this->view->setTemplate($template);
+        $this->view->merge($content->getData());
      * @return string
      */
     protected function getDevice()

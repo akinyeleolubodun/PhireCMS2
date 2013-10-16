@@ -6,15 +6,15 @@ namespace Phire\Controller\Phire\Content;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class NavigationController extends C
+class NavigationController extends AbstractController
 {
 
     /**
@@ -54,15 +54,15 @@ class NavigationController extends C
      */
     public function index()
     {
-        $navigation = new Model\Navigation(array(
+        $this->prepareView($this->viewPath . '/navigation.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Navigation'
         ));
-
+        $navigation = new Model\Navigation(array('acl' => $this->project->getService('acl')));
         $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view = View::factory($this->viewPath . '/navigation.phtml', $navigation->getData());
+        $this->view->set('table', $navigation->table);
         $this->send();
     }
 
@@ -73,13 +73,14 @@ class NavigationController extends C
      */
     public function add()
     {
-        $navigation = new Model\Navigation(array(
+        $this->prepareView($this->viewPath . '/navigation.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $navigation->set('title', 'Navigation ' . $navigation->config()->separator . ' Add');
+        $this->view->set('title', 'Navigation ' . $this->view->separator . ' Add');
+
         $form = new Form\Navigation(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
@@ -93,6 +94,7 @@ class NavigationController extends C
             );
 
             if ($form->isValid()) {
+                $navigation = new Model\Navigation();
                 $navigation->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
@@ -109,14 +111,12 @@ class NavigationController extends C
                 if (null !== $this->request->getQuery('update')) {
                     $this->sendJson($form->getErrors());
                 } else {
-                    $navigation->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/navigation.phtml', $navigation->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             }
         } else {
-            $navigation->set('form', $form);
-            $this->view = View::factory($this->viewPath . '/navigation.phtml', $navigation->getData());
+            $this->view->set('form', $form);
             $this->send();
         }
     }
@@ -131,17 +131,18 @@ class NavigationController extends C
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $navigation = new Model\Navigation(array(
+            $this->prepareView($this->viewPath . '/navigation.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
+            $navigation = new Model\Navigation();
             $navigation->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
             if (isset($navigation->id)) {
-                $navigation->set('title', 'Navigation ' . $navigation->config()->separator . ' ' . $navigation->navigation);
+                $this->view->set('title', 'Navigation ' . $this->view->separator . ' ' . $navigation->navigation);
                 $form = new Form\Navigation(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $navigation->id, $this->project->isLoaded('Fields')
@@ -173,22 +174,18 @@ class NavigationController extends C
                         if (null !== $this->request->getQuery('update')) {
                             $this->sendJson($form->getErrors());
                         } else {
-                            $navigation->set('form', $form);
-                            $this->view = View::factory($this->viewPath . '/navigation.phtml', $navigation->getData());
+                            $this->view->set('form', $form);
                             $this->send();
                         }
                     }
                 // Else, render form
                 } else {
-                    $navigationValues = $navigation->getData();
-                    unset($navigationValues['acl']);
                     $form->setFieldValues(
-                        $navigationValues,
+                        $navigation->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
-                    $navigation->set('form', $form);
-                    $this->view = View::factory($this->viewPath . '/navigation.phtml', $navigation->getData());
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             // Else, redirect
@@ -220,14 +217,14 @@ class NavigationController extends C
      */
     public function error()
     {
-        $navigation = new Model\Navigation(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $navigation->set('title', '404 Error ' . $navigation->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $navigation->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

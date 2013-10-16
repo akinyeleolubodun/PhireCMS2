@@ -141,8 +141,6 @@ class Template extends AbstractContentModel
 
             $this->data['table'] = $table;
         }
-
-        $this->data['templates'] = $templateAry;
     }
 
     /**

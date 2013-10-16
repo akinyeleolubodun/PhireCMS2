@@ -72,8 +72,6 @@ class ContentType extends AbstractContentModel
         if (isset($types->rows[0])) {
             $this->data['table'] = Html::encode($types->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
-
-        $this->data['types'] = $types->rows;
     }
 
     /**

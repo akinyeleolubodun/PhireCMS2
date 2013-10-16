@@ -6,15 +6,15 @@ namespace Phire\Controller\Phire;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
+use Phire\Controller\AbstractController;
 use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class ConfigController extends C
+class ConfigController extends AbstractController
 {
 
     /**
@@ -54,19 +54,21 @@ class ConfigController extends C
      */
     public function index()
     {
-        $config = new Model\Config(array(
+        $this->prepareView($this->viewPath . '/config.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Configuration'
         ));
 
+        $config = new Model\Config();
+
         if ($this->request->isPost()) {
             $config->update($this->request->getPost());
             Response::redirect($this->request->getBasePath() . '?saved=' . time());
         } else {
             $config->getAll();
-            $this->view = View::factory($this->viewPath . '/config.phtml', $config->getData());
+            $this->view->merge($config->getData());
             $this->send();
         }
     }
@@ -95,14 +97,13 @@ class ConfigController extends C
      */
     public function error()
     {
-        $config = new Model\Config(array(
+        $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $config->set('title', '404 Error ' . $config->config()->separator . ' Page Not Found');
-        $this->view = View::factory($this->viewPath . '/error.phtml', $config->getData());
+        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found');
         $this->send(404);
     }
 
