@@ -155,7 +155,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #install {
     margin: 0 auto;
-    padding: 25px 0 0 0;
+    padding: 20px 0 35px 0;
     width: 850px;
     overflow: auto;
 }
@@ -226,7 +226,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #login {
     margin: 0 auto;
-    padding: 40px 0 0 0;
+    padding: 40px 0 35px 0;
     width: 850px;
     overflow: auto;
 }
