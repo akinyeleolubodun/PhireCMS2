@@ -91,13 +91,26 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $this->view->set('acl', $this->project->getService('acl'))
-                       ->set('phireNav', $this->project->getService('phireNav'));
+            $this->prepareView(null, array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $this->prepareView();
         }
-        $content = new Model\Content();
+
+        // Set up navigations
+        $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+        $this->view->merge($nav->getContentNav());
+        $this->view->set('category_nav', $nav->getCategoryNav());
+
+        $content = new Model\Content(array('acl' => $this->project->getService('acl')));
         $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
+
+        // Set breadcrumb and model object
+        $this->view->set('breadcrumb', $content->getBreadcrumb())
+                   ->set('phire', $content);
 
         // If page found, but requires SSL
         if (isset($content->id) && (($_SERVER['SERVER_PORT'] != '443') && ($content->force_ssl))) {
@@ -106,10 +119,10 @@ class IndexController extends AbstractController
         } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
             if (strpos($template, '[{categor') !== false) {
-                $content->setByCategory($template, $this->project->isLoaded('Fields'));
+                $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
             }
-            $this->view->setTemplate($template);
             $this->view->merge($content->getData());
+            $this->view->setTemplate($template);
             $this->send();
         // Else, check for date-based URI
         } else {
@@ -148,22 +161,35 @@ class IndexController extends AbstractController
      */
     public function category()
     {
-        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $this->view->set('acl', $this->project->getService('acl'))
-                       ->set('phireNav', $this->project->getService('phireNav'));
+            $this->prepareView(null, array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $this->prepareView();
         }
+
+        // Set up navigation
+        $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+        $this->view->merge($nav->getContentNav());
+        $this->view->set('category_nav', $nav->getCategoryNav());
 
         $category = new Model\Category();
         $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
+
+        // Set up breadcrumb
+        $this->view->set('breadcrumb', $category->getBreadcrumb());
+
         if (isset($category->id)) {
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
             $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
             if (strpos($template, '[{categor') !== false) {
-                $category->setByCategory($template, $this->project->isLoaded('Fields'));
+                $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
             }
             $this->view->setTemplate($template);
             $this->view->merge($category->getData());
+            $this->view->set('phire', $category);
             $this->send();
         } else {
             $this->error();
@@ -177,16 +203,25 @@ class IndexController extends AbstractController
      */
     public function search()
     {
-        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $this->view->set('acl', $this->project->getService('acl'))
-                       ->set('phireNav', $this->project->getService('phireNav'));
+            $this->prepareView(null, array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $this->prepareView();
         }
 
-        $this->view->set('title', 'Search');
+        // Set up navigation
+        $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+        $this->view->merge($nav->getContentNav());
+        $this->view->set('category_nav', $nav->getCategoryNav())
+                   ->set('title', 'Search');
 
         $content = new Model\Content();
         $content->search($this->request, $this->project->isLoaded('Fields'));
+        $this->view->set('phire', $content);
+
         if (count($content->keys) == 0) {
             $this->view->set('error', 'No search keywords were passed. Please try again.');
         }
@@ -194,7 +229,7 @@ class IndexController extends AbstractController
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
         if (strpos($template, '[{categor') !== false) {
-            $content->setByCategory($template, $this->project->isLoaded('Fields'));
+            $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
         }
 
         $this->view->setTemplate($template);
@@ -209,10 +244,13 @@ class IndexController extends AbstractController
      */
     public function feed()
     {
-        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $this->view->set('acl', $this->project->getService('acl'))
-                       ->set('phireNav', $this->project->getService('phireNav'));
+            $this->prepareView(null, array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $this->prepareView();
         }
 
         $this->view->set('title', 'Feed');
@@ -249,23 +287,27 @@ class IndexController extends AbstractController
      */
     public function error($msg = null)
     {
-        $this->prepareView();
         if ($this->project->getService('acl')->isAuth()) {
-            $this->view->set('acl', $this->project->getService('acl'))
-                       ->set('phireNav', $this->project->getService('phireNav'));
+            $this->prepareView(null, array(
+                'acl'      => $this->project->getService('acl'),
+                'phireNav' => $this->project->getService('phireNav')
+            ));
+        } else {
+            $this->prepareView();
         }
 
         $content = new Model\Content();
         $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
         $code = (null !== $msg) ? 200 : 404;
 
-        $this->view->set('title', $title);
-        $this->view->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL);
+        $this->view->set('title', $title)
+                   ->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL)
+                   ->set('phire', $content);
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
         if (strpos($template, '[{categor') !== false) {
-            $content->setByCategory($template, $this->project->isLoaded('Fields'));
+            $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
         }
 
         $this->view->setTemplate($template);
@@ -349,7 +391,7 @@ class IndexController extends AbstractController
                             $this->response->setHeader('Content-Type', $tmpl[$device]['content_type']);
                         }
                     }
-                    $t = Model\Content::parse($t, $template);
+                    $t = Model\Template::parse($t, $template);
                 }
             // Else, if the template is a file
             } else {

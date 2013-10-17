@@ -9,8 +9,111 @@ use Pop\Form\Element;
 use Pop\I18n\I18n;
 use Phire\Table;
 
-class Config extends AbstractContentModel
+class Config extends AbstractModel
 {
+
+
+    /**
+     * Allowed media actions
+     *
+     * @var   array
+     */
+    protected static $mediaActions = array(
+        'resize'         => 'resize',
+        'resizeToWidth'  => 'resizeToWidth',
+        'resizeToHeight' => 'resizeToHeight',
+        'scale'          => 'scale',
+        'crop'           => 'crop',
+        'cropThumb'      => 'cropThumb'
+    );
+
+    /**
+     * Allowed media types
+     *
+     * @var   array
+     */
+    protected static $mediaTypes = array(
+        'ai'     => 'application/postscript',
+        'aif'    => 'audio/x-aiff',
+        'aiff'   => 'audio/x-aiff',
+        'avi'    => 'video/x-msvideo',
+        'bmp'    => 'image/x-ms-bmp',
+        'bz2'    => 'application/bzip2',
+        'css'    => 'text/css',
+        'csv'    => 'text/csv',
+        'doc'    => 'application/msword',
+        'docx'   => 'application/msword',
+        'eps'    => 'application/octet-stream',
+        'fla'    => 'application/octet-stream',
+        'flv'    => 'application/octet-stream',
+        'gif'    => 'image/gif',
+        'gz'     => 'application/x-gzip',
+        'html'   => 'text/html',
+        'htm'    => 'text/html',
+        'jpe'    => 'image/jpeg',
+        'jpg'    => 'image/jpeg',
+        'jpeg'   => 'image/jpeg',
+        'js'     => 'text/plain',
+        'json'   => 'text/plain',
+        'mov'    => 'video/quicktime',
+        'mp2'    => 'audio/mpeg',
+        'mp3'    => 'audio/mpeg',
+        'mp4'    => 'video/mp4',
+        'mpg'    => 'video/mpeg',
+        'mpeg'   => 'video/mpeg',
+        'otf'    => 'application/x-font-otf',
+        'pdf'    => 'application/pdf',
+        'phar'   => 'application/x-phar',
+        'php'    => 'text/plain',
+        'php3'   => 'text/plain',
+        'phtml'  => 'text/plain',
+        'png'    => 'image/png',
+        'ppt'    => 'application/msword',
+        'pptx'   => 'application/msword',
+        'psd'    => 'image/x-photoshop',
+        'rar'    => 'application/x-rar-compressed',
+        'sql'    => 'text/plain',
+        'svg'    => 'image/svg+xml',
+        'swf'    => 'application/x-shockwave-flash',
+        'tar'    => 'application/x-tar',
+        'tbz'    => 'application/bzip2',
+        'tbz2'   => 'application/bzip2',
+        'tgz'    => 'application/x-gzip',
+        'tif'    => 'image/tiff',
+        'tiff'   => 'image/tiff',
+        'tsv'    => 'text/tsv',
+        'ttf'    => 'application/x-font-ttf',
+        'txt'    => 'text/plain',
+        'wav'    => 'audio/x-wav',
+        'wma'    => 'audio/x-ms-wma',
+        'wmv'    => 'audio/x-ms-wmv',
+        'xls'    => 'application/msword',
+        'xlsx'   => 'application/msword',
+        'xhtml'  => 'application/xhtml+xml',
+        'xml'    => 'application/xml',
+        'yml'    => 'text/plain',
+        'zip'    => 'application/x-zip'
+    );
+
+    /**
+     * Get media actions
+     *
+     * @return array
+     */
+    public static function getMediaActions()
+    {
+        return self::$mediaActions;
+    }
+
+    /**
+     * Get media types
+     *
+     * @return array
+     */
+    public static function getMediaTypes()
+    {
+        return self::$mediaTypes;
+    }
 
     /**
      * Get configuration values
@@ -98,7 +201,7 @@ class Config extends AbstractContentModel
 
         // Set media actions and media types form elements
         $mediaConfig = $this->getMediaConfig($config['media_actions']);
-        $mediaTypes = $this->getMediaTypes($config['media_allowed_types']);
+        $mediaTypes = $this->getMediaAllowedTypes($config['media_allowed_types']);
 
         $imageAdapters = array('Gd' => 'Gd');
         if (\Pop\Image\Imagick::isInstalled()) {
@@ -290,7 +393,7 @@ class Config extends AbstractContentModel
         $mediaRemove = '                    <div id="media-remove">' . PHP_EOL . '                        <strong>Remove:</strong><br />' . PHP_EOL;
 
         $i = 1;
-        $actionOptions = array_merge(array('0' => '----'), Content::getMediaActions());
+        $actionOptions = array_merge(array('0' => '----'), self::$mediaActions);
         foreach ($actions as $size => $action) {
             $mediaSizes .= '                        <input type="text" name="media_size_' . $i . '" id="media_size_' . $i . '" value="' . $size . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $actionSelect = new Element\Select('media_action_' . $i, $actionOptions, $action['action'], '                        ');
@@ -324,9 +427,9 @@ class Config extends AbstractContentModel
      * @param  array $allowed
      * @return string
      */
-    protected function getMediaTypes($allowed)
+    protected function getMediaAllowedTypes($allowed)
     {
-        $mediaTypeValues = Content::getMediaTypes();
+        $mediaTypeValues = self::$mediaTypes;
         $mediaTypes = '                    <div class="media-types-div">' . PHP_EOL;
 
         $i = 0;

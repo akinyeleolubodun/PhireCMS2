@@ -7,7 +7,7 @@ namespace Phire\Model;
 use Pop\Data\Type\Html;
 use Phire\Table;
 
-class ContentType extends AbstractContentModel
+class ContentType extends AbstractModel
 {
 
     /**

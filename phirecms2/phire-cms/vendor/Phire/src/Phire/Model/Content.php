@@ -8,216 +8,93 @@ use Pop\Archive\Archive;
 use Pop\Data\Type\Html;
 use Pop\File\Dir;
 use Pop\File\File;
+use Pop\Filter\String;
+use Pop\Nav\Nav;
 use Pop\Web\Session;
 use Phire\Table;
 
-class Content extends AbstractContentModel
+class Content extends AbstractModel
 {
 
     /**
-     * Allowed media actions
-     *
-     * @var   array
+     * Constant for unpublished
      */
-    protected static $mediaActions = array(
-        'resize'         => 'resize',
-        'resizeToWidth'  => 'resizeToWidth',
-        'resizeToHeight' => 'resizeToHeight',
-        'scale'          => 'scale',
-        'crop'           => 'crop',
-        'cropThumb'      => 'cropThumb'
-    );
+    const UNPUBLISHED = 0;
 
     /**
-     * Allowed media types
-     *
-     * @var   array
+     * Constant for draft
      */
-    protected static $mediaTypes = array(
-        'ai'     => 'application/postscript',
-        'aif'    => 'audio/x-aiff',
-        'aiff'   => 'audio/x-aiff',
-        'avi'    => 'video/x-msvideo',
-        'bmp'    => 'image/x-ms-bmp',
-        'bz2'    => 'application/bzip2',
-        'css'    => 'text/css',
-        'csv'    => 'text/csv',
-        'doc'    => 'application/msword',
-        'docx'   => 'application/msword',
-        'eps'    => 'application/octet-stream',
-        'fla'    => 'application/octet-stream',
-        'flv'    => 'application/octet-stream',
-        'gif'    => 'image/gif',
-        'gz'     => 'application/x-gzip',
-        'html'   => 'text/html',
-        'htm'    => 'text/html',
-        'jpe'    => 'image/jpeg',
-        'jpg'    => 'image/jpeg',
-        'jpeg'   => 'image/jpeg',
-        'js'     => 'text/plain',
-        'json'   => 'text/plain',
-        'mov'    => 'video/quicktime',
-        'mp2'    => 'audio/mpeg',
-        'mp3'    => 'audio/mpeg',
-        'mp4'    => 'video/mp4',
-        'mpg'    => 'video/mpeg',
-        'mpeg'   => 'video/mpeg',
-        'otf'    => 'application/x-font-otf',
-        'pdf'    => 'application/pdf',
-        'phar'   => 'application/x-phar',
-        'php'    => 'text/plain',
-        'php3'   => 'text/plain',
-        'phtml'  => 'text/plain',
-        'png'    => 'image/png',
-        'ppt'    => 'application/msword',
-        'pptx'   => 'application/msword',
-        'psd'    => 'image/x-photoshop',
-        'rar'    => 'application/x-rar-compressed',
-        'sql'    => 'text/plain',
-        'svg'    => 'image/svg+xml',
-        'swf'    => 'application/x-shockwave-flash',
-        'tar'    => 'application/x-tar',
-        'tbz'    => 'application/bzip2',
-        'tbz2'   => 'application/bzip2',
-        'tgz'    => 'application/x-gzip',
-        'tif'    => 'image/tiff',
-        'tiff'   => 'image/tiff',
-        'tsv'    => 'text/tsv',
-        'ttf'    => 'application/x-font-ttf',
-        'txt'    => 'text/plain',
-        'wav'    => 'audio/x-wav',
-        'wma'    => 'audio/x-ms-wma',
-        'wmv'    => 'audio/x-ms-wmv',
-        'xls'    => 'application/msword',
-        'xlsx'   => 'application/msword',
-        'xhtml'  => 'application/xhtml+xml',
-        'xml'    => 'application/xml',
-        'yml'    => 'text/plain',
-        'zip'    => 'application/x-zip'
-    );
+    const DRAFT = 1;
 
     /**
-     * Get media actions
-     *
-     * @return array
+     * Constant for published
      */
-    public static function getMediaActions()
+    const PUBLISHED = 2;
+
+    /**
+     * Image types regex
+     *
+     * @var   string
+     */
+    protected static $imageRegex = '/^.*\.(ai|eps|gif|jpe|jpg|jpeg|pdf|png|psd)$/i';
+
+    /**
+     * Method to check is content object is allowed
+     *
+     * @param  mixed $content
+     * @return boolean
+     */
+    public static function isAllowed($content)
     {
-        return self::$mediaActions;
-    }
+        $sess = Session::getInstance();
+        $user = (isset($sess->user)) ? $sess->user : null;
 
-    /**
-     * Get media types
-     *
-     * @return array
-     */
-    public static function getMediaTypes()
-    {
-        return self::$mediaTypes;
-    }
-
-    /**
-     * Static method to parse placeholders within string content
-     *
-     * @param  string $c
-     * @param  mixed  $id
-     * @param  mixed  $pid
-     * @return string
-     */
-    public static function parse($c, $id = null, $pid = null)
-    {
-        // Parse any date placeholders
-        $dates = array();
-        preg_match_all('/\[\{date.*\}\]/', $c, $dates);
-        if (isset($dates[0]) && isset($dates[0][0])) {
-            foreach ($dates[0] as $date) {
-                $pattern = str_replace('}]', '', substr($date, (strpos($date, '_') + 1)));
-                $c = str_replace($date, date($pattern), $c);
+        // Get any content roles
+        $rolesAry = array();
+        if (isset($content->title)) {
+            $roles = Table\ContentToRoles::findAll(null, array('content_id' => $content->id));
+            foreach ($roles->rows as $role) {
+                $rolesAry[] = $role->role_id;
             }
         }
 
-        // Parse any template placeholders
-        $tmpls = array();
-        preg_match_all('/\[\{template_.*\}\]/', $c, $tmpls);
-        if (isset($tmpls[0]) && isset($tmpls[0][0])) {
-            foreach ($tmpls[0] as $tmpl) {
-                $t = str_replace('}]', '', substr($tmpl, (strpos($tmpl, '_') + 1)));
-                if (($t != $id) && ($t != $pid)) {
-                    $template = (is_numeric($t)) ? Table\Templates::findById($t) : Table\Templates::findBy(array('name' => $t));
-                    if (isset($template->id)) {
-                        $t = self::parse($template->template, $template->id, $id);
-                        $c = str_replace($tmpl, $t, $c);
-                    } else {
-                        $c = str_replace($tmpl, '', $c);
+        // If there are no roles, or the user's role is allowed
+        if ((count($rolesAry) == 0) || ((count($rolesAry) > 0) && (null !== $user) && in_array($user['role_id'], $rolesAry))) {
+            $allowed = true;
+        // Else, not allowed
+        } else {
+            $allowed = false;
+        }
+
+        // Check if the content is published, a draft or expired
+        if (isset($content->title) && (null !== $content->status)) {
+            // If a regular URI type
+            if (($content->type_uri == 1) && ((strtotime($content->published) >= time()) ||
+                ((null !== $content->expired) && ($content->expired != '0000-00-00 00:00:00') && (strtotime($content->expired) <= time())))) {
+                $allowed = false;
+            // Else, if an event type
+            } else if ($content->type_uri == 2) {
+                // If no end date
+                if ((null === $content->expired) || ($content->expired == '0000-00-00 00:00:00')) {
+                    if (strtotime($content->published) < time()) {
+                        $allowed = false;
                     }
                 } else {
-                    $c = str_replace($tmpl, '', $c);
-                }
-            }
-        }
-
-        // Parse any session placeholder
-        $open  = array();
-        $close = array();
-        $merge = array();
-        $sess  = array();
-        preg_match_all('/\[\{sess\}\]/msi', $c, $open, PREG_OFFSET_CAPTURE);
-        preg_match_all('/\[\{\/sess\}\]/msi', $c, $close, PREG_OFFSET_CAPTURE);
-
-        // If matches are found, format and merge the results.
-        if ((isset($open[0][0])) && (isset($close[0][0]))) {
-            foreach ($open[0] as $key => $value) {
-                $merge[] = array($open[0][$key][0] => $open[0][$key][1], $close[0][$key][0] => $close[0][$key][1]);
-            }
-        }
-        foreach ($merge as $match) {
-            $sess[] = substr($c, $match['[{sess}]'], (($match['[{/sess}]'] - $match['[{sess}]']) + 9));
-        }
-
-        if (count($sess) > 0) {
-            $session = Session::getInstance();
-            foreach ($sess as $s) {
-                $sessString = str_replace(array('[{sess}]', '[{/sess}]'), array('', ''), $s);
-
-                if (strpos($sessString, '[{or}]') !== false) {
-                    $sessValues = explode('[{or}]', $sessString);
-                    if (isset($sessValues[0]) && isset($sessValues[1])) {
-                        $sessValues[0] = str_replace(array('[{', '}]'), array('', ''), $sessValues[0]);
-                        if (strpos($sessValues[0], '->') !== false) {
-                            $sV = explode('->', $sessValues[0]);
-                            if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
-                                $c = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $c);
-                            } else {
-                                $c = str_replace($s, $sessValues[1], $c);
-                            }
-                        } else if (isset($session->{$sessValues[0]})) {
-                            $c = str_replace($s, $session->{$sessValues[0]}, $c);
-                        } else {
-                            $c = str_replace($s, $sessValues[1], $c);
-                        }
-                    } else {
-                        $c = str_replace($s, '', $c);
-                    }
-                } else {
-                    $sessValue = str_replace(array('[{', '}]'), array('', ''), $sessString);
-                    if (strpos($sessValue, '->') !== false) {
-                        $sV = explode('->', $sessValue);
-                        if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
-                            $c = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $c);
-                        } else {
-                            $c = str_replace($s, '', $c);
-                        }
-                    } else if (isset($session->{$sessValue})) {
-                        $c = str_replace($s, $session->{$sessValue}, $c);
-                    } else {
-                        $c = str_replace($s, '', $c);
+                    if (strtotime($content->expired) <= time()) {
+                        $allowed = false;
                     }
                 }
             }
+
+            // Published status override
+            if ((int)$content->status == self::UNPUBLISHED) {
+                $allowed = false;
+            } else if ((int)$content->status == self::DRAFT) {
+                $allowed = (isset($sess->user) && (strtolower($sess->user->type) == 'user'));
+            }
         }
 
-
-        return $c;
+        return $allowed;
     }
 
     /**
@@ -432,9 +309,7 @@ class Content extends AbstractContentModel
         $content = Table\Content::execute($sql->render(true), array('uri' => $uri));
 
         if (isset($content->id)) {
-            $this->getNav($content);
-            $this->isAllowed($content);
-
+            $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
 
             // If the Fields module is installed, and if there are fields for this form/model
@@ -461,9 +336,7 @@ class Content extends AbstractContentModel
         if (empty($date['uri'])) {
             $this->data['rows'] = $content->rows;
         } else if (isset($content->id)) {
-            $this->getNav($content);
-            $this->isAllowed($content);
-
+            $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
 
             // If the Fields module is installed, and if there are fields for this form/model
@@ -476,6 +349,74 @@ class Content extends AbstractContentModel
     }
 
     /**
+     * Get content by category method
+     *
+     * @param  mixed  $cat
+     * @param  string  $orderBy
+     * @param  int     $limit
+     * @param  boolean $isFields
+     * @return array
+     */
+    public function getByCategory($cat, $orderBy = 'id ASC', $limit = null, $isFields = false)
+    {
+        if (!is_numeric($cat)) {
+            $c = Table\Categories::findBy(array('category' => $cat));
+        } else {
+            $c = Table\Categories::findById($cat);
+        }
+
+        $contentAry = array();
+        if (isset($c->id)) {
+            $sql = Table\Content::getSql();
+            $sql->select(array(
+                0          => DB_PREFIX . 'content.id',
+                1          => DB_PREFIX . 'content.type_id',
+                2          => DB_PREFIX . 'content.parent_id',
+                3          => DB_PREFIX . 'content.template',
+                4          => DB_PREFIX . 'content.title',
+                'uri'      => DB_PREFIX . 'content.uri',
+                6          => DB_PREFIX . 'content.slug',
+                9          => DB_PREFIX . 'content.feed',
+                10         => DB_PREFIX . 'content.force_ssl',
+                11         => DB_PREFIX . 'content.status',
+                12         => DB_PREFIX . 'content.created',
+                13         => DB_PREFIX . 'content.updated',
+                14         => DB_PREFIX . 'content.published',
+                15         => DB_PREFIX . 'content.expired',
+                16         => DB_PREFIX . 'content.created_by',
+                17         => DB_PREFIX . 'content.updated_by',
+                'type_uri' => DB_PREFIX . 'content_types.uri'
+            ));
+
+            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_to_categories', array('id', 'content_id'), 'LEFT JOIN');
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_categories.category_id', ':category_id');
+            $order = explode(' ', $orderBy);
+            $sql->select()->orderBy($order[0], $order[1]);
+            if (null !== $limit) {
+                $sql->select()->limit((int)$limit);
+            }
+            $content = Table\Content::execute($sql->render(true), array('category_id' => $c->id));
+
+            if (isset($content->rows[0])) {
+                foreach ($content->rows as $cont) {
+                    if (self::isAllowed($cont)) {
+                        $contentValues = (array)$cont;
+
+                        // If the Fields module is installed, and if there are fields for this form/model
+                        if ($isFields) {
+                            $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($cont->id, true));
+                        }
+                        $contentAry[] = new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
+                    }
+                }
+            }
+        }
+
+        return $contentAry;
+    }
+
+    /**
      * Search for content
      *
      * @param  boolean $isFields
@@ -484,7 +425,6 @@ class Content extends AbstractContentModel
      */
     public function search($request, $isFields = false)
     {
-        $this->getNav();
         $this->data['keys'] = array();
         $this->data['results'] = array();
         $track = array();
@@ -691,6 +631,30 @@ class Content extends AbstractContentModel
         }
 
         return $entries;
+    }
+
+    /**
+     * Method to get content breadcrumb
+     *
+     * @return string
+     */
+    public function getBreadcrumb()
+    {
+        $breadcrumb = $this->title;
+        $pId = $this->parent_id;
+
+        while ($pId != 0) {
+            $content = Table\Content::findById($pId);
+            if (isset($content->id)) {
+                if ($content->status == self::PUBLISHED) {
+                    $breadcrumb = '<a href="' . BASE_PATH . $content->uri . '">' . $content->title . '</a> ' .
+                        $this->config->separator . ' ' . $breadcrumb;
+                }
+                $pId = $content->parent_id;
+            }
+        }
+
+        return $breadcrumb;
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Phire\Model;
 use Pop\Data\Type\Html;
 use Phire\Table;
 
-class Category extends AbstractContentModel
+class Category extends AbstractModel
 {
 
     /**
@@ -123,7 +123,6 @@ class Category extends AbstractContentModel
     {
         $category = Table\Categories::findBy(array('uri' => $uri));
         if (isset($category->id)) {
-            $this->getNav($category);
             $categoryValues = $category->getValues();
             $categoryValues['title'] = $categoryValues['category'];
 
@@ -367,6 +366,28 @@ class Category extends AbstractContentModel
     }
 
     /**
+     * Method to get category breadcrumb
+     *
+     * @return string
+     */
+    public function getBreadcrumb()
+    {
+        $breadcrumb = $this->category;
+        $pId = $this->parent_id;
+
+        while ($pId != 0) {
+            $category = Table\Categories::findById($pId);
+            if (isset($category->id)) {
+                $breadcrumb = '<a href="' . BASE_PATH . '/category' . $category->uri . '">' . $category->category . '</a> ' .
+                    $this->config->separator . ' ' . $breadcrumb;
+                $pId = $category->parent_id;
+            }
+        }
+
+        return $breadcrumb;
+    }
+
+    /**
      * Recursive function to get a formatted array of nested categories id => category
      *
      * @param  array $categories
@@ -380,6 +401,45 @@ class Category extends AbstractContentModel
                 $this->getCategories($category['children'], ($depth + 1));
             }
         }
+    }
+
+    /**
+     * Recursive method to get category children
+     *
+     * @param array   $category
+     * @param int     $pid
+     * @param boolean $count
+     * @return  array
+     */
+    protected function getChildren($category, $pid, $count = false)
+    {
+        $children = array();
+        foreach ($category as $c) {
+            if ($c->parent_id == $pid) {
+                // Get any content roles
+                $rolesAry = array();
+                if (isset($c->title)) {
+                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
+                    foreach ($roles->rows as $role) {
+                        $rolesAry[] = $role->role_id;
+                    }
+                }
+
+                $p = (array)$c;
+                $p['uri'] = BASE_PATH . '/category'  . $c->uri;
+                $p['href'] = $p['uri'];
+                $p['name'] = $c->category;
+
+                if (($count) && ($c->total)) {
+                    $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
+                }
+
+                $p['children'] = $this->getChildren($category, $c->id, $count);
+                $children[] = $p;
+            }
+        }
+
+        return $children;
     }
 
 }

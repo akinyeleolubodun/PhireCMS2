@@ -5,11 +5,166 @@
 namespace Phire\Model;
 
 use Pop\Data\Type\Html;
+use Pop\Web\Session;
 use Phire\Form;
 use Phire\Table;
 
-class Template extends AbstractContentModel
+class Template extends AbstractModel
 {
+
+    /**
+     * Static method to parse placeholders within string content
+     *
+     * @param  string $tmp
+     * @param  mixed  $id
+     * @param  mixed  $pid
+     * @return string
+     */
+    public static function parse($tmp, $id = null, $pid = null)
+    {
+        // Parse any date placeholders
+        $dates = array();
+        preg_match_all('/\[\{date.*\}\]/', $tmp, $dates);
+        if (isset($dates[0]) && isset($dates[0][0])) {
+            foreach ($dates[0] as $date) {
+                $pattern = str_replace('}]', '', substr($date, (strpos($date, '_') + 1)));
+                $tmp = str_replace($date, date($pattern), $tmp);
+            }
+        }
+
+        // Parse any template placeholders
+        $tmpls = array();
+        preg_match_all('/\[\{template_.*\}\]/', $tmp, $tmpls);
+        if (isset($tmpls[0]) && isset($tmpls[0][0])) {
+            foreach ($tmpls[0] as $tmpl) {
+                $t = str_replace('}]', '', substr($tmpl, (strpos($tmpl, '_') + 1)));
+                if (($t != $id) && ($t != $pid)) {
+                    $template = (is_numeric($t)) ? Table\Templates::findById($t) : Table\Templates::findBy(array('name' => $t));
+                    if (isset($template->id)) {
+                        $t = self::parse($template->template, $template->id, $id);
+                        $tmp = str_replace($tmpl, $t, $tmp);
+                    } else {
+                        $tmp = str_replace($tmpl, '', $tmp);
+                    }
+                } else {
+                    $tmp = str_replace($tmpl, '', $tmp);
+                }
+            }
+        }
+
+        // Parse any session placeholder
+        $open  = array();
+        $close = array();
+        $merge = array();
+        $sess  = array();
+        preg_match_all('/\[\{sess\}\]/msi', $tmp, $open, PREG_OFFSET_CAPTURE);
+        preg_match_all('/\[\{\/sess\}\]/msi', $tmp, $close, PREG_OFFSET_CAPTURE);
+
+        // If matches are found, format and merge the results.
+        if ((isset($open[0][0])) && (isset($close[0][0]))) {
+            foreach ($open[0] as $key => $value) {
+                $merge[] = array($open[0][$key][0] => $open[0][$key][1], $close[0][$key][0] => $close[0][$key][1]);
+            }
+        }
+        foreach ($merge as $match) {
+            $sess[] = substr($tmp, $match['[{sess}]'], (($match['[{/sess}]'] - $match['[{sess}]']) + 9));
+        }
+
+        if (count($sess) > 0) {
+            $session = Session::getInstance();
+            foreach ($sess as $s) {
+                $sessString = str_replace(array('[{sess}]', '[{/sess}]'), array('', ''), $s);
+
+                if (strpos($sessString, '[{or}]') !== false) {
+                    $sessValues = explode('[{or}]', $sessString);
+                    if (isset($sessValues[0]) && isset($sessValues[1])) {
+                        $sessValues[0] = str_replace(array('[{', '}]'), array('', ''), $sessValues[0]);
+                        if (strpos($sessValues[0], '->') !== false) {
+                            $sV = explode('->', $sessValues[0]);
+                            if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
+                                $tmp = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $tmp);
+                            } else {
+                                $tmp = str_replace($s, $sessValues[1], $tmp);
+                            }
+                        } else if (isset($session->{$sessValues[0]})) {
+                            $tmp = str_replace($s, $session->{$sessValues[0]}, $tmp);
+                        } else {
+                            $tmp = str_replace($s, $sessValues[1], $tmp);
+                        }
+                    } else {
+                        $tmp = str_replace($s, '', $tmp);
+                    }
+                } else {
+                    $sessValue = str_replace(array('[{', '}]'), array('', ''), $sessString);
+                    if (strpos($sessValue, '->') !== false) {
+                        $sV = explode('->', $sessValue);
+                        if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
+                            $tmp = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $tmp);
+                        } else {
+                            $tmp = str_replace($s, '', $tmp);
+                        }
+                    } else if (isset($session->{$sessValue})) {
+                        $tmp = str_replace($s, $session->{$sessValue}, $tmp);
+                    } else {
+                        $tmp = str_replace($s, '', $tmp);
+                    }
+                }
+            }
+        }
+
+        return $tmp;
+    }
+
+    /**
+     * Parse categories method
+     *
+     * @param  mixed   $template
+     * @param  boolean $isFields
+     * @return array
+     */
+    public static function parseCategories($template, $isFields = false)
+    {
+        $catAry  = array();
+        $cats    = array();
+        $content = new Content();
+        preg_match_all('/\[\{category_.*\}\]/', $template, $cats);
+        if (isset($cats[0]) && isset($cats[0][0])) {
+            foreach ($cats[0] as $cat) {
+                $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
+                if ($c != 'nav') {
+                    if (strpos($c, '_') !== false) {
+                        $cAry = explode('_', $c);
+                        $ct = $cAry[0];
+                        $orderBy = (isset($cAry[1])) ? $cAry[1] : 'id ASC';
+                        $limit = (isset($cAry[2])) ? $cAry[2] : null;
+                        $cont = $content->getByCategory($ct, $orderBy, $limit, $isFields);
+                    } else {
+                        $cont = $content->getByCategory($c, 'id ASC', null, $isFields);
+                    }
+                    $catAry['category_' . $c] = $cont;
+                }
+            }
+        }
+
+        $cats = array();
+        preg_match_all('/\[\{categories_.*\}\]/', $template, $cats);
+        if (isset($cats[0]) && isset($cats[0][0])) {
+            foreach ($cats[0] as $cat) {
+                $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
+                $category = new \Phire\Model\Category();
+                if (strpos($c, '_') !== false) {
+                    $cAry = explode('_', $c);
+                    $ct = $cAry[0];
+                    $limit = (isset($cAry[1])) ? $cAry[1] : null;
+                    $catAry['categories_' . $c] = $category->getChildCategories($ct, $limit, $isFields);
+                } else {
+                    $catAry['categories_' . $c] = $category->getChildCategories($c, null, $isFields);
+                }
+            }
+        }
+
+        return $catAry;
+    }
 
     /**
      * Get all templates method

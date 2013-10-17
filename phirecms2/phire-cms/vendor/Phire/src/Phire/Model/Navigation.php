@@ -5,9 +5,12 @@
 namespace Phire\Model;
 
 use Pop\Data\Type\Html;
+use Pop\Filter\String;
+use Pop\Nav\Nav;
+use Pop\Web\Session;
 use Phire\Table;
 
-class Navigation extends AbstractContentModel
+class Navigation extends AbstractModel
 {
 
     /**
@@ -78,6 +81,177 @@ class Navigation extends AbstractContentModel
             $table = Html::encode($navAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
             $this->data['table'] = $table;
         }
+    }
+
+    /**
+     * Method to get all content navigation
+     *
+     * @return array
+     */
+    public function getContentNav()
+    {
+        // Get main navs
+        $navigations = Table\Navigation::findAll();
+        $navs = array();
+
+        foreach ($navigations->rows as $nav) {
+            $sql = Table\Content::getSql();
+            $sql->select(array(
+                DB_PREFIX . 'content.id',
+                DB_PREFIX . 'content.type_id',
+                DB_PREFIX . 'content.parent_id',
+                DB_PREFIX . 'content.template',
+                DB_PREFIX . 'content.title',
+                DB_PREFIX . 'content.uri',
+                DB_PREFIX . 'content.slug',
+                DB_PREFIX . 'content.feed',
+                DB_PREFIX . 'content.force_ssl',
+                DB_PREFIX . 'content.status',
+                DB_PREFIX . 'content.created',
+                DB_PREFIX . 'content.updated',
+                DB_PREFIX . 'content.published',
+                DB_PREFIX . 'content.expired',
+                DB_PREFIX . 'content.created_by',
+                DB_PREFIX . 'content.updated_by',
+                'type_uri' => DB_PREFIX . 'content_types.uri',
+                DB_PREFIX . 'content_to_navigation.navigation_id',
+            ));
+
+            // If it's a draft and a user is logged in
+            if (isset($this->data['acl']) && ($this->data['acl']->isAuth())) {
+                $sql->select()->where()->notEqualTo(DB_PREFIX . 'content.status', 0, 'AND');
+            } else {
+                $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', \Phire\Model\Content::PUBLISHED, 'AND');
+            }
+
+            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_to_navigation', array('id', 'content_id'), 'LEFT JOIN');
+            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_navigation.navigation_id', $nav->id, 'AND');
+
+            $sql->select()->orderBy(DB_PREFIX . 'content_to_navigation.order', 'ASC');
+
+            $allContent = Table\Content::execute($sql->render(true));
+
+            if (isset($allContent->rows[0])) {
+                $top = array(
+                    'node' => (null !== $nav->top_node) ? $nav->top_node : 'ul',
+                    'id'   => (null !== $nav->top_id) ? $nav->top_id : String::slug($nav->navigation)
+                );
+                $parent = array();
+                $child  = array();
+
+                if (null !== $nav->top_class) {
+                    $top['class'] = $nav->top_class;
+                }
+                if (null !== $nav->top_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->top_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $top['attributes'] = $attribs;
+                }
+
+                if (null !== $nav->parent_node) {
+                    $parent['node'] = $nav->parent_node;
+                }
+                if (null !== $nav->parent_id) {
+                    $parent['id'] = $nav->parent_id;
+                }
+                if (null !== $nav->parent_class) {
+                    $parent['class'] = $nav->parent_class;
+                }
+                if (null !== $nav->parent_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->parent_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $parent['attributes'] = $attribs;
+                }
+
+                if (null !== $nav->child_node) {
+                    $child['node'] = $nav->child_node;
+                }
+                if (null !== $nav->child_id) {
+                    $child['id'] = $nav->child_id;
+                }
+                if (null !== $nav->child_class) {
+                    $child['class'] = $nav->child_class;
+                }
+                if (null !== $nav->child_attributes) {
+                    $attribs = array();
+                    $attsAry = explode(' ', $nav->child_attributes);
+                    foreach ($attsAry as $att) {
+                        $a = explode('=', $att);
+                        if (isset($a[0]) && isset($a[1])) {
+                            $attribs[trim($a[0])] = str_replace('"', '', trim($a[1]));
+                        }
+                    }
+                    $child['attributes'] = $attribs;
+                }
+
+                $on  = (null !== $nav->on_class) ? $nav->on_class : null;
+                $off = (null !== $nav->off_class) ? $nav->off_class : null;
+
+                $navConfig = array(
+                    'top'    => $top,
+                    'parent' => $parent,
+                    'child'  => $child,
+                    'on'     => $on,
+                    'off'    => $off
+                );
+
+                if (isset($allContent->rows[0])) {
+                    $navChildren = $this->getContentChildren($allContent->rows, 0);
+                    if (count($navChildren) > 0) {
+                        $navName = str_replace('-', '_', String::slug($nav->navigation));
+                        $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
+                        $newNav = new Nav($navChildren, $navConfig);
+                        $newNav->nav()->setIndent($indent);
+                        $navs[$navName] = $newNav;
+                    }
+                }
+            }
+        }
+
+        return $navs;
+    }
+
+    /**
+     * Method to get category navigation
+     *
+     * @return mixed
+     */
+    public function getCategoryNav()
+    {
+        $nav = null;
+        $categories = Table\Categories::getCategoriesWithCount();
+        if (isset($categories->rows[0])) {
+            // Get category nav
+            $catConfig = array(
+                'top' => array(
+                    'id'    => 'category-nav'
+                ),
+                'parent' => array(
+                    'class' => 'category-nav-level'
+                ),
+                'on' => 'category-nav-on'
+            );
+            $navChildren = $this->getCategoryChildren($categories->rows, 0, true);
+            if (count($navChildren) > 0) {
+                $nav = new Nav($navChildren, $catConfig);
+                $nav->nav()->setIndent('    ');
+            }
+        }
+
+        return $nav;
     }
 
     /**
@@ -203,6 +377,81 @@ class Navigation extends AbstractContentModel
                 }
             }
         }
+    }
+
+    /**
+     * Recursive method to get content children
+     *
+     * @param  array   $content
+     * @param  int     $pid
+     * @return array
+     */
+    protected function getContentChildren($content, $pid)
+    {
+        $children = array();
+        foreach ($content as $c) {
+            if ($c->parent_id == $pid) {
+                // Get any content roles
+                $rolesAry = array();
+                if (isset($c->title)) {
+                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
+                    foreach ($roles->rows as $role) {
+                        $rolesAry[] = $role->role_id;
+                    }
+                }
+
+                $p = (array)$c;
+                $p['uri'] = BASE_PATH . $c->uri;
+                $p['href'] = $p['uri'];
+                $p['name'] = $c->title;
+
+                if (\Phire\Model\Content::isAllowed($c)) {
+                    $p['children'] = $this->getContentChildren($content, $c->id);
+                    $children[] = $p;
+                }
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * Recursive method to get category children
+     *
+     * @param array   $category
+     * @param int     $pid
+     * @param boolean $count
+     * @return  array
+     */
+    protected function getCategoryChildren($category, $pid, $count = false)
+    {
+        $children = array();
+        foreach ($category as $c) {
+            if ($c->parent_id == $pid) {
+                // Get any content roles
+                $rolesAry = array();
+                if (isset($c->title)) {
+                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
+                    foreach ($roles->rows as $role) {
+                        $rolesAry[] = $role->role_id;
+                    }
+                }
+
+                $p = (array)$c;
+                $p['uri'] = BASE_PATH . '/category'  . $c->uri;
+                $p['href'] = $p['uri'];
+                $p['name'] = $c->category;
+
+                if (($count) && ($c->total)) {
+                    $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
+                }
+
+                $p['children'] = $this->getCategoryChildren($category, $c->id, $count);
+                $children[] = $p;
+            }
+        }
+
+        return $children;
     }
 
 }

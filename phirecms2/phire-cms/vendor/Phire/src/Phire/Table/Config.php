@@ -84,7 +84,7 @@ class Config extends Record
             }
         }
 
-        $allowedTypes = Model\Content::getMediaTypes();
+        $allowedTypes = Model\Config::getMediaTypes();
         foreach ($allowedTypes as $key => $value) {
             if (!in_array($key, $config['media_allowed_types'])) {
                 unset($allowedTypes[$key]);
