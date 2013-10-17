@@ -224,7 +224,7 @@ class RolesController extends AbstractController
     {
         if (null !== $this->request->getPath(1)) {
             $resources = \Phire\Model\UserRole::getResources($this->project->module('Phire'));
-            $class = urldecode($this->request->getPath(1));
+            $class = str_replace('_', '\\', urldecode($this->request->getPath(1)));
             $actions = array();
 
             foreach ($resources as $key => $resource) {

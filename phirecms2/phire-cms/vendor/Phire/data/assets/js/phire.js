@@ -69,7 +69,7 @@ var changePermissions = function(sel) {
 
     if (marked != 0) {
         var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-        var j = $().json.parse(jsonLoc + encodeURIComponent(marked));
+        var j = $().json.parse(jsonLoc + encodeURIComponent(marked.replace(/\\/g, '_')));
         for (var i = 0; i < j.actions.length; i++) {
             $('#permission_' + cur + '_' + id).append('option', {"value" : j.actions[i]}, j.actions[i]);
         }
