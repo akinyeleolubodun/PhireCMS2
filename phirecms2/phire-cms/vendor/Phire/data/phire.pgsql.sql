@@ -261,12 +261,12 @@ INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "feed", "for
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_navigation"
+-- Table structure for table "navigation"
 --
 
 CREATE SEQUENCE navigation_id_seq START 7001;
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]navigation" (
   "id" integer NOT NULL DEFAULT nextval('navigation_id_seq'),
   "navigation" varchar(255) NOT NULL,
   "spaces" integer,
@@ -288,10 +288,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
 ) ;
 
 --
--- Dumping data for table "content_navigation"
+-- Dumping data for table "navigation"
 --
 
-INSERT INTO "[{prefix}]content_navigation" ("navigation", "spaces", "top_node", "top_id") VALUES
+INSERT INTO "[{prefix}]navigation" ("navigation", "spaces", "top_node", "top_id") VALUES
 ('Main Nav', 4, 'ul', 'main-nav');
 
 -- --------------------------------------------------------
@@ -306,7 +306,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
   "order" integer NOT NULL,
   UNIQUE ("content_id", "navigation_id"),
   CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]content_navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 --
@@ -319,12 +319,12 @@ INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "o
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_categories"
+-- Table structure for table "categories"
 --
 
 CREATE SEQUENCE category_id_seq START 8001;
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]categories" (
   "id" integer NOT NULL DEFAULT nextval('category_id_seq'),
   "parent_id" integer,
   "title" varchar(255) NOT NULL,
@@ -333,10 +333,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "order" integer NOT NULL,
   "total" integer NOT NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE category_id_seq OWNED BY "[{prefix}]content_categories"."id";
+ALTER SEQUENCE category_id_seq OWNED BY "[{prefix}]categories"."id";
 
 -- --------------------------------------------------------
 
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
   "category_id" integer NOT NULL,
   UNIQUE ("content_id", "category_id"),
   CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 
@@ -370,12 +370,12 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_roles" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_templates"
+-- Table structure for table "templates"
 --
 
 CREATE SEQUENCE template_id_seq START 9001;
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   "id" integer NOT NULL DEFAULT nextval('template_id_seq'),
   "parent_id" integer,
   "name" varchar(255) NOT NULL,
@@ -383,10 +383,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
   "device" varchar(255) NOT NULL,
   "template" text NOT NULL,
 PRIMARY KEY ("id"),
-CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]content_templates"."id";
+ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]templates"."id";
 
 -- --------------------------------------------------------
 

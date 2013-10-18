@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\Phire\Content;
+namespace Phire\Controller\Phire\Structure;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -14,11 +14,11 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class NavigationController extends AbstractController
+class TemplatesController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the navigation controller object
+     * Constructor method to instantiate the templates controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -30,16 +30,16 @@ class NavigationController extends AbstractController
     {
         if (null === $viewPath) {
             $cfg = $project->module('Phire')->asArray();
-            $viewPath = __DIR__ . '/../../../../../view/phire/content';
+            $viewPath = __DIR__ . '/../../../../../view/phire/structure';
 
             if (isset($cfg['view'])) {
                 $class = get_class($this);
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'] . '/content';
+                    $viewPath = $cfg['view']['*'] . '/structure';
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'] . '/content';
+                    $viewPath = $cfg['view'] . '/structure';
                 }
             }
         }
@@ -48,40 +48,41 @@ class NavigationController extends AbstractController
     }
 
     /**
-     * Navigation index method
+     * Templates index method
      *
      * @return void
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/navigation.phtml', array(
-            'assets'   => $this->project->getAssets(),
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Navigation'
-        ));
-        $navigation = new Model\Navigation(array('acl' => $this->project->getService('acl')));
-        $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $navigation->table);
-        $this->send();
-    }
-
-    /**
-     * Navigation add method
-     *
-     * @return void
-     */
-    public function add()
-    {
-        $this->prepareView($this->viewPath . '/navigation.phtml', array(
+        $this->prepareView($this->viewPath . '/templates.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Navigation ' . $this->view->separator . ' Add');
+        $template = new Model\Template(array('acl' => $this->project->getService('acl')));
+        $template->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
+        $this->view->set('table', $template->table)
+                   ->set('title', 'Structure ' . $this->view->separator . ' Templates');
+        $this->send();
+    }
 
-        $form = new Form\Navigation(
+    /**
+     * Templates add method
+     *
+     * @return void
+     */
+    public function add()
+    {
+        $this->prepareView($this->viewPath . '/templates.phtml', array(
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
+
+        $this->view->set('title', 'Structure ' . $this->view->separator . ' Templates ' . $this->view->separator . ' Add');
+
+        $form = new Form\Template(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
         );
@@ -89,20 +90,20 @@ class NavigationController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
+                array('htmlentities'),
                 array(null, array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
-                $navigation = new Model\Navigation();
-                $navigation->save($form, $this->project->isLoaded('Fields'));
+                $template = new Model\Template();
+                $template->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                    Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
                     $this->sendJson(array(
-                        'redirect' => $this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time(),
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time(),
                         'updated'  => '',
-                        'form'     => 'navigation-form'
+                        'form'     => 'template-form'
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -122,7 +123,7 @@ class NavigationController extends AbstractController
     }
 
     /**
-     * Navigation edit method
+     * Templates edit method
      *
      * @return void
      */
@@ -131,40 +132,40 @@ class NavigationController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/navigation.phtml', array(
+            $this->prepareView($this->viewPath . '/templates.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
-            $navigation = new Model\Navigation();
-            $navigation->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $template = new Model\Template();
+            $template->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
-            if (isset($navigation->id)) {
-                $this->view->set('title', 'Navigation ' . $this->view->separator . ' ' . $navigation->navigation);
-                $form = new Form\Navigation(
+            if (isset($template->id)) {
+                $this->view->set('title', 'Structure ' . $this->view->separator . ' Templates ' . $this->view->separator . ' ' . $template->name);
+                $form = new Form\Template(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $navigation->id, $this->project->isLoaded('Fields')
+                    $template->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
+                        array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $navigation->update($form, $this->project->isLoaded('Fields'));
+                        $template->update($form, $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                            Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
                                 'updated' => '',
-                                'form'    => 'navigation-form'
+                                'form'    => 'template-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());
@@ -181,8 +182,8 @@ class NavigationController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $navigation->getData(),
-                        array('strip_tags', 'htmlentities'),
+                        $template->getData(),
+                        array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $this->view->set('form', $form);
@@ -196,15 +197,31 @@ class NavigationController extends AbstractController
     }
 
     /**
-     * Navigation remove method
+     * Templates copy method
+     *
+     * @return void
+     */
+    public function copy()
+    {
+        if (null === $this->request->getPath(1)) {
+            Response::redirect($this->request->getBasePath());
+        } else {
+            $template = new Model\Template();
+            $template->copy($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            Response::redirect($this->request->getBasePath());
+        }
+    }
+
+    /**
+     * Templates remove method
      *
      * @return void
      */
     public function remove()
     {
         if ($this->request->isPost()) {
-            $navigation = new Model\Navigation();
-            $navigation->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $template = new Model\Template();
+            $template->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

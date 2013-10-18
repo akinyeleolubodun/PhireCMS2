@@ -12,7 +12,7 @@ class Categories extends Record
     /**
      * @var   string
      */
-    protected $tableName = 'content_categories';
+    protected $tableName = 'categories';
 
     /**
      * @var   string
@@ -65,13 +65,13 @@ class Categories extends Record
         $catSql = static::getSql();
 
         $catSql->select(array(
-            DB_PREFIX . 'content_categories.id',
-            DB_PREFIX . 'content_categories.parent_id',
-            DB_PREFIX . 'content_categories.title',
-            DB_PREFIX . 'content_categories.uri',
-            DB_PREFIX . 'content_categories.slug',
-            DB_PREFIX . 'content_categories.order',
-            DB_PREFIX . 'content_categories.total',
+            DB_PREFIX . 'categories.id',
+            DB_PREFIX . 'categories.parent_id',
+            DB_PREFIX . 'categories.title',
+            DB_PREFIX . 'categories.uri',
+            DB_PREFIX . 'categories.slug',
+            DB_PREFIX . 'categories.order',
+            DB_PREFIX . 'categories.total',
             'cat_count.num'
         ))->join($secondSql, array('id', 'category_id'), 'LEFT JOIN')
           ->orderBy('order', 'ASC');

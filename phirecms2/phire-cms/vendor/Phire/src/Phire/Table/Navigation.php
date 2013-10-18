@@ -12,7 +12,7 @@ class Navigation extends Record
     /**
      * @var   string
      */
-    protected $tableName = 'content_navigation';
+    protected $tableName = 'navigation';
 
     /**
      * @var   string

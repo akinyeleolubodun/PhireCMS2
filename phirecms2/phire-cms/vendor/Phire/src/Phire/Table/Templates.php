@@ -12,7 +12,7 @@ class Templates extends Record
     /**
      * @var   string
      */
-    protected $tableName = 'content_templates';
+    protected $tableName = 'templates';
 
     /**
      * @var   string

@@ -26,7 +26,7 @@ class Category extends AbstractModel
     }
 
     /**
-     * Get all content categories method
+     * Get all categories method
      *
      * @param  string  $sort
      * @param  string  $page
@@ -58,15 +58,15 @@ class Category extends AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'category-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/content/categories/remove',
+                'action'  => BASE_PATH . APP_URI . '/structure/categories/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
-                    'id'       => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=id">#</a>',
-                    'title'    => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=title">Title</a>',
+                    'id'       => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=id">#</a>',
+                    'title'    => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=title">Title</a>',
                     'process'  => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -83,7 +83,7 @@ class Category extends AbstractModel
 
         foreach ($cats as $id => $name) {
             if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'edit'))) {
-                $name = '<a href="' . BASE_PATH . APP_URI . '/content/categories/edit/' . $id . '">' . $name . '</a>';
+                $name = '<a href="' . BASE_PATH . APP_URI . '/structure/categories/edit/' . $id . '">' . $name . '</a>';
             }
             $catAry[] = array(
                 'id'    => $id,
@@ -187,7 +187,7 @@ class Category extends AbstractModel
     }
 
     /**
-     * Get content categories by ID method
+     * Get category by ID method
      *
      * @param  int     $id
      * @param  boolean $isFields
@@ -199,6 +199,8 @@ class Category extends AbstractModel
 
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
+            $categoryValues['category_title'] = $categoryValues['title'];
+            unset($categoryValues['title']);
 
             // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
@@ -210,7 +212,7 @@ class Category extends AbstractModel
     }
 
     /**
-     * Save content categories
+     * Save category
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
@@ -259,7 +261,7 @@ class Category extends AbstractModel
     }
 
     /**
-     * Update content categories
+     * Update category
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
@@ -307,7 +309,7 @@ class Category extends AbstractModel
     }
 
     /**
-     * Remove content categories
+     * Remove category
      *
      * @param  array   $post
      * @param  boolean $isFields
@@ -381,15 +383,6 @@ class Category extends AbstractModel
         $children = array();
         foreach ($category as $c) {
             if ($c->parent_id == $pid) {
-                // Get any content roles
-                $rolesAry = array();
-                if (isset($c->title)) {
-                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
-                    foreach ($roles->rows as $role) {
-                        $rolesAry[] = $role->role_id;
-                    }
-                }
-
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . '/category'  . $c->uri;
                 $p['href'] = $p['uri'];

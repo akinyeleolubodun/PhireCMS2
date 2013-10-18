@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\Phire\Content;
+namespace Phire\Controller\Phire\Structure;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -14,11 +14,11 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class CategoriesController extends AbstractController
+class NavigationController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the categories controller object
+     * Constructor method to instantiate the navigation controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -30,16 +30,16 @@ class CategoriesController extends AbstractController
     {
         if (null === $viewPath) {
             $cfg = $project->module('Phire')->asArray();
-            $viewPath = __DIR__ . '/../../../../../view/phire/content';
+            $viewPath = __DIR__ . '/../../../../../view/phire/structure';
 
             if (isset($cfg['view'])) {
                 $class = get_class($this);
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'] . '/content';
+                    $viewPath = $cfg['view']['*'] . '/structure';
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'] . '/content';
+                    $viewPath = $cfg['view'] . '/structure';
                 }
             }
         }
@@ -48,39 +48,40 @@ class CategoriesController extends AbstractController
     }
 
     /**
-     * Categories index method
+     * Navigation index method
      *
      * @return void
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/categories.phtml', array(
+        $this->prepareView($this->viewPath . '/navigation.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Categories'
+            'phireNav' => $this->project->getService('phireNav')
         ));
-        $category = new Model\Category(array('acl' => $this->project->getService('acl')));
-        $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $category->table);
+        $navigation = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+        $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
+        $this->view->set('table', $navigation->table)
+                   ->set('title', 'Structure ' . $this->view->separator . ' Navigation');
         $this->send();
     }
 
     /**
-     * Categories add method
+     * Navigation add method
      *
      * @return void
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/categories.phtml', array(
+        $this->prepareView($this->viewPath . '/navigation.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Categories ' . $this->view->separator . ' Add');
-        $form = new Form\Category(
+        $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' Add');
+
+        $form = new Form\Navigation(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
         );
@@ -93,15 +94,15 @@ class CategoriesController extends AbstractController
             );
 
             if ($form->isValid()) {
-                $category = new Model\Category();
-                $category->save($form, $this->project->isLoaded('Fields'));
+                $navigation = new Model\Navigation();
+                $navigation->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                    Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
-                } else if (null !==         $this->request->getQuery('update')) {
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
+                } else if (null !== $this->request->getQuery('update')) {
                     $this->sendJson(array(
-                        'redirect' => $this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time(),
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time(),
                         'updated'  => '',
-                        'form'     => 'category-form'
+                        'form'     => 'navigation-form'
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -121,7 +122,7 @@ class CategoriesController extends AbstractController
     }
 
     /**
-     * Categories edit method
+     * Navigation edit method
      *
      * @return void
      */
@@ -130,21 +131,21 @@ class CategoriesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/categories.phtml', array(
+            $this->prepareView($this->viewPath . '/navigation.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
-            $category = new Model\Category();
-            $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $navigation = new Model\Navigation();
+            $navigation->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
-            if (isset($category->id)) {
-                $this->view->set('title', 'Categories ' . $this->view->separator . ' ' . $category->title);
-                $form = new Form\Category(
+            if (isset($navigation->id)) {
+                $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' ' . $navigation->navigation);
+                $form = new Form\Navigation(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $category->id, $this->project->isLoaded('Fields')
+                    $navigation->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
@@ -157,13 +158,13 @@ class CategoriesController extends AbstractController
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $category->update($form, $this->project->isLoaded('Fields'));
+                        $navigation->update($form, $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                            Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
                                 'updated' => '',
-                                'form'    => 'category-form'
+                                'form'    => 'navigation-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());
@@ -180,7 +181,7 @@ class CategoriesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $category->getData(),
+                        $navigation->getData(),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
@@ -195,51 +196,18 @@ class CategoriesController extends AbstractController
     }
 
     /**
-     * Categories remove method
+     * Navigation remove method
      *
      * @return void
      */
     public function remove()
     {
-        // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $category = new Model\Category();
-            $category->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $navigation = new Model\Navigation();
+            $navigation->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());
-    }
-
-    /**
-     * Method to get other parent category objects via JS
-     *
-     * @return void
-     */
-    public function json()
-    {
-        if (null !== $this->request->getPath(1)) {
-            $uri = '/';
-            $category = Table\Categories::findById($this->request->getPath(1));
-
-            // Construct the full parent URI
-            if (isset($category->id)) {
-                $uri = $category->slug;
-                while ($category->parent_id != 0) {
-                    $category = Table\Categories::findById($category->parent_id);
-                    if (isset($category->id)) {
-                        $uri = $category->slug . '/' . $uri;
-                    }
-                }
-            }
-
-            $body = array('uri' => $uri . '/');
-
-            // Build the response and send it
-            $response = new Response();
-            $response->setHeader('Content-Type', 'application/json')
-                     ->setBody(json_encode($body));
-            $response->send();
-        }
     }
 
     /**
@@ -254,6 +222,7 @@ class CategoriesController extends AbstractController
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
+
         $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
                    ->set('msg', $this->view->error_message);
         $this->send(404);

@@ -20,6 +20,12 @@ return array(
                     '/templates'  => 'Phire\Controller\Phire\Content\TemplatesController',
                     '/types'      => 'Phire\Controller\Phire\Content\TypesController'
                 ),
+                '/structure'  => array(
+                    '/'           => 'Phire\Controller\Phire\Structure\IndexController',
+                    '/categories' => 'Phire\Controller\Phire\Structure\CategoriesController',
+                    '/navigation' => 'Phire\Controller\Phire\Structure\NavigationController',
+                    '/templates'  => 'Phire\Controller\Phire\Structure\TemplatesController'
+                ),
                 '/extensions' => 'Phire\Controller\Phire\Extensions\IndexController',
                 '/users' => array(
                     '/'         => 'Phire\Controller\Phire\User\IndexController',
@@ -54,12 +60,22 @@ return array(
                             'resource'   => 'Phire\Controller\Phire\Content\TypesController',
                             'permission' => 'index'
                         )
-                    ),
+                    )
+                )
+            ),
+            array(
+                'name' => 'Structure',
+                'href' => BASE_PATH . APP_URI . '/structure',
+                'acl' => array(
+                    'resource'   => 'Phire\Controller\Phire\Structure\IndexController',
+                    'permission' => 'index'
+                ),
+                'children' => array(
                     array(
                         'name' => 'Categories',
                         'href' => 'categories',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\CategoriesController',
+                            'resource'   => 'Phire\Controller\Phire\Structure\CategoriesController',
                             'permission' => 'index'
                         )
                     ),
@@ -67,7 +83,7 @@ return array(
                         'name' => 'Navigation',
                         'href' => 'navigation',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\NavigationController',
+                            'resource'   => 'Phire\Controller\Phire\Structure\NavigationController',
                             'permission' => 'index'
                         )
                     ),
@@ -75,7 +91,7 @@ return array(
                         'name' => 'Templates',
                         'href' => 'templates',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Content\TemplatesController',
+                            'resource'   => 'Phire\Controller\Phire\Structure\TemplatesController',
                             'permission' => 'index'
                         )
                     )

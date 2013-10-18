@@ -253,10 +253,10 @@ INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "feed"
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_navigation"
+-- Table structure for table "navigation"
 --
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]navigation" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "navigation" varchar NOT NULL,
   "spaces" integer,
@@ -277,13 +277,13 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_navigation" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_navigation', 7000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]navigation', 7000);
 
 --
--- Dumping data for table "content_navigation"
+-- Dumping data for table "navigation"
 --
 
-INSERT INTO "[{prefix}]content_navigation" ("id", "navigation", "spaces", "top_node", "top_id") VALUES (7001, 'Main Nav', 4, 'ul', 'main-nav');
+INSERT INTO "[{prefix}]navigation" ("id", "navigation", "spaces", "top_node", "top_id") VALUES (7001, 'Main Nav', 4, 'ul', 'main-nav');
 
 -- --------------------------------------------------------
 
@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
   "order" integer NOT NULL,
   UNIQUE ("content_id", "navigation_id"),
   CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]content_navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 --
@@ -309,10 +309,10 @@ INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "o
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_categories"
+-- Table structure for table "categories"
 --
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]categories" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
   "title" varchar NOT NULL,
@@ -321,10 +321,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "order" integer NOT NULL,
   "total" integer NOT NULL,
   UNIQUE ("id"),
-  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_categories', 8000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]categories', 8000);
 
 -- --------------------------------------------------------
 
@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
   "category_id" integer NOT NULL,
   UNIQUE ("content_id", "category_id"),
   CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]content_categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 -- --------------------------------------------------------
@@ -357,10 +357,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_roles" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_templates"
+-- Table structure for table "templates"
 --
 
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
+CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
   "name" varchar NOT NULL,
@@ -368,10 +368,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_templates" (
   "device" varchar NOT NULL,
   "template" text NOT NULL,
   UNIQUE ("id"),
-  CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]content_templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_templates', 9000);
+INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 9000);
 
 -- --------------------------------------------------------
 

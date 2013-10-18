@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\Phire\Content;
+namespace Phire\Controller\Phire\Structure;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -14,11 +14,11 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class TemplatesController extends AbstractController
+class CategoriesController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the templates controller object
+     * Constructor method to instantiate the categories controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -30,16 +30,16 @@ class TemplatesController extends AbstractController
     {
         if (null === $viewPath) {
             $cfg = $project->module('Phire')->asArray();
-            $viewPath = __DIR__ . '/../../../../../view/phire/content';
+            $viewPath = __DIR__ . '/../../../../../view/phire/structure';
 
             if (isset($cfg['view'])) {
                 $class = get_class($this);
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'] . '/content';
+                    $viewPath = $cfg['view']['*'] . '/structure';
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'] . '/content';
+                    $viewPath = $cfg['view'] . '/structure';
                 }
             }
         }
@@ -48,41 +48,39 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates index method
+     * Categories index method
      *
      * @return void
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/templates.phtml', array(
+        $this->prepareView($this->viewPath . '/categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Templates'
+            'phireNav' => $this->project->getService('phireNav')
         ));
-
-        $template = new Model\Template(array('acl' => $this->project->getService('acl')));
-        $template->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $template->table);
+        $category = new Model\Category(array('acl' => $this->project->getService('acl')));
+        $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
+        $this->view->set('table', $category->table)
+                   ->set('title', 'Structure ' . $this->view->separator . ' Categories');
         $this->send();
     }
 
     /**
-     * Templates add method
+     * Categories add method
      *
      * @return void
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/templates.phtml', array(
+        $this->prepareView($this->viewPath . '/categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Templates ' . $this->view->separator . ' Add');
-
-        $form = new Form\Template(
+        $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' Add');
+        $form = new Form\Category(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
             0, $this->project->isLoaded('Fields')
         );
@@ -90,20 +88,20 @@ class TemplatesController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('htmlentities'),
+                array('strip_tags', 'htmlentities'),
                 array(null, array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
-                $template = new Model\Template();
-                $template->save($form, $this->project->isLoaded('Fields'));
+                $category = new Model\Category();
+                $category->save($form, $this->project->isLoaded('Fields'));
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                    Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
-                } else if (null !== $this->request->getQuery('update')) {
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
+                } else if (null !==         $this->request->getQuery('update')) {
                     $this->sendJson(array(
-                        'redirect' => $this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time(),
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time(),
                         'updated'  => '',
-                        'form'     => 'template-form'
+                        'form'     => 'category-form'
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -123,7 +121,7 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates edit method
+     * Categories edit method
      *
      * @return void
      */
@@ -132,40 +130,40 @@ class TemplatesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/templates.phtml', array(
+            $this->prepareView($this->viewPath . '/categories.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
-            $template = new Model\Template();
-            $template->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $category = new Model\Category();
+            $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
 
             // If field is found and valid
-            if (isset($template->id)) {
-                $this->view->set('title', 'Templates ' . $this->view->separator . ' ' . $template->name);
-                $form = new Form\Template(
+            if (isset($category->id)) {
+                $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' ' . $category->title);
+                $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $template->id, $this->project->isLoaded('Fields')
+                    $category->id, $this->project->isLoaded('Fields')
                 );
 
                 // If form is submitted
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('htmlentities'),
+                        array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $template->update($form, $this->project->isLoaded('Fields'));
+                        $category->update($form, $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                            Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
                                 'updated' => '',
-                                'form'    => 'template-form'
+                                'form'    => 'category-form'
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());
@@ -182,8 +180,8 @@ class TemplatesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $template->getData(),
-                        array('htmlentities'),
+                        $category->getData(),
+                        array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );
                     $this->view->set('form', $form);
@@ -197,34 +195,51 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates copy method
-     *
-     * @return void
-     */
-    public function copy()
-    {
-        if (null === $this->request->getPath(1)) {
-            Response::redirect($this->request->getBasePath());
-        } else {
-            $template = new Model\Template();
-            $template->copy($this->request->getPath(1), $this->project->isLoaded('Fields'));
-            Response::redirect($this->request->getBasePath());
-        }
-    }
-
-    /**
-     * Templates remove method
+     * Categories remove method
      *
      * @return void
      */
     public function remove()
     {
+        // Loop through and delete the fields
         if ($this->request->isPost()) {
-            $template = new Model\Template();
-            $template->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $category = new Model\Category();
+            $category->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());
+    }
+
+    /**
+     * Method to get other parent category objects via JS
+     *
+     * @return void
+     */
+    public function json()
+    {
+        if (null !== $this->request->getPath(1)) {
+            $uri = '/';
+            $category = Table\Categories::findById($this->request->getPath(1));
+
+            // Construct the full parent URI
+            if (isset($category->id)) {
+                $uri = $category->slug;
+                while ($category->parent_id != 0) {
+                    $category = Table\Categories::findById($category->parent_id);
+                    if (isset($category->id)) {
+                        $uri = $category->slug . '/' . $uri;
+                    }
+                }
+            }
+
+            $body = array('uri' => $uri . '/');
+
+            // Build the response and send it
+            $response = new Response();
+            $response->setHeader('Content-Type', 'application/json')
+                     ->setBody(json_encode($body));
+            $response->send();
+        }
     }
 
     /**
@@ -239,7 +254,6 @@ class TemplatesController extends AbstractController
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
-
         $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
                    ->set('msg', $this->view->error_message);
         $this->send(404);

@@ -14,7 +14,7 @@ class Navigation extends AbstractModel
 {
 
     /**
-     * Get all content navigation method
+     * Get all navigation method
      *
      * @param  string  $sort
      * @param  string  $page
@@ -45,15 +45,15 @@ class Navigation extends AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'navigation-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/content/navigation/remove',
+                'action'  => BASE_PATH . APP_URI . '/structure/navigation/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
-                    'id'       => '<a href="' . BASE_PATH . APP_URI . '/content/navigation?sort=id">#</a>',
-                    'navigation' => '<a href="' . BASE_PATH . APP_URI . '/content/navigation?sort=navigation">Navigation</a>',
+                    'id'       => '<a href="' . BASE_PATH . APP_URI . '/structure/navigation?sort=id">#</a>',
+                    'navigation' => '<a href="' . BASE_PATH . APP_URI . '/structure/navigation?sort=navigation">Navigation</a>',
                     'process'  => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -67,7 +67,7 @@ class Navigation extends AbstractModel
         $navAry = array();
         foreach ($navigation->rows as $id => $nav) {
             if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\NavigationController', 'edit'))) {
-                $nv = '<a href="' . BASE_PATH . APP_URI . '/content/navigation/edit/' . $nav->id . '">' . $nav->navigation . '</a>';
+                $nv = '<a href="' . BASE_PATH . APP_URI . '/structure/navigation/edit/' . $nav->id . '">' . $nav->navigation . '</a>';
             } else {
                 $nv = $nav->navigation;
             }
@@ -255,7 +255,7 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Get content navigation by ID method
+     * Get navigation by ID method
      *
      * @param  int     $id
      * @param  boolean $isFields
@@ -278,7 +278,7 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Save content navigation
+     * Save navigation
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
@@ -318,7 +318,7 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Update content navigation
+     * Update navigation
      *
      * @param \Pop\Form\Form $form
      * @param  boolean       $isFields
@@ -356,7 +356,7 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Remove content navigation
+     * Remove navigation
      *
      * @param  array   $post
      * @param  boolean $isFields
@@ -391,15 +391,6 @@ class Navigation extends AbstractModel
         $children = array();
         foreach ($content as $c) {
             if ($c->parent_id == $pid) {
-                // Get any content roles
-                $rolesAry = array();
-                if (isset($c->title)) {
-                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
-                    foreach ($roles->rows as $role) {
-                        $rolesAry[] = $role->role_id;
-                    }
-                }
-
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . $c->uri;
                 $p['href'] = $p['uri'];
@@ -428,15 +419,6 @@ class Navigation extends AbstractModel
         $children = array();
         foreach ($category as $c) {
             if ($c->parent_id == $pid) {
-                // Get any content roles
-                $rolesAry = array();
-                if (isset($c->title)) {
-                    $roles = Table\ContentToRoles::findAll(null, array('content_id' => $c->id));
-                    foreach ($roles->rows as $role) {
-                        $rolesAry[] = $role->role_id;
-                    }
-                }
-
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . '/category'  . $c->uri;
                 $p['href'] = $p['uri'];

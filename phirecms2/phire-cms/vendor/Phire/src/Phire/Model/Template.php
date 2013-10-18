@@ -212,15 +212,15 @@ class Template extends AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'template-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/content/templates/remove',
+                'action'  => BASE_PATH . APP_URI . '/structure/templates/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
-                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=id">#</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/templates?sort=name">Name</a>',
+                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=id">#</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=name">Name</a>',
                     'copy'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">Copy</span>',
                     'process' => $removeCheckAll
                 ),
@@ -241,13 +241,13 @@ class Template extends AbstractModel
                 $t = (array)$tmpl['template'];
 
                 if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
-                    $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $t['id'] .'">' . $t['name'] . '</a>';
+                    $name = '<a href="' . BASE_PATH . APP_URI . '/structure/templates/edit/' . $t['id'] .'">' . $t['name'] . '</a>';
                 } else {
                     $name = $t['name'];
                 }
 
                 if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
-                    $t['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/templates/copy/' . $t['id'] .'">Copy</a>';
+                    $t['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/structure/templates/copy/' . $t['id'] .'">Copy</a>';
                 } else {
                     unset($options['table']['headers']['copy']);
                 }
@@ -262,14 +262,14 @@ class Template extends AbstractModel
                         $c = (array)$child;
 
                         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
-                            $name = '<a href="' . BASE_PATH . APP_URI . '/content/templates/edit/' . $c['id'] .'">' . $c['name'] . '</a>';
+                            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/templates/edit/' . $c['id'] .'">' . $c['name'] . '</a>';
                         } else {
                             $name = $c['name'];
                         }
                         $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $name;
                         $c['device'] = $devices[$c['device']];
                         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
-                            $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/templates/copy/' . $c['id'] .'">Copy</a>';
+                            $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/structure/templates/copy/' . $c['id'] .'">Copy</a>';
                         }
                         $tmplAry[] = $c;
                     }
@@ -378,7 +378,7 @@ class Template extends AbstractModel
     }
 
     /**
-     * Copy content
+     * Copy template
      *
      * @param  int     $tid
      * @param  boolean $isFields
@@ -482,7 +482,7 @@ class Template extends AbstractModel
     }
 
     /**
-     * Remove content template
+     * Remove template
      *
      * @param  array   $post
      * @param  boolean $isFields

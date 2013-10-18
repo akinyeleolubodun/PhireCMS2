@@ -237,10 +237,10 @@ INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `feed`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `content_navigation`
+-- Table structure for table `navigation`
 --
 
-CREATE TABLE IF NOT EXISTS `[{prefix}]content_navigation` (
+CREATE TABLE IF NOT EXISTS `[{prefix}]navigation` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `navigation` varchar(255) NOT NULL,
   `spaces` int(16),
@@ -262,10 +262,10 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_navigation` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;
 
 --
--- Dumping data for table `content_navigation`
+-- Dumping data for table `navigation`
 --
 
-INSERT INTO `[{prefix}]content_navigation` (`id`, `navigation`, `spaces`, `top_node`, `top_id`) VALUES
+INSERT INTO `[{prefix}]navigation` (`id`, `navigation`, `spaces`, `top_node`, `top_id`) VALUES
 (7001, 'Main Nav', 4, 'ul', 'main-nav');
 
 -- --------------------------------------------------------
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_to_navigation` (
   `order` int(16) NOT NULL,
   UNIQUE (`content_id`, `navigation_id`),
   CONSTRAINT `fk_navigation_content_id` FOREIGN KEY (`content_id`) REFERENCES `[{prefix}]content` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_content_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `[{prefix}]content_navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `[{prefix}]navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 --
@@ -293,10 +293,10 @@ INSERT INTO `[{prefix}]content_to_navigation` (`content_id`, `navigation_id`, `o
 -- --------------------------------------------------------
 
 --
--- Table structure for table `content_categories`
+-- Table structure for table `categories`
 --
 
-CREATE TABLE IF NOT EXISTS `[{prefix}]content_categories` (
+CREATE TABLE IF NOT EXISTS `[{prefix}]categories` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `parent_id` int(16),
   `title` varchar(255) NOT NULL,
@@ -305,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_categories` (
   `order` int(16) NOT NULL,
   `total` int(1) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_category_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_category_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
 
 -- --------------------------------------------------------
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_to_categories` (
   `category_id` int(16) NOT NULL,
   UNIQUE (`content_id`, `category_id`),
   CONSTRAINT `fk_category_content_id` FOREIGN KEY (`content_id`) REFERENCES `[{prefix}]content` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_content_category_id` FOREIGN KEY (`category_id`) REFERENCES `[{prefix}]content_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_content_category_id` FOREIGN KEY (`category_id`) REFERENCES `[{prefix}]categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 
@@ -340,10 +340,10 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_to_roles` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `content_templates`
+-- Table structure for table `templates`
 --
 
-CREATE TABLE IF NOT EXISTS `[{prefix}]content_templates` (
+CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `parent_id` int(16),
   `name` varchar(255) NOT NULL,
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content_templates` (
   `device` varchar(255) NOT NULL,
   `template` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_template_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]content_templates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_template_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]templates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9001 ;
 
 -- --------------------------------------------------------
