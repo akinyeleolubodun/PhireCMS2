@@ -517,6 +517,8 @@ class User extends AbstractModel
         $verified = (isset($fields['verified'])) ? $fields['verified'] : $user->verified;
         $failedAttempts = (isset($fields['failed_attempts'])) ? $fields['failed_attempts'] : $user->failed_attempts;
 
+        $first = ((null === $user->role_id) && (null === $user->logins));
+
         // Save the user's updated data
         $user->role_id         = $roleId;
         $user->username        = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
@@ -536,6 +538,11 @@ class User extends AbstractModel
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             \Fields\Model\FieldValue::update($fields, $user->id);
+        }
+
+        // Send verification if needed
+        if ($first) {
+            $this->sendApproval($user, $type);
         }
     }
 
@@ -609,6 +616,40 @@ class User extends AbstractModel
     }
 
     /**
+     * Send approval email to a user
+     *
+     * @param \Phire\Table\Users $user
+     * @param \Phire\Table\UserTypes $type
+     * @return void
+     */
+    public function sendApproval(\Phire\Table\Users $user, $type)
+    {
+        // Get the base path and domain
+        $basePath = (strtolower($type->type) != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+        $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+
+        // Set the recipient
+        $rcpt = array(
+            'name'   => $user->username,
+            'email'  => $user->email,
+            'login'  => 'http://' . $_SERVER['HTTP_HOST'] . $basePath . '/login',
+            'domain' => $domain
+        );
+
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+            $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/approval.txt');
+        } else {
+            $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/approval.txt');
+        }
+
+        // Send email verification
+        $mail = new Mail($domain . ' - Access Granted', $rcpt);
+        $mail->from('noreply@' . $domain);
+        $mail->setText($mailTmpl);
+        $mail->send();
+    }
+
+    /**
      * Send verification email to a user
      *
      * @param \Phire\Table\Users $user
@@ -623,11 +664,11 @@ class User extends AbstractModel
 
         // Set the recipient
         $rcpt = array(
-            'name'  => $user->username,
-            'email' => $user->email,
-            'url'   => 'http://' . $_SERVER['HTTP_HOST'] . $basePath . '/verify/' . $user->id . '/' . sha1($user->email),
-            'login' => 'http://' . $_SERVER['HTTP_HOST'] . $basePath . '/login',
-            'domain'   => $domain
+            'name'   => $user->username,
+            'email'  => $user->email,
+            'url'    => 'http://' . $_SERVER['HTTP_HOST'] . $basePath . '/verify/' . $user->id . '/' . sha1($user->email),
+            'login'  => 'http://' . $_SERVER['HTTP_HOST'] . $basePath . '/login',
+            'domain' => $domain
         );
 
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
@@ -737,9 +778,31 @@ class User extends AbstractModel
     public function unsubscribe(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
-
         $user = Table\Users::findBy(array('email' => $form->email));
+
         if (isset($user->id)) {
+            // Get the base path and domain
+            $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+
+            // Set the recipient
+            $rcpt = array(
+                'name'   => $user->username,
+                'email'  => $user->email,
+                'domain' => $domain
+            );
+
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+                $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/unsubscribe.txt');
+            } else {
+                $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/unsubscribe.txt');
+            }
+
+            // Send email verification
+            $mail = new Mail($domain . ' - Unsubscribed', $rcpt);
+            $mail->from('noreply@' . $domain);
+            $mail->setText($mailTmpl);
+            $mail->send();
+
             $user->delete();
         }
     }

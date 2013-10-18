@@ -51,7 +51,13 @@ class User extends Form
         // Else, create initial user fields
         } else {
             $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields, $action);
-            $id = (strpos($action, '/install/user') !== false) ? 'user-install-form' : 'user-form';
+            if (strpos($action, '/install/user') !== false) {
+                $id = 'user-install-form';
+            } else if ($profile) {
+                $id = 'user-install-form';
+            } else {
+                $id = 'user-form';
+            }
         }
 
         parent::__construct($action, $method, null, '        ');
@@ -277,7 +283,7 @@ class User extends Form
             'label' => '&nbsp;',
             'value' => 'SAVE',
             'attributes' => array(
-                'class' => 'save-btn'
+                'class' => ((strpos($action, '/install/user') !== false) || ($profile)) ? 'update-btn' : 'save-btn'
             )
         );
 
@@ -308,7 +314,7 @@ class User extends Form
             );
         }
 
-        $allFields = (strpos($action, '/install/user') !== false) ?  array($fields1, $fields2, $fields3, $fields4) : array($fields4, $fields1, $fields2, $fields3);
+        $allFields = ((strpos($action, '/install/user') !== false) || ($profile)) ? array($fields1, $fields2, $fields3, $fields4) : array($fields4, $fields1, $fields2, $fields3);
 
         return $allFields;
     }

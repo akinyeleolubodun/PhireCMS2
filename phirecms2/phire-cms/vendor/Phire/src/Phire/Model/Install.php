@@ -202,6 +202,10 @@ class Install
             'domain' => $domain
         );
 
+        $config = \Phire\Table\Config::findById('site_email');
+        $config->value = $form->email1;
+        $config->update();
+
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
             $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/install.txt');
         } else {

@@ -36,7 +36,7 @@ class Forgot extends Form
                 'label' => '&nbsp;',
                 'value' => 'SUBMIT',
                 'attributes' => array(
-                    'class' => 'save-btn',
+                    'class' => 'update-btn',
                     'style' => 'display: block; width: 300px; margin: 0 auto;'
                 )
             )

@@ -19,7 +19,7 @@
     $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl', 'incontent'), array(' ', 'Date &amp; Time', 'SSL', 'In-Content'), $setting));
     switch ($setting):
         case 'system_title':
-            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#system_title\').toggle(\'table-row\'); $(\'#site_title\').toggle(\'table-row\'); $(\'#separator\').toggle(\'table-row\'); $(\'#default_language\').toggle(\'table-row\'); $(\'#error_message\').toggle(\'table-row\'); return false;">Default Settings</a></th></tr>' . PHP_EOL;
+            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#system_title\').toggle(\'table-row\'); $(\'#site_email\').toggle(\'table-row\'); $(\'#site_title\').toggle(\'table-row\'); $(\'#separator\').toggle(\'table-row\'); $(\'#default_language\').toggle(\'table-row\'); $(\'#error_message\').toggle(\'table-row\'); return false;">Default Settings</a></th></tr>' . PHP_EOL;
             $display = 'none';
             break;
         case 'datetime_format':

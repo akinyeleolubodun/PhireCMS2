@@ -189,7 +189,7 @@ class IndexController extends AbstractController
             Response::redirect($this->request->getBasePath());
         // Else render the registration form
         } else {
-            $this->prepareView($this->viewPath . '/profile.phtml', array(
+            $this->prepareView($this->viewPath . '/register.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -216,7 +216,14 @@ class IndexController extends AbstractController
                     if (null !== $redirect) {
                         Response::redirect($redirect);
                     } else {
-                        $this->view->set('form', '    <p>Thank you for registering.</p>');
+                        $this->view->set('form', '        <h4>Thank you for registering.</h4>')
+                                   ->set('typeUri', ((strtolower($this->type->type) != 'user') ? '/' . strtolower($this->type->type) : APP_URI));
+                        if ($this->type->verification) {
+                            $this->view->set('verify', true);
+                        }
+                        if ($this->type->approval) {
+                            $this->view->set('approval', true);
+                        }
                         $this->send();
                     }
                 // Else, re-render the form with errors
@@ -299,7 +306,7 @@ class IndexController extends AbstractController
      */
     public function unsubscribe($redirect = null)
     {
-        $this->prepareView($this->viewPath . '/profile.phtml', array(
+        $this->prepareView($this->viewPath . '/unsubscribe.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -326,6 +333,10 @@ class IndexController extends AbstractController
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
+                    $this->prepareView($this->viewPath . '/unsubscribe.phtml', array(
+                        'assets'   => $this->project->getAssets(),
+                        'title'    => 'Unsubscribe'
+                    ));
                     $this->view->set('form', '    <p>Thank you. You have been unsubscribed from this website.</p>');
                     $this->send();
                 }

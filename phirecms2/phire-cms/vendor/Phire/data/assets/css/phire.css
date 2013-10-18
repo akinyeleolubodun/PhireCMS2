@@ -771,12 +771,12 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     text-transform: uppercase;
     border-radius: 4px;
     font-size: 1.2em;
-    background-color: #1481bc;
+    background-color: #5a8c1d;
 }
 
 .save-btn:hover {
     cursor: pointer;
-    background-color: #37ade8;
+    background-color: #75b724;
 }
 
 .update-btn {
@@ -790,12 +790,12 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     text-transform: uppercase;
     border-radius: 4px;
     font-size: 1.2em;
-    background-color: #5a8c1d;
+    background-color: #1481bc;
 }
 
 .update-btn:hover {
     cursor: pointer;
-    background-color: #75b724;
+    background-color: #37ade8;
 }
 
 .remove-btn {

@@ -1,0 +1,15 @@
+<?php include __DIR__ . '/header.phtml'; ?>
+        <h1><?php echo $title; ?></h1>
+<?php echo $form;?>
+<?php if (isset($verify)): ?>
+        <p>You have been sent an email for verification purposes.</p>
+<?php endif; ?>
+<?php if (isset($approval)): ?>
+        <p>Your new account requires the approval of the site administrator.</p>
+<?php endif; ?>
+<?php if (isset($verify) || isset($approval)): ?>
+        <p>Once access is granted, you will be able to <a href="<?php echo BASE_PATH . $typeUri; ?>/login">log in here</a>. If you have trouble gaining access to the site, please contact the <a href="mailto:<?php echo  $site_email; ?>">site administrator</a>.</p>
+<?php elseif (is_string($form)): ?>
+        <p>You can <a href="<?php echo BASE_PATH . $typeUri; ?>/login">log in here</a>.</p>
+<?php endif; ?>
+<?php include __DIR__ . '/footer.phtml'; ?>

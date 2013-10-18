@@ -55,6 +55,7 @@ class Config extends Record
     {
         $settings = array(
             'system_title',
+            'site_email',
             'site_title',
             'separator',
             'default_language',

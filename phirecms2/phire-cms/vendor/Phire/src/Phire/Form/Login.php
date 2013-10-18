@@ -43,7 +43,7 @@ class Login extends Form
                 'label' => '&nbsp;',
                 'value' => 'LOGIN',
                 'attributes' => array(
-                    'class' => 'save-btn',
+                    'class' => 'update-btn',
                     'style' => 'display: block; width: 300px; margin: 0 auto;'
                 )
             )
