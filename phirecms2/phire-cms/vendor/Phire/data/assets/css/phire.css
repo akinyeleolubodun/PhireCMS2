@@ -304,7 +304,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     text-align: right;
 }
 
-#phire-nav-1 {
+#phire-nav {
     position: relative;
     z-index: 10;
     margin: 0 auto;
@@ -315,7 +315,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     border-bottom: solid 1px #353331;
 }
 
-#phire-nav-1 li {
+#phire-nav li {
     position: relative;
     margin: 0 0 0 10px;
     padding: 0;
@@ -323,7 +323,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     display: inline-block;
 }
 
-#phire-nav-1 li > a {
+#phire-nav li > a {
     margin: 0;
     padding: 11px 30px 9px 30px;
     display: block;
@@ -334,12 +334,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     text-decoration: none;
 }
 
-#phire-nav-1 li > a:hover {
+#phire-nav li > a:hover {
     background-color: #000;
     text-decoration: underline;
 }
 
-#phire-nav-1 li > ul {
+#phire-nav li > ul {
     display: none;
     position: absolute;
     margin: 0;
@@ -350,11 +350,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     background-color: #000;
 }
 
-#phire-nav-1 li:hover > ul {
+#phire-nav li:hover > ul {
     display: block;
 }
 
-#phire-nav-1 li > ul > li {
+#phire-nav li > ul > li {
     position: relative;
     display: block;
     clear: left;
@@ -366,7 +366,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     list-style-type: none;
 }
 
-#phire-nav-1 li > ul > li > a {
+#phire-nav li > ul > li > a {
     margin: 0;
     padding: 8px 5px 0 15px;
     color: #fff;
@@ -379,14 +379,14 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     background-color: #000;
 }
 
-#phire-nav-1 li > ul > li > a:hover {
+#phire-nav li > ul > li > a:hover {
     text-align: left;
     color: #bce6ff;
     background-color: #1392db;
     text-decoration: underline;
 }
 
-#phire-nav-1 li > ul > li > ul {
+#phire-nav li > ul > li > ul {
     display: none;
     position: absolute;
     margin: 0;
@@ -397,7 +397,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     background-color: #000;
 }
 
-#phire-nav-1 li > ul > li:hover > ul {
+#phire-nav li > ul > li:hover > ul {
     display: block;
 }
 

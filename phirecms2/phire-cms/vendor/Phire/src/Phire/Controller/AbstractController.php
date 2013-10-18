@@ -57,7 +57,7 @@ class AbstractController extends \Pop\Mvc\Controller
 
             if (isset($this->view->phireNav) && isset($this->view->acl) && ($this->view->acl->hasRole($this->view->role->getName()))) {
                 $this->view->phireNav->setConfig(array(
-                    'parent' => array(
+                    'top' => array(
                         'node'  => 'ul',
                         'id'    => 'phire-nav'
                     ),

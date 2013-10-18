@@ -141,7 +141,7 @@ class CategoriesController extends AbstractController
 
             // If field is found and valid
             if (isset($category->id)) {
-                $this->view->set('title', 'Categories ' . $this->view->separator . ' ' . $category->category);
+                $this->view->set('title', 'Categories ' . $this->view->separator . ' ' . $category->title);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $category->id, $this->project->isLoaded('Fields')

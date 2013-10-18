@@ -93,7 +93,7 @@ class Category extends Form
         $cats = Table\Categories::findAll('id ASC');
         foreach ($cats->rows as $cat) {
             if (($cat->id != $cid) && (!in_array($cat->id, $children))) {
-                $parents[$cat->id] = $cat->category;
+                $parents[$cat->id] = $cat->title;
             }
         }
 
@@ -104,7 +104,7 @@ class Category extends Form
         $content = Table\Categories::findAll('order ASC');
         foreach ($content->rows as $c) {
             if (($c->parent_id == 0) && ($c->id != $cid)) {
-                $parents[$c->id] = $c->category;
+                $parents[$c->id] = $c->title;
                 $children = $this->children($c->id);
                 if (count($children) > 0) {
                     foreach ($children as $id => $child) {
@@ -126,13 +126,13 @@ class Category extends Form
                     'onchange' => "catSlug(null, 'slug');"
                 )
             ),
-            'category' => array(
+            'category_title' => array(
                 'type'       => 'text',
-                'label'      => 'Category:',
+                'label'      => 'Title:',
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 80,
-                    'onkeyup' => "catSlug('category', 'slug');"
+                    'onkeyup' => "catSlug('category_title', 'slug');"
                 )
             ),
             'slug' => array(
@@ -226,7 +226,7 @@ class Category extends Form
 
         if (isset($c->rows[0])) {
             foreach ($c->rows as $child) {
-                $children[$child->id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ($depth + 1)) . '&gt; ' . $child->category;
+                $children[$child->id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ($depth + 1)) . '&gt; ' . $child->title;
                 $c = Table\Categories::findBy(array('parent_id' => $child->id));
                 if (isset($c->rows[0])) {
                     $d = $depth + 1;

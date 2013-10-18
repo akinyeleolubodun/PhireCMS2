@@ -298,7 +298,7 @@ INSERT INTO `[{prefix}]content_to_navigation` (`content_id`, `navigation_id`, `o
 CREATE TABLE IF NOT EXISTS `[{prefix}]content_categories` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `parent_id` int(16),
-  `category` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `uri` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
   `order` int(16) NOT NULL,

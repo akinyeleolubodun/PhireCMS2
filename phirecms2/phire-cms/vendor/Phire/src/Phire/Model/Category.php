@@ -66,7 +66,7 @@ class Category extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'       => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=id">#</a>',
-                    'category' => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=category">Category</a>',
+                    'title'    => '<a href="' . BASE_PATH . APP_URI . '/content/categories?sort=title">Title</a>',
                     'process'  => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -86,8 +86,8 @@ class Category extends AbstractModel
                 $name = '<a href="' . BASE_PATH . APP_URI . '/content/categories/edit/' . $id . '">' . $name . '</a>';
             }
             $catAry[] = array(
-                'id' => $id,
-                'category' => $name
+                'id'    => $id,
+                'title' => $name
             );
         }
 
@@ -124,7 +124,6 @@ class Category extends AbstractModel
         $category = Table\Categories::findBy(array('uri' => $uri));
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
-            $categoryValues['title'] = $categoryValues['category'];
 
             // If the Fields module is installed, and if there are fields for this form/model
             if ($isFields) {
@@ -145,7 +144,7 @@ class Category extends AbstractModel
                         } else {
                             $c['isFile'] = false;
                         }
-                        $c['category_title'] = $category->category;
+                        $c['category_title'] = $category->title;
                         $c['category_uri'] = $category->uri;
                         if ($isFields) {
                             $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
@@ -171,7 +170,7 @@ class Category extends AbstractModel
                             } else {
                                 $c['isFile'] = false;
                             }
-                            $c['category_title'] = $childCat->category;
+                            $c['category_title'] = $childCat->title;
                             $c['category_uri'] = $childCat->uri;
                             if ($isFields) {
                                 $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
@@ -198,7 +197,7 @@ class Category extends AbstractModel
     public function getChildCategories($cat, $limit = null, $isFields = false)
     {
         if (!is_numeric($cat)) {
-            $c = Table\Categories::findBy(array('category' => $cat));
+            $c = Table\Categories::findBy(array('title' => $cat));
         } else {
             $c = Table\Categories::findById($cat);
         }
@@ -277,7 +276,7 @@ class Category extends AbstractModel
 
         $category = new Table\Categories(array(
             'parent_id' => (($fields['parent_id'] != 0) ? $fields['parent_id'] : null),
-            'category'  => $fields['category'],
+            'title'     => $fields['category_title'],
             'uri'       => $uri,
             'slug'      => $fields['slug'],
             'order'     => (int)$fields['order'],
@@ -326,7 +325,7 @@ class Category extends AbstractModel
 
         $category = Table\Categories::findById($fields['id']);
         $category->parent_id = (((int)$fields['parent_id'] != 0) ? $fields['parent_id'] : null);
-        $category->category  = $fields['category'];
+        $category->title     = $fields['category_title'];
         $category->uri       = $uri;
         $category->slug      = $fields['slug'];
         $category->order     = (int)$fields['order'];
@@ -372,13 +371,13 @@ class Category extends AbstractModel
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->category;
+        $breadcrumb = $this->title;
         $pId = $this->parent_id;
 
         while ($pId != 0) {
             $category = Table\Categories::findById($pId);
             if (isset($category->id)) {
-                $breadcrumb = '<a href="' . BASE_PATH . '/category' . $category->uri . '">' . $category->category . '</a> ' .
+                $breadcrumb = '<a href="' . BASE_PATH . '/category' . $category->uri . '">' . $category->title . '</a> ' .
                     $this->config->separator . ' ' . $breadcrumb;
                 $pId = $category->parent_id;
             }
@@ -396,7 +395,7 @@ class Category extends AbstractModel
      */
     protected function getCategories($categories, $depth = 0) {
         foreach ($categories as $category) {
-            $this->categories[$category['id']] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $category['category'];
+            $this->categories[$category['id']] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $category['title'];
             if (count($category['children']) > 0) {
                 $this->getCategories($category['children'], ($depth + 1));
             }
@@ -428,7 +427,7 @@ class Category extends AbstractModel
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . '/category'  . $c->uri;
                 $p['href'] = $p['uri'];
-                $p['name'] = $c->category;
+                $p['name'] = $c->title;
 
                 if (($count) && ($c->total)) {
                     $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';

@@ -314,7 +314,7 @@ INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "o
 CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "parent_id" integer,
-  "category" varchar NOT NULL,
+  "title" varchar NOT NULL,
   "uri" varchar NOT NULL,
   "slug" varchar NOT NULL,
   "order" integer NOT NULL,

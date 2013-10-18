@@ -440,7 +440,7 @@ class Navigation extends AbstractModel
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . '/category'  . $c->uri;
                 $p['href'] = $p['uri'];
-                $p['name'] = $c->category;
+                $p['name'] = $c->title;
 
                 if (($count) && ($c->total)) {
                     $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';

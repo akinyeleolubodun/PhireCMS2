@@ -326,7 +326,7 @@ CREATE SEQUENCE category_id_seq START 8001;
 CREATE TABLE IF NOT EXISTS "[{prefix}]content_categories" (
   "id" integer NOT NULL DEFAULT nextval('category_id_seq'),
   "parent_id" integer,
-  "category" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
   "uri" varchar(255) NOT NULL,
   "slug" varchar(255) NOT NULL,
   "order" integer NOT NULL,

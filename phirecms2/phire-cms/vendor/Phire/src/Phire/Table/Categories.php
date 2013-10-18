@@ -67,7 +67,7 @@ class Categories extends Record
         $catSql->select(array(
             DB_PREFIX . 'content_categories.id',
             DB_PREFIX . 'content_categories.parent_id',
-            DB_PREFIX . 'content_categories.category',
+            DB_PREFIX . 'content_categories.title',
             DB_PREFIX . 'content_categories.uri',
             DB_PREFIX . 'content_categories.slug',
             DB_PREFIX . 'content_categories.order',

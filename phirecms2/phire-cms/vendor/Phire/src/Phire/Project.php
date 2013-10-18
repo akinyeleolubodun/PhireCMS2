@@ -272,7 +272,7 @@ class Project extends P
                 $phireNav = $model['phireNav'];
                 $phireNav->addBranch(array(
                     'name' => 'Edit This Page',
-                    'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->getModel()->id . '?live=1',
+                    'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->get('id') . '?live=1',
                     'acl'  => array(
                         'resource'   => 'Phire\Controller\Phire\Content\IndexController',
                         'permission' => 'edit'
@@ -280,11 +280,8 @@ class Project extends P
                 ), true);
                 $phireNav->setConfig(array(
                     'top' => array(
-                        'id'         => 'phire-nav-1',
+                        'id'         => 'phire-nav',
                         'attributes' => array('style' => 'display: none;')
-                    ),
-                    'parent' => array(
-                        'id' => 'phire-nav'
                     )
                 ));
                 $phireNav->rebuild();
@@ -293,7 +290,7 @@ class Project extends P
                 }
                 $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
                 $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
-                $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#phire-nav-1\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
+                $body = str_replace('</body>', '<a id="nav-gear" href="#" onclick="$(\'#phire-nav\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
                 $controller->getResponse()->setBody($body);
             }
         }
