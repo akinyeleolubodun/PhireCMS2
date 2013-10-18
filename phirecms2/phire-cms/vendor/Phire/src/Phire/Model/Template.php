@@ -124,9 +124,9 @@ class Template extends AbstractModel
      */
     public static function parseCategories($template, $isFields = false)
     {
-        $catAry  = array();
-        $cats    = array();
-        $content = new Content();
+        $catAry = array();
+        $cats   = array();
+        $phire  = new \Phire\Model\Phire();
         preg_match_all('/\[\{category_.*\}\]/', $template, $cats);
         if (isset($cats[0]) && isset($cats[0][0])) {
             foreach ($cats[0] as $cat) {
@@ -137,9 +137,9 @@ class Template extends AbstractModel
                         $ct = $cAry[0];
                         $orderBy = (isset($cAry[1])) ? $cAry[1] : 'id ASC';
                         $limit = (isset($cAry[2])) ? $cAry[2] : null;
-                        $cont = $content->getByCategory($ct, $orderBy, $limit, $isFields);
+                        $cont = $phire->getContentByCategory($ct, $orderBy, $limit, $isFields);
                     } else {
-                        $cont = $content->getByCategory($c, 'id ASC', null, $isFields);
+                        $cont = $phire->getContentByCategory($c, 'id ASC', null, $isFields);
                     }
                     $catAry['category_' . $c] = $cont;
                 }
@@ -151,14 +151,13 @@ class Template extends AbstractModel
         if (isset($cats[0]) && isset($cats[0][0])) {
             foreach ($cats[0] as $cat) {
                 $c = str_replace('}]', '', substr($cat, (strpos($cat, '_') + 1)));
-                $category = new \Phire\Model\Category();
                 if (strpos($c, '_') !== false) {
                     $cAry = explode('_', $c);
                     $ct = $cAry[0];
                     $limit = (isset($cAry[1])) ? $cAry[1] : null;
-                    $catAry['categories_' . $c] = $category->getChildCategories($ct, $limit, $isFields);
+                    $catAry['categories_' . $c] = $phire->getChildCategories($ct, $limit, $isFields);
                 } else {
-                    $catAry['categories_' . $c] = $category->getChildCategories($c, null, $isFields);
+                    $catAry['categories_' . $c] = $phire->getChildCategories($c, null, $isFields);
                 }
             }
         }

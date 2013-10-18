@@ -110,7 +110,7 @@ class IndexController extends AbstractController
 
         // Set breadcrumb and model object
         $this->view->set('breadcrumb', $content->getBreadcrumb())
-                   ->set('phire', $content);
+                   ->set('phire', new Model\Phire());
 
         // If page found, but requires SSL
         if (isset($content->id) && (($_SERVER['SERVER_PORT'] != '443') && ($content->force_ssl))) {
@@ -189,7 +189,7 @@ class IndexController extends AbstractController
             }
             $this->view->setTemplate($template);
             $this->view->merge($category->getData());
-            $this->view->set('phire', $category);
+            $this->view->set('phire', new Model\Phire());
             $this->send();
         } else {
             $this->error();
@@ -220,7 +220,7 @@ class IndexController extends AbstractController
 
         $content = new Model\Content();
         $content->search($this->request, $this->project->isLoaded('Fields'));
-        $this->view->set('phire', $content);
+        $this->view->set('phire', new Model\Phire());
 
         if (count($content->keys) == 0) {
             $this->view->set('error', 'No search keywords were passed. Please try again.');
@@ -302,7 +302,7 @@ class IndexController extends AbstractController
 
         $this->view->set('title', $title)
                    ->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL)
-                   ->set('phire', $content);
+                   ->set('phire', new Model\Phire());
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');

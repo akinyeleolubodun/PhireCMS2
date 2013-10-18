@@ -187,40 +187,6 @@ class Category extends AbstractModel
     }
 
     /**
-     * Get child categories
-     *
-     * @param  mixed   $cat
-     * @param  int     $limit
-     * @param  boolean $isFields
-     * @return array
-     */
-    public function getChildCategories($cat, $limit = null, $isFields = false)
-    {
-        if (!is_numeric($cat)) {
-            $c = Table\Categories::findBy(array('title' => $cat));
-        } else {
-            $c = Table\Categories::findById($cat);
-        }
-
-        $categoryAry = array();
-        if (isset($c->id)) {
-            $limit = (null !== $limit) ? (int)$limit : null;
-            $children = Table\Categories::findBy(array('parent_id' => $c->id), 'order ASC', $limit);
-            if (isset($children->rows[0])) {
-                foreach ($children->rows as $child) {
-                    $child = (array)$child;
-                    if ($isFields) {
-                        $child = array_merge($child, \Fields\Model\FieldValue::getAll($child['id'], true));
-                    }
-                    $categoryAry[] = new \ArrayObject($child, \ArrayObject::ARRAY_AS_PROPS);
-                }
-            }
-        }
-
-        return $categoryAry;
-    }
-
-    /**
      * Get content categories by ID method
      *
      * @param  int     $id
