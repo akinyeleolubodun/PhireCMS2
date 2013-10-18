@@ -235,7 +235,7 @@ class Content extends Form
         if (!$this->hasFile) {
             $fields4['status'] = array(
                 'type'   => 'select',
-                'label'  => 'Status:',
+                'label'  => 'Status:</strong>',
                 'value'  => array(
                     0 => 'Unpublished',
                     1 => 'Draft',
@@ -262,10 +262,18 @@ class Content extends Form
             }
             $fields5['navigation_id'] = array(
                 'type'   => 'checkbox',
-                'label'  => '<span class="label-pad-1">Navigation:</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>Order:</span>',
+                'label'  => 'Navigation / Order:',
                 'value'  => $navsAry,
                 'marked' => $navsMarked
             );
+            // Add categories
+            if (count($categoryAry) > 0) {
+                $fields5['category_id'] = array(
+                    'type'     => 'checkbox',
+                    'label'    => 'Categories:',
+                    'value'    => $categoryAry
+                );
+            }
             $fields5['feed'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Feed:',
@@ -289,6 +297,14 @@ class Content extends Form
                 'value'  => $rolesAry
             );
         } else {
+            // Add categories
+            if (count($categoryAry) > 0) {
+                $fields5['category_id'] = array(
+                    'type'     => 'checkbox',
+                    'label'    => 'Categories:',
+                    'value'    => $categoryAry
+                );
+            }
             $fields5['feed'] = array(
                 'type'   => 'radio',
                 'label'  => 'Include in Feed:',
@@ -315,16 +331,6 @@ class Content extends Form
                     }
                 }
             }
-        }
-
-        $fields3 = array();
-        // Add categories
-        if (count($categoryAry) > 0) {
-            $fields3['category_id'] = array(
-                'type'     => 'checkbox',
-                'label'    => 'Categories:',
-                'value'    => $categoryAry
-            );
         }
 
         // Create pub/exp date fields for a URI-based content object
@@ -426,7 +432,7 @@ class Content extends Form
         );
 
         $allFields = array();
-        $allFields[] = array_merge($fields6, $fields4, $fields5, $fields3);
+        $allFields[] = array_merge($fields6, $fields4, $fields5);
         $allFields[] = $fields1;
 
         if(count($fields2) > 0) {

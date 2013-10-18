@@ -91,6 +91,10 @@ dd {
     line-height: 1.2em;
 }
 
+label {
+    font-weight: bold;
+}
+
 fieldset {
     margin: 0;
     padding: 0 3px 6px 3px;
@@ -421,11 +425,18 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
 #navigation-form-field-group-1 {
     margin: 0 0 40px 10px;
-    padding: 0 0 40px 10px;
+    padding: 0 0 20px 15px;
     float: right;
-    width: 290px;
-    min-height: 400px;
+    width: 280px;
+    min-height: 450px;
     border-left: solid 1px #ccc;
+}
+
+#content-form-field-group-1 fieldset {
+    width: 250px;
+    margin: 0 0 10px 0;
+    padding: 5px 0 5px 0;
+    border-top: solid 1px #ccc;
 }
 
 #content-form-field-group-1 > dt {
@@ -439,7 +450,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #content-form-field-group-1 > dd {
-    margin: 0;
+    margin: 0 0 5px 0;
     padding: 0 3px 3px 3px;
     float: left;
     line-height: 1.0em;
