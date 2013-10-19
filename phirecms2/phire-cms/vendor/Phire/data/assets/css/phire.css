@@ -1028,3 +1028,8 @@ th.config-header > a:hover {
     float: left;
     width: 108px;
 }
+
+.nav-div {
+    margin: 5px 0 5px 0;
+    padding: 2px 0 2px 0;
+}

@@ -28,6 +28,7 @@ class Navigation extends AbstractModel
         $navAry = array();
 
         foreach ($navigation->rows as $nav) {
+
             $sql = Table\ContentToNavigation::getSql();
             $sql->select(array(
                 'content_id',
@@ -43,12 +44,17 @@ class Navigation extends AbstractModel
 
             $content = Table\ContentToNavigation::execute($sql->render(true));
             $navChildren = array();
+            $parents = array('0' => '----');
             if (isset($content->rows[0])) {
+                foreach ($content->rows as $c) {
+                    $parents[$c->id] = $c->title;
+                }
                 $navChildren = $this->getContentChildren($content->rows, 0, true);
             }
 
             $navAry[] = array(
                 'nav'      => $nav,
+                'parents'  => $parents,
                 'children' => $this->getNavChildren($navChildren, array())
             );
         }
@@ -349,6 +355,14 @@ class Navigation extends AbstractModel
                     $content2Nav->order = (int)$value;
                     $content2Nav->update();
                 }
+            } else if (strpos($key, 'parent_id_') !== false) {
+                $id = str_replace('parent_id_', '', $key);
+                $content = Table\Content::findById($id);
+                if (isset($content->id)) {
+                    $pId = ((int)$value == 0) ? null : (int)$value;
+                    $content->parent_id = $pId;
+                    $content->update();
+                }
             }
         }
 
@@ -438,6 +452,7 @@ class Navigation extends AbstractModel
             $set[] = array(
                 'title'         => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $nav['title'],
                 'content_id'    => $nav['content_id'],
+                'parent_id'     => $nav['parent_id'],
                 'navigation_id' => $nav['navigation_id'],
                 'order'         => $nav['order']
             );
