@@ -18,69 +18,42 @@ class Navigation extends AbstractModel
      *
      * @param  string  $sort
      * @param  string  $page
-     * @return void
+     * @return array
      */
     public function getAll($sort = null, $page = null)
     {
         $order = $this->getSortOrder($sort, $page);
         $navigation = Table\Navigation::findAll($order['field'] . ' ' . $order['order']);
 
-        if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\NavigationController', 'remove'))) {
-            $removeCheckbox = '<input type="checkbox" name="remove_navigation[]" id="remove_navigation[{i}]" value="[{id}]" />';
-            $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_navigation" />';
-            $submit = array(
-                'class' => 'remove-btn',
-                'value' => 'Remove'
-            );
-        } else {
-            $removeCheckbox = '&nbsp;';
-            $removeCheckAll = '&nbsp;';
-            $submit = array(
-                'class' => 'remove-btn',
-                'value' => 'Remove',
-                'style' => 'display: none;'
-            );
-        }
-
-        $options = array(
-            'form' => array(
-                'id'      => 'navigation-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/structure/navigation/remove',
-                'method'  => 'post',
-                'process' => $removeCheckbox,
-                'submit'  => $submit
-            ),
-            'table' => array(
-                'headers' => array(
-                    'id'       => '<a href="' . BASE_PATH . APP_URI . '/structure/navigation?sort=id">#</a>',
-                    'navigation' => '<a href="' . BASE_PATH . APP_URI . '/structure/navigation?sort=navigation">Navigation</a>',
-                    'process'  => $removeCheckAll
-                ),
-                'class'       => 'data-table',
-                'cellpadding' => 0,
-                'cellspacing' => 0,
-                'border'      => 0
-            ),
-            'indent' => '        '
-        );
-
         $navAry = array();
-        foreach ($navigation->rows as $id => $nav) {
-            if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\NavigationController', 'edit'))) {
-                $nv = '<a href="' . BASE_PATH . APP_URI . '/structure/navigation/edit/' . $nav->id . '">' . $nav->navigation . '</a>';
-            } else {
-                $nv = $nav->navigation;
+
+        foreach ($navigation->rows as $nav) {
+            $sql = Table\ContentToNavigation::getSql();
+            $sql->select(array(
+                'content_id',
+                'navigation_id',
+                'order',
+                'id',
+                'parent_id',
+                'title',
+                'uri'
+            ))->where()->equalTo('navigation_id', $nav->id);
+            $sql->select()->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN');
+            $sql->select()->orderBy('order', 'ASC');
+
+            $content = Table\ContentToNavigation::execute($sql->render(true));
+            $navChildren = array();
+            if (isset($content->rows[0])) {
+                $navChildren = $this->getContentChildren($content->rows, 0, true);
             }
+
             $navAry[] = array(
-                'id' => $nav->id,
-                'navigation' => $nv
+                'nav'      => $nav,
+                'children' => $this->getNavChildren($navChildren, array())
             );
         }
 
-        if (isset($navAry[0])) {
-            $table = Html::encode($navAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            $this->data['table'] = $table;
-        }
+        return $navAry;
     }
 
     /**
@@ -115,6 +88,7 @@ class Navigation extends AbstractModel
                 DB_PREFIX . 'content.updated_by',
                 'type_uri' => DB_PREFIX . 'content_types.uri',
                 DB_PREFIX . 'content_to_navigation.navigation_id',
+                DB_PREFIX . 'content_to_navigation.order',
             ));
 
             // If it's a draft and a user is logged in
@@ -356,14 +330,28 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Remove navigation
+     * Process navigation
      *
      * @param  array   $post
      * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function process(array $post, $isFields = false)
     {
+        foreach ($post as $key => $value) {
+            if (strpos($key, 'navigation_order_') !== false) {
+                $key = str_replace('navigation_order_', '', $key);
+                $ids = explode('_', $key);
+                $navId = $ids[0];
+                $contentId = $ids[1];
+                $content2Nav = Table\ContentToNavigation::findById(array($contentId, $navId));
+                if (isset($content2Nav->content_id)) {
+                    $content2Nav->order = (int)$value;
+                    $content2Nav->update();
+                }
+            }
+        }
+
         if (isset($post['remove_navigation'])) {
             foreach ($post['remove_navigation'] as $id) {
                 $navigation = Table\Navigation::findById($id);
@@ -382,11 +370,12 @@ class Navigation extends AbstractModel
     /**
      * Recursive method to get content children
      *
-     * @param  array   $content
-     * @param  int     $pid
+     * @param  array $content
+     * @param  int $pid
+     * @param  boolean $override
      * @return array
      */
-    protected function getContentChildren($content, $pid)
+    protected function getContentChildren($content, $pid, $override = false)
     {
         $children = array();
         foreach ($content as $c) {
@@ -396,8 +385,8 @@ class Navigation extends AbstractModel
                 $p['href'] = $p['uri'];
                 $p['name'] = $c->title;
 
-                if (\Phire\Model\Content::isAllowed($c)) {
-                    $p['children'] = $this->getContentChildren($content, $c->id);
+                if (($override) || (\Phire\Model\Content::isAllowed($c))) {
+                    $p['children'] = $this->getContentChildren($content, $c->id, $override);
                     $children[] = $p;
                 }
             }
@@ -434,6 +423,30 @@ class Navigation extends AbstractModel
         }
 
         return $children;
+    }
+
+    /**
+     * Recursive method to get category children
+     *
+     * @param array $children
+     * @param array $set
+     * @param int   $depth
+     * @return array
+     */
+    protected function getNavChildren($children, $set, $depth = 0) {
+        foreach ($children as $nav) {
+            $set[] = array(
+                'title'         => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $nav['title'],
+                'content_id'    => $nav['content_id'],
+                'navigation_id' => $nav['navigation_id'],
+                'order'         => $nav['order']
+            );
+            if (count($nav['children']) > 0) {
+                $set = $this->getNavChildren($nav['children'], $set, ($depth + 1));
+            }
+        }
+
+        return $set;
     }
 
 }

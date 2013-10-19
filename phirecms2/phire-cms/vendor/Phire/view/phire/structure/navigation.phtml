@@ -6,9 +6,42 @@
 <?php if (isset($form)): ?>
         <div id="result" style="display: none;"></div>
 <?php echo $form;
-elseif (isset($table)): ?>
-<?php echo $table;
-else: ?>
+elseif (isset($navigation) && isset($navigation[0])): ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'process')): ?>
+        <form id="navigation-remove-form" action="/phirecms2/phire/structure/navigation/process" method="post">
+            <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th>&nbsp;</th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation">Navigation</a></th><th class="last-th"><input type="checkbox" id="checkall" name="checkall" value="remove_navigation" /></th></tr>
+<?php else: ?>
+            <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th>&nbsp;</th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation">Navigation</a></th><th class="last-th">&nbsp;</th></tr>
+<?php endif; ?>
+<?php foreach ($navigation as $nav):
+    $navDiv = null;
+    $expand = ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))) ? '<a href="#" onclick="$(\'#nav-div-' . $nav['nav']->id . '\').toggle(); return false;">[+]</a>&nbsp;' : '&nbsp;';
+    $remove = ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'process')) ?
+        '<input type="checkbox" name="remove_navigation[]" id="remove_navigation1" value="' . $nav['nav']->id . '" />' : '&nbsp;';
+    $edit = ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit')) ?
+        '<a href="' . BASE_PATH . APP_URI .'/structure/navigation/edit/' . $nav['nav']->id . '">' . $nav['nav']->navigation . '</a>' : $nav['nav']->navigation;
+
+    if ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))):
+        $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div">';
+        foreach ($nav['children'] as $c):
+            $navDiv .= '<div style="margin: 6px 0 6px 0;"><input type="text" style="margin: 0 5px 0 0; padding: 2px; font-size: 1.0em; text-align: center;" name="navigation_order_' . $c['navigation_id'] . '_' . $c['content_id'] . '" size="2" value="' . $c['order'] . '" /> ' . $c['title'] . '</div>';
+        endforeach;
+        $navDiv .= '</div>';
+    endif;
+?>
+                <tr><td class="first-td vert-top"><?php echo $nav['nav']->id; ?></td><td class="vert-top" style="width: 2%;"><?php echo $expand; ?></td><td class="vert-top"><?php echo $edit . $navDiv; ?></td><td class="last-td vert-top"><?php echo $remove; ?></td></tr>
+<?php endforeach; ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'process')): ?>
+                <tr class="table-bottom-row"><td colspan="4" class="table-bottom-row"><input type="submit" name="submit" id="submit" class="remove-btn" value="Process" /><div class="page-links"></div></td></tr>
+            </table>
+        </form>
+<?php else: ?>
+                <tr class="table-bottom-row"><td colspan="4" class="table-bottom-row"><div class="page-links"></div></td></tr>
+            </table>
+<?php endif; ?>
+<?php else: ?>
         <p style="clear: left; padding: 15px 0 0 0;">There is currently no navigation.</p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

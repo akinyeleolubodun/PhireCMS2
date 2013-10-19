@@ -60,8 +60,7 @@ class NavigationController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
         $navigation = new Model\Navigation(array('acl' => $this->project->getService('acl')));
-        $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $navigation->table)
+        $this->view->set('navigation', $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page')))
                    ->set('title', 'Structure ' . $this->view->separator . ' Navigation');
         $this->send();
     }
@@ -196,15 +195,15 @@ class NavigationController extends AbstractController
     }
 
     /**
-     * Navigation remove method
+     * Navigation process method
      *
      * @return void
      */
-    public function remove()
+    public function process()
     {
         if ($this->request->isPost()) {
             $navigation = new Model\Navigation();
-            $navigation->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $navigation->process($this->request->getPost(), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

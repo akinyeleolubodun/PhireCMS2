@@ -96,14 +96,6 @@ class Navigation extends Form
                     'size'    => 80
                 )
             ),
-            'spaces' => array(
-                'type'       => 'text',
-                'label'      => 'Indentation Spaces:',
-                'attributes' => array(
-                    'size'    => 10
-                ),
-                'value'      => 4
-            ),
             'top_node' => array(
                 'type'       => 'text',
                 'label'      => '<span class="label-pad-1">Top Node</span><span class="label-pad-1">ID</span><span class="label-pad-1">Class</span><span>Attributes:</span>',
@@ -183,15 +175,23 @@ class Navigation extends Form
                 'type'       => 'text',
                 'label'      => '&quot;On&quot; Class:',
                 'attributes' => array(
-                    'size'    => 20
+                    'size'    => 15
                 )
             ),
             'off_class' => array(
                 'type'       => 'text',
                 'label'      => '&quot;Off&quot; Class:',
                 'attributes' => array(
-                    'size'    => 20
+                    'size'    => 15
                 )
+            ),
+            'spaces' => array(
+                'type'       => 'text',
+                'label'      => 'Indentation Spaces:',
+                'attributes' => array(
+                    'size'    => 15
+                ),
+                'value'      => 4
             )
         );
 
