@@ -170,13 +170,17 @@ class Content extends Form
                     'label'      => 'Parent:',
                     'value'      => $parents,
                     'attributes' => array(
-                        'onchange' => "slug(null, 'uri');"
+                        'onchange' => "slug(null, 'uri');",
+                        'style'    => 'min-width: 200px;'
                     )
                 ),
                 'template' => array(
                     'type' => 'select',
                     'label'      => 'Template:',
                     'value'      => $this->getTemplates($cfg),
+                    'attributes' => array(
+                        'style'    => 'min-width: 200px;'
+                    )
                 )
             );
 

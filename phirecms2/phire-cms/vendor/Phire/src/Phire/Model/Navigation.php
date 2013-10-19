@@ -454,7 +454,8 @@ class Navigation extends AbstractModel
                 'content_id'    => $nav['content_id'],
                 'parent_id'     => $nav['parent_id'],
                 'navigation_id' => $nav['navigation_id'],
-                'order'         => $nav['order']
+                'order'         => $nav['order'],
+                'children'      => $this->children($nav['content_id'])
             );
             if (count($nav['children']) > 0) {
                 $set = $this->getNavChildren($nav['children'], $set, ($depth + 1));
@@ -462,6 +463,32 @@ class Navigation extends AbstractModel
         }
 
         return $set;
+    }
+
+    /**
+     * Recursive method to get children of the content object
+     *
+     * @param  int   $pid
+     * @param  array $children
+     * @param  int   $depth
+     * @return array
+     */
+    protected function children($pid, $children = array(), $depth = 0)
+    {
+        $c = Table\Content::findBy(array('parent_id' => $pid));
+
+        if (isset($c->rows[0])) {
+            foreach ($c->rows as $child) {
+                $children[] = $child->id;
+                $c = Table\Content::findBy(array('parent_id' => $child->id));
+                if (isset($c->rows[0])) {
+                    $d = $depth + 1;
+                    $children = $this->children($child->id, $children, $d);
+                }
+            }
+        }
+
+        return $children;
     }
 
 }
