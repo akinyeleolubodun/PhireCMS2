@@ -1,6 +1,37 @@
 <?php include __DIR__ . '/header.phtml'; ?>
-        <h1><?php echo $title; ?></h1>
-        <p>
-            This is the application home page for Phire CMS.
-        </p>
+        <h1><?php echo $subTitle; ?></h1>
+        <table id="system-overview" cellpadding="0" cellspacing="0">
+            <tr><th colspan="2">System Overview</th></tr>
+<?php foreach ($overview as $key => $value): ?>
+            <tr><td><strong><?php echo ucwords(str_replace(array('_', 'Php'), array(' ', 'PHP'), $key)); ?>:</strong></td><td><?php echo $value; ?></td></tr>
+<?php endforeach; ?>
+        </table>
+        <table id="recent-content" cellpadding="0" cellspacing="0">
+            <tr><th colspan="5">Recent Content</th></tr>
+<?php foreach ($recent as $content):
+    $link = ($content->type_uri == 0) ? '<a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="' . BASE_PATH . $content->uri . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $content->uri . '</a>';
+    if (null !== $content->status):
+        switch ($content->status):
+            case 0:
+                $status = '<strong class="error">Unpublished</strong>';
+                break;
+            case 1:
+                $status = '<strong class="orange">Draft</strong>';
+                break;
+            case 2:
+                $status = '<strong class="green">Published</strong>';
+                break;
+        endswitch;
+    else:
+        $status = '&nbsp;';
+    endif;
+    if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')):
+        $title = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $content->id . '">' . $content->title . '</a>';
+    else:
+        $title = $content->title;
+    endif;
+?>
+            <tr><td><?php echo $content->name; ?></td><td><?php echo $title; ?></td><td><?php echo $link; ?></td><td><?php echo date($datetime_format, strtotime($content->created)); ?></td><td><?php echo $status; ?></td></tr>
+<?php endforeach; ?>
+        </table>
 <?php include __DIR__ . '/footer.phtml'; ?>

@@ -10,76 +10,89 @@ class Phire extends AbstractModel
 {
 
     /**
-     * Execute a custom SQL query
-     *
-     * @param  string  $sql
-     * @param  array   $params
-     * @param  boolean $isFields
-     * @return mixed
-     */
-    public function db($sql, $params = null, $isFields = false)
-    {
-
-    }
-
-    /**
      * Get content object
      *
-     * @param  mixed   $content
+     * @param  mixed   $id
      * @param  boolean $isFields
-     * @return mixed
+     * @return \ArrayObject
      */
-    public function getContent($content, $isFields = false)
+    public function getContent($id, $isFields = false)
     {
+        $contentValues = array();
+        $content = (is_numeric($id)) ? Table\Content::findById($id) : Table\Content::findBy(array('uri' => $id));
 
+        if (isset($content->id)) {
+            $contentValues = $content->getValues();
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id));
+            }
+        }
+
+        return new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
      * Get category object
      *
-     * @param  mixed   $category
+     * @param  mixed   $id
      * @param  boolean $isFields
      * @return mixed
      */
-    public function getCategory($category, $isFields = false)
+    public function getCategory($id, $isFields = false)
     {
+        $categoryValues = array();
+        $category = (is_numeric($id)) ? Table\Categories::findById($id) : Table\Categories::findBy(array('uri' => $id));
 
+        if (isset($category->id)) {
+            $categoryValues = $category->getValues();
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($category->id));
+            }
+        }
+
+        return new \ArrayObject($categoryValues, \ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
      * Get template object
      *
-     * @param  mixed   $template
+     * @param  mixed   $id
      * @param  boolean $isFields
      * @return mixed
      */
-    public function getTemplate($template, $isFields = false)
+    public function getTemplate($id, $isFields = false)
     {
+        $templateValues = array();
+        $template = (is_numeric($id)) ? Table\Templates::findById($id) : Table\Templates::findBy(array('name' => $id));
 
+        if (isset($template->id)) {
+            $templateValues = $template->getValues();
+
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                $templateValues = array_merge($templateValues, \Fields\Model\FieldValue::getAll($template->id));
+            }
+
+            $templateValues['template'] = Template::parse($templateValues['template'], $template->id);
+        }
+
+        return new \ArrayObject($templateValues, \ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
      * Get navigation object
      *
-     * @param  mixed   $navigation
-     * @param  boolean $isFields
+     * @param  mixed $name
      * @return mixed
      */
-    public function getNavigation($navigation, $isFields = false)
+    public function getNavigation($name)
     {
+        $nav = new Navigation();
+        $navAry = $nav->getContentNav();
 
-    }
-
-    /**
-     * Get user object
-     *
-     * @param  mixed   $user
-     * @param  boolean $isFields
-     * @return mixed
-     */
-    public function getUser($user, $isFields = false)
-    {
-
+        return (isset($navAry[$name])) ? $navAry[$name] : null;
     }
 
     /**

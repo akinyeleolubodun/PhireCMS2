@@ -109,6 +109,38 @@ class Content extends AbstractModel
     }
 
     /**
+     * Get recent content method
+     *
+     * @return array
+     */
+    public function getRecent()
+    {
+        $recent = array();
+
+        $sql = Table\Content::getSql();
+        $sql->select(array(
+            DB_PREFIX . 'content.id',
+            DB_PREFIX . 'content.type_id',
+            DB_PREFIX . 'content_types.name',
+            'type_uri' => DB_PREFIX . 'content_types.uri',
+            DB_PREFIX . 'content.title',
+            DB_PREFIX . 'content.uri',
+            DB_PREFIX . 'content.created',
+            DB_PREFIX . 'content.created_by',
+            'user_id' => DB_PREFIX . 'users.id',
+            DB_PREFIX . 'users.username',
+            DB_PREFIX . 'content.status'
+        ))->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN')
+          ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
+          ->orderBy('created', 'DESC')
+          ->limit(10);
+
+        $content = Table\Content::execute($sql->render(true));
+
+        return $content->rows;
+    }
+
+    /**
      * Get all content method
      *
      * @param  int     $typeId
@@ -223,7 +255,7 @@ class Content extends AbstractModel
         $this->data['type']    = $contentType->name;
         $this->data['typeUri'] = $contentType->uri;
 
-        $status = array('Unpublished', 'Draft', 'Published');
+        $status = array('<strong class="error">Unpublished</strong>', '<strong class="orange">Draft</strong>', '<strong class="green">Published</strong>');
         $contentAry = array();
         $ids = array();
 

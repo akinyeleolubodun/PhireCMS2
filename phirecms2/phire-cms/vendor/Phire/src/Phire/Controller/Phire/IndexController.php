@@ -92,8 +92,16 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Home'
+            'title'    => 'Dashboard',
+            'subTitle' => 'Welcome to Phire CMS 2.0'
         ));
+
+        $content = new Model\Content();
+        $config = new Model\Config();
+
+        $this->view->set('recent', $content->getRecent())
+                   ->set('overview', $config->getOverview());
+
         $this->send();
     }
 

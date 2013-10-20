@@ -412,6 +412,45 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
 }
 
+#system-overview {
+    margin: 0;
+    padding: 0;
+    float: right;
+    width: 25%;
+    border: solid 1px #ccc;
+}
+
+#recent-content {
+    margin: 0;
+    padding: 0;
+    float: left;
+    width: 73.5%;
+    border: solid 1px #ccc;
+}
+
+#system-overview tr, #recent-content tr {
+    margin: 0;
+    padding: 0;
+}
+
+#system-overview tr:hover, #recent-content tr:hover {
+    background-color: #eff6fc;
+}
+
+#system-overview th, #recent-content th {
+    margin: 0;
+    text-align: left;
+    padding: 8px 5px 8px 5px;
+    background-color: #dedede;
+}
+
+#system-overview td, #recent-content td {
+    margin: 0;
+    padding: 8px 5px 8px 5px;
+    border-top: solid 1px #ccc;
+    font-size: 0.9em;
+}
+
 #search-title {
     padding: 2px 5px 3px 5px;
 }
@@ -1032,4 +1071,14 @@ th.config-header > a:hover {
 .nav-div {
     margin: 5px 0 5px 0;
     padding: 2px 0 2px 0;
+}
+
+.green {
+    font-weight: bold;
+    color: #528435;
+}
+
+.orange {
+    font-weight: bold;
+    color: #e56300;
 }

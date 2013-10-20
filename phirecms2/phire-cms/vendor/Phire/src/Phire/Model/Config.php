@@ -116,6 +116,43 @@ class Config extends AbstractModel
     }
 
     /**
+     * Get overview configuration values
+     *
+     * @return array
+     */
+    public function getOverview()
+    {
+        $cfg = Table\Config::getConfig();
+        $config = array();
+        $formattedConfig = array();
+
+        foreach ($cfg->rows as $c) {
+            if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
+                $value = unserialize($c->value);
+            } else {
+                $value = htmlentities($c->value, ENT_QUOTES, 'UTF-8');
+            }
+
+            $config[$c->setting] = $value;
+        }
+
+        // Set server config settings
+        $overview = array(
+            'system_version'          => $config['system_version'],
+            'system_document root'    => $config['system_document_root'],
+            'server_operating_system' => $config['server_operating_system'],
+            'server_software'         => $config['server_software'],
+            'database_version'        => $config['database_version'],
+            'php_version'             => $config['php_version'],
+            'installed_on'            => date($this->config->datetime_format, strtotime($config['installed_on'])),
+            'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
+                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(Never)'
+        );
+
+        return $overview;
+    }
+
+    /**
      * Get configuration values
      *
      * @return void
@@ -146,7 +183,7 @@ class Config extends AbstractModel
             'php_version'             => $config['php_version'],
             'installed_on'            => date($this->config->datetime_format, strtotime($config['installed_on'])),
             'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
-                date($this->config->datetime_format, strtotime($config['updated_on'])) : 'N/A'
+                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(Never)'
         );
 
         // Set system title form element
