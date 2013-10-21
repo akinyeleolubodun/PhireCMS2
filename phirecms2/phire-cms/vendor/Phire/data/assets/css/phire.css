@@ -112,18 +112,20 @@ input[type=text], input[type=password] {
 
 input[type=file] {
     margin: 0;
-    padding: 2px;
+    padding: 0;
     border-radius: 4px;
     width: 300px;
+    height: 28px;
     border: solid 1px #d3d3d3;
     background-color: #d3d3d3;
+    font-size: 12px;
     font-family: arial, helvetica, verdana, sans-serif;
 }
 
 select {
     margin: 0;
-    padding: 4px;
-    font-size: 1.1em;
+    padding: 4px 2px 4px 2px;
+    font-size: 1.0em;
     border: solid 1px #d3d3d3;
     background-color: #d3d3d3;
     border-radius: 4px;
@@ -219,6 +221,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     margin: 0;
     padding: 4px 3px 6px 3px;
     line-height: 1.2em;
+}
+
+#install-form > dl > dd > input[type=text], #user-install-form > dl > dd > input[type=text], #user-install-form > dl > dd > input[type=password] {
+    width: 250px;
 }
 
 #user-install-form {
@@ -453,6 +459,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #search-title {
     padding: 2px 5px 3px 5px;
+    height: 15px;
 }
 
 #content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form {
@@ -496,8 +503,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #content-process {
-    margin: 6px 6px 2px 6px;
-    padding: 2px;
+    margin: 4px 6px 2px 6px;
+    padding: 3px;
     float: right;
 }
 
@@ -812,8 +819,9 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .save-btn {
     margin: 0;
-    padding: 8px 0 8px 0;
-    width: 260px;
+    padding: 6px 0 8px 0;
+    width: 250px;
+    height: 34px;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -831,8 +839,9 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .update-btn {
     margin: 0;
-    padding: 8px 0 8px 0;
-    width: 260px;
+    padding: 6px 0 8px 0;
+    width: 250px;
+    height: 34px;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -850,8 +859,9 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .remove-btn {
     margin: 0;
-    padding: 8px 0 8px 0;
-    width: 130px;
+    padding: 4px 0 6px 0;
+    width: 120px;
+    height: 32px;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -869,8 +879,9 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .process-btn {
     margin: 0;
-    padding: 8px 0 8px 0;
-    width: 260px;
+    padding: 6px 0 8px 0;
+    width: 250px;
+    height: 34px;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -891,13 +902,14 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     margin: 0 0 0 5px;
     padding: 3px 0 4px 0;
     width: 70px;
+    height: 22px;
     color: #fff;
     text-align: center;
     font-weight: bold;
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 11px;
     background-color: #5a8c1d;
 }
 

@@ -3,6 +3,10 @@
  * Phire CMS 2.0 Bootstrap File
  */
 
+// Calculate and define the base path
+$basePath = str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__));
+define('BASE_PATH', (!empty($basePath) ? $basePath : ''));
+
 // Require the config file
 require_once 'config.php';
 

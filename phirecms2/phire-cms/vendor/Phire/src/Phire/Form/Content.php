@@ -143,7 +143,7 @@ class Content extends Form
         // Prevent the object's children or itself from being in the parent drop down
         $content = Table\Content::findAll('id ASC');
         foreach ($content->rows as $c) {
-            if (($c->parent_id == 0) && ($c->id != $mid)) {
+            if (($c->parent_id == 0) && ($c->id != $mid) && (null !== $c->status)) {
                 $parents[$c->id] = $c->title;
                 $children = $this->children($c->id);
                 if (count($children) > 0) {

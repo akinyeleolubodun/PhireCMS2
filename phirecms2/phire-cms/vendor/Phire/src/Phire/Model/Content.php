@@ -1229,7 +1229,7 @@ class Content extends AbstractModel
         if (in_array($ext, $formats)) {
             $mediaDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
             foreach ($cfg as $size => $action) {
-                if (in_array($action['action'], self::$mediaActions)) {
+                if (in_array($action['action'], Config::getMediaActions())) {
                     // If 'size' directory does not exist, create it
                     if (!file_exists($mediaDir . DIRECTORY_SEPARATOR . $size)) {
                         mkdir($mediaDir . DIRECTORY_SEPARATOR . $size);

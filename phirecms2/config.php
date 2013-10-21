@@ -4,21 +4,17 @@
  */
 
 /**
- * Path and URI Configuration Settings
+ * URI and Path  Configuration Settings
  */
 
-// Calculate and define the base path
-$basePath = str_replace(array(realpath($_SERVER['DOCUMENT_ROOT']), '\\'), array('', '/'), realpath(__DIR__));
-define('BASE_PATH', (!empty($basePath) ? $basePath : ''));
+// Define the application URI
+define('APP_URI', '/phire');
 
 // Define the application path
 define('APP_PATH', '/phire-cms');
 
 // Define the media path
 define('CONTENT_PATH', '/phire-content');
-
-// Define the application URI
-define('APP_URI', '/phire');
 
 /**
  * Database Configuration Settings
