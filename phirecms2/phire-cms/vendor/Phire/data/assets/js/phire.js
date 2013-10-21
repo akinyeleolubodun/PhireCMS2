@@ -331,6 +331,14 @@ var addBatchFields = function() {
 };
 
 /**
+ * Function to show upload div
+ */
+var showLoading = function() {
+    console.log(123);
+    document.getElementById('loading').style.display = 'block';
+};
+
+/**
  * Function to check if form values have changed before leaving the page
  *
  * @return void

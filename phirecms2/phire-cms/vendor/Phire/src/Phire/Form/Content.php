@@ -61,7 +61,6 @@ class Content extends Form
 
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', $id);
-
     }
 
     /**

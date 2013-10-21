@@ -80,7 +80,8 @@ class Batch extends Form
         }
 
         parent::__construct($action, $method, null, '        ');
-        $this->setAttributes('id', 'batch-form');
+        $this->setAttributes('id', 'batch-form')
+             ->setAttributes('onsubmit', 'showLoading();');
     }
 
 }
