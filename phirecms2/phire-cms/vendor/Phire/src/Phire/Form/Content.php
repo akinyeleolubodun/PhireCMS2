@@ -239,7 +239,7 @@ class Content extends Form
         if (!$this->hasFile) {
             $fields4['status'] = array(
                 'type'   => 'select',
-                'label'  => 'Status:</strong>',
+                'label'  => 'Status:',
                 'value'  => array(
                     0 => 'Unpublished',
                     1 => 'Draft',

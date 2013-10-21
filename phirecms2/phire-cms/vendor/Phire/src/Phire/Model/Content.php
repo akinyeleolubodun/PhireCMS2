@@ -39,6 +39,16 @@ class Content extends AbstractModel
     protected static $imageRegex = '/^.*\.(ai|eps|gif|jpe|jpg|jpeg|pdf|png|psd)$/i';
 
     /**
+     * Method to get image regex
+     *
+     * @return string
+     */
+    public static function getImageRegex()
+    {
+        return self::$imageRegex;
+    }
+
+    /**
      * Method to check is content object is allowed
      *
      * @param  mixed $content

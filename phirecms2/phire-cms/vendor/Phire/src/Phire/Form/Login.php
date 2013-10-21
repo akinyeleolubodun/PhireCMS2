@@ -26,7 +26,7 @@ class Login extends Form
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
-                    'style' => 'display: block; width: 288px; margin: 0 auto;'
+                    'style' => 'display: block; width: 290px; margin: 0 auto;'
                 )
             ),
             'password' => array(
@@ -35,7 +35,7 @@ class Login extends Form
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
-                    'style' => 'display: block; width: 288px; margin: 0 auto;'
+                    'style' => 'display: block; width: 290px; margin: 0 auto;'
                 )
             ),
             'submit' => array(

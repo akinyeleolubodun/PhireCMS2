@@ -12,7 +12,6 @@ use Phire\Table;
 class Config extends AbstractModel
 {
 
-
     /**
      * Allowed media actions
      *

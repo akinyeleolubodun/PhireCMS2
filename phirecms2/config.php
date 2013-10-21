@@ -4,7 +4,7 @@
  */
 
 /**
- * URI and Path  Configuration Settings
+ * URI and Path Configuration Settings
  */
 
 // Define the application URI

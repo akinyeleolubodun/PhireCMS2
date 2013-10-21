@@ -223,8 +223,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     line-height: 1.2em;
 }
 
-#install-form > dl > dd > input[type=text], #user-install-form > dl > dd > input[type=text], #user-install-form > dl > dd > input[type=password] {
+#install-form > dl > dd > input[type=text] {
     width: 250px;
+}
+
+#user-install-form > dl > dd > input[type=text], #user-install-form > dl > dd > input[type=password] {
+    width: 240px;
 }
 
 #user-install-form {
@@ -1028,6 +1032,10 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     padding: 5px;
     list-style-type: none;
     border-bottom: solid 1px #ccc;
+}
+
+.module-nav li:last-child {
+    border: none;
 }
 
 th.config-header {

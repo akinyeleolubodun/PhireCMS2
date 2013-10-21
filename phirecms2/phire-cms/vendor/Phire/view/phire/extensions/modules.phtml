@@ -17,7 +17,7 @@ foreach ($modules as $module):
         $yesChecked = 'checked="checked" ';
         $noChecked  = null;
         if (isset($module->module_nav)):
-            $nav = PHP_EOL . '                <tr style="background: transparent;"><td colspan="7" style="background: transparent; border-left: solid 1px #ccc; border-right: solid 1px #ccc; padding: 0; margin: 0;">' . $module->module_nav . '</td></tr>';
+            $nav = PHP_EOL . '                <tr style="background: transparent;"><td colspan="7" style="background: transparent; border-left: solid 1px #ccc; border-right: solid 1px #ccc; padding: 0; margin: 0;">' . PHP_EOL . $module->module_nav . '</td></tr>' .  PHP_EOL;
         endif;
     else:
         $yesChecked = null;
