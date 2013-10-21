@@ -202,7 +202,7 @@ class Extension extends AbstractModel
                     if (strpos($css, '*/') !== false) {
                         $cssHeader = substr($css, 0, strpos($css, '*/'));
                         $cssHeader = substr($cssHeader, (strpos($cssHeader, '/*') + 2));
-                        $cssHeaderAry = explode(PHP_EOL, $cssHeader);
+                        $cssHeaderAry = explode("\n", $cssHeader);
                         foreach ($cssHeaderAry as $line) {
                             if (strpos($line, ':')) {
                                 $ary = explode(':', $line);
@@ -282,7 +282,7 @@ class Extension extends AbstractModel
                     if (strpos($cfg, '*/') !== false) {
                         $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
                         $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));
-                        $cfgHeaderAry = explode(PHP_EOL, $cfgHeader);
+                        $cfgHeaderAry = explode("\n", $cfgHeader);
                         foreach ($cfgHeaderAry as $line) {
                             if (strpos($line, ':')) {
                                 $ary = explode(':', $line);

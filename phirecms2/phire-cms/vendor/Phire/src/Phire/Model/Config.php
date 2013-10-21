@@ -440,8 +440,8 @@ class Config extends AbstractModel
         foreach ($actions as $size => $action) {
             $mediaSizes .= '                        <input type="text" name="media_size_' . $i . '" id="media_size_' . $i . '" value="' . $size . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $actionSelect = new Element\Select('media_action_' . $i, $actionOptions, $action['action'], '                        ');
-            $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 3px 0 3px 0;');
-            $mediaActions .= (string)$actionSelect;
+            $actionSelect->setAttributes('style', 'display: block; font-size: 1.1em; margin: 0; padding: 3px 0 3px 0;');
+            $mediaActions .= '<div style="height: 28px; padding: 0; margin: 0 0 8px 0;">' . $actionSelect . '</div>';
             $mediaParams .= '                        <input type="text" name="media_params_' . $i . '" id="media_params_' . $i . '" value="' . $action['params'] . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $mediaQuality .= '                        <input type="text" name="media_quality_' . $i . '" id="media_quality_' . $i . '" value="' . $action['quality'] . '" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
             $mediaRemove .= '                        <input type="checkbox" class="rm-media" name="rm_media[]" value="' . $size . '" style="display: block;" />' . PHP_EOL;
@@ -450,8 +450,8 @@ class Config extends AbstractModel
 
         $mediaSizes .= '                        <input type="text" name="media_size_new_1" id="media_size_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
         $actionSelect = new Element\Select('media_action_new_1', $actionOptions, null, '                        ');
-        $actionSelect->setAttributes('style', 'display: block; margin: 0 0 9px 0; padding: 3px 0 3px 0;');
-        $mediaActions .= (string)$actionSelect;
+        $actionSelect->setAttributes('style', 'display: block; font-size: 1.1em; margin: 0; padding: 3px 0 3px 0;');
+        $mediaActions .= '<div style="height: 28px; padding: 0; margin: 0 0 8px 0;">' . $actionSelect . '</div>';
         $mediaParams .= '                        <input type="text" name="media_params_new_1" id="media_params_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
         $mediaQuality .= '                        <input type="text" name="media_quality_new_1" id="media_quality_new_1" value="" style="padding: 2px; display: block;" size="10" />' . PHP_EOL;
 

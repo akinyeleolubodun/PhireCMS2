@@ -80,7 +80,7 @@ class ConfigController extends AbstractController
     public function json()
     {
         if (null !== $this->request->getPath(1)) {
-            $format = str_replace('\\', '/', urldecode($this->request->getPath(1)));
+            $format = str_replace('_', '/', urldecode($this->request->getPath(1)));
 
             // Build the response and send it
             $response = new Response();

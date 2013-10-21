@@ -148,7 +148,7 @@ var catSlug = function(src, tar) {
  * @return void
  */
 var customDatetime = function(val) {
-    var j = $().json.parse('./config/json/' + val.replace(/\//g, '\\'));
+    var j = $().json.parse('./config/json/' + encodeURIComponent(val.replace(/\//g, '_')));
     if ($('#custom-datetime')[0] != undefined) {
         var v = (j.format != '') ? '(' + j.format + ')' : '';
         $('#custom-datetime').val(v);
