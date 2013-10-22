@@ -125,6 +125,7 @@ class IndexController extends AbstractController
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
+                'phire'    => new Model\Phire(),
                 'title'    => 'Login'
             ));
 
@@ -201,6 +202,7 @@ class IndexController extends AbstractController
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
+                'phire'    => new Model\Phire(),
                 'title'    => 'Register'
             ));
 
@@ -259,6 +261,7 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
+            'phire'    => new Model\Phire(),
             'title'    => 'Profile'
         ));
 
@@ -318,6 +321,7 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
+            'phire'    => new Model\Phire(),
             'title'    => 'Unsubscribe'
         ));
 
@@ -375,6 +379,7 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
+            'phire'    => new Model\Phire(),
             'title'    => 'Forgot'
         ));
 
@@ -428,6 +433,7 @@ class IndexController extends AbstractController
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
+                'phire'    => new Model\Phire(),
                 'title'    => 'Verify'
             ));
 
@@ -475,7 +481,8 @@ class IndexController extends AbstractController
         $this->prepareView($this->viewPath . '/error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
+            'phireNav' => $this->project->getService('phireNav'),
+            'phire'    => new Model\Phire(),
         ));
 
         $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found');
