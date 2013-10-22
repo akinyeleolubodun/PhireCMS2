@@ -129,7 +129,7 @@ class UserType extends Form
                     '2' => 'SHA1',
                     '3' => 'Crypt',
                     '4' => 'Bcrypt',
-                    '5' => 'Mcrypt',
+                    '5' => 'Mcrypt (2-Way)',
                     '6' => 'Crypt_MD5',
                     '7' => 'Crypt_SHA256',
                     '8' => 'Crypt_SHA512',

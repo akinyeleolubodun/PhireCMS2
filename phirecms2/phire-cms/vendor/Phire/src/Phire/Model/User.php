@@ -829,6 +829,11 @@ class User extends AbstractModel
                 }
 
                 $encPassword = $crypt->create($password);
+                $encPasswordAry = array(
+                    'hash' => $encPassword,
+                    'salt' => $crypt->getSalt()
+                );
+                $encPassword = serialize($encPasswordAry);
                 break;
 
             case Auth\Auth::ENCRYPT_BCRYPT:
