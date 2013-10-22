@@ -179,7 +179,9 @@ return array(
             'Phire\Controller\IndexController',
             'Phire\Controller\Phire\IndexController',
             'Phire\Controller\Phire\Install\IndexController'
-        )
+        ),
+        // Encryption options for whichever encryption method you choose
+        'encryptionOptions' => array()
     ))
 );
 

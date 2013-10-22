@@ -44,10 +44,6 @@ class UserType extends Form
                 $this->getElement('type')
                      ->addValidator(new Validator\Equal('user', "The type name for this user type cannot change and must be 'user'."));
             }
-            if ($this->password_encryption == 3) {
-                $this->getElement('password_salt')
-                     ->addValidator(new Validator\NotEmpty(null, 'The crypt password encryption requires a password salt.'));
-            }
         }
 
         // Check for global file setting configurations
@@ -129,17 +125,17 @@ class UserType extends Form
                 'type'  => 'select',
                 'label' => 'Password Encryption:',
                 'value' => array(
-                    '3' => 'Crypt',
-                    '2' => 'SHA1',
                     '1' => 'MD5',
+                    '2' => 'SHA1',
+                    '3' => 'Crypt',
+                    '4' => 'Bcrypt',
+                    '5' => 'Mcrypt',
+                    '6' => 'Crypt_MD5',
+                    '7' => 'Crypt_SHA256',
+                    '8' => 'Crypt_SHA512',
                     '0' => 'None'
                 ),
-                'marked' => '2'
-            ),
-            'password_salt' => array(
-                'type'       => 'text',
-                'label'      => 'Password Salt:',
-                'attributes' => array('size' => 40)
+                'marked' => '4'
             ),
             'ip_allowed' => array(
                 'type'       => 'text',

@@ -43,10 +43,3 @@ define('DB_HOST', '');
 // Define the database prefix
 define('DB_PREFIX', '');
 
-/**
- * Application secret
- */
-
-// Define the application secret
-define('AUTH_SECRET', '');
-

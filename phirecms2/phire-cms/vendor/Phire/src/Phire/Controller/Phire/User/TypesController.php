@@ -162,7 +162,7 @@ class TypesController extends AbstractController
 
                     // If form is valid, save type
                     if ($form->isValid()) {
-                        $type->update($form, $this->project->isLoaded('Fields'));
+                        $type->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

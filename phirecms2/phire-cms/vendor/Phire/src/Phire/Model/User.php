@@ -4,6 +4,8 @@
  */
 namespace Phire\Model;
 
+use Pop\Auth;
+use Pop\Crypt;
 use Pop\Data\Type\Html;
 use Pop\Filter\String;
 use Pop\Log;
@@ -387,44 +389,24 @@ class User extends AbstractModel
     /**
      * Save user
      *
-     * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
+     * @param  \Pop\Form\Form $form
+     * @param  \Pop\Config    $config
+     * @param  boolean        $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form, $config, $isFields = false)
     {
+        $encOptions = $config->encryptionOptions->asArray();
+
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
         $type = Table\UserTypes::findById($fields['type_id']);
 
-        if (isset($fields['password1'])) {
-            $password = $fields['password1'];
-
-            // Set the password according to the user type
-            if (isset($type->id)) {
-                switch ($type->password_encryption) {
-                    case 3:
-                        $password = crypt($fields['password1'], $type->password_salt);
-                        break;
-                    case 2:
-                        $password = sha1($fields['password1']);
-                        break;
-                    case 1:
-                        $password = md5($fields['password1']);
-                        break;
-                    case 0:
-                        $password = $fields['password1'];
-                        break;
-                }
-            }
-        } else {
-            $password = '';
-        }
+        $password = (isset($fields['password1'])) ?
+            self::encryptPassword($fields['password1'], $type->password_encryption, $encOptions) : '';
 
         // Set the username according to user type
-        $fields['username'] = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
-        $fields['password'] = $password;
-        $fields['email'] = $fields['email1'];
+        $username = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
 
         // Set the role according to user type
         if (isset($fields['role_id'])) {
@@ -442,9 +424,9 @@ class User extends AbstractModel
         $user = new Table\Users(array(
             'type_id'         => $fields['type_id'],
             'role_id'         => $fields['role_id'],
-            'username'        => $fields['username'],
-            'password'        => $fields['password'],
-            'email'           => $fields['email'],
+            'username'        => $username,
+            'password'        => $password,
+            'email'           => $fields['email1'],
             'verified'        => $fields['verified'],
             'logins'          => null,
             'failed_attempts' => 0
@@ -469,80 +451,65 @@ class User extends AbstractModel
     /**
      * Update user
      *
-     * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
+     * @param  \Pop\Form\Form $form
+     * @param  \Pop\Config    $config
+     * @param  boolean        $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form, $config, $isFields = false)
     {
+        $encOptions = $config->encryptionOptions->asArray();
+
+
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
         $type = Table\UserTypes::findById($fields['type_id']);
         $user = Table\Users::findById($fields['id']);
 
-        if (isset($fields['password1'])) {
+        if (isset($user->id)) {
             // If there's a new password, set according to the user type
             if (($fields['password1'] != '') && ($fields['password2'] != '')) {
-                $password = $fields['password1'];
-
-                if (isset($type->id)) {
-                    switch ($type->password_encryption) {
-                        case 3:
-                            $password = crypt($fields['password1'], $type->password_salt);
-                            break;
-                        case 2:
-                            $password = sha1($fields['password1']);
-                            break;
-                        case 1:
-                            $password = md5($fields['password1']);
-                            break;
-                        case 0:
-                            $password = $fields['password1'];
-                            break;
-                    }
-                }
-
-                $user->password = $password;
+                $user->password = self::encryptPassword($fields['password1'], $type->password_encryption, $encOptions);
             }
-        }
 
-        // Set role
-        if (isset($fields['role_id'])) {
-            $roleId = ($fields['role_id'] == 0) ? null : $fields['role_id'];
-        } else {
-            $roleId = $user->role_id;
-        }
+            // Set role
+            if (isset($fields['role_id'])) {
+                $roleId = ($fields['role_id'] == 0) ? null : $fields['role_id'];
+            } else {
+                $roleId = $user->role_id;
+            }
 
-        // Set verified and attempts
-        $verified = (isset($fields['verified'])) ? $fields['verified'] : $user->verified;
-        $failedAttempts = (isset($fields['failed_attempts'])) ? $fields['failed_attempts'] : $user->failed_attempts;
+            // Set verified and attempts
+            $verified = (isset($fields['verified'])) ? $fields['verified'] : $user->verified;
+            $failedAttempts = (isset($fields['failed_attempts'])) ? $fields['failed_attempts'] : $user->failed_attempts;
 
-        $first = ((null === $user->role_id) && (null === $user->logins));
+            $first = ((null === $user->role_id) && (null === $user->logins));
 
-        // Save the user's updated data
-        $user->role_id         = $roleId;
-        $user->username        = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
-        $user->email           = $fields['email1'];
-        $user->verified        = $verified;
-        $user->failed_attempts = $failedAttempts;
+            // Save the user's updated data
+            $user->role_id         = $roleId;
+            $user->username        = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
+            $user->email           = $fields['email1'];
+            $user->verified        = $verified;
+            $user->failed_attempts = $failedAttempts;
 
-        $sess = Session::getInstance();
-        $sess->last_user_id = $user->id;
-        if ($sess->user->id == $user->id) {
-            $sess->user->username = $user->username;
-        }
+            $sess = Session::getInstance();
+            $sess->last_user_id = $user->id;
+            if ($sess->user->id == $user->id) {
+                $sess->user->username = $user->username;
+            }
 
-        $user->update();
-        $this->data['id'] = $user->id;
+            $user->update();
+            $this->data['id'] = $user->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $user->id);
-        }
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                \Fields\Model\FieldValue::update($fields, $user->id);
+            }
 
-        // Send verification if needed
-        if ($first) {
-            $this->sendApproval($user, $type);
+            // Send verification if needed
+            if ($first) {
+                $this->sendApproval($user, $type);
+            }
         }
     }
 
@@ -550,18 +517,20 @@ class User extends AbstractModel
      * Update user type
      *
      * @param \Pop\Form\Form $form
+     * @param \Pop\Config $config
      * @return void
      */
-    public function updateType(\Pop\Form\Form $form)
+    public function updateType(\Pop\Form\Form $form, $config)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
 
         // If the user type has changed
         if ($this->type_id != $form->type_id) {
             $user = Table\Users::findById($this->id);
+            $oldType = Table\UserTypes::findById($user->id);
             $type = Table\UserTypes::findById($form->type_id);
 
-            if (isset($user->id) && isset($type->id)) {
+            if (isset($user->id)) {
                 // If the new type has a different username setting
                 if ($type->email_as_username) {
                     $newUsername = $user->email;
@@ -587,6 +556,10 @@ class User extends AbstractModel
                 $user->type_id = $type->id;
                 $user->role_id = null;
                 $user->update();
+
+                if ($oldType->password_encryption != $type->password_encryption) {
+                    $this->sendReminder($user->email, $config);
+                }
             }
         }
     }
@@ -701,39 +674,27 @@ class User extends AbstractModel
     /**
      * Send password reminder to user
      *
-     * @param \Pop\Form\Form $form
+     * @param  string      $email
+     * @param  \Pop\Config $config
      * @return void
      */
-    public function sendReminder(\Pop\Form\Form $form)
+    public function sendReminder($email, $config)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
-        $user = Table\Users::findBy(array('email' => $form->email));
+        $encOptions = $config->encryptionOptions->asArray();
+
+        $user = Table\Users::findBy(array('email' => $email));
 
         if (isset($user->id)) {
             $type = Table\UserTypes::findById($user->type_id);
 
-            // Based on user type settings, set or reset the password
-            switch ($type->password_encryption) {
-                case 0:
-                    $newPassword = $this->password;
-                    $newEncPassword = $newPassword;
-                    $msg = 'Your username and password is:';
-                    break;
-                case 1;
-                    $newPassword = (string)String::random(8, String::ALPHANUM);
-                    $newEncPassword = md5($newPassword);
-                    $msg = 'Your password has been reset for security reasons. Your username and new password is:';
-                    break;
-                case 2:
-                    $newPassword = (string)String::random(8, String::ALPHANUM);
-                    $newEncPassword = sha1($newPassword);
-                    $msg = 'Your password has been reset for security reasons. Your username and new password is:';
-                    break;
-                case 3:
-                    $newPassword = (string)String::random(8, String::ALPHANUM);
-                    $newEncPassword = crypt($newPassword, $type->password_salt);
-                    $msg = 'Your password has been reset for security reasons. Your username and new password is:';
-                    break;
+            if ($type->password_encryption == Auth\Auth::ENCRYPT_NONE) {
+                $newPassword = $this->password;
+                $newEncPassword = $newPassword;
+                $msg = 'Your username and password is:';
+            } else {
+                $newPassword = (string)String::random(8, String::ALPHANUM);
+                $newEncPassword = self::encryptPassword($newPassword, $type->password_encryption, $encOptions);
+                $msg = 'Your password has been reset for security reasons. Your username and new password is:';
             }
 
             // Save new password
@@ -805,6 +766,105 @@ class User extends AbstractModel
 
             $user->delete();
         }
+    }
+
+    /**
+     * Encrypt password
+     *
+     * @param string $password
+     * @param int    $encryption
+     * @param array  $options
+     * @return string
+     */
+    public static function encryptPassword($password, $encryption, $options)
+    {
+        $encPassword = $password;
+        $salt = (!empty($options['salt'])) ? $options['salt'] : null;
+
+        // Set the password according to the user type
+        switch ($encryption) {
+            case Auth\Auth::ENCRYPT_CRYPT_SHA_512:
+                $crypt = new Crypt\Sha(512);
+                $crypt->setSalt($salt);
+
+                // Set rounds, if applicable
+                if (!empty($options['rounds'])) {
+                    $crypt->setRounds($options['rounds']);
+                }
+
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_CRYPT_SHA_256:
+                $crypt = new Crypt\Sha(256);
+                $crypt->setSalt($salt);
+
+                // Set rounds, if applicable
+                if (!empty($options['rounds'])) {
+                    $crypt->setRounds($options['rounds']);
+                }
+
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_CRYPT_MD5:
+                $crypt = new Crypt\Md5();
+                $crypt->setSalt($salt);
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_MCRYPT:
+                $crypt = new Crypt\Mcrypt();
+                $crypt->setSalt($salt);
+
+                // Set cipher, mode and source, if applicable
+                if (!empty($options['cipher'])) {
+                    $crypt->setCipher($options['cipher']);
+                }
+                if (!empty($options['mode'])) {
+                    $crypt->setMode($options['mode']);
+                }
+                if (!empty($options['source'])) {
+                    $crypt->setSource($options['source']);
+                }
+
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_BCRYPT:
+                $crypt = new Crypt\Bcrypt();
+                $crypt->setSalt($salt);
+
+                // Set cost and prefix, if applicable
+                if (!empty($options['cost'])) {
+                    $crypt->setCost($options['cost']);
+                }
+                if (!empty($options['prefix'])) {
+                    $crypt->setPrefix($options['prefix']);
+                }
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_CRYPT:
+                $crypt = new Crypt\Crypt();
+                $crypt->setSalt($salt);
+                $encPassword = $crypt->create($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_SHA1:
+                $encPassword = sha1($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_MD5:
+                $encPassword = md5($password);
+                break;
+
+            case Auth\Auth::ENCRYPT_NONE:
+                $encPassword = $password;
+                break;
+        }
+
+        return $encPassword;
     }
 
     /**

@@ -36,7 +36,10 @@ class User extends Form
                     'type'     => 'select',
                     'required' => true,
                     'label'    => 'Select User Type:',
-                    'value'    => $typesAry
+                    'value'    => $typesAry,
+                    'attributes' => array(
+                        'style' => 'padding: 6px 5px 7px 5px;'
+                    )
                 ),
                 'submit' => array(
                     'type'  => 'submit',

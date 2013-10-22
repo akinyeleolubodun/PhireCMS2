@@ -142,7 +142,7 @@ class IndexController extends AbstractController
                     // If form is valid, save new user
                     if ($form->isValid()) {
                         $user = new Model\User();
-                        $user->save($form, $this->project->isLoaded('Fields'));
+                        $user->save($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -212,7 +212,7 @@ class IndexController extends AbstractController
 
                     // If form is valid, save the user
                     if ($form->isValid()) {
-                        $user->update($form, $this->project->isLoaded('Fields'));
+                        $user->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -282,7 +282,7 @@ class IndexController extends AbstractController
 
                     // If the form is valid, save user type
                     if ($form->isValid()) {
-                        $user->updateType($form);
+                        $user->updateType($form, $this->project->module('Phire'));
                         Response::redirect($this->request->getBasePath());
                     // Else, re-render the form with errors
                     } else {

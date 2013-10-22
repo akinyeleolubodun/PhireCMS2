@@ -22,7 +22,7 @@ class Auth extends A\Auth
     public function __construct($encryption = 0, $salt = null)
     {
         $adapter = new A\Adapter\Table('Phire\Table\Users', 'username', 'password', 'role_id');
-        parent::__construct($adapter, $encryption, $salt);
+        parent::__construct($adapter, $encryption);
     }
 
     /**
@@ -30,13 +30,14 @@ class Auth extends A\Auth
      *
      * @param  \Phire\Table\UserTypes $type
      * @param  string                 $username
+     * @param  array                  $options
      * @return \Phire\Auth\Auth
      */
-    public function config($type, $username = null)
+    public function config($type, $username = null, $options = array())
     {
         // Set the password encryption and salt
         $this->setEncryption((int)$type->password_encryption);
-        $this->setSalt($type->password_salt);
+        $this->setEncryptionOptions($options);
 
         // Set attempt limit
         $this->setAttemptLimit((int)$type->allowed_attempts);

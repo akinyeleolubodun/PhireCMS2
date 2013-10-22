@@ -226,14 +226,14 @@ class Install extends Form
                     '1' => 'MD5',
                     '2' => 'SHA1',
                     '3' => 'Crypt',
+                    '4' => 'Bcrypt',
+                    '5' => 'Mcrypt',
+                    '6' => 'Crypt_MD5',
+                    '7' => 'Crypt_SHA256',
+                    '8' => 'Crypt_SHA512',
                     '0' => 'None'
                 ),
-                'marked' => 2
-            ),
-            'password_salt' => array (
-                'type' => 'text',
-                'label' => 'Password Salt:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Required for \'Crypt\')</em>',
-                'attributes' => array('size' => 30)
+                'marked' => 4
             ),
             'submit' => array (
                 'type' => 'submit',

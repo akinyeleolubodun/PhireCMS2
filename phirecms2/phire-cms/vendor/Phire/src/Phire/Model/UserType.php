@@ -156,11 +156,14 @@ class UserType extends AbstractModel
      * Update type
      *
      * @param \Pop\Form\Form $form
+     * @param  \Pop\Config   $config
      * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form, $config, $isFields = false)
     {
+        $encOptions = $config->encryptionOptions->asArray();
+
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
@@ -177,36 +180,8 @@ class UserType extends AbstractModel
         unset($fields['update']);
 
         $type = Table\UserTypes::findById($form->id);
-
-        // If the password encryption changed
-        if ($type->password_encryption != $fields['password_encryption']) {
-            $users = Table\Users::findAll(null, array('type_id' => $type->id));
-            foreach ($users->rows as $u) {
-                $user = Table\Users::findById($u->id);
-                if (isset($user->id)) {
-                    switch ($fields['password_encryption']) {
-                        case 0:
-                            $fields['password_salt'] = '';
-                            $newPassword = $this->password;
-                            break;
-                        case 1;
-                            $fields['password_salt'] = '';
-                            $newPassword = md5((string)String::random(8, String::ALPHANUM));
-                            break;
-                        case 2:
-                            $fields['password_salt'] = '';
-                            $newPassword = sha1((string)String::random(8, String::ALPHANUM));
-                            break;
-                        case 3:
-                            $newPassword = crypt((string)String::random(8, String::ALPHANUM), $fields['password_salt']);
-                            break;
-                    }
-
-                    $user->password = $newPassword;
-                    $user->save();
-                }
-            }
-        }
+        $oldEnc = $type->password_encryption;
+        $newEnc = $fields['password_encryption'];
 
         // Extract dynamic field values out of the form
         $fieldsAry = array();
@@ -221,6 +196,18 @@ class UserType extends AbstractModel
         $type->setValues($fields);
         $type->update();
         $this->data['id'] = $type->id;
+
+        // If the password encryption changed
+        if ($oldEnc != $newEnc) {
+            $users = Table\Users::findAll(null, array('type_id' => $type->id));
+            foreach ($users->rows as $u) {
+                $user = Table\Users::findById($u->id);
+                if (isset($user->id)) {
+                    $u = new User();
+                    $u->sendReminder($user->email, $config);
+                }
+            }
+        }
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {

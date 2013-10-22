@@ -220,7 +220,7 @@ class IndexController extends AbstractController
                 // If form is valid, save the user
                 if ($form->isValid()) {
                     $user = new Model\User();
-                    $user->save($form, $this->project->isLoaded('Fields'));
+                    $user->save($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
                     if (null !== $redirect) {
                         Response::redirect($redirect);
                     } else {
@@ -282,7 +282,7 @@ class IndexController extends AbstractController
 
                 // If the form is valid
                 if ($form->isValid()) {
-                    $user->update($form, $this->project->isLoaded('Fields'));
+                    $user->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
                     $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
                     if ($url == '') {
                         $url = '/';
@@ -390,8 +390,9 @@ class IndexController extends AbstractController
 
             // If form is valid, send reminder
             if ($form->isValid()) {
+                $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
                 $user = new Model\User();
-                $user->sendReminder($form);
+                $user->sendReminder($form->email, $this->project->module('Phire'));
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
