@@ -247,7 +247,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Home Page', '/', '', 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2);
 
 -- --------------------------------------------------------
 

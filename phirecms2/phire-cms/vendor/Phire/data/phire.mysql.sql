@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
 --
 
 INSERT INTO `[{prefix}]content` (`id`, `type_id`, `title`, `uri`, `slug`, `feed`, `force_ssl`, `status`) VALUES
-(6001, 5001, 'Home Page', '/', '', 1, 0, 2);
+(6001, 5001, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2);
 
 -- --------------------------------------------------------
 

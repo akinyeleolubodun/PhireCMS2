@@ -185,7 +185,7 @@ class Content extends Form
 
             $uri = array(
                 'type'       => 'text',
-                'label'      => 'URI:',
+                'label'      => 'URI:' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="slug(\'content_title\', \'uri\'); return false;">[ Generate URI ]</a>': null),
                 'attributes' => array(
                     'size'    => 80,
                     'onkeyup' => "slug(null, 'uri');"
@@ -193,9 +193,11 @@ class Content extends Form
             );
             $titleAttributes = array(
                 'size'    => 80,
-                'style'   => 'display: block;',
-                'onkeyup' => "slug('content_title', 'uri');"
+                'style'   => 'display: block;'
             );
+            if ($mid == 0) {
+                $titleAttributes['onkeyup'] = "slug('content_title', 'uri');";
+            }
         // Else, if type is a file
         } else {
             $this->hasFile = true;

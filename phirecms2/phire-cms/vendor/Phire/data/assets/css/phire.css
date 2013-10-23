@@ -1150,3 +1150,13 @@ th.config-header > a:hover {
     font-weight: bold;
     color: #e56300;
 }
+
+.recent-header {
+    font-size: 0.9em;
+    border-top: solid 1px #ccc;
+}
+
+.small-link, .small-link:hover {
+    font-weight: normal;
+    font-size: 0.9em;
+}

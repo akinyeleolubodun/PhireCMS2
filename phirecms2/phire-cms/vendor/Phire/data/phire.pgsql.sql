@@ -255,7 +255,7 @@ ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 --
 
 INSERT INTO "[{prefix}]content" ("type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES
-(5001, 'Home Page', '/', '', 1, 0, 2);
+(5001, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2);
 
 -- --------------------------------------------------------
 
