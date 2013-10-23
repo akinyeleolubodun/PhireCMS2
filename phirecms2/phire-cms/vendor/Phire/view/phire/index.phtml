@@ -1,12 +1,12 @@
 <?php include __DIR__ . '/header.phtml'; ?>
         <h1><?php echo $subTitle; ?></h1>
-        <table id="system-overview" cellpadding="0" cellspacing="0">
+        <table class="system-overview" cellpadding="0" cellspacing="0">
             <tr><th colspan="2">System Overview</th></tr>
 <?php foreach ($overview as $key => $value): ?>
             <tr><td><strong><?php echo ucwords(str_replace(array('_', 'Php'), array(' ', 'PHP'), $key)); ?>:</strong></td><td><?php echo $value; ?></td></tr>
 <?php endforeach; ?>
         </table>
-        <table id="recent-content" cellpadding="0" cellspacing="0">
+        <table class="dashboard-table" cellpadding="0" cellspacing="0">
             <tr><th colspan="5">Recent Content</th></tr>
             <tr><th class="recent-header" style="background-color: #efefef;">Type</th><th class="recent-header" style="background-color: #efefef;">Title</th><th class="recent-header" style="background-color: #efefef;">URI</th><th class="recent-header" style="background-color: #efefef;">Created</th><th class="recent-header" style="background-color: #efefef;">Status</th></tr>
 <?php foreach ($recent as $content):
@@ -40,5 +40,24 @@
 ?>
             <tr><td><?php echo $typeLink; ?></td><td><?php echo $title; ?></td><td><?php echo $link; ?></td><td><?php echo date($datetime_format, strtotime($content->created)); ?></td><td><?php echo $status; ?></td></tr>
 <?php endforeach; ?>
+        </table>
+        <table class="dashboard-table" cellpadding="0" cellspacing="0">
+            <tr><th colspan="2">Extensions</th></tr>
+            <tr><th class="recent-header" style="background-color: #efefef;">Themes</th><th class="recent-header" style="background-color: #efefef;">Active</th></tr>
+<?php if (count($themes) > 0): ?>
+<?php foreach ($themes as $theme): ?>
+            <tr><td><?php echo $theme->name; ?></td><td><?php echo ($theme->active) ? 'Yes' : 'No'; ?></td></tr>
+<?php endforeach; ?>
+<?php else: ?>
+            <tr><td colspan="2">There are currently no themes installed.</td></tr>
+<?php endif; ?>
+            <tr><th class="recent-header" style="background-color: #efefef;">Modules</th><th class="recent-header" style="background-color: #efefef;">Active</th></tr>
+<?php if (count($modules) > 0): ?>
+<?php foreach ($modules as $module): ?>
+            <tr><td><?php echo $module->name; ?></td><td><?php echo ($module->active) ? 'Yes' : 'No'; ?></td></tr>
+<?php endforeach; ?>
+<?php else: ?>
+            <tr><td colspan="2">There are currently no modules installed.</td></tr>
+<?php endif; ?>
         </table>
 <?php include __DIR__ . '/footer.phtml'; ?>

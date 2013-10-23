@@ -100,6 +100,8 @@ class IndexController extends AbstractController
         $config = new Model\Config();
 
         $this->view->set('recent', $content->getRecent())
+                   ->set('themes', $content->getThemes())
+                   ->set('modules', $content->getModules())
                    ->set('overview', $config->getOverview());
 
         $this->send();

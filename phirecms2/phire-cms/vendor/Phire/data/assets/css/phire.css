@@ -422,7 +422,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
 }
 
-#system-overview {
+.system-overview {
     margin: 0;
     padding: 0;
     float: right;
@@ -430,31 +430,32 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     border: solid 1px #ccc;
 }
 
-#recent-content {
-    margin: 0;
+.dashboard-table {
+    margin: 0 0 20px 0;
     padding: 0;
+    clear: left;
     float: left;
     width: 73.5%;
     border: solid 1px #ccc;
 }
 
-#system-overview tr, #recent-content tr {
+.system-overview tr, .dashboard-table tr {
     margin: 0;
     padding: 0;
 }
 
-#system-overview tr:hover, #recent-content tr:hover {
+.system-overview tr:hover, .dashboard-table tr:hover {
     background-color: #eff6fc;
 }
 
-#system-overview th, #recent-content th {
+.system-overview th, .dashboard-table th {
     margin: 0;
     text-align: left;
     padding: 8px 5px 8px 5px;
     background-color: #dedede;
 }
 
-#system-overview td, #recent-content td {
+.system-overview td, .dashboard-table td {
     margin: 0;
     padding: 8px 5px 8px 5px;
     border-top: solid 1px #ccc;
