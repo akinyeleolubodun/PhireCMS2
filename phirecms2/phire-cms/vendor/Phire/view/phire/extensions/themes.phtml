@@ -4,7 +4,10 @@
         <h4 class="error"><?php echo $error; ?></h4>
 <?php else: ?>
 <?php if (count($new) > 0): ?>
-        <p>New themes (<?php echo count($new); ?>) have been detected. <a href="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes/install">Click here</a> to install.</p>
+        <div id="install-nav">
+            New themes have been detected. Click the button below to install them.
+            <a class="install-ext-btn" href="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes/install">Install (<?php echo count($new); ?>)</a>
+        </div>
 <?php endif; ?>
 <?php if (count($themes) > 0): ?>
         <form id="themes-remove-form" action="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes/process" method="post">

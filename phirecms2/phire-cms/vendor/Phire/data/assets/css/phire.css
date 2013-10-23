@@ -699,6 +699,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
 }
 
+#install-nav {
+    margin: 0;
+    padding: 0 0 20px 0;
+    overflow: auto;
+}
+
 #footer {
     position: absolute;
     bottom: 0;
@@ -958,6 +964,28 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .add-btn:hover {
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+    background-color: #37ade8;
+}
+
+.install-ext-btn {
+    margin: 4px 5px 5px 0;
+    padding: 5px 8px 5px 8px;
+    display: block;
+    width: 75px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #1481bc;
+}
+
+.install-ext-btn:hover {
     cursor: pointer;
     color: #fff;
     text-decoration: none;
