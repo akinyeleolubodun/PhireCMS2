@@ -203,7 +203,7 @@ class NavigationController extends AbstractController
     {
         if ($this->request->isPost()) {
             $navigation = new Model\Navigation();
-            $navigation->process($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $navigation->process($this->request->getPost(), $this->request->getPath(1), $this->project->isLoaded('Fields'));
         }
 
         Response::redirect($this->request->getBasePath());

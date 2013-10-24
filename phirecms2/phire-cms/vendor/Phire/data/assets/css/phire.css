@@ -949,6 +949,26 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #75b724;
 }
 
+.small-save-btn {
+    margin: 0;
+    padding: 2px 0 6px 0;
+    width: 60px;
+    height: 20px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-size: 1.0em;
+    background-color: #5a8c1d;
+}
+
+.small-save-btn:hover {
+    cursor: pointer;
+    background-color: #75b724;
+}
+
 .add-btn {
     margin: 4px 5px 5px 0;
     padding: 5px 8px 5px 8px;

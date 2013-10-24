@@ -13,6 +13,8 @@ use Phire\Table;
 class Navigation extends AbstractModel
 {
 
+    protected $trackNav = array();
+
     /**
      * Get all navigation method
      *
@@ -49,7 +51,16 @@ class Navigation extends AbstractModel
                 foreach ($content->rows as $c) {
                     $parents[$c->id] = $c->title;
                 }
-                $navChildren = $this->getContentChildren($content->rows, 0, true);
+                $this->trackNav = array();
+                $navChildren = $this->getContentChildren($content->rows, null, true);
+                $newChildren = array();
+                foreach ($content->rows as $c) {
+                    if (!in_array($c->id, $this->trackNav)) {
+                        $newChildren = array_merge($newChildren, $this->getContentChildren($content->rows, $c->parent_id, true));
+                    }
+                }
+
+                $navChildren = array_merge($newChildren, $navChildren);
             }
 
             $navAry[] = array(
@@ -339,10 +350,11 @@ class Navigation extends AbstractModel
      * Process navigation
      *
      * @param  array   $post
+     * @param  int     $id
      * @param  boolean $isFields
      * @return void
      */
-    public function process(array $post, $isFields = false)
+    public function process(array $post, $id, $isFields = false)
     {
         foreach ($post as $key => $value) {
             if (strpos($key, 'navigation_order_') !== false) {
@@ -366,17 +378,14 @@ class Navigation extends AbstractModel
             }
         }
 
-        if (isset($post['remove_navigation'])) {
-            foreach ($post['remove_navigation'] as $id) {
-                $navigation = Table\Navigation::findById($id);
-                if (isset($navigation->id)) {
-                    $navigation->delete();
-                }
-
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+        if (isset($post['rm_nav'])) {
+            $navigation = Table\Navigation::findById($id);
+            if (isset($navigation->id)) {
+                $navigation->delete();
+            }
+            // If the Fields module is installed, and if there are fields for this form/model
+            if ($isFields) {
+                \Fields\Model\FieldValue::remove($id);
             }
         }
     }
@@ -384,8 +393,8 @@ class Navigation extends AbstractModel
     /**
      * Recursive method to get content children
      *
-     * @param  array $content
-     * @param  int $pid
+     * @param  array   $content
+     * @param  int     $pid
      * @param  boolean $override
      * @return array
      */
@@ -394,6 +403,9 @@ class Navigation extends AbstractModel
         $children = array();
         foreach ($content as $c) {
             if ($c->parent_id == $pid) {
+                if (!in_array($c->id, $this->trackNav)) {
+                    $this->trackNav[] = $c->id;
+                }
                 $p = (array)$c;
                 $p['uri'] = BASE_PATH . $c->uri;
                 $p['href'] = $p['uri'];
