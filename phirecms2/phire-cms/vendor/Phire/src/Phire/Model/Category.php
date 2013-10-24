@@ -155,6 +155,7 @@ class Category extends AbstractModel
             }
 
             // Get any child category content objects
+            /*
             $childCat = Table\Categories::findBy(array('parent_id' => $category->id));
             while (isset($childCat->id)) {
                 $childId = $childCat->id;
@@ -181,6 +182,7 @@ class Category extends AbstractModel
                 }
                 $childCat = Table\Categories::findBy(array('parent_id' => $childId));
             }
+            */
 
             $this->data = array_merge($this->data, $categoryValues);
         }
