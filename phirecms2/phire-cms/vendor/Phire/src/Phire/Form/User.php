@@ -244,21 +244,22 @@ class User extends Form
             $fields3 = array();
         }
 
+        $fieldGroups = array();
         $dynamicFields = false;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
             $newFields = \Fields\Model\Field::getByModel($model, $tid, $uid);
-            if (count($newFields) > 0) {
-                foreach ($newFields as $key => $value) {
-                    $fields3[$key] = $value;
-                    if ($value['type'] == 'file') {
-                        $this->hasFile = true;
-                    }
-                    if (strpos($key, 'new_') !== false) {
-                        $dynamicFields = true;
-                    }
+            if ($newFields['dynamic']) {
+                $dynamicFields = true;
+            }
+            if ($newFields['hasFile']) {
+                $this->hasFile = true;
+            }
+            foreach ($newFields as $key => $value) {
+                if (is_numeric($key)) {
+                    $fieldGroups[] = $value;
                 }
             }
         }
@@ -317,7 +318,22 @@ class User extends Form
             );
         }
 
-        $allFields = ((strpos($action, '/install/user') !== false) || ($profile)) ? array($fields1, $fields2, $fields3, $fields4) : array($fields4, $fields1, $fields2, $fields3);
+        if ((strpos($action, '/install/user') !== false) || ($profile)) {
+            $allFields = array($fields1, $fields2, $fields3);
+            if (count($fieldGroups) > 0) {
+                foreach ($fieldGroups as $fg) {
+                    $allFields[] = $fg;
+                }
+            }
+            $allFields[] = $fields4;
+        } else {
+            $allFields = array($fields4, $fields1, $fields2, $fields3);
+            if (count($fieldGroups) > 0) {
+                foreach ($fieldGroups as $fg) {
+                    $allFields[] = $fg;
+                }
+            }
+        }
 
         return $allFields;
     }

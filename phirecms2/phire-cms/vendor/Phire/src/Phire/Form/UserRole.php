@@ -101,6 +101,22 @@ class UserRole extends Form
             )
         );
 
+        $fieldGroups = array();
+
+        // If the Fields module is installed, and if there are fields for this form/model
+        if ($isFields) {
+            $model = str_replace('Form', 'Model', get_class($this));
+            $newFields = \Fields\Model\Field::getByModel($model, 0, $rid);
+            if ($newFields['hasFile']) {
+                $this->hasFile = true;
+            }
+            foreach ($newFields as $key => $value) {
+                if (is_numeric($key)) {
+                    $fieldGroups[] = $value;
+                }
+            }
+        }
+
         // Get any existing field values
         $fields2 = array();
 
@@ -220,7 +236,16 @@ class UserRole extends Form
             )
         );
 
-        return array($fields4, $fields1, $fields2, $fields3);
+        $allFields = array($fields4, $fields1);
+        if (count($fieldGroups) > 0) {
+            foreach ($fieldGroups as $fg) {
+                $allFields[] = $fg;
+            }
+        }
+        $allFields[] = $fields2;
+        $allFields[] = $fields3;
+
+        return $allFields;
     }
 }
 

@@ -18,13 +18,13 @@ class Navigation extends Form
      *
      * @param  string  $action
      * @param  string  $method
-     * @param  int     $cid
+     * @param  int     $nid
      * @param  boolean $isFields
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $cid = 0, $isFields = false)
+    public function __construct($action = null, $method = 'post', $nid = 0, $isFields = false)
     {
-        $this->initFieldsValues = $this->getInitFields($cid, $isFields);
+        $this->initFieldsValues = $this->getInitFields($nid, $isFields);
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'navigation-form');
     }
@@ -79,11 +79,11 @@ class Navigation extends Form
     /**
      * Get the init field values
      *
-     * @param  int     $cid
+     * @param  int     $nid
      * @param  boolean $isFields
      * @return array
      */
-    protected function getInitFields($cid = 0, $isFields = false)
+    protected function getInitFields($nid = 0, $isFields = false)
     {
 
         // Create initial fields
@@ -195,22 +195,22 @@ class Navigation extends Form
             )
         );
 
-        $fields2 = array();
+        $fieldGroups = array();
         $dynamicFields = false;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, 0, $cid);
-            if (count($newFields) > 0) {
-                foreach ($newFields as $key => $value) {
-                    $fields2[$key] = $value;
-                    if ($value['type'] == 'file') {
-                        $this->hasFile = true;
-                    }
-                    if (strpos($key, 'new_') !== false) {
-                        $dynamicFields = true;
-                    }
+            $newFields = \Fields\Model\Field::getByModel($model, 0, $nid);
+            if ($newFields['dynamic']) {
+                $dynamicFields = true;
+            }
+            if ($newFields['hasFile']) {
+                $this->hasFile = true;
+            }
+            foreach ($newFields as $key => $value) {
+                if (is_numeric($key)) {
+                    $fieldGroups[] = $value;
                 }
             }
         }
@@ -243,7 +243,14 @@ class Navigation extends Form
             )
         );
 
-        return array($fields3, $fields1, $fields2);
+        $allFields = array($fields3, $fields1);
+        if (count($fieldGroups) > 0) {
+            foreach ($fieldGroups as $fg) {
+                $allFields[] = $fg;
+            }
+        }
+
+        return $allFields;
     }
 
 }

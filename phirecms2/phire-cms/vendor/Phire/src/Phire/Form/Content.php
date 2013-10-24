@@ -318,22 +318,22 @@ class Content extends Form
             );
         }
 
-        $fields2 = array();
+        $fieldGroups = array();
         $dynamicFields = false;
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
             $newFields = \Fields\Model\Field::getByModel($model, $tid, $mid);
-            if (count($newFields) > 0) {
-                foreach ($newFields as $key => $value) {
-                    $fields2[$key] = $value;
-                    if ($value['type'] == 'file') {
-                        $this->hasFile = true;
-                    }
-                    if (strpos($key, 'new_') !== false) {
-                        $dynamicFields = true;
-                    }
+            if ($newFields['dynamic']) {
+                $dynamicFields = true;
+            }
+            if ($newFields['hasFile']) {
+                $this->hasFile = true;
+            }
+            foreach ($newFields as $key => $value) {
+                if (is_numeric($key)) {
+                    $fieldGroups[] = $value;
                 }
             }
         }
@@ -440,8 +440,10 @@ class Content extends Form
         $allFields[] = array_merge($fields6, $fields4, $fields5);
         $allFields[] = $fields1;
 
-        if(count($fields2) > 0) {
-            $allFields[] = $fields2;
+        if (count($fieldGroups) > 0) {
+            foreach ($fieldGroups as $fg) {
+                $allFields[] = $fg;
+            }
         }
 
         return $allFields;
