@@ -693,13 +693,6 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 10px 0 0 2px;
 }
 
-#add-nav {
-    float: left;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-}
-
 #install-nav {
     margin: 0;
     padding: 0 0 20px 0;
@@ -969,7 +962,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #75b724;
 }
 
-.add-btn {
+.small-btn {
     margin: 4px 5px 5px 0;
     padding: 5px 8px 5px 8px;
     display: block;
@@ -984,7 +977,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #1481bc;
 }
 
-.add-btn:hover {
+.small-btn:hover {
     cursor: pointer;
     color: #fff;
     text-decoration: none;

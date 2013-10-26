@@ -195,7 +195,7 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/add.phtml', array(
+            $this->prepareView($this->viewPath . '/edit.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -206,7 +206,9 @@ class IndexController extends AbstractController
 
             // If content object is found and valid
             if (isset($content->id)) {
+                $type = Table\ContentTypes::findById($content->type_id);
                 $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
+                           ->set('typeUri', $type->uri)
                            ->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',

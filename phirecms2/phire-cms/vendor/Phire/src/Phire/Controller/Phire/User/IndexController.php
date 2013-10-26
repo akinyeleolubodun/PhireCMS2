@@ -125,7 +125,8 @@ class IndexController extends AbstractController
 
             // If user type is valid
             if (isset($type->id)) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $this->view->separator . ' Add');
+                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $this->view->separator . ' Add')
+                           ->set('typeId', $type->id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $type->id, false, 0, $this->project->isLoaded('Fields')
@@ -196,7 +197,8 @@ class IndexController extends AbstractController
 
             // If user is found and valid
             if (null !== $user->id) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username);
+                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username)
+                           ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $user->type_id, false, $user->id, $this->project->isLoaded('Fields')
@@ -259,7 +261,7 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/edit.phtml', array(
+            $this->prepareView($this->viewPath . '/type.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -270,7 +272,8 @@ class IndexController extends AbstractController
 
             // If user is found and valid
             if (null !== $user->id) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' Type ' . $this->view->separator . ' ' . $user->username);
+                $this->view->set('title', 'Users ' . $this->view->separator . ' Type ' . $this->view->separator . ' ' . $user->username)
+                           ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, false, 0, $this->project->isLoaded('Fields')
@@ -330,6 +333,7 @@ class IndexController extends AbstractController
                 $user = new Model\User();
                 $user->getLoginsById($this->request->getPath(1), $this->project->isLoaded('Fields'));
                 $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' Logins ' . $this->view->separator . ' ' . $user->username)
+                           ->set('typeId', $user->type_id)
                            ->set('table', $user->table);
                 $this->send();
             }
