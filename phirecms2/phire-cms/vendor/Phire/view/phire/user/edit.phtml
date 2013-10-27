@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
-<?php if ($acl->isAuth('Phire\Controller\Phire\User\UsersController', 'add')): ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a></a>
 <?php endif; ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>

@@ -225,15 +225,20 @@ class RolesController extends AbstractController
         if (null !== $this->request->getPath(1)) {
             $resources = \Phire\Model\UserRole::getResources($this->project->module('Phire'));
             $class = str_replace('_', '\\', urldecode($this->request->getPath(1)));
+            $types   = array();
             $actions = array();
 
             foreach ($resources as $key => $resource) {
                 if ($key == $class) {
+                    $types   = $resource['types'];
                     $actions = $resource['actions'];
                 }
             }
 
-            $body = array('actions' => $actions);
+            $body = array(
+                'types'   => $types,
+                'actions' => $actions
+            );
 
             // Build the response and send it
             $response = new Response();

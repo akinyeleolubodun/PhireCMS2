@@ -18,22 +18,25 @@ class Content extends Form
     /**
      * Constructor method to instantiate the form object
      *
-     * @param  string  $action
-     * @param  string  $method
-     * @param  int     $tid
-     * @param  int     $mid
-     * @param  boolean $isFields
-     * @param  array   $cfg
+     * @param  string         $action
+     * @param  string         $method
+     * @param  int            $tid
+     * @param  int            $mid
+     * @param  boolean        $isFields
+     * @param  array          $cfg
+     * @param \Phire\Auth\Acl $acl
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $isFields = false, $cfg = array())
+    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $isFields = false, $cfg = array(), $acl = null)
     {
         // Generate fields for content type select first
         if ($tid == 0) {
             $typesAry = array();
             $types = Table\ContentTypes::findAll('order ASC');
             foreach ($types->rows as $type) {
-                $typesAry[$type->id] = $type->name;
+                if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add_' . $type->id)) {
+                    $typesAry[$type->id] = $type->name;
+                }
             }
 
             $this->initFieldsValues = array(

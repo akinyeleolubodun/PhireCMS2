@@ -4,10 +4,13 @@
 <?php if (isset($updated)): ?>
         <div id="updated"><?php echo $updated; ?></div>
 <?php endif; ?>
-<?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a><?php echo ((isset($typeUri) && (!$typeUri)) ? ' <a class="small-btn" href="' . BASE_PATH . APP_URI . '/content/batch/' . $typeId . '">Batch</a>' : null); ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a>
 <?php endif; ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo $typeId; ?>">Back</a>
+<?php if (isset($typeUri) && (!$typeUri) && ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'batch' . (isset($typeId) ? '_' . $typeId : null)))): ?>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/batch/<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Batch</a>
+<?php endif; ?>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>
         <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php endif; ?>

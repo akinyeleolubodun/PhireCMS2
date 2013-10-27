@@ -63,7 +63,7 @@ class UserSession extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\UsersController', 'edit')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit')) {
             $username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/[{user_id}]">[{username}]</a>';
         } else {
             $username = '[{username}]';

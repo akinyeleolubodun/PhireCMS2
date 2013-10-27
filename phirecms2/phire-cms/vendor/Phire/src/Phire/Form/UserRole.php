@@ -119,17 +119,18 @@ class UserRole extends Form
 
         // Get any existing field values
         $fields2 = array();
+        $fieldGroups = array();
 
         // If the Fields module is installed, and if there are fields for this form/model
         if ($isFields) {
             $model = str_replace('Form', 'Model', get_class($this));
             $newFields = \Fields\Model\Field::getByModel($model, 0, $rid);
-            if (count($newFields) > 0) {
-                foreach ($newFields as $key => $value) {
-                    $fields2[$key] = $value;
-                    if ($value['type'] == 'file') {
-                        $this->hasFile = true;
-                    }
+            if ($newFields['hasFile']) {
+                $this->hasFile = true;
+            }
+            foreach ($newFields as $key => $value) {
+                if (is_numeric($key)) {
+                    $fieldGroups[] = $value;
                 }
             }
         }
@@ -137,10 +138,17 @@ class UserRole extends Form
         // Get available resources with their corresponding permissions
         $resources = \Phire\Model\UserRole::getResources($config);
         $classes = array('0' => '(All)');
+        $classTypes = array();
         $classActions = array();
         foreach ($resources as $key => $resource) {
             $classes[$key] = $resource['name'];
+            $classTypes[$key] = array('0' => '(All)');
             $classActions[$key] = array('0' => '(All)');
+            foreach ($resource['types'] as $id => $type) {
+                if ((int)$id != 0) {
+                    $classTypes[$key][$id] = $type;
+                }
+            }
             foreach ($resource['actions'] as $permAction) {
                 $classActions[$key][$permAction] = $permAction;
             }
@@ -151,6 +159,14 @@ class UserRole extends Form
             $permissions = UserPermissions::findAll(null, array('role_id' => $rid));
             $i = 1;
             foreach ($permissions->rows as $permission) {
+                if (strpos($permission->permission, '_') !== false) {
+                    $permAry = explode('_', $permission->permission);
+                    $p = $permAry[0];
+                    $t = $permAry[1];
+                } else {
+                    $p = $permission->permission;
+                    $t = '0';
+                }
                 $fields2['resource_cur_' . $i] = array(
                     'type'       => 'select',
                     'label'      => "&nbsp;",
@@ -164,7 +180,13 @@ class UserRole extends Form
                 $fields2['permission_cur_' . $i] = array(
                     'type'       => 'select',
                     'value'      => $classActions[$permission->resource],
-                    'marked'     => $permission->permission,
+                    'marked'     => $p,
+                    'attributes' => array('style' => 'display: block; min-width: 150px;')
+                );
+                $fields2['type_cur_' . $i] = array(
+                    'type'       => 'select',
+                    'value'      => $classTypes[$permission->resource],
+                    'marked'     => $t,
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
                 );
                 $fields2['allow_cur_' . $i] = array(
@@ -188,7 +210,7 @@ class UserRole extends Form
         $fields3 = array(
             'resource_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<a href="#" onclick="addResource(); return false;">[+]</a> Resource / Permission:',
+                'label'      => '<span class="label-pad-2"><a href="#" onclick="addResource(); return false;">[+]</a> Resource:</span><span class="label-pad-2">Action:</span><span class="label-pad-2">Type:</span><span class="label-pad-2">Permission:</span>',
                 'attributes' => array(
                     'onchange' => 'changePermissions(this);',
                     'style' => 'display: block; margin: 3px 0 3px 0;'
@@ -196,6 +218,11 @@ class UserRole extends Form
                 'value'      => $classes
             ),
             'permission_new_1' => array(
+                'type'       => 'select',
+                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
+                'value'      => array('0' => '(All)')
+            ),
+            'type_new_1' => array(
                 'type'       => 'select',
                 'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array('0' => '(All)')
@@ -242,8 +269,8 @@ class UserRole extends Form
                 $allFields[] = $fg;
             }
         }
-        $allFields[] = $fields2;
         $allFields[] = $fields3;
+        $allFields[] = $fields2;
 
         return $allFields;
     }

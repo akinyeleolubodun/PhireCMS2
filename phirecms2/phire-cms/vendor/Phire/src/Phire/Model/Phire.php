@@ -107,7 +107,6 @@ class Phire extends AbstractModel
     public function getContentByCategory($cat, $orderBy = 'id ASC', $limit = null, $isFields = false)
     {
         if (!is_numeric($cat)) {
-            echo 123;
             $c = Table\Categories::findBy(array('title' => $cat));
         } else {
             $c = Table\Categories::findById($cat);

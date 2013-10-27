@@ -36,6 +36,12 @@ var addResource = function() {
         "id"   : 'permission_new_' + resourceCount
     }).appendTo($('#permission_new_1').parent());
 
+    // Add type select field
+    $('#type_new_1').clone({
+        "name" : 'type_new_' + resourceCount,
+        "id"   : 'type_new_' + resourceCount
+    }).appendTo($('#type_new_1').parent());
+
     // Add allow select field
     $('#allow_new_1').clone({
         "name" : 'allow_new_' + resourceCount,
@@ -44,6 +50,7 @@ var addResource = function() {
 
     $('#resource_new_' + resourceCount).val($('#resource_new_' + (resourceCount - 1) + ' > option:selected').val());
     $('#permission_new_' + resourceCount).val($('#permission_new_' + (resourceCount - 1) + ' > option:selected').val());
+    $('#type_new_' + resourceCount).val($('#type_new_' + (resourceCount - 1) + ' > option:selected').val());
     $('#allow_new_' + resourceCount).val($('#allow_new_' + (resourceCount - 1) + ' > option:selected').val());
 };
 
@@ -65,11 +72,24 @@ var changePermissions = function(sel) {
         $(opts[i]).remove();
     }
 
+    opts = $('#type_' + cur + '_' + id + ' > option').toArray();
+    start = opts.length - 1;
+
+    for (var i = start; i >= 0; i--) {
+        $(opts[i]).remove();
+    }
+
+    $('#type_' + cur + '_' + id).append('option', {"value" : 0}, '(All)');
     $('#permission_' + cur + '_' + id).append('option', {"value" : 0}, '(All)');
 
     if (marked != 0) {
         var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
         var j = $().json.parse(jsonLoc + encodeURIComponent(marked.replace(/\\/g, '_')));
+        for (type in j.types) {
+            if (type != 0) {
+                $('#type_' + cur + '_' + id).append('option', {"value" : type}, j.types[type]);
+            }
+        }
         for (var i = 0; i < j.actions.length; i++) {
             $('#permission_' + cur + '_' + id).append('option', {"value" : j.actions[i]}, j.actions[i]);
         }
@@ -334,7 +354,6 @@ var addBatchFields = function() {
  * Function to show upload div
  */
 var showLoading = function() {
-    console.log(123);
     document.getElementById('loading').style.display = 'block';
 };
 

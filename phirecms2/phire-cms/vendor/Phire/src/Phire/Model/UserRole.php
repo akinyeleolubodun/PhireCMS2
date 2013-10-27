@@ -86,13 +86,40 @@ class UserRole extends AbstractModel
                                 }
                             }
 
+                            $types = array(0 => '(All)');
+
+                            if ($class != 'Phire\Controller\IndexController') {
+                                $classAry = explode('\\', $class);
+                                $end1 = count($classAry) - 2;
+                                $end2 = count($classAry) - 1;
+                                $model = $classAry[0] . '_Model_';
+                                if (stripos($classAry[$end2], 'index') !== false) {
+                                    $model .= $classAry[$end1];
+                                } else if (substr($classAry[$end2], 0, 4) == 'Type') {
+                                    $model .= $classAry[$end1] . 'Type';
+                                } else {
+                                    $model .= str_replace('Controller', '', $classAry[$end2]);
+
+                                }
+
+                                if (substr($model, -3) == 'ies') {
+                                    $model = substr($model, 0, -3) . 'y';
+                                } else if (substr($model, -1) == 's') {
+                                    $model = substr($model, 0, -1);
+                                }
+                                $types = \Phire\Project::getModelTypes($model);
+                            }
+
+
                             // Format the resource and permissions
                             $c = str_replace(array('Controller.php', '\\'), array('', '/'), $c);
                             $c = substr($c, (strpos($c, 'Controller') + 11));
                             $c = str_replace('Phire/', '', $c);
+
                             if (!in_array($class, $exclude) || (isset($exclude[$class]) && is_array($exclude[$class]))) {
                                 $resources[$class] = array(
                                     'name'    => $c,
+                                    'types'   => $types,
                                     'actions' => $actions
                                 );
                             }
@@ -231,10 +258,14 @@ class UserRole extends AbstractModel
             if (strpos($key, 'resource_new_') !== false) {
                 $id = substr($key, (strrpos($key, '_') + 1));
                 if ($value != '0') {
+                    $perm = (($_POST['permission_new_' . $id] != '0') ? $_POST['permission_new_' . $id] : '');
+                    if ($perm != '') {
+                        $perm .= (($_POST['type_new_' . $id] != '0') ? '_' . $_POST['type_new_' . $id] : '');
+                    }
                     $permission = new Table\UserPermissions(array(
                         'role_id'    => $role->id,
                         'resource'   => $value,
-                        'permission' => (($_POST['permission_new_' . $id] != '0') ? $_POST['permission_new_' . $id] : ''),
+                        'permission' => $perm,
                         'allow'      => (int)$_POST['allow_new_' . $id]
                     ));
                     $permission->save();
@@ -279,10 +310,14 @@ class UserRole extends AbstractModel
                 $id = substr($key, (strrpos($key, '_') + 1));
                 $cur = (strpos($key, 'resource_new_') !== false) ? 'new' : 'cur';
                 if ($value != '0') {
+                    $perm = (($_POST['permission_' . $cur . '_' . $id] != '0') ? $_POST['permission_' . $cur . '_' . $id] : '');
+                    if ($perm != '') {
+                        $perm .= (($_POST['type_' . $cur . '_' . $id] != '0') ? '_' . $_POST['type_' . $cur . '_' . $id] : '');
+                    }
                     $permission = new Table\UserPermissions(array(
                         'role_id'    => $role->id,
                         'resource'   => $value,
-                        'permission' => (($_POST['permission_' . $cur . '_' . $id] != '0') ? $_POST['permission_' . $cur . '_' . $id] : ''),
+                        'permission' => $perm,
                         'allow'      => (int)$_POST['allow_' . $cur . '_' . $id]
                     ));
                     $permission->save();
@@ -293,7 +328,9 @@ class UserRole extends AbstractModel
         // Remove and resource/permissions
         foreach ($_POST as $key => $value) {
             if ((strpos($key, 'rm_resource_') !== false) && isset($value[0])) {
-                $permission = Table\UserPermissions::findById(explode('_', $value[0]));
+                $ids = explode('_', $value[0]);
+                $perm = (count($ids) == 4) ? $ids[2] . '_' . $ids[3] : $ids[2];
+                $permission = Table\UserPermissions::findById(array($ids[0], $ids[1], $perm));
                 if (isset($permission->role_id)) {
                     $permission->delete();
                 }
@@ -304,6 +341,7 @@ class UserRole extends AbstractModel
         if ($isFields) {
             \Fields\Model\FieldValue::update($fields, $role->id);
         }
+
     }
 
     /**

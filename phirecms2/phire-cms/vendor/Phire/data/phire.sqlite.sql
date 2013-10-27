@@ -247,7 +247,8 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("id", "type_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("id", "type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, NULL, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("id", "type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6002, 5001, 6001, 'About Phire CMS 2.0', '/about-phire', 'about-phire', 1, 0, 2)
 
 -- --------------------------------------------------------
 
@@ -304,6 +305,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
 --
 
 INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES (6001, 7001, 1);
+INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES (6002, 7001, 2);
 
 -- --------------------------------------------------------
 

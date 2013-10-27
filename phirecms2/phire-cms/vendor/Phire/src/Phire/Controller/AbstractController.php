@@ -75,7 +75,11 @@ class AbstractController extends \Pop\Mvc\Controller
                         foreach ($contentTypes->rows as $type) {
                             $this->view->phireNav->addLeaf('Content', array(
                                 'name'     => $type->name,
-                                'href'     => 'index/' . $type->id
+                                'href'     => 'index/' . $type->id,
+                                'acl' => array(
+                                    'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                                    'permission' => 'index_' . $type->id
+                                )
                             ), 1);
                         }
                     }
@@ -86,7 +90,11 @@ class AbstractController extends \Pop\Mvc\Controller
                         foreach ($userTypes->rows as $type) {
                             $this->view->phireNav->addLeaf('Users', array(
                                 'name'     => ucwords(str_replace('-', ' ', $type->type)),
-                                'href'     => 'index/' . $type->id
+                                'href'     => 'index/' . $type->id,
+                                'acl' => array(
+                                    'resource'   => 'Phire\Controller\Phire\User\IndexController',
+                                    'permission' => 'index_' . $type->id
+                                )
                             ), 1);
                         }
                     }

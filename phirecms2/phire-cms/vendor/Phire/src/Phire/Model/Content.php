@@ -218,7 +218,7 @@ class Content extends AbstractModel
         $contentType = Table\ContentTypes::findById($typeId);
         $this->data['type'] = $contentType->name;
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process_' . $typeId)) {
             $removeCheckbox = '<input type="checkbox" name="process_content[]" value="[{id}]" id="process_content[{i}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="process_content" />';
             $submit = array(
@@ -298,7 +298,7 @@ class Content extends AbstractModel
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
                 $ids[] = $c['id'];
             } else {
-                if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $typeId)) {
                     $c['title'] = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
                 }
             }
@@ -315,7 +315,7 @@ class Content extends AbstractModel
             }
             $c['created_date'] = $c['created'];
             // Add copy link
-            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy'))) {
+            if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy_' . $typeId))) {
                 $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a>';
             }
             unset($c['created']);
@@ -324,7 +324,7 @@ class Content extends AbstractModel
 
         if (isset($contentAry[0])) {
             $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
-            if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'remove')) {
+            if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process_' . $typeId)) {
                 // If there are open authoring ids, remove "remove" checkbox
                 if (count($ids) > 0) {
                     foreach ($ids as $id) {

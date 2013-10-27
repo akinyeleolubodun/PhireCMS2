@@ -14,22 +14,25 @@ class User extends Form
     /**
      * Constructor method to instantiate the form object
      *
-     * @param  string  $action
-     * @param  string  $method
-     * @param  int     $tid
-     * @param  boolean $profile
-     * @param  int     $uid
-     * @param  boolean $isFields
+     * @param  string         $action
+     * @param  string         $method
+     * @param  int            $tid
+     * @param  boolean        $profile
+     * @param  int            $uid
+     * @param  boolean        $isFields
+     * @param \Phire\Auth\Acl $acl
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $isFields = false)
+    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $isFields = false, $acl = null)
     {
         // Create user type fields/form first
         if ($tid == 0) {
             $typesAry = array();
             $types = Table\UserTypes::findAll('id ASC');
             foreach ($types->rows as $type) {
-                $typesAry[$type->id] = $type->type;
+                if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add_' . $type->id)) {
+                    $typesAry[$type->id] = $type->type;
+                }
             }
             $this->initFieldsValues = array(
                 'type_id' => array(

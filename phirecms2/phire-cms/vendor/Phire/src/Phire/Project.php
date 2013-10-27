@@ -225,6 +225,11 @@ class Project extends P
                 $permission = 'error';
             }
 
+            $permId = $router->controller()->getRequest()->getPath(1);
+            if ((null !== $permId) && is_numeric($permId)) {
+                $permission .= '_' . $permId;
+            }
+
             // Get the user URI
             $uri = ((APP_URI == '') || (strtolower($router->project()->getService('acl')->getType()->type) == 'user')) ?
                 APP_URI :
@@ -236,7 +241,7 @@ class Project extends P
                 (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
                 \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
                 return \Pop\Event\Manager::KILL;
-                // Else, if not logged in or allowed, redirect to the system login
+            // Else, if not logged in or allowed, redirect to the system login
             } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
                 ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
                 ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
@@ -245,7 +250,7 @@ class Project extends P
                 (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
                 \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
                 return \Pop\Event\Manager::KILL;
-                // Else, if logged in and allowed, and a system access URI, redirect back to the system
+           // Else, if logged in and allowed, and a system access URI, redirect back to the system
             } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
                     ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
                     ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
@@ -275,7 +280,7 @@ class Project extends P
                     'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->get('id') . '?live=1',
                     'acl'  => array(
                         'resource'   => 'Phire\Controller\Phire\Content\IndexController',
-                        'permission' => 'edit'
+                        'permission' => 'edit_' . $controller->getView()->get('type_id')
                     )
                 ), true);
                 $phireNav->setConfig(array(
@@ -294,6 +299,77 @@ class Project extends P
                 $controller->getResponse()->setBody($body);
             }
         }
+    }
+
+    /**
+     * Static method to get model types
+     *
+     * @param mixed $model
+     * @return array
+     */
+    public static function getModelTypes($model)
+    {
+        if (is_array($model)) {
+            $aryVals = array_values($model);
+            $model = array_shift($aryVals);
+        }
+
+        $typesClass = null;
+
+        $modelTypes = array('0' => '(All)');
+        $model = str_replace('Model', 'Table', $model);
+        $classAry = explode('_', $model);
+        $dirs = array();
+
+        // Get system and extension modules
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0])) {
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
+                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
+            }
+        } else if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0])) {
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/' . $classAry[1])) {
+                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/' . $classAry[1]);
+            }
+        }
+
+        // Loop through directories looking for models and their respective types
+        // i.e., Users and UserTypes
+        foreach ($dirs as $dir) {
+            if (file_exists($dir . '/' . $classAry[2] . 'Types.php')) {
+                $typesClass = implode('\\', $classAry) . 'Types';
+            } else {
+                if (substr($classAry[2], -1) == 's') {
+                    $class = substr($classAry[2], 0, -1) . 'Types';
+                    if (file_exists($dir . '/' . $class . '.php')) {
+                        $typesClass = $classAry[0] . '\\' . $classAry[0] . '\\' . $class;
+                    }
+                } else if (substr($classAry[2], -1) == 'y') {
+                    $class = substr($classAry[2], 0, -1) . 'iesTypes';
+                    if (file_exists($dir . '/' . $class . '.php')) {
+                        $typesClass = $classAry[0] . '\\' . $classAry[0] . '\\' . $class;
+                    }
+                }
+            }
+
+            // Attempt to find all types for the related model
+            if (null !== $typesClass) {
+                $types = $typesClass::findAll('id ASC');
+                if (isset($types->rows[0])) {
+                    foreach ($types->rows as $type) {
+                        if (isset($type->name)) {
+                            $name = $type->name;
+                        } else if (isset($type->type)) {
+                            $name = $type->type;
+                        } else {
+                            $name = $type->id;
+                        }
+                        $modelTypes[$type->id] = $name;
+                    }
+                }
+            }
+        }
+
+        return $modelTypes;
     }
 
     /**

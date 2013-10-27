@@ -95,7 +95,7 @@ class IndexController extends AbstractController
             $this->view->set('title', 'Users ' . $this->view->separator . ' Select Type');
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                '0', false, 0, $this->project->isLoaded('Fields')
+                '0', false, 0, $this->project->isLoaded('Fields'), $this->project->getService('acl')
             );
 
             // If form is submitted

@@ -99,7 +99,8 @@ class IndexController extends AbstractController
                 $this->view->set('title', 'Content ' . $this->view->separator . ' Select Type');
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
+                    0, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray(),
+                    $this->project->getService('acl')
                 );
 
                 if ($this->request->isPost()) {

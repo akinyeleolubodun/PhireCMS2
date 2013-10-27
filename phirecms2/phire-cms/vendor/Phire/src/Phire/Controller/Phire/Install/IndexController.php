@@ -157,10 +157,13 @@ class IndexController extends C
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
 
-                    $home = \Phire\Table\Content::findById(6001);
-                    if (isset($home->id)) {
-                        $home->created_by = $user->getData('id');
-                        $home->update();
+                    $pages = array(6001, 6002);
+                    foreach ($pages as $pid) {
+                        $page = \Phire\Table\Content::findById($pid);
+                        if (isset($page->id)) {
+                            $page->created_by = $user->getData('id');
+                            $page->update();
+                        }
                     }
 
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
