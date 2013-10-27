@@ -171,7 +171,8 @@ class User extends AbstractModel
         $this->data['title'] = (isset($userType->id)) ? ucwords(str_replace('-', ' ', $userType->type)) : null;
         $this->data['type'] = $userType->type;
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'remove_' . $typeId)) {
+        if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'remove')) &&
+            ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'remove_' . $typeId))) {
             $removeCheckbox = '<input type="checkbox" name="remove_users[]" id="remove_users[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_users" />';
             $submit = array(
@@ -195,7 +196,8 @@ class User extends AbstractModel
             if (is_array($logins)) {
                 $lastAry = end($logins);
                 $last = date('D  M j, Y H:i:s', key($logins)) . ', ' . $lastAry['ua'] . ' [' . $lastAry['ip'] . ']';
-                if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'logins_' . $typeId)) {
+                if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'logins')) &&
+                    ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'logins_' . $typeId))) {
                     $count = '<a href="' . BASE_PATH . APP_URI . '/users/logins/' . $value->id . '">' . count($logins) . '</a>';
                 } else {
                     $count = count($logins);
@@ -205,11 +207,13 @@ class User extends AbstractModel
                 $count = 0;
             }
 
-            if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit_' . $typeId)) {
+            if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit')) &&
+                ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit_' . $typeId))) {
                 $userRows[$key]->username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">' . $userRows[$key]->username . '</a>';
             }
 
-            if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'type_' . $typeId)) {
+            if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'type')) &&
+                ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'type_' . $typeId))) {
                 $userRows[$key]->type = '<a href="' . BASE_PATH . APP_URI . '/users/type/' . $userRows[$key]->id . '">' . $userRows[$key]->type . '</a>';
             }
 
