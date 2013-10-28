@@ -369,3 +369,86 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]field_groups` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255),
+  `order` int(16),
+  `dynamic` int(1),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12001 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]fields` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `group_id` int(16),
+  `type` varchar(255),
+  `name` varchar(255),
+  `label` varchar(255),
+  `values` varchar(255),
+  `default_values` varchar(255),
+  `attributes` varchar(255),
+  `validators` varchar(255),
+  `encryption` int(1) NOT NULL,
+  `order` int(16) NOT NULL,
+  `required` int(1) NOT NULL,
+  `editor` varchar(255),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11001 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields_to_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]fields_to_groups` (
+  `field_id` int(16) NOT NULL,
+  `group_id` int(16) NOT NULL,
+  UNIQUE (`field_id`, `group_id`),
+  CONSTRAINT `fk_field_group_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_group_field_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields_to_models`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]fields_to_models` (
+  `field_id` int(16) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `type_id` int(16),
+  UNIQUE (`field_id`, `model`, `type_id`),
+  CONSTRAINT `fk_field_id_model` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_values`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]field_values` (
+  `field_id` int(16) NOT NULL,
+  `model_id` int(16) NOT NULL,
+  `value` mediumtext,
+  `timestamp` int(16),
+  `history` mediumtext,
+  UNIQUE (`field_id`, `model_id`),
+  CONSTRAINT `fk_field_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;

@@ -2,6 +2,10 @@
  * Phire CMS 2.0 Scripts
  */
 
+var clr;
+var curForm;
+var phireTimeout;
+var submitted = false;
 var resourceCount = 1;
 var batchCount = 1;
 var contentForm;
@@ -11,10 +15,25 @@ var contentParentUri = '';
 var categoryParentId = 0;
 var categoryParentUri = '';
 var curErrors = 0;
-var submitted = false;
-var clr;
-var curForm;
-var phireTimeout;
+var valCount = 1;
+var modelCount = 1;
+var curValue = null;
+var selIds = [];
+var validators = [
+    '----', 'AlphaNumeric', 'Alpha', 'BetweenInclude', 'Between', 'CreditCard', 'Email',
+    'Equal', 'Excluded', 'GreaterThanEqual', 'GreaterThan', 'Included', 'Ipv4', 'Ipv6',
+    'IsSubnetOf', 'LengthBetweenInclude', 'LengthBetween', 'LengthGte', 'LengthGt',
+    'LengthLte', 'LengthLt', 'Length', 'LessThanEqual', 'LessThan', 'NotEmpty',
+    'NotEqual', 'Numeric', 'RegEx', 'Subnet'
+];
+
+var sysBasePath = window.location.href;
+if (sysBasePath.indexOf('/add') != -1) {
+    sysBasePath = sysBasePath.substring(0, sysBasePath.indexOf('/add'));
+} else if (sysBasePath.indexOf('/edit') != -1) {
+    sysBasePath = sysBasePath.substring(0, sysBasePath.indexOf('/edit'));
+}
+sysBasePath = sysBasePath.substring(0, sysBasePath.lastIndexOf('/'));
 
 /**
  * Function to add resource/permission
@@ -399,6 +418,315 @@ var checkFormChange = function() {
 };
 
 /**
+ * Function to add validators to the fields form
+ *
+ * @return void
+ */
+var addValidator = function() {
+    valCount++;
+
+    // Add validator select field
+    $('#validator_new_1').clone({
+        "name" : 'validator_new_' + valCount,
+        "id"   : 'validator_new_' + valCount
+    }).appendTo($('#validator_new_1').parent());
+
+    // Add validator value text field
+    $('#validator_value_new_1').clone({
+        "name" : 'validator_value_new_' + valCount,
+        "id"   : 'validator_value_new_' + valCount
+    }).appendTo($('#validator_value_new_1').parent());
+
+    // Add validator message text field
+    $('#validator_message_new_1').clone({
+        "name" : 'validator_message_new_' + valCount,
+        "id"   : 'validator_message_new_' + valCount
+    }).appendTo($('#validator_message_new_1').parent());
+};
+
+/**
+ * Function to add model/type to the fields form
+ *
+ * @return void
+ */
+var addModel = function() {
+    var parentModelId = modelCount;
+    modelCount++;
+
+    // Add model select field
+    $('#model_' + parentModelId).clone({
+        "name" : 'model_' + modelCount,
+        "id"   : 'model_' + modelCount
+    }).appendTo($('#model_' + parentModelId).parent());
+
+    // Add type_id text field
+    $('#type_id_' + parentModelId).clone({
+        "name"  : 'type_id_' + modelCount,
+        "id"    : 'type_id_' + modelCount,
+        "value" : 0
+    }).appendTo($('#type_id_' + parentModelId).parent());
+
+    // Select marked clean up
+    var sel1 = $('#model_' + parentModelId)[0];
+    var sel2 = $('#model_' + modelCount)[0];
+    var marked1 = null;
+    var marked2 = null;
+
+    for (var i = 0; i < sel1.options.length; i++) {
+        if (sel1.options[i].selected) {
+            marked1 = i;
+        }
+        if (sel2.options[i].selected) {
+            marked2 = i;
+            sel2.options[i].selected = false;
+        }
+    }
+
+    if (marked1 != marked2) {
+        sel2.options[marked1].selected = true;
+    }
+};
+
+/**
+ * Function to add fields to the form
+ *
+ * @param  array flds
+ * @return void
+ */
+var addFields = function(flds) {
+    var fieldCount = 1;
+
+    // Get the next field number
+    while ($('#field_' + flds[0] + '_new_' + fieldCount)[0] != undefined) {
+        fieldCount++;
+    }
+
+    // Clone the fields
+    for (var i = 0; i < flds.length; i++) {
+        var oldName = 'field_' + flds[i] + '_new_1';
+        var newName = 'field_' + flds[i] + '_new_' + fieldCount;
+        var oldObj = $('#' + oldName)[0];
+
+        // If the object is a checkbox or radio set, clone the fieldset
+        if ((oldObj.type == 'checkbox') || (oldObj.type == 'radio')) {
+            var fldSet = $(oldObj).parent();
+            var fldSetInputs = fldSet.getElementsByTagName('input');
+            var vals = [];
+            var mrk = [];
+            for (var j = 0; j < fldSetInputs.length; j++) {
+                vals.push(fldSetInputs[j].value);
+                if (fldSetInputs[j].checked) {
+                    mrk.push(fldSetInputs[j].value);
+                }
+            }
+            var fldSetParent = $(fldSet).parent();
+            if (oldObj.type == 'checkbox') {
+                var attribs = {"name" : newName + '[]', "id" : newName};
+                $(fldSetParent).appendCheckbox(vals, attribs, mrk);
+            } else {
+                var attribs = {"name" : newName, "id" : newName};
+                $(fldSetParent).appendRadio(vals, attribs, mrk);
+            }
+        // Else, clone the input or select
+        } else {
+            var realNewName = ((oldObj.nodeName == 'SELECT') && (oldObj.getAttribute('multiple') != undefined)) ?
+                newName + '[]' :
+                newName;
+            $('#' + oldName).clone({
+                "name" : realNewName,
+                "id"   : newName
+            }).appendTo($('#' + oldName).parent());
+        }
+    }
+};
+
+/**
+ * Function to change model types
+ *
+ * @param  mixed sel
+ * @return void
+ */
+var changeModelTypes = function(sel) {
+    var id = sel.id.substring(sel.id.lastIndexOf('_') + 1);
+    var marked = $('#' + sel.id + ' > option:selected').val();
+    var opts = $('#type_id_' + id + ' > option').toArray();
+    var start = opts.length - 1;
+
+    for (var i = start; i >= 0; i--) {
+        $(opts[i]).remove();
+    }
+
+    // Get new model types and create new select drop down
+    var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
+    var j = $().json.parse(jsonLoc + marked.replace(/\\/g, '_'));
+    if (j.types[0] != undefined) {
+        var types = [];
+        for (key in j.types) {
+            types.push([key, j.types[key]]);
+        }
+    }
+    for (var i = 0; i < types.length; i++) {
+        $('#type_id_' + id).append('option', {"value" : types[i][0]}, types[i][1]);
+    }
+};
+
+/**
+ * Function to change field history
+ *
+ * @param  mixed  sel
+ * @param  string basePath
+ * @return void
+ */
+var changeHistory = function(sel, basePath) {
+    var ids = sel.id.substring(sel.id.indexOf('_') + 1).split('_');
+    var modelId = ids[0];
+    var fieldId = ids[1];
+    var marked = $('#' + sel.id + ' > option:selected').val();
+
+    if ((curValue == null) && ($('#field_' + fieldId)[0] != undefined)) {
+        curValue = $('#field_' + fieldId).val();
+    }
+
+    if (marked != 0) {
+        var j = $().json.parse(basePath + '/structure/fields/json/history/' + modelId + '/' + fieldId + '/' + marked);
+        if ($('#field_' + j.fieldId)[0] != undefined) {
+            if (typeof CKEDITOR !== 'undefined') {
+                if (CKEDITOR.instances['field_' + j.fieldId] != undefined) {
+                    CKEDITOR.instances['field_' + j.fieldId].setData(j.value);
+                }
+            } else if (typeof tinymce !== 'undefined') {
+                tinymce.activeEditor.setContent(j.value);
+            }
+            $('#field_' + j.fieldId).val(j.value);
+        }
+    } else {
+        if ($('#field_' + fieldId)[0] != undefined) {
+            if (typeof CKEDITOR !== 'undefined') {
+                if (CKEDITOR.instances['field_' + fieldId] != undefined) {
+                    CKEDITOR.instances['field_' + fieldId].setData(curValue);
+                }
+            } else if (typeof tinymce !== 'undefined') {
+                tinymce.activeEditor.setContent(curValue);
+            }
+            $('#field_' + fieldId).val(curValue);
+        }
+    }
+};
+
+/**
+ * Function to change editor
+ *
+ * @param  mixed  sel
+ * @return void
+ */
+var changeEditor = function(sel) {
+    var content = '';
+    var val = $(sel).val();
+    var id = sel.id.substring(sel.id.indexOf('_') + 1);
+    var w = Math.round($('#field_' + id).width());
+    var h = Math.round($('#field_' + id).height());
+
+    if (val == 'source') {
+        if (typeof CKEDITOR !== 'undefined') {
+            content = CKEDITOR.instances['field_' + id].getData();
+            CKEDITOR.instances['field_' + id].destroy();
+        } else if (typeof tinymce !== 'undefined') {
+            content = tinymce.activeEditor.getContent();
+            var par = $('#field_' + id).parent();
+            var children = par.childNodes;
+            for (var i = 0; i < children.length; i++) {
+                if (children[i].nodeName == 'DIV') {
+                    par.removeChild(children[i]);
+                }
+            }
+        }
+        $('#field_' + id).val(content);
+        $('#field_' + id).show();
+    } else if (val == 'ckeditor') {
+        loadEditor('ckeditor', id);
+    } else if (val == 'tinymce') {
+        loadEditor('tinymce', id);
+    }
+};
+
+/**
+ * Function to toggle editor select
+ *
+ * @param  mixed  sel
+ * @return void
+ */
+var toggleEditor = function(sel) {
+    if ($(sel).val().indexOf('textarea') != -1) {
+        $('#editor').show();
+    } else {
+        $('#editor').hide();
+    }
+};
+
+/**
+ * Function to loader editor(s)
+ *
+ * @param  string editor
+ * @return void
+ */
+var loadEditor = function(editor, id) {
+    if (null != id) {
+        var w = Math.round($('#field_' + id).width());
+        var h = Math.round($('#field_' + id).height());
+        selIds = [{ "id" : id, "width" : w, "height" : h }];
+    }
+    if (selIds.length > 0) {
+        for (var i = 0; i < selIds.length; i++) {
+            if (editor == 'ckeditor') {
+                if (CKEDITOR.instances['field_' + selIds[i].id] == undefined) {
+                    CKEDITOR.replace(
+                        'field_' + selIds[i].id,
+                        {
+                            width  : selIds[i].width,
+                            height : selIds[i].height,
+                            filebrowserBrowseUrl      : sysBasePath + '/structure/fields/browser/file?editor=ckeditor',
+                            filebrowserImageBrowseUrl : sysBasePath + '/structure/fields/browser/image?editor=ckeditor',
+                            filebrowserWindowWidth    : '900',
+                            filebrowserWindowHeight   : '700'
+                        }
+                    );
+                }
+            } else if (editor == 'tinymce') {
+                if (tinymce.editors['field_' + selIds[i].id] == undefined) {
+                    tinymce.init(
+                        {
+                            selector              : "textarea#field_" + selIds[i].id,
+                            theme                 : "modern",
+                            plugins: [
+                                "advlist autolink lists link image hr", "searchreplace wordcount code fullscreen",
+                                "table", "template paste textcolor"
+                            ],
+                            image_advtab          : true,
+                            toolbar1              : "insertfile undo redo | styleselect | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image",
+                            width                 : selIds[i].width,
+                            height                : selIds[i].height,
+                            relative_urls         : false,
+                            file_browser_callback : function(field_name, url, type, win) {
+                                tinymce.activeEditor.windowManager.open({
+                                    title  : "Asset Browser",
+                                    url    : sysBasePath + '/structure/fields/browser/' + type + '?editor=tinymce',
+                                    width  : 900,
+                                    height : 700
+                                }, {
+                                    oninsert : function(url) {
+                                        win.document.getElementById(field_name).value = url;
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+            }
+        }
+    }
+};
+
+/**
  * Document ready function to load the correct URI string into the URI span
  */
 $(document).ready(function(){
@@ -504,6 +832,72 @@ $(document).ready(function(){
                 val = '/';
             }
             $($('#slug').parent()).append('span', {"id" : 'slug-span'}, ((val.substring(0, 2) == '//') ? val.substring(1) : val));
+        }
+    }
+
+    if ($('#model_1')[0] != undefined) {
+        while ($('#model_' + modelCount)[0] != undefined) {
+            modelCount++;
+        }
+        modelCount--;
+    }
+    if ($('#field-remove-form')[0] != undefined) {
+        $('#checkall').click(function(){
+            if (this.checked) {
+                $('#field-remove-form').checkAll(this.value);
+            } else {
+                $('#field-remove-form').uncheckAll(this.value);
+            }
+        });
+    }
+
+    if ($('#field-group-remove-form')[0] != undefined) {
+        $('#checkall').click(function(){
+            if (this.checked) {
+                $('#field-group-remove-form').checkAll(this.value);
+            } else {
+                $('#field-group-remove-form').uncheckAll(this.value);
+            }
+        });
+    }
+
+    var sels = $('select').toArray();
+    var selVal = null;
+    if ((sels != '') && (sels.length > 0)) {
+        for (var i = 0; i < sels.length; i++) {
+            if (sels[i].id.indexOf('editor_') != -1) {
+                var id = sels[i].id.substring(sels[i].id.indexOf('_') + 1);
+                var w = Math.round($('#field_' + id).width());
+                var h = Math.round($('#field_' + id).height());
+                selIds.push({ "id" : id, "width" : w, "height" : h });
+                selVal = $(sels[i]).val();
+            }
+        }
+
+        if (null != selVal) {
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement("script");
+            switch (selVal) {
+                case 'ckeditor':
+                    script.src = _jaxRoot + 'ckeditor/ckeditor.js';
+                    script.onload = script.onreadystatechange = function() {
+                        if (typeof CKEDITOR != 'undefined') {
+                            loadEditor('ckeditor');
+                        }
+                    }
+                    head.appendChild(script);
+                    break;
+
+                case 'tinymce':
+                    script.src = _jaxRoot + 'tinymce/tinymce.min.js';
+                    script.onload = script.onreadystatechange = function() {
+                        if (typeof tinymce != 'undefined') {
+                            loadEditor('tinymce');
+                        }
+                    }
+                    head.appendChild(script);
+                    break;
+            }
         }
     }
 

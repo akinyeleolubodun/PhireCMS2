@@ -11,5 +11,8 @@
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\TemplatesController', 'index')): ?>
             <tr><td><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/templates">Templates</a></td></tr>
 <?php endif; ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Structure\FieldsController', 'index')): ?>
+            <tr><td><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields">Fields</a></td></tr>
+<?php endif; ?>
         </table>
 <?php include __DIR__ . '/../footer.phtml'; ?>

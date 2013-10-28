@@ -14,11 +14,11 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class TemplatesController extends AbstractController
+class GroupsController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the templates controller object
+     * Constructor method to instantiate the groups controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -37,9 +37,9 @@ class TemplatesController extends AbstractController
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'] . '/structure';
+                    $viewPath = $cfg['view']['*'];
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'] . '/structure';
+                    $viewPath = $cfg['view'];
                 }
             }
         }
@@ -48,61 +48,56 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates index method
+     * Group index method
      *
      * @return void
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/templates.phtml', array(
+        $this->prepareView($this->viewPath . '/groups.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $template = new Model\Template(array('acl' => $this->project->getService('acl')));
-        $template->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $template->table)
-                   ->set('title', 'Structure ' . $this->view->separator . ' Templates');
+        $group = new Model\FieldGroup(array('acl' => $this->project->getService('acl')));
+        $group->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
+        $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields ' . $this->view->separator . ' Groups')
+                   ->set('table', $group->table);
         $this->send();
     }
 
     /**
-     * Templates add method
+     * Group add method
      *
      * @return void
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/templates.phtml', array(
+        $this->prepareView($this->viewPath . '/groups.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Structure ' . $this->view->separator . ' Templates ' . $this->view->separator . ' Add');
-
-        $form = new Form\Template(
-            $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
-        );
-
+        $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields ' . $this->view->separator . ' Groups ' . $this->view->separator . ' Add');
+        $form = new Form\FieldGroup($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
                 array('htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array(array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
-                $template = new Model\Template();
-                $template->save($form);
+                $group = new Model\FieldGroup();
+                $group->save($form);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                    Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
+                    Response::redirect($this->request->getBasePath() . '/edit/' . $group->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
                     $this->sendJson(array(
-                        'redirect' => $this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time(),
-                        'updated'  => '',
-                        'form'     => 'template-form'
+                        'redirect' => $this->request->getBasePath() . '/edit/' . $group->id . '?saved=' . time(),
+                        'updated'  => ''
                     ));
                 } else {
                     Response::redirect($this->request->getBasePath());
@@ -122,7 +117,7 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates edit method
+     * Group edit method
      *
      * @return void
      */
@@ -131,39 +126,36 @@ class TemplatesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/templates.phtml', array(
+            $this->prepareView($this->viewPath . '/groups.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
             ));
 
-            $template = new Model\Template();
-            $template->getById($this->request->getPath(1));
+            $group = new Model\FieldGroup();
+            $group->getById($this->request->getPath(1));
 
-            // If field is found and valid
-            if (isset($template->id)) {
-                $this->view->set('title', 'Structure ' . $this->view->separator . ' Templates ' . $this->view->separator . ' ' . $template->name);
-                $form = new Form\Template(
-                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $template->id
-                );
+            // If group is found and valid
+            if (isset($group->id)) {
+                $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields ' . $this->view->separator . ' Groups ' . $this->view->separator . ' ' . $group->name);
+                $form = new Form\FieldGroup($this->request->getBasePath() . $this->request->getRequestUri());
 
                 // If form is submitted
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
                         array('htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array(array(ENT_QUOTES, 'UTF-8'))
                     );
 
-                    // If form is valid, save field
+                    // If form is valid, save group
                     if ($form->isValid()) {
-                        $template->update($form);
+                        $group->update($form);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
-                            Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
+                            Response::redirect($this->request->getBasePath() . '/edit/' . $group->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
                             $this->sendJson(array(
-                                'updated' => '',
-                                'form'    => 'template-form'
+                                'updated' => ''
                             ));
                         } else {
                             Response::redirect($this->request->getBasePath());
@@ -180,9 +172,9 @@ class TemplatesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $template->getData(),
+                        $group->getData(),
                         array('htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array(array(ENT_QUOTES, 'UTF-8'))
                     );
                     $this->view->set('form', $form);
                     $this->send();
@@ -195,31 +187,16 @@ class TemplatesController extends AbstractController
     }
 
     /**
-     * Templates copy method
-     *
-     * @return void
-     */
-    public function copy()
-    {
-        if (null === $this->request->getPath(1)) {
-            Response::redirect($this->request->getBasePath());
-        } else {
-            $template = new Model\Template();
-            $template->copy($this->request->getPath(1));
-            Response::redirect($this->request->getBasePath());
-        }
-    }
-
-    /**
-     * Templates remove method
+     * Group remove method
      *
      * @return void
      */
     public function remove()
     {
+        // Loop through and delete the groups
         if ($this->request->isPost()) {
-            $template = new Model\Template();
-            $template->remove($this->request->getPost());
+            $group = new Model\FieldGroup();
+            $group->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

@@ -210,7 +210,7 @@ class IndexController extends AbstractController
 
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
-                'post', $this->type->id, true, 0, $this->project->isLoaded('Fields')
+                'post', $this->type->id, true, 0
             );
 
             // If form is submitted
@@ -224,7 +224,7 @@ class IndexController extends AbstractController
                 // If form is valid, save the user
                 if ($form->isValid()) {
                     $user = new Model\User();
-                    $user->save($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
+                    $user->save($form, $this->project->module('Phire'));
                     if (null !== $redirect) {
                         Response::redirect($redirect);
                     } else {
@@ -268,13 +268,13 @@ class IndexController extends AbstractController
         ));
 
         $user = new Model\User();
-        $user->getById($this->sess->user->id, $this->project->isLoaded('Fields'));
+        $user->getById($this->sess->user->id);
 
         // If user is found and valid
         if (null !== $user->id) {
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
-                'post', $this->type->id, true, $user->id, $this->project->isLoaded('Fields')
+                'post', $this->type->id, true, $user->id
             );
 
             // If the form is submitted
@@ -287,7 +287,7 @@ class IndexController extends AbstractController
 
                 // If the form is valid
                 if ($form->isValid()) {
-                    $user->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
+                    $user->update($form, $this->project->module('Phire'));
                     $url = (null !== $redirect) ? $redirect : $this->request->getBasePath();
                     if ($url == '') {
                         $url = '/';

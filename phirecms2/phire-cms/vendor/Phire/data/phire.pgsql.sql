@@ -406,3 +406,93 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
 ) ;
 
 ALTER SEQUENCE extension_id_seq OWNED BY "[{prefix}]extensions"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_groups"
+--
+
+CREATE SEQUENCE group_id_seq START 12001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
+  "id" integer NOT NULL DEFAULT nextval('group_id_seq'),
+  "name" varchar(255),
+  "order" integer,
+  "dynamic" integer,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE group_id_seq OWNED BY "[{prefix}]field_groups"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "fields"
+--
+
+CREATE SEQUENCE field_id_seq START 11001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
+  "id" integer NOT NULL DEFAULT nextval('field_id_seq'),
+  "group_id" integer,
+  "type" varchar(255),
+  "name" varchar(255),
+  "label" varchar(255),
+  "values" varchar(255),
+  "default_values" varchar(255),
+  "attributes" varchar(255),
+  "validators" varchar(255),
+  "encryption" integer NOT NULL,
+  "order" integer NOT NULL,
+  "required" integer NOT NULL,
+  "editor" varchar(255),
+  PRIMARY KEY ("id"),
+  CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+ALTER SEQUENCE field_id_seq OWNED BY "[{prefix}]fields"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "fields_to_groups"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]fields_to_groups" (
+  "field_id" integer NOT NULL,
+  "group_id" integer NOT NULL,
+  UNIQUE ("field_id", "group_id"),
+  CONSTRAINT "fk_field_group_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_group_field_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "fields_to_models"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]fields_to_models" (
+  "field_id" integer NOT NULL,
+  "model" varchar(255) NOT NULL,
+  "type_id" integer,
+  UNIQUE ("field_id", "model", "type_id"),
+  CONSTRAINT "fk_field_id_model" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_values"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
+  "field_id" integer NOT NULL,
+  "model_id" integer NOT NULL,
+  "value" text,
+  "timestamp" integer,
+  "history" text,
+  UNIQUE ("field_id", "model_id"),
+  CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;

@@ -95,7 +95,7 @@ class IndexController extends AbstractController
             $this->view->set('title', 'Users ' . $this->view->separator . ' Select Type');
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                '0', false, 0, $this->project->isLoaded('Fields'), $this->project->getService('acl')
+                '0', false, 0, $this->project->getService('acl')
             );
 
             // If form is submitted
@@ -129,7 +129,7 @@ class IndexController extends AbstractController
                            ->set('typeId', $type->id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $type->id, false, 0, $this->project->isLoaded('Fields')
+                    $type->id, false, 0
                 );
 
                 // If form is submitted
@@ -143,7 +143,7 @@ class IndexController extends AbstractController
                     // If form is valid, save new user
                     if ($form->isValid()) {
                         $user = new Model\User();
-                        $user->save($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
+                        $user->save($form, $this->project->module('Phire'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -193,7 +193,7 @@ class IndexController extends AbstractController
             ));
 
             $user = new Model\User();
-            $user->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $user->getById($this->request->getPath(1));
 
             // If user is found and valid
             if (null !== $user->id) {
@@ -201,7 +201,7 @@ class IndexController extends AbstractController
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $user->type_id, false, $user->id, $this->project->isLoaded('Fields')
+                    $user->type_id, false, $user->id
                 );
 
                 // If form is submitted
@@ -214,7 +214,7 @@ class IndexController extends AbstractController
 
                     // If form is valid, save the user
                     if ($form->isValid()) {
-                        $user->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
+                        $user->update($form, $this->project->module('Phire'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -276,7 +276,7 @@ class IndexController extends AbstractController
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, false, 0, $this->project->isLoaded('Fields')
+                    0, false, 0
                 );
 
                 // If the form is submitted
@@ -331,7 +331,7 @@ class IndexController extends AbstractController
                 ));
 
                 $user = new Model\User();
-                $user->getLoginsById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+                $user->getLoginsById($this->request->getPath(1));
                 $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' Logins ' . $this->view->separator . ' ' . $user->username)
                            ->set('typeId', $user->type_id)
                            ->set('table', $user->table);
@@ -352,7 +352,7 @@ class IndexController extends AbstractController
         // Loop through the users to delete
         if ($this->request->isPost()) {
             $user = new Model\User();
-            $user->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $user->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath() . $typeId);
@@ -369,8 +369,7 @@ class IndexController extends AbstractController
         $user->getExport(
             $this->request->getPath(1),
             $this->request->getQuery('sort'),
-            $this->request->getQuery('page'),
-            $this->project->isLoaded('Fields')
+            $this->request->getQuery('page')
         );
 
         if (isset($user->userRows[0])) {

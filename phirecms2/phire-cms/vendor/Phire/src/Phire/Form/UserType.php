@@ -17,12 +17,11 @@ class UserType extends Form
      * @param  string  $action
      * @param  string  $method
      * @param  int     $tid
-     * @param  boolean $isFields
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $isFields = false)
+    public function __construct($action = null, $method = 'post', $tid = 0)
     {
-        $this->initFieldsValues = $this->getInitFields($tid, $isFields);
+        $this->initFieldsValues = $this->getInitFields($tid);
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'user-type-form');
     }
@@ -76,10 +75,9 @@ class UserType extends Form
      * Get the init field values
      *
      * @param  int     $tid
-     * @param  boolean $isFields
      * @return array
      */
-    protected function getInitFields($tid = 0, $isFields = false)
+    protected function getInitFields($tid = 0)
     {
         $yesNo = array('1' => 'Yes', '0' => 'No');
 
@@ -248,20 +246,17 @@ class UserType extends Form
         $fieldGroups = array();
         $dynamicFields = false;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, 0, $tid);
-            if ($newFields['dynamic']) {
-                $dynamicFields = true;
-            }
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, 0, $tid);
+        if ($newFields['dynamic']) {
+            $dynamicFields = true;
+        }
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
             }
         }
 

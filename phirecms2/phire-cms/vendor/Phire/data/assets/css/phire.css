@@ -427,14 +427,14 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     height: 15px;
 }
 
-#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form {
+#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form, #field-form, #field-group-form {
     margin: 20px 0 20px 0;
     padding: 0;
 }
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
 #content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
-#navigation-form-field-group-1 {
+#navigation-form-field-group-1, #field-form-field-group-1 {
     margin: 0 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;

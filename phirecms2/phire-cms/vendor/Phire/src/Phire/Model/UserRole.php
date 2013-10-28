@@ -215,20 +215,14 @@ class UserRole extends AbstractModel
      * Get role by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $role = Table\UserRoles::findById($id);
         if (isset($role->id)) {
             $roleValues = $role->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $roleValues = array_merge($roleValues, \Fields\Model\FieldValue::getAll($id));
-            }
-
+            $roleValues = array_merge($roleValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $roleValues);
         }
     }
@@ -237,10 +231,9 @@ class UserRole extends AbstractModel
      * Save role
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -273,20 +266,16 @@ class UserRole extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $role->id);
-        }
+        FieldValue::save($fields, $role->id);
     }
 
     /**
      * Update role
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -337,21 +326,16 @@ class UserRole extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $role->id);
-        }
-
+        FieldValue::update($fields, $role->id);
     }
 
     /**
      * Remove user role
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_roles'])) {
             foreach ($post['remove_roles'] as $id) {
@@ -369,10 +353,7 @@ class UserRole extends AbstractModel
                     Table\UserTypes::execute($sql->render(true));
                 }
 
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                FieldValue::remove($id);
             }
         }
     }

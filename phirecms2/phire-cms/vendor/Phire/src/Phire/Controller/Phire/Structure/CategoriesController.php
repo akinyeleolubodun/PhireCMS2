@@ -81,8 +81,7 @@ class CategoriesController extends AbstractController
 
         $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' Add');
         $form = new Form\Category(
-            $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->isLoaded('Fields')
+            $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
         );
 
         if ($this->request->isPost()) {
@@ -94,7 +93,7 @@ class CategoriesController extends AbstractController
 
             if ($form->isValid()) {
                 $category = new Model\Category();
-                $category->save($form, $this->project->isLoaded('Fields'));
+                $category->save($form);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                 } else if (null !==         $this->request->getQuery('update')) {
@@ -137,14 +136,14 @@ class CategoriesController extends AbstractController
             ));
 
             $category = new Model\Category();
-            $category->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $category->getById($this->request->getPath(1));
 
             // If field is found and valid
             if (isset($category->id)) {
                 $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' ' . $category->category_title);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $category->id, $this->project->isLoaded('Fields')
+                    $category->id
                 );
 
                 // If form is submitted
@@ -157,7 +156,7 @@ class CategoriesController extends AbstractController
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $category->update($form, $this->project->isLoaded('Fields'));
+                        $category->update($form);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -204,7 +203,7 @@ class CategoriesController extends AbstractController
         // Loop through and delete the fields
         if ($this->request->isPost()) {
             $category = new Model\Category();
-            $category->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $category->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

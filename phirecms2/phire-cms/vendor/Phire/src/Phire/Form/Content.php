@@ -22,12 +22,11 @@ class Content extends Form
      * @param  string         $method
      * @param  int            $tid
      * @param  int            $mid
-     * @param  boolean        $isFields
      * @param  array          $cfg
      * @param \Phire\Auth\Acl $acl
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $isFields = false, $cfg = array(), $acl = null)
+    public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $cfg = array(), $acl = null)
     {
         // Generate fields for content type select first
         if ($tid == 0) {
@@ -58,7 +57,7 @@ class Content extends Form
             $id = 'content-select-form';
         // Else, generate fields for the content object
         } else {
-            $this->initFieldsValues = $this->getInitFields($tid, $mid, $isFields, $cfg);
+            $this->initFieldsValues = $this->getInitFields($tid, $mid, $cfg);
             $id = 'content-form';
         }
 
@@ -124,11 +123,10 @@ class Content extends Form
      *
      * @param  int     $tid
      * @param  int     $mid
-     * @param  boolean $isFields
      * @param  array   $cfg
      * @return array
      */
-    protected function getInitFields($tid = 0, $mid = 0, $isFields = false, $cfg = array())
+    protected function getInitFields($tid = 0, $mid = 0, $cfg = array())
     {
         // Get types and type object
         $typesAry = array();
@@ -324,20 +322,17 @@ class Content extends Form
         $fieldGroups = array();
         $dynamicFields = false;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, $tid, $mid);
-            if ($newFields['dynamic']) {
-                $dynamicFields = true;
-            }
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, $tid, $mid);
+        if ($newFields['dynamic']) {
+            $dynamicFields = true;
+        }
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
             }
         }
 

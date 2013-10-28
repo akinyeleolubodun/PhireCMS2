@@ -249,21 +249,15 @@ class Navigation extends AbstractModel
      * Get navigation by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $navigation = Table\Navigation::findById($id);
 
         if (isset($navigation->id)) {
             $navigationValues = $navigation->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $navigationValues = array_merge($navigationValues, \Fields\Model\FieldValue::getAll($id));
-            }
-
+            $navigationValues = array_merge($navigationValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $navigationValues);
         }
     }
@@ -272,10 +266,9 @@ class Navigation extends AbstractModel
      * Save navigation
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -302,20 +295,16 @@ class Navigation extends AbstractModel
         $navigation->save();
         $this->data['id'] = $navigation->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $navigation->id);
-        }
+        FieldValue::save($fields, $navigation->id);
     }
 
     /**
      * Update navigation
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -340,10 +329,7 @@ class Navigation extends AbstractModel
 
         $this->data['id'] = $navigation->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $navigation->id);
-        }
+        FieldValue::update($fields, $navigation->id);
     }
 
     /**
@@ -351,10 +337,9 @@ class Navigation extends AbstractModel
      *
      * @param  array   $post
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function process(array $post, $id, $isFields = false)
+    public function process(array $post, $id)
     {
         foreach ($post as $key => $value) {
             if (strpos($key, 'navigation_order_') !== false) {
@@ -383,10 +368,7 @@ class Navigation extends AbstractModel
             if (isset($navigation->id)) {
                 $navigation->delete();
             }
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                \Fields\Model\FieldValue::remove($id);
-            }
+            FieldValue::remove($id);
         }
     }
 

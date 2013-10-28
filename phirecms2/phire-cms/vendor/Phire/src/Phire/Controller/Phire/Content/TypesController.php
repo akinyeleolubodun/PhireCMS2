@@ -83,7 +83,7 @@ class TypesController extends AbstractController
         $this->view->set('title', 'Content Types ' . $this->view->separator . ' Add');
         $form = new Form\ContentType(
             $this->request->getBasePath() . $this->request->getRequestUri() . (isset($_GET['redirect']) ? '?redirect=1' : null),
-            'post', 0, $this->project->isLoaded('Fields')
+            'post', 0
         );
 
         if ($this->request->isPost()) {
@@ -95,7 +95,7 @@ class TypesController extends AbstractController
 
             if ($form->isValid()) {
                 $type = new Model\ContentType();
-                $type->save($form, $this->project->isLoaded('Fields'));
+                $type->save($form);
                 $url = ($form->redirect) ? BASE_PATH . APP_URI . '/content/add/' . $type->id : $this->request->getBasePath();
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
@@ -139,14 +139,14 @@ class TypesController extends AbstractController
             ));
 
             $type = new Model\ContentType();
-            $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $type->getById($this->request->getPath(1));
 
             // If field is found and valid
             if (isset($type->id)) {
                 $this->view->set('title', 'Content Types ' . $this->view->separator . ' ' . $type->name);
                 $form = new Form\ContentType(
                     $this->request->getBasePath() . $this->request->getRequestUri(),
-                    'post', $type->id, $this->project->isLoaded('Fields')
+                    'post', $type->id
                 );
 
                 // If form is submitted
@@ -159,7 +159,7 @@ class TypesController extends AbstractController
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $type->update($form, $this->project->isLoaded('Fields'));
+                        $type->update($form);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -205,7 +205,7 @@ class TypesController extends AbstractController
     {
         if ($this->request->isPost()) {
             $type = new Model\ContentType();
-            $type->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $type->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

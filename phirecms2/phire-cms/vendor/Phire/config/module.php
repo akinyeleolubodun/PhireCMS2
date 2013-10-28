@@ -24,7 +24,9 @@ return array(
                     '/'           => 'Phire\Controller\Phire\Structure\IndexController',
                     '/categories' => 'Phire\Controller\Phire\Structure\CategoriesController',
                     '/navigation' => 'Phire\Controller\Phire\Structure\NavigationController',
-                    '/templates'  => 'Phire\Controller\Phire\Structure\TemplatesController'
+                    '/templates'  => 'Phire\Controller\Phire\Structure\TemplatesController',
+                    '/fields'     => 'Phire\Controller\Phire\Structure\FieldsController',
+                    '/groups'     => 'Phire\Controller\Phire\Structure\GroupsController',
                 ),
                 '/extensions' => 'Phire\Controller\Phire\Extensions\IndexController',
                 '/users' => array(
@@ -92,6 +94,14 @@ return array(
                         'href' => 'templates',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Structure\TemplatesController',
+                            'permission' => 'index'
+                        )
+                    ),
+                    array(
+                        'name' => 'Fields',
+                        'href' => 'fields',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Structure\FieldsController',
                             'permission' => 'index'
                         )
                     )
@@ -175,13 +185,20 @@ return array(
             )
         ),
         // Exclude parameter for excluding user-specific resources (controllers) and permissions (actions)
-        'exclude' => array(
+        'exclude_controllers' => array(
             'Phire\Controller\IndexController',
             'Phire\Controller\Phire\IndexController',
             'Phire\Controller\Phire\Install\IndexController'
         ),
+        // Exclude parameter for excluding model objects from field assignment
+        'exclude_models' => array(
+            'Phire\Model\Extension',
+            'Phire\Model\Install',
+            'Phire\Model\UserSession'
+        ),
         // Encryption options for whichever encryption method you choose
-        'encryptionOptions' => array()
+        'encryptionOptions' => array(),
+        'history' => 5
     ))
 );
 

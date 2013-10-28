@@ -99,7 +99,7 @@ class IndexController extends AbstractController
                 $this->view->set('title', 'Content ' . $this->view->separator . ' Select Type');
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray(),
+                    0, 0, $this->project->module('Phire')->asArray(),
                     $this->project->getService('acl')
                 );
 
@@ -132,7 +132,7 @@ class IndexController extends AbstractController
 
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                        $type->id, 0, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
+                        $type->id, 0, $this->project->module('Phire')->asArray()
                     );
 
                     // If form is submitted
@@ -147,7 +147,7 @@ class IndexController extends AbstractController
                         if ($form->isValid()) {
                             try {
                                 $content = new Model\Content();
-                                $content->save($form, $this->project->isLoaded('Fields'));
+                                $content->save($form);
                                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
                                 } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
@@ -203,7 +203,7 @@ class IndexController extends AbstractController
             ));
 
             $content = new Model\Content();
-            $content->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $content->getById($this->request->getPath(1));
 
             // If content object is found and valid
             if (isset($content->id)) {
@@ -213,7 +213,7 @@ class IndexController extends AbstractController
                            ->set('typeId', $content->type_id);
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $content->type_id, $content->id, $this->project->isLoaded('Fields'), $this->project->module('Phire')->asArray()
+                    $content->type_id, $content->id, $this->project->module('Phire')->asArray()
                 );
 
                 // If form is submitted
@@ -227,7 +227,7 @@ class IndexController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         try {
-                            $content->update($form, $this->project->isLoaded('Fields'));
+                            $content->update($form);
                             if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
                             } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
@@ -284,7 +284,7 @@ class IndexController extends AbstractController
             $content = new Model\Content();
             $content->getById($this->request->getPath(1));
             if (isset($content->id)) {
-                $content->copy($this->project->isLoaded('Fields'));
+                $content->copy();
                 Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
             } else {
                 Response::redirect($this->request->getBasePath());
@@ -348,7 +348,7 @@ class IndexController extends AbstractController
         $typeId = (null !== $this->request->getPath(1)) ? '/index/' . $this->request->getPath(1) : null;
         if ($this->request->isPost()) {
             $content = new Model\Content();
-            $content->process($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $content->process($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath() . $typeId);

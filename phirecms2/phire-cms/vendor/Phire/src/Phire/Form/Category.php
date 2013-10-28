@@ -19,12 +19,11 @@ class Category extends Form
      * @param  string  $action
      * @param  string  $method
      * @param  int     $cid
-     * @param  boolean $isFields
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $cid = 0, $isFields = false)
+    public function __construct($action = null, $method = 'post', $cid = 0)
     {
-        $this->initFieldsValues = $this->getInitFields($cid, $isFields);
+        $this->initFieldsValues = $this->getInitFields($cid);
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'category-form');
     }
@@ -80,10 +79,9 @@ class Category extends Form
      * Get the init field values
      *
      * @param  int     $cid
-     * @param  boolean $isFields
      * @return array
      */
-    protected function getInitFields($cid = 0, $isFields = false)
+    protected function getInitFields($cid = 0)
     {
         // Get children, if applicable
         $children = ($cid != 0) ? $this->children($cid) : array();
@@ -164,20 +162,17 @@ class Category extends Form
         $fieldGroups = array();
         $dynamicFields = false;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, 0, $cid);
-            if ($newFields['dynamic']) {
-                $dynamicFields = true;
-            }
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, 0, $cid);
+        if ($newFields['dynamic']) {
+            $dynamicFields = true;
+        }
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
             }
         }
 

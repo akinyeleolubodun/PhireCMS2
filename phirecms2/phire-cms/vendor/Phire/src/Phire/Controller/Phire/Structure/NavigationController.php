@@ -81,8 +81,7 @@ class NavigationController extends AbstractController
         $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' Add');
 
         $form = new Form\Navigation(
-            $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->isLoaded('Fields')
+            $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
         );
 
         if ($this->request->isPost()) {
@@ -94,7 +93,7 @@ class NavigationController extends AbstractController
 
             if ($form->isValid()) {
                 $navigation = new Model\Navigation();
-                $navigation->save($form, $this->project->isLoaded('Fields'));
+                $navigation->save($form);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -137,14 +136,13 @@ class NavigationController extends AbstractController
             ));
 
             $navigation = new Model\Navigation();
-            $navigation->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $navigation->getById($this->request->getPath(1));
 
             // If field is found and valid
             if (isset($navigation->id)) {
                 $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' ' . $navigation->navigation);
                 $form = new Form\Navigation(
-                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $navigation->id, $this->project->isLoaded('Fields')
+                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $navigation->id
                 );
 
                 // If form is submitted
@@ -157,7 +155,7 @@ class NavigationController extends AbstractController
 
                     // If form is valid, save field
                     if ($form->isValid()) {
-                        $navigation->update($form, $this->project->isLoaded('Fields'));
+                        $navigation->update($form);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -203,7 +201,7 @@ class NavigationController extends AbstractController
     {
         if ($this->request->isPost()) {
             $navigation = new Model\Navigation();
-            $navigation->process($this->request->getPost(), $this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $navigation->process($this->request->getPost(), $this->request->getPath(1));
         }
 
         Response::redirect($this->request->getBasePath());

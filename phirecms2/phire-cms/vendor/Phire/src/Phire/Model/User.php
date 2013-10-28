@@ -261,10 +261,9 @@ class User extends AbstractModel
      * @param  int $typeId
      * @param  string $sort
      * @param  string $page
-     * @param  boolean $isFields
      * @return void
      */
-    public function getExport($typeId, $sort = null, $page = null, $isFields = false)
+    public function getExport($typeId, $sort = null, $page = null)
     {
         $order = $this->getSortOrder($sort, $page);
         $sql = Table\Users::getSql();
@@ -297,11 +296,8 @@ class User extends AbstractModel
                     $row->last_login = '(Never)';
                 }
 
-                // Get any field values
-                if ($isFields) {
-                    $values = \Fields\Model\FieldValue::getAll($row->id, true);
-                    $row = new \ArrayObject(array_merge((array)$row, $values), \ArrayObject::ARRAY_AS_PROPS);
-                }
+                $values = FieldValue::getAll($row->id, true);
+                $row = new \ArrayObject(array_merge((array)$row, $values), \ArrayObject::ARRAY_AS_PROPS);
 
                 $userRows[] = $row;
             }
@@ -316,10 +312,9 @@ class User extends AbstractModel
      * Get user by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $user = Table\Users::findById($id);
         if (isset($user->id)) {
@@ -328,12 +323,7 @@ class User extends AbstractModel
             $userValues['type_name'] = (isset($type->id) ? ucwords(str_replace('-', ' ', $type->type)) : null);
             $userValues['email1'] = $userValues['email'];
             $userValues['verified'] = (int)$userValues['verified'];
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $userValues = array_merge($userValues, \Fields\Model\FieldValue::getAll($id));
-            }
-
+            $userValues = array_merge($userValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $userValues);
         }
     }
@@ -342,13 +332,12 @@ class User extends AbstractModel
      * Get user by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getLoginsById($id, $isFields = false)
+    public function getLoginsById($id)
     {
         // Get user logins
-        $this->getById($id, $isFields);
+        $this->getById($id);
         $logins = unserialize($this->logins);
         $loginsAry = array();
 
@@ -395,10 +384,9 @@ class User extends AbstractModel
      *
      * @param  \Pop\Form\Form $form
      * @param  \Pop\Config    $config
-     * @param  boolean        $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $config, $isFields = false)
+    public function save(\Pop\Form\Form $form, $config)
     {
         $encOptions = $config->encryptionOptions->asArray();
 
@@ -441,10 +429,7 @@ class User extends AbstractModel
         $sess = Session::getInstance();
         $sess->last_user_id = $user->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $user->id);
-        }
+        FieldValue::save($fields, $user->id);
 
         // Send verification if needed
         if (($type->verification) && !($user->verified)) {
@@ -457,13 +442,11 @@ class User extends AbstractModel
      *
      * @param  \Pop\Form\Form $form
      * @param  \Pop\Config    $config
-     * @param  boolean        $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $config, $isFields = false)
+    public function update(\Pop\Form\Form $form, $config)
     {
         $encOptions = $config->encryptionOptions->asArray();
-
 
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -505,10 +488,7 @@ class User extends AbstractModel
             $user->update();
             $this->data['id'] = $user->id;
 
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                \Fields\Model\FieldValue::update($fields, $user->id);
-            }
+            FieldValue::update($fields, $user->id);
 
             // Send verification if needed
             if ($first) {
@@ -572,10 +552,9 @@ class User extends AbstractModel
      * Remove user
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_users'])) {
             foreach ($post['remove_users'] as $id) {
@@ -584,10 +563,7 @@ class User extends AbstractModel
                     $user->delete();
                 }
 
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                FieldValue::remove($id);
             }
         }
     }

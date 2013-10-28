@@ -119,10 +119,9 @@ class Template extends AbstractModel
      * Parse categories method
      *
      * @param  mixed   $template
-     * @param  boolean $isFields
      * @return array
      */
-    public static function parseCategories($template, $isFields = false)
+    public static function parseCategories($template)
     {
         $catAry = array();
         $cats   = array();
@@ -137,9 +136,9 @@ class Template extends AbstractModel
                         $ct = $cAry[0];
                         $orderBy = (isset($cAry[1])) ? $cAry[1] : 'id ASC';
                         $limit = (isset($cAry[2])) ? $cAry[2] : null;
-                        $cont = $phire->getContentByCategory($ct, $orderBy, $limit, $isFields);
+                        $cont = $phire->getContentByCategory($ct, $orderBy, $limit);
                     } else {
-                        $cont = $phire->getContentByCategory($c, 'id ASC', null, $isFields);
+                        $cont = $phire->getContentByCategory($c, 'id ASC', null);
                     }
                     $catAry['category_' . $c] = $cont;
                 }
@@ -155,9 +154,9 @@ class Template extends AbstractModel
                     $cAry = explode('_', $c);
                     $ct = $cAry[0];
                     $limit = (isset($cAry[1])) ? $cAry[1] : null;
-                    $catAry['categories_' . $c] = $phire->getChildCategories($ct, $limit, $isFields);
+                    $catAry['categories_' . $c] = $phire->getChildCategories($ct, $limit);
                 } else {
-                    $catAry['categories_' . $c] = $phire->getChildCategories($c, null, $isFields);
+                    $catAry['categories_' . $c] = $phire->getChildCategories($c, null);
                 }
             }
         }
@@ -301,21 +300,15 @@ class Template extends AbstractModel
      * Get template by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $template = Table\Templates::findById($id);
 
         if (isset($template->id)) {
             $templateValues = $template->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $templateValues = array_merge($templateValues, \Fields\Model\FieldValue::getAll($id));
-            }
-
+            $templateValues = array_merge($templateValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $templateValues);
         }
     }
@@ -324,10 +317,9 @@ class Template extends AbstractModel
      * Save template
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -343,20 +335,16 @@ class Template extends AbstractModel
         $template->save();
         $this->data['id'] = $template->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $template->id);
-        }
+        FieldValue::save($fields, $template->id);
     }
 
     /**
      * Update template
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -371,20 +359,16 @@ class Template extends AbstractModel
 
         $this->data['id'] = $template->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $template->id);
-        }
+        FieldValue::update($fields, $template->id);
     }
 
     /**
      * Copy template
      *
      * @param  int     $tid
-     * @param  boolean $isFields
      * @return void
      */
-    public function copy($tid, $isFields = false)
+    public function copy($tid)
     {
         $template = Table\Templates::findById($tid);
 
@@ -411,22 +395,19 @@ class Template extends AbstractModel
 
             $newTemplate->save();
 
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $template->id));
-                if (isset($values->rows[0])) {
-                    foreach ($values->rows as $value) {
-                        $field = \Fields\Table\Fields::findById($value->field_id);
-                        if (isset($field->id) && ($field->type != 'file')) {
-                            $val = new \Fields\Table\FieldValues(array(
-                                'field_id'  => $value->field_id,
-                                'model_id'  => $newTemplate->id,
-                                'value'     => $value->value,
-                                'timestamp' => $value->timestamp,
-                                'history'   => $value->history
-                            ));
-                            $val->save();
-                        }
+            $values = Table\FieldValues::findAll(null, array('model_id' => $template->id));
+            if (isset($values->rows[0])) {
+                foreach ($values->rows as $value) {
+                    $field = Table\Fields::findById($value->field_id);
+                    if (isset($field->id) && ($field->type != 'file')) {
+                        $val = new Table\FieldValues(array(
+                            'field_id'  => $value->field_id,
+                            'model_id'  => $newTemplate->id,
+                            'value'     => $value->value,
+                            'timestamp' => $value->timestamp,
+                            'history'   => $value->history
+                        ));
+                        $val->save();
                     }
                 }
             }
@@ -457,22 +438,19 @@ class Template extends AbstractModel
 
                     $newChild->save();
 
-                    // If the Fields module is installed, and if there are fields for this form/model
-                    if ($isFields) {
-                        $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $child->id));
-                        if (isset($values->rows[0])) {
-                            foreach ($values->rows as $value) {
-                                $field = \Fields\Table\Fields::findById($value->field_id);
-                                if (isset($field->id) && ($field->type != 'file')) {
-                                    $val = new \Fields\Table\FieldValues(array(
-                                        'field_id'  => $value->field_id,
-                                        'model_id'  => $newChild->id,
-                                        'value'     => $value->value,
-                                        'timestamp' => $value->timestamp,
-                                        'history'   => $value->history
-                                    ));
-                                    $val->save();
-                                }
+                    $values = Table\FieldValues::findAll(null, array('model_id' => $child->id));
+                    if (isset($values->rows[0])) {
+                        foreach ($values->rows as $value) {
+                            $field = Table\Fields::findById($value->field_id);
+                            if (isset($field->id) && ($field->type != 'file')) {
+                                $val = new Table\FieldValues(array(
+                                    'field_id'  => $value->field_id,
+                                    'model_id'  => $newChild->id,
+                                    'value'     => $value->value,
+                                    'timestamp' => $value->timestamp,
+                                    'history'   => $value->history
+                                ));
+                                $val->save();
                             }
                         }
                     }
@@ -485,10 +463,9 @@ class Template extends AbstractModel
      * Remove template
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_templates'])) {
             foreach ($post['remove_templates'] as $id) {
@@ -497,10 +474,7 @@ class Template extends AbstractModel
                     $template->delete();
                 }
 
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                FieldValue::remove($id);
             }
         }
     }

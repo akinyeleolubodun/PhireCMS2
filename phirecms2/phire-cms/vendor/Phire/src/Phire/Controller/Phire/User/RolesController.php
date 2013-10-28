@@ -83,7 +83,7 @@ class RolesController extends AbstractController
 
         $form = new Form\UserRole(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->module('Phire'), $this->project->isLoaded('Fields')
+            0, $this->project->module('Phire')
         );
 
         // If form is submitted
@@ -97,7 +97,7 @@ class RolesController extends AbstractController
             // If form is valid, save new role
             if ($form->isValid()) {
                 $role = new Model\UserRole();
-                $role->save($form, $this->project->isLoaded('Fields'));
+                $role->save($form);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -142,14 +142,14 @@ class RolesController extends AbstractController
             ));
 
             $role = new Model\UserRole();
-            $role->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $role->getById($this->request->getPath(1));
 
             // If role is found and valid
             if (isset($role->name)) {
                 $this->view->set('title', 'User Roles ' . $this->view->separator . ' ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $role->id, $this->project->module('Phire'), $this->project->isLoaded('Fields')
+                    $role->id, $this->project->module('Phire')
                 );
 
                 // If form is submitted
@@ -162,7 +162,7 @@ class RolesController extends AbstractController
 
                     // If form is valid, save role
                     if ($form->isValid()) {
-                        $role->update($form, $this->project->isLoaded('Fields'));
+                        $role->update($form);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -209,7 +209,7 @@ class RolesController extends AbstractController
         // Loop through and delete the roles
         if ($this->request->isPost()) {
             $role = new Model\UserRole();
-            $role->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $role->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

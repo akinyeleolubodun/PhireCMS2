@@ -19,11 +19,10 @@ class User extends Form
      * @param  int            $tid
      * @param  boolean        $profile
      * @param  int            $uid
-     * @param  boolean        $isFields
      * @param \Phire\Auth\Acl $acl
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $isFields = false, $acl = null)
+    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $acl = null)
     {
         // Create user type fields/form first
         if ($tid == 0) {
@@ -56,7 +55,7 @@ class User extends Form
             $id = 'user-select-form';
         // Else, create initial user fields
         } else {
-            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $isFields, $action);
+            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $action);
             if (strpos($action, '/install/user') !== false) {
                 $id = 'user-install-form';
             } else if ($profile) {
@@ -159,11 +158,10 @@ class User extends Form
      * @param  int     $tid
      * @param  boolean $profile
      * @param  int     $uid
-     * @param  boolean $isFields
      * @param  string  $action
      * @return array
      */
-    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $isFields = false, $action)
+    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $action)
     {
         $type = Table\UserTypes::findById($tid);
         $fields1 = array();
@@ -250,20 +248,17 @@ class User extends Form
         $fieldGroups = array();
         $dynamicFields = false;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, $tid, $uid);
-            if ($newFields['dynamic']) {
-                $dynamicFields = true;
-            }
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, $tid, $uid);
+        if ($newFields['dynamic']) {
+            $dynamicFields = true;
+        }
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
             }
         }
 

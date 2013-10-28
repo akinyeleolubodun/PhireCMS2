@@ -78,20 +78,14 @@ class ContentType extends AbstractModel
      * Get content type by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $type = Table\ContentTypes::findById($id);
         if (isset($type->id)) {
             $typeValues = $type->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $typeValues = array_merge($typeValues, \Fields\Model\FieldValue::getAll($id));
-            }
-
+            $typeValues = array_merge($typeValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $typeValues);
         }
     }
@@ -100,10 +94,9 @@ class ContentType extends AbstractModel
      * Save content type
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -117,20 +110,16 @@ class ContentType extends AbstractModel
         $type->save();
         $this->data['id'] = $type->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $type->id);
-        }
+        FieldValue::save($fields, $type->id);
     }
 
     /**
      * Update content type
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -143,20 +132,16 @@ class ContentType extends AbstractModel
         
         $this->data['id'] = $type->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $type->id);
-        }
+        FieldValue::update($fields, $type->id);
     }
 
     /**
      * Remove content type
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_types'])) {
             foreach ($post['remove_types'] as $id) {
@@ -174,10 +159,7 @@ class ContentType extends AbstractModel
                     $type->delete();
                 }
 
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                FieldValue::remove($id);
             }
         }
     }

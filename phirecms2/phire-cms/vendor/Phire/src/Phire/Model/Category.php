@@ -116,19 +116,14 @@ class Category extends AbstractModel
      * Get category by URI method
      *
      * @param  string  $uri
-     * @param  boolean $isFields
      * @return void
      */
-    public function getByUri($uri, $isFields = false)
+    public function getByUri($uri)
     {
         $category = Table\Categories::findBy(array('uri' => $uri));
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($category->id, true));
-            }
+            $categoryValues = array_merge($categoryValues, FieldValue::getAll($category->id, true));
 
             // Get content object within the category
             $categoryValues['items'] = array();
@@ -146,43 +141,11 @@ class Category extends AbstractModel
                         }
                         $c['category_title'] = $category->title;
                         $c['category_uri'] = $category->uri;
-                        if ($isFields) {
-                            $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
-                        }
+                        $c = array_merge($c, FieldValue::getAll($c['id'], true));
                         $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
             }
-
-            // Get any child category content objects
-            /*
-            $childCat = Table\Categories::findBy(array('parent_id' => $category->id));
-            while (isset($childCat->id)) {
-                $childId = $childCat->id;
-                $content = Table\ContentToCategories::findBy(array('category_id' => $childId));
-                if (isset($content->rows[0])) {
-                    foreach ($content->rows as $cont) {
-                        $c = Table\Content::findById($cont->content_id);
-                        if (isset($c->id) && ((null === $c->status) || ($c->status == 2))) {
-                            $c = $c->getValues();
-                            if (substr($c['uri'], 0, 1) != '/') {
-                                $c['uri'] = CONTENT_PATH . '/media/' . $c['uri'];
-                                $c['isFile'] = true;
-                            } else {
-                                $c['isFile'] = false;
-                            }
-                            $c['category_title'] = $childCat->title;
-                            $c['category_uri'] = $childCat->uri;
-                            if ($isFields) {
-                                $c = array_merge($c, \Fields\Model\FieldValue::getAll($c['id'], true));
-                            }
-                            $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
-                        }
-                    }
-                }
-                $childCat = Table\Categories::findBy(array('parent_id' => $childId));
-            }
-            */
 
             $this->data = array_merge($this->data, $categoryValues);
         }
@@ -192,10 +155,9 @@ class Category extends AbstractModel
      * Get category by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $category = Table\Categories::findById($id);
 
@@ -204,10 +166,7 @@ class Category extends AbstractModel
             $categoryValues['category_title'] = $categoryValues['title'];
             unset($categoryValues['title']);
 
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($id));
-            }
+            $categoryValues = array_merge($categoryValues, FieldValue::getAll($id));
 
             $this->data = array_merge($this->data, $categoryValues);
         }
@@ -217,10 +176,9 @@ class Category extends AbstractModel
      * Save category
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -256,20 +214,16 @@ class Category extends AbstractModel
         $category->save();
         $this->data['id'] = $category->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $category->id);
-        }
+        FieldValue::save($fields, $category->id);
     }
 
     /**
      * Update category
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -304,20 +258,16 @@ class Category extends AbstractModel
 
         $this->data['id'] = $category->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $category->id);
-        }
+        FieldValue::update($fields, $category->id);
     }
 
     /**
      * Remove category
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_categories'])) {
             foreach ($post['remove_categories'] as $id) {
@@ -326,10 +276,7 @@ class Category extends AbstractModel
                     $category->delete();
                 }
 
-                // If the Fields module is installed, and if there are fields for this form/model
-                if ($isFields) {
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                FieldValue::remove($id);
             }
         }
     }

@@ -347,10 +347,9 @@ class Content extends AbstractModel
      * Get content by URI method
      *
      * @param  string  $uri
-     * @param  boolean $isFields
      * @return void
      */
-    public function getByUri($uri, $isFields = false)
+    public function getByUri($uri)
     {
         $sql = Table\Content::getSql();
         $sql->select(array(
@@ -379,12 +378,7 @@ class Content extends AbstractModel
         if (isset($content->id)) {
             $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id, true));
-            }
-
+            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
             $this->data = array_merge($this->data, $contentValues);
         }
     }
@@ -393,10 +387,9 @@ class Content extends AbstractModel
      * Get content by date method
      *
      * @param  array   $date
-     * @param  boolean $isFields
      * @return void
      */
-    public function getByDate($date, $isFields = false)
+    public function getByDate($date)
     {
         $this->data['date'] = $date['match'];
         $content = Table\Content::findByDate($date);
@@ -406,12 +399,7 @@ class Content extends AbstractModel
         } else if (isset($content->id)) {
             $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id, true));
-            }
-
+            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
             $this->data = array_merge($this->data, $contentValues);
         }
     }
@@ -419,11 +407,10 @@ class Content extends AbstractModel
     /**
      * Search for content
      *
-     * @param  boolean $isFields
      * @param  \Pop\Http\Request $request
      * @return void
      */
-    public function search($request, $isFields = false)
+    public function search($request)
     {
         $this->data['keys'] = array();
         $this->data['results'] = array();
@@ -450,58 +437,55 @@ class Content extends AbstractModel
                 $results = $content->rows;
             }
 
-            // If the Fields module is installed, search fields by name/value
-            if ($isFields) {
-                foreach ($this->data['keys'] as $key) {
-                    if (isset($search[$key]) && ($search[$key] != '')) {
-                        $field = \Fields\Table\Fields::findBy(array('name' => $key));
-                        if (isset($field->id)) {
-                            $sql = \Fields\Table\FieldValues::getSql();
-                            $sql->select(array(
-                                DB_PREFIX . 'field_values.field_id',
-                                DB_PREFIX . 'field_values.model_id',
-                                DB_PREFIX . 'field_values.value',
-                                DB_PREFIX . 'fields_to_models.model'
-                            ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
-                            $sql->select()
-                                ->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id')->like('value', ':value');
+            foreach ($this->data['keys'] as $key) {
+                if (isset($search[$key]) && ($search[$key] != '')) {
+                    $field = Table\Fields::findBy(array('name' => $key));
+                    if (isset($field->id)) {
+                        $sql = Table\FieldValues::getSql();
+                        $sql->select(array(
+                            DB_PREFIX . 'field_values.field_id',
+                            DB_PREFIX . 'field_values.model_id',
+                            DB_PREFIX . 'field_values.value',
+                            DB_PREFIX . 'fields_to_models.model'
+                        ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
+                        $sql->select()
+                            ->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id')->like('value', ':value');
 
-                            // Execute field values SQL
-                            $fieldValues = \Fields\Table\FieldValues::execute(
-                                $sql->render(true),
-                                array(
-                                    'field_id' => $field->id,
-                                    'value' => '%' . $search[$key] . '%'
-                                )
-                            );
+                        // Execute field values SQL
+                        $fieldValues = Table\FieldValues::execute(
+                            $sql->render(true),
+                            array(
+                                'field_id' => $field->id,
+                                'value' => '%' . $search[$key] . '%'
+                            )
+                        );
 
-                            // If field values are found, extrapolate the table class from the model class
-                            if (isset($fieldValues->rows[0])) {
-                                foreach ($fieldValues->rows as $fv) {
-                                    $tableClass = str_replace('Model', 'Table', $fv->model);
+                        // If field values are found, extrapolate the table class from the model class
+                        if (isset($fieldValues->rows[0])) {
+                            foreach ($fieldValues->rows as $fv) {
+                                $tableClass = str_replace('Model', 'Table', $fv->model);
+                                if (!class_exists($tableClass, false)) {
+                                    if (substr($tableClass, -1) == 's') {
+                                        $tableClass = substr($tableClass, 0, -1);
+                                    } else {
+                                        $tableClass .= 's';
+                                    }
                                     if (!class_exists($tableClass, false)) {
-                                        if (substr($tableClass, -1) == 's') {
-                                            $tableClass = substr($tableClass, 0, -1);
-                                        } else {
-                                            $tableClass .= 's';
-                                        }
-                                        if (!class_exists($tableClass, false)) {
-                                            if (substr($tableClass, -1) == 'y') {
-                                                $tableClass = substr($tableClass, 0, -1) . 'ies';
-                                                if (!class_exists($tableClass, false)) {
-                                                    $tableClass = null;
-                                                }
+                                        if (substr($tableClass, -1) == 'y') {
+                                            $tableClass = substr($tableClass, 0, -1) . 'ies';
+                                            if (!class_exists($tableClass, false)) {
+                                                $tableClass = null;
                                             }
                                         }
                                     }
+                                }
 
-                                    // If table class is found, find model object
-                                    if ((null !== $tableClass) && (!in_array($fv->model_id, $track))) {
-                                        $cont = $tableClass::findById($fv->model_id);
-                                        if (isset($cont->id)) {
-                                            $results[] = $cont;
-                                            $track[] = $fv->model_id;
-                                        }
+                                // If table class is found, find model object
+                                if ((null !== $tableClass) && (!in_array($fv->model_id, $track))) {
+                                    $cont = $tableClass::findById($fv->model_id);
+                                    if (isset($cont->id)) {
+                                        $results[] = $cont;
+                                        $track[] = $fv->model_id;
                                     }
                                 }
                             }
@@ -518,10 +502,9 @@ class Content extends AbstractModel
      * Get content by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $content = Table\Content::findById($id);
         if (isset($content->id)) {
@@ -589,11 +572,7 @@ class Content extends AbstractModel
 
 
             $contentValues['typeUri'] = $type->uri;
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($id));
-            }
+            $contentValues = array_merge($contentValues, FieldValue::getAll($id));
 
             if (!((!$this->config->open_authoring) && ($contentValues['created_by'] != $this->user->id))) {
                 $this->data = array_merge($this->data, $contentValues);
@@ -661,11 +640,10 @@ class Content extends AbstractModel
      * Save content
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @throws \Pop\File\Exception
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -798,21 +776,17 @@ class Content extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fields, $content->id);
-        }
+        FieldValue::save($fields, $content->id);
     }
 
     /**
      * Update content
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @throws \Pop\File\Exception
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $isFields = false)
+    public function update(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -975,19 +949,15 @@ class Content extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fields, $content->id);
-        }
+        FieldValue::update($fields, $content->id);
     }
 
     /**
      * Copy content
      *
-     * @param  boolean $isFields
      * @return void
      */
-    public function copy($isFields = false)
+    public function copy()
     {
         $id    = $this->data['id'];
         $title = $this->data['content_title'] . ' (Copy ';
@@ -1051,22 +1021,19 @@ class Content extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $values = \Fields\Table\FieldValues::findAll(null, array('model_id' => $id));
-            if (isset($values->rows[0])) {
-                foreach ($values->rows as $value) {
-                    $field = \Fields\Table\Fields::findById($value->field_id);
-                    if (isset($field->id) && ($field->type != 'file')) {
-                        $val = new \Fields\Table\FieldValues(array(
-                            'field_id'  => $value->field_id,
-                            'model_id'  => $content->id,
-                            'value'     => $value->value,
-                            'timestamp' => $value->timestamp,
-                            'history'   => $value->history
-                        ));
-                        $val->save();
-                    }
+        $values = Table\FieldValues::findAll(null, array('model_id' => $id));
+        if (isset($values->rows[0])) {
+            foreach ($values->rows as $value) {
+                $field = Table\Fields::findById($value->field_id);
+                if (isset($field->id) && ($field->type != 'file')) {
+                    $val = new Table\FieldValues(array(
+                        'field_id'  => $value->field_id,
+                        'model_id'  => $content->id,
+                        'value'     => $value->value,
+                        'timestamp' => $value->timestamp,
+                        'history'   => $value->history
+                    ));
+                    $val->save();
                 }
             }
         }
@@ -1213,10 +1180,9 @@ class Content extends AbstractModel
      * Process batch
      *
      * @param  array $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function process(array $post, $isFields = false)
+    public function process(array $post)
     {
         $process = (int)$post['content_process'];
         if (isset($post['process_content'])) {
@@ -1241,8 +1207,8 @@ class Content extends AbstractModel
                 }
 
                 // If the Fields module is installed, and if there are fields for this form/model
-                if (($process < 0) && ($isFields) && !((!$open) && ($createdBy != $this->user->id))) {
-                    \Fields\Model\FieldValue::remove($id);
+                if (($process < 0) && !((!$open) && ($createdBy != $this->user->id))) {
+                    FieldValue::remove($id);
                 }
             }
         }

@@ -91,19 +91,14 @@ class UserType extends AbstractModel
      * Get type by ID method
      *
      * @param  int     $id
-     * @param  boolean $isFields
      * @return void
      */
-    public function getById($id, $isFields = false)
+    public function getById($id)
     {
         $type = Table\UserTypes::findById($id);
         if (isset($type->id)) {
             $typeValues = $type->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $typeValues = array_merge($typeValues, \Fields\Model\FieldValue::getAll($id));
-            }
+            $typeValues = array_merge($typeValues, FieldValue::getAll($id));
 
             $this->data = array_merge($this->data, $typeValues);
         }
@@ -113,10 +108,9 @@ class UserType extends AbstractModel
      * Save type
      *
      * @param \Pop\Form\Form $form
-     * @param  boolean       $isFields
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $isFields = false)
+    public function save(\Pop\Form\Form $form)
     {
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
@@ -146,10 +140,7 @@ class UserType extends AbstractModel
         $type->save();
         $this->data['id'] = $type->id;
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::save($fieldsAry, $type->id);
-        }
+        FieldValue::save($fieldsAry, $type->id);
     }
 
     /**
@@ -157,10 +148,9 @@ class UserType extends AbstractModel
      *
      * @param \Pop\Form\Form $form
      * @param  \Pop\Config   $config
-     * @param  boolean       $isFields
      * @return void
      */
-    public function update(\Pop\Form\Form $form, $config, $isFields = false)
+    public function update(\Pop\Form\Form $form, $config)
     {
         $encOptions = $config->encryptionOptions->asArray();
 
@@ -209,20 +199,16 @@ class UserType extends AbstractModel
             }
         }
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            \Fields\Model\FieldValue::update($fieldsAry, $type->id);
-        }
+        FieldValue::update($fieldsAry, $type->id);
     }
 
     /**
      * Remove user type
      *
      * @param  array   $post
-     * @param  boolean $isFields
      * @return void
      */
-    public function remove(array $post, $isFields = false)
+    public function remove(array $post)
     {
         if (isset($post['remove_types'])) {
             foreach ($post['remove_types'] as $id) {
@@ -231,13 +217,9 @@ class UserType extends AbstractModel
                     $type->delete();
                 }
 
-                // If the Fields module is installed, and if there are fields for this model type
-                if ($isFields) {
-                    $fields = new \Fields\Table\FieldsToModels();
-                    $fields->delete(array('type_id' => $id));
-
-                    \Fields\Model\FieldValue::remove($id);
-                }
+                $fields = new \Phire\Table\FieldsToModels();
+                $fields->delete(array('type_id' => $id));
+                FieldValue::remove($id);
             }
         }
     }

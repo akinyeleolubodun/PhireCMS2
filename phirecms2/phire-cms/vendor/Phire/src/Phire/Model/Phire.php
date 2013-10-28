@@ -13,20 +13,16 @@ class Phire extends AbstractModel
      * Get content object
      *
      * @param  mixed   $id
-     * @param  boolean $isFields
      * @return \ArrayObject
      */
-    public function getContent($id, $isFields = false)
+    public function getContent($id)
     {
         $contentValues = array();
         $content = (is_numeric($id)) ? Table\Content::findById($id) : Table\Content::findBy(array('uri' => $id));
 
         if (isset($content->id)) {
             $contentValues = $content->getValues();
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($content->id));
-            }
+            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id));
         }
 
         return new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
@@ -36,20 +32,16 @@ class Phire extends AbstractModel
      * Get category object
      *
      * @param  mixed   $id
-     * @param  boolean $isFields
      * @return mixed
      */
-    public function getCategory($id, $isFields = false)
+    public function getCategory($id)
     {
         $categoryValues = array();
         $category = (is_numeric($id)) ? Table\Categories::findById($id) : Table\Categories::findBy(array('uri' => $id));
 
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $categoryValues = array_merge($categoryValues, \Fields\Model\FieldValue::getAll($category->id));
-            }
+            $categoryValues = array_merge($categoryValues, FieldValue::getAll($category->id));
         }
 
         return new \ArrayObject($categoryValues, \ArrayObject::ARRAY_AS_PROPS);
@@ -59,22 +51,16 @@ class Phire extends AbstractModel
      * Get template object
      *
      * @param  mixed   $id
-     * @param  boolean $isFields
      * @return mixed
      */
-    public function getTemplate($id, $isFields = false)
+    public function getTemplate($id)
     {
         $templateValues = array();
         $template = (is_numeric($id)) ? Table\Templates::findById($id) : Table\Templates::findBy(array('name' => $id));
 
         if (isset($template->id)) {
             $templateValues = $template->getValues();
-
-            // If the Fields module is installed, and if there are fields for this form/model
-            if ($isFields) {
-                $templateValues = array_merge($templateValues, \Fields\Model\FieldValue::getAll($template->id));
-            }
-
+            $templateValues = array_merge($templateValues, FieldValue::getAll($template->id));
             $templateValues['template'] = Template::parse($templateValues['template'], $template->id);
         }
 
@@ -101,10 +87,9 @@ class Phire extends AbstractModel
      * @param  mixed   $cat
      * @param  string  $orderBy
      * @param  int     $limit
-     * @param  boolean $isFields
      * @return array
      */
-    public function getContentByCategory($cat, $orderBy = 'id ASC', $limit = null, $isFields = false)
+    public function getContentByCategory($cat, $orderBy = 'id ASC', $limit = null)
     {
         if (!is_numeric($cat)) {
             $c = Table\Categories::findBy(array('title' => $cat));
@@ -150,11 +135,7 @@ class Phire extends AbstractModel
                 foreach ($content->rows as $cont) {
                     if (\Phire\Model\Content::isAllowed($cont)) {
                         $contentValues = (array)$cont;
-
-                        // If the Fields module is installed, and if there are fields for this form/model
-                        if ($isFields) {
-                            $contentValues = array_merge($contentValues, \Fields\Model\FieldValue::getAll($cont->id, true));
-                        }
+                        $contentValues = array_merge($contentValues, FieldValue::getAll($cont->id, true));
                         $contentAry[] = new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
@@ -169,10 +150,9 @@ class Phire extends AbstractModel
      *
      * @param  mixed   $cat
      * @param  int     $limit
-     * @param  boolean $isFields
      * @return array
      */
-    public function getChildCategories($cat, $limit = null, $isFields = false)
+    public function getChildCategories($cat, $limit = null)
     {
         if (!is_numeric($cat)) {
             $c = Table\Categories::findBy(array('title' => $cat));
@@ -187,9 +167,7 @@ class Phire extends AbstractModel
             if (isset($children->rows[0])) {
                 foreach ($children->rows as $child) {
                     $child = (array)$child;
-                    if ($isFields) {
-                        $child = array_merge($child, \Fields\Model\FieldValue::getAll($child['id'], true));
-                    }
+                    $child = array_merge($child, FieldValue::getAll($child['id'], true));
                     $categoryAry[] = new \ArrayObject($child, \ArrayObject::ARRAY_AS_PROPS);
                 }
             }

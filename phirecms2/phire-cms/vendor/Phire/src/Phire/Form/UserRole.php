@@ -20,12 +20,11 @@ class UserRole extends Form
      * @param  string      $method
      * @param  int         $rid
      * @param  \Pop\Config $config
-     * @param  boolean     $isFields
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $rid = 0, $config = null, $isFields = false)
+    public function __construct($action = null, $method = 'post', $rid = 0, $config = null)
     {
-        $this->initFieldsValues = $this->getInitFields($rid, $config, $isFields);
+        $this->initFieldsValues = $this->getInitFields($rid, $config);
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'user-role-form');
     }
@@ -73,10 +72,9 @@ class UserRole extends Form
      *
      * @param  int         $rid
      * @param  \Pop\Config $config
-     * @param  boolean     $isFields
      * @return array
      */
-    protected function getInitFields($rid = 0, $config = null, $isFields = false)
+    protected function getInitFields($rid = 0, $config = null)
     {
         // Get types for the user role
         $typesAry = array();
@@ -101,37 +99,18 @@ class UserRole extends Form
             )
         );
 
-        $fieldGroups = array();
-
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, 0, $rid);
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
-            }
-        }
-
         // Get any existing field values
         $fields2 = array();
         $fieldGroups = array();
 
-        // If the Fields module is installed, and if there are fields for this form/model
-        if ($isFields) {
-            $model = str_replace('Form', 'Model', get_class($this));
-            $newFields = \Fields\Model\Field::getByModel($model, 0, $rid);
-            if ($newFields['hasFile']) {
-                $this->hasFile = true;
-            }
-            foreach ($newFields as $key => $value) {
-                if (is_numeric($key)) {
-                    $fieldGroups[] = $value;
-                }
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, 0, $rid);
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
             }
         }
 

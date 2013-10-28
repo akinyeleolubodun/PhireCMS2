@@ -82,8 +82,7 @@ class TypesController extends AbstractController
         $this->view->set('title', 'User Types ' . $this->view->separator . ' Add');
 
         $form = new Form\UserType(
-            $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-            0, $this->project->isLoaded('Fields')
+            $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
         );
 
         // If form is submitted
@@ -97,7 +96,7 @@ class TypesController extends AbstractController
             // If form is valid, save new type
             if ($form->isValid()) {
                 $type = new Model\UserType();
-                $type->save($form, $this->project->isLoaded('Fields'));
+                $type->save($form);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -142,14 +141,13 @@ class TypesController extends AbstractController
             ));
 
             $type = new Model\UserType();
-            $type->getById($this->request->getPath(1), $this->project->isLoaded('Fields'));
+            $type->getById($this->request->getPath(1));
 
             // If type is found and valid
             if (null !== $type->type) {
                 $this->view->set('title', 'User Types ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)));
                 $form = new Form\UserType(
-                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    $this->request->getPath(1), $this->project->isLoaded('Fields')
+                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $this->request->getPath(1)
                 );
 
                 // If form is submitted
@@ -162,7 +160,7 @@ class TypesController extends AbstractController
 
                     // If form is valid, save type
                     if ($form->isValid()) {
-                        $type->update($form, $this->project->module('Phire'), $this->project->isLoaded('Fields'));
+                        $type->update($form, $this->project->module('Phire'));
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -208,7 +206,7 @@ class TypesController extends AbstractController
     {
         if ($this->request->isPost()) {
             $type = new Model\UserType();
-            $type->remove($this->request->getPost(), $this->project->isLoaded('Fields'));
+            $type->remove($this->request->getPost());
         }
 
         Response::redirect($this->request->getBasePath());

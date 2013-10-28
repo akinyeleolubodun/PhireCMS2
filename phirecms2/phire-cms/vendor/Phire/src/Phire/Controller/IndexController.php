@@ -106,7 +106,7 @@ class IndexController extends AbstractController
         $this->view->set('category_nav', $nav->getCategoryNav());
 
         $content = new Model\Content(array('acl' => $this->project->getService('acl')));
-        $content->getByUri($this->request->getRequestUri(), $this->project->isLoaded('Fields'));
+        $content->getByUri($this->request->getRequestUri());
 
         // Set breadcrumb and model object
         $this->view->set('breadcrumb', $content->getBreadcrumb())
@@ -119,7 +119,7 @@ class IndexController extends AbstractController
         } else if (isset($content->id) && ($content->allowed)) {
             $template = $this->getTemplate($content->template, 'index');
             if (strpos($template, '[{categor') !== false) {
-                $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
+                $this->view->merge(Model\Template::parseCategories($template));
             }
             $this->view->merge($content->getData());
             $this->view->setTemplate($template);
@@ -132,7 +132,7 @@ class IndexController extends AbstractController
             }
             $date = $this->isDate($uri);
             if (null !== $date) {
-                $content->getByDate($date, $this->project->isLoaded('Fields'));
+                $content->getByDate($date);
                 if (isset($content->id) && ($content->allowed)) {
                     $template = $this->getTemplate($content->template, 'index');
                     $this->view->setTemplate($template);
@@ -176,7 +176,7 @@ class IndexController extends AbstractController
         $this->view->set('category_nav', $nav->getCategoryNav());
 
         $category = new Model\Category();
-        $category->getByUri(substr($this->request->getRequestUri(), 9), $this->project->isLoaded('Fields'));
+        $category->getByUri(substr($this->request->getRequestUri(), 9));
 
         // Set up breadcrumb
         $this->view->set('breadcrumb', $category->getBreadcrumb());
@@ -185,7 +185,7 @@ class IndexController extends AbstractController
             $tmpl = Table\Templates::findBy(array('name' => 'Category'));
             $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
             if (strpos($template, '[{categor') !== false) {
-                $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
+                $this->view->merge(Model\Template::parseCategories($template));
             }
             $this->view->setTemplate($template);
             $this->view->merge($category->getData());
@@ -219,7 +219,7 @@ class IndexController extends AbstractController
                    ->set('title', 'Search');
 
         $content = new Model\Content();
-        $content->search($this->request, $this->project->isLoaded('Fields'));
+        $content->search($this->request);
         $this->view->set('phire', new Model\Phire());
 
         if (count($content->keys) == 0) {
@@ -229,7 +229,7 @@ class IndexController extends AbstractController
         $tmpl = Table\Templates::findBy(array('name' => 'Search'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
         if (strpos($template, '[{categor') !== false) {
-            $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
+            $this->view->merge(Model\Template::parseCategories($template));
         }
 
         $this->view->setTemplate($template);
@@ -307,7 +307,7 @@ class IndexController extends AbstractController
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
         $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'error') : $this->getTemplate('error.phtml', 'error');
         if (strpos($template, '[{categor') !== false) {
-            $this->view->merge(Model\Template::parseCategories($template, $this->project->isLoaded('Fields')));
+            $this->view->merge(Model\Template::parseCategories($template));
         }
 
         $this->view->setTemplate($template);
