@@ -165,7 +165,7 @@ class Content extends Form
         unset($categoryAry[0]);
 
         // If type requires a URI
-        if (($type->uri == 1) || ($type->uri == 2)) {
+        if ($type->uri == 1) {
             $fields1 = array(
                 'parent_id' => array(
                     'type'       => 'select',
@@ -345,7 +345,7 @@ class Content extends Form
         if ($type->uri) {
             $fields4['published_month'] = array(
                 'type'       => 'select',
-                'label'      => (($type->uri == 2) ? 'Start:' : 'Published:'),
+                'label'      => 'Publish / Start Date:',
                 'value'      => Element\Select::MONTHS_SHORT,
                 'marked'     => date('m')
             );
@@ -371,7 +371,7 @@ class Content extends Form
             );
             $fields4['expired_month'] = array(
                 'type'       => 'select',
-                'label'      => (($type->uri == 2) ? 'End:' : 'Expired:'),
+                'label'      => 'Expiration / End Date:',
                 'value'      => Element\Select::MONTHS_SHORT
             );
             $fields4['expired_day'] = array(
@@ -411,7 +411,7 @@ class Content extends Form
             )
         );
 
-        if (($type->uri == 1) || ($type->uri == 2)) {
+        if ($type->uri == 1) {
             $fields6['preview'] = array(
                 'type'       => 'button',
                 'value'      => 'PREVIEW',

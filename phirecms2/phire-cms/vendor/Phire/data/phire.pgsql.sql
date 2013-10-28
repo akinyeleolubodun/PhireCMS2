@@ -213,8 +213,7 @@ ALTER SEQUENCE content_type_id_seq OWNED BY "[{prefix}]content_types"."id";
 
 INSERT INTO "[{prefix}]content_types" ("name", "uri", "order") VALUES
 ('Page', 1, 1),
-('Media', 0, 2),
-('Event', 2, 3);
+('Media', 0, 2);
 
 -- --------------------------------------------------------
 
@@ -255,8 +254,8 @@ ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 --
 
 INSERT INTO "[{prefix}]content" ("type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES
-(5001, NULL, 'Welcome to Phire CMS 2.0', '/', '', 1, 0, 2),
-(5001, 6001, 'About Phire CMS 2.0', '/about-phire', 'about-phire', 1, 0, 2);
+(5001, NULL, 'Welcome', '/', '', 1, 0, 2),
+(5001, 6001, 'About', '/about', 'about', 1, 0, 2);
 
 -- --------------------------------------------------------
 

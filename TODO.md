@@ -1,9 +1,7 @@
 Phire CMS 2.0.0 TO-DO
 =====================
 
-- System Theme
-    + Create dashboard
-    + Clean up CSS
+- Finish module hook process
 - Default Theme
 - Language
 - Updates

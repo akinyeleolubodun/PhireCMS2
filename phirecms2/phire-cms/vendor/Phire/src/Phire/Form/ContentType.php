@@ -97,8 +97,7 @@ class ContentType extends Form
                 'label'  => 'URI Type:',
                 'value'  => array(
                     '1' => 'URI',
-                    '0' => 'File',
-                    '2' => 'Event'
+                    '0' => 'File'
                 ),
                 'marked' => 1
             )
