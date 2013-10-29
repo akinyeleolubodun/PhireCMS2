@@ -198,7 +198,18 @@ return array(
         ),
         // Encryption options for whichever encryption method you choose
         'encryptionOptions' => array(),
-        'history' => 5
+        'history' => 5,
+        'captcha' => array(
+            'length'      => 4,
+            'width'       => 71,
+            'height'      => 26,
+            'lineSpacing' => 5,
+            'lineColor'   => array(175, 175, 175),
+            'textColor'   => array(0, 0, 0),
+            'font'        => null,
+            'size'        => 0,
+            'rotate'      => 0
+        )
     ))
 );
 

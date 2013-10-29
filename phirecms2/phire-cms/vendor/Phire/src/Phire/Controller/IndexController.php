@@ -4,6 +4,7 @@
  */
 namespace Phire\Controller;
 
+use Pop\Filter\String;
 use Pop\Http\Response;
 use Pop\Http\Request;
 use Pop\Mvc\View;
@@ -277,6 +278,54 @@ class IndexController extends AbstractController
         );
 
         echo $feed->render(true);
+    }
+
+    /**
+     * CAPTCHA method
+     *
+     * @return void
+     */
+    public function captcha()
+    {
+        $config = $this->project->module('Phire')->captcha;
+        $sess = Session::getInstance();
+
+        if (!isset($sess->captcha) || (null !== $this->request->getQuery('reload'))) {
+            $sess->captcha = String::random($config->length, String::ALPHANUM, String::UPPER);
+        }
+
+        $spacing   = $config->lineSpacing;
+        $lineColor = $config->lineColor->asArray();
+        $textColor = $config->textColor->asArray();
+
+        $image = new \Pop\Image\Gd('captcha.gif', $config->width, $config->height);
+        $image->setStrokeColor(new \Pop\Color\Space\Rgb($lineColor[0], $lineColor[1], $lineColor[2]));
+
+        // Draw background grid
+        for ($y = $spacing; $y <= $config->height; $y += $spacing) {
+            $image->drawLine(0, $y, $config->width, $y);
+        }
+
+        for ($x = $spacing; $x <= $config->width; $x += $spacing) {
+            $image->drawLine($x, 0, $x, $config->height);
+        }
+
+        $image->setStrokeColor(new \Pop\Color\Space\Rgb($textColor[0], $textColor[1], $textColor[2]))
+              ->border(0.5);
+
+        // If no font, use system font
+        if (null === $config->font) {
+            $textX = round(($config->width - ($config->length * 10)) / 2);
+            $textY = round(($config->height - 16) / 2);
+            $image->text($sess->captcha, 5, $textX, $textY);
+        // Else, use TTF font
+        } else {
+            $textX = round(($config->width - ($config->length * ($config->size / 1.5))) / 2);
+            $textY = round($config->height - (($config->height - $config->size) / 2) + ((int)$config->rotate / 2));
+            $image->text($sess->captcha, $config->size, $textX, $textY, $config->font, (int)$config->rotate);
+        }
+
+        $image->output();
     }
 
     /**
