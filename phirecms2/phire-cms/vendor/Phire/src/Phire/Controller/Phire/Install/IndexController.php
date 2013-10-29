@@ -69,6 +69,10 @@ class IndexController extends C
 
             $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
+            if (!\Pop\Image\Gd::isInstalled() && !\Pop\Image\Imagick::isInstalled()) {
+                $install->set('error', 'Neither the GD or Imagick extensions are installed. Phire CMS 2.0 requires one of them to be installed for graphic manipulation to fully function properly. You can continue with the install, but you will not be able to upload or manipulate image graphics until one of the image extensions is installed.');
+            }
+
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),

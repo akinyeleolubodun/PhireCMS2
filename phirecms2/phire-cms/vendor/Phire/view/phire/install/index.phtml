@@ -15,6 +15,11 @@
     <div id="install-header">
         <h2><?php echo $title; ?></h2>
     </div>
+<?php if (isset($error)): ?>
+    <div id="install-error">
+        <p><?php echo $error; ?></p>
+    </div>
+<?php endif; ?>
     <div id="install">
 <?php echo $form; ?>
     </div>
