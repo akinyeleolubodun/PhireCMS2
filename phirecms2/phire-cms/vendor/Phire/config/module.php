@@ -200,6 +200,7 @@ return array(
         'encryptionOptions' => array(),
         'history' => 5,
         'captcha' => array(
+            'expire'      => 300,
             'length'      => 4,
             'width'       => 71,
             'height'      => 26,

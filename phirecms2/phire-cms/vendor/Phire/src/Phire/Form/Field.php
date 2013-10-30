@@ -282,6 +282,23 @@ class Field extends Form
                     }
                     $i++;
                 }
+            } else {
+                $fields3['model_1'] = array(
+                    'type'       => 'select',
+                    'label'      => $f2mLabel,
+                    'value'      => $models,
+                    'attributes' => array(
+                        'style'    => 'display: block; margin: 0 0 4px 0;',
+                        'onchange' => 'changeModelTypes(this);'
+                    )
+                );
+                $fields3['type_id_1'] = array(
+                    'type'       => 'select',
+                    'value'      => \Phire\Project::getModelTypes($models),
+                    'attributes' => array(
+                        'style' => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
+                    )
+                );
             }
         } else {
             $fields3['model_1'] = array(

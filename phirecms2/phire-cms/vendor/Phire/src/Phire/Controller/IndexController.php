@@ -289,9 +289,41 @@ class IndexController extends AbstractController
     {
         $config = $this->project->module('Phire')->captcha;
         $sess = Session::getInstance();
+        $expire = (null !== $config->expire) ? (int)$config->expire : 300;
+        $captchaImage = '<br /><img id="captcha-image" src="' . BASE_PATH . '/captcha" /><br /><a class="reload-link" href="#" onclick="document.getElementById(\'captcha-image\').src = \'' . BASE_PATH . '/captcha?reload=1\';return false;">Reload</a>';
 
-        if (!isset($sess->captcha) || (null !== $this->request->getQuery('reload'))) {
-            $sess->captcha = String::random($config->length, String::ALPHANUM, String::UPPER);
+        // If token does not exist, create one
+        if ((null !== $this->request->getQuery('reload')) || !isset($sess->pop_captcha)) {
+            $token = array(
+                'captcha' => $captchaImage,
+                'value'   => String::random($config->length, String::ALPHANUM, String::UPPER),
+                'expire'  => (int)$expire,
+                'start'   => time()
+            );
+            $sess->pop_captcha = serialize($token);
+        // Else, retrieve existing token
+        } else {
+            $token = unserialize($sess->pop_captcha);
+            if ($token['value'] == '') {
+                $token = array(
+                    'captcha' => $captchaImage,
+                    'value'   => String::random($config->length, String::ALPHANUM, String::UPPER),
+                    'expire'  => (int)$expire,
+                    'start'   => time()
+                );
+                $sess->pop_captcha = serialize($token);
+            // Check to see if the token has expired
+            } else  if ($token['expire'] > 0) {
+                if (($token['expire'] + $token['start']) < time()) {
+                    $token = array(
+                        'captcha' => $captchaImage,
+                        'value'   => String::random($config->length, String::ALPHANUM, String::UPPER),
+                        'expire'  => (int)$expire,
+                        'start'   => time()
+                    );
+                    $sess->pop_captcha = serialize($token);
+                }
+            }
         }
 
         $spacing   = $config->lineSpacing;
@@ -317,12 +349,12 @@ class IndexController extends AbstractController
         if (null === $config->font) {
             $textX = round(($config->width - ($config->length * 10)) / 2);
             $textY = round(($config->height - 16) / 2);
-            $image->text($sess->captcha, 5, $textX, $textY);
+            $image->text($token['value'], 5, $textX, $textY);
         // Else, use TTF font
         } else {
             $textX = round(($config->width - ($config->length * ($config->size / 1.5))) / 2);
             $textY = round($config->height - (($config->height - $config->size) / 2) + ((int)$config->rotate / 2));
-            $image->text($sess->captcha, $config->size, $textX, $textY, $config->font, (int)$config->rotate);
+            $image->text($token['value'], $config->size, $textX, $textY, $config->font, (int)$config->rotate);
         }
 
         $image->output();

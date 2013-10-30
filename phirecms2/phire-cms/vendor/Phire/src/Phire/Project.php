@@ -327,8 +327,8 @@ class Project extends P
                 $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
             }
         } else if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0])) {
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/' . $classAry[1])) {
-                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/' . $classAry[1]);
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
+                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
             }
         }
 
