@@ -498,15 +498,15 @@ class Field extends \Phire\Model\AbstractModel
      */
     public static function getModels($config = null)
     {
-        $models = array();
+        $models = array('0' => '----');
         $exclude = array();
         $override = null;
 
         // Get any exclude or override config values
         if (null !== $config) {
             $configAry = $config->asArray();
-            if (isset($configAry['exclude'])) {
-                $exclude = $configAry['exclude'];
+            if (isset($configAry['exclude_models'])) {
+                $exclude = $configAry['exclude_models'];
             }
             if (isset($configAry['override'])) {
                 $override = $configAry['override'];
@@ -546,7 +546,7 @@ class Field extends \Phire\Model\AbstractModel
                     $dFiles = $d->getFiles();
                     sort($dFiles);
                     foreach ($dFiles as $m) {
-                        if (substr($m, 0, 8) !== 'Abstract') {
+                        if ((substr($m, 0, 8) !== 'Abstract')) {
                             $model = str_replace('.php', '', $mod . '\Model\\' . $m);
                             if (!in_array($model, $exclude) && (strpos($model, 'index.html') === false)) {
                                 $models[$model] = ((strpos($model, '\\') !== false) ?
@@ -891,12 +891,12 @@ class Field extends \Phire\Model\AbstractModel
 
         // Save field to model relationships
         foreach ($_POST as $key => $value) {
-            if (strpos($key, 'model_') !== false) {
+            if ((strpos($key, 'model_new_') !== false) && ($value != '0')) {
                 $id = substr($key, (strrpos($key, '_') + 1));
                 $fieldToModel = new Table\FieldsToModels(array(
                     'field_id' => $field->id,
                     'model'    => $value,
-                    'type_id'  => (int)$_POST['type_id_' . $id]
+                    'type_id'  => (int)$_POST['type_id_new_' . $id]
                 ));
                 $fieldToModel->save();
             }
@@ -972,12 +972,13 @@ class Field extends \Phire\Model\AbstractModel
 
         // Save field to model relationships
         foreach ($_POST as $key => $value) {
-            if (substr($key, 0, 6) == 'model_') {
+            if ((substr($key, 0, 6) == 'model_') && ($value != '0')) {
+                $cur = (strpos($key, 'new_') !== false) ? 'new_' : 'cur_';
                 $id = substr($key, (strrpos($key, '_') + 1));
                 $values = array(
                     'field_id' => $field->id,
                     'model'    => $value,
-                    'type_id'  => (int)$_POST['type_id_' . $id]
+                    'type_id'  => (int)$_POST['type_id_' . $cur . $id]
                 );
 
                 if (!in_array($values, $removed)) {

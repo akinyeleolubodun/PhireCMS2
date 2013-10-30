@@ -454,21 +454,21 @@ var addModel = function() {
     modelCount++;
 
     // Add model select field
-    $('#model_' + parentModelId).clone({
-        "name" : 'model_' + modelCount,
-        "id"   : 'model_' + modelCount
-    }).appendTo($('#model_' + parentModelId).parent());
+    $('#model_new_' + parentModelId).clone({
+        "name" : 'model_new_' + modelCount,
+        "id"   : 'model_new_' + modelCount
+    }).appendTo($('#model_new_' + parentModelId).parent());
 
     // Add type_id text field
-    $('#type_id_' + parentModelId).clone({
-        "name"  : 'type_id_' + modelCount,
-        "id"    : 'type_id_' + modelCount,
+    $('#type_id_new_' + parentModelId).clone({
+        "name"  : 'type_id_new_' + modelCount,
+        "id"    : 'type_id_new_' + modelCount,
         "value" : 0
-    }).appendTo($('#type_id_' + parentModelId).parent());
+    }).appendTo($('#type_id_new_' + parentModelId).parent());
 
     // Select marked clean up
-    var sel1 = $('#model_' + parentModelId)[0];
-    var sel2 = $('#model_' + modelCount)[0];
+    var sel1 = $('#model_new_' + parentModelId)[0];
+    var sel2 = $('#model_new_' + modelCount)[0];
     var marked1 = null;
     var marked2 = null;
 
@@ -548,8 +548,9 @@ var addFields = function(flds) {
  */
 var changeModelTypes = function(sel) {
     var id = sel.id.substring(sel.id.lastIndexOf('_') + 1);
+    var cur = (sel.id.indexOf('new_') != -1) ? 'new_' : 'cur_';
     var marked = $('#' + sel.id + ' > option:selected').val();
-    var opts = $('#type_id_' + id + ' > option').toArray();
+    var opts = $('#type_id_' + cur + id + ' > option').toArray();
     var start = opts.length - 1;
 
     for (var i = start; i >= 0; i--) {
@@ -566,7 +567,7 @@ var changeModelTypes = function(sel) {
         }
     }
     for (var i = 0; i < types.length; i++) {
-        $('#type_id_' + id).append('option', {"value" : types[i][0]}, types[i][1]);
+        $('#type_id_' + cur + id).append('option', {"value" : types[i][0]}, types[i][1]);
     }
 };
 

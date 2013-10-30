@@ -164,8 +164,6 @@ class Field extends Form
             $selectStyle = 'display: block; margin: 0 0 5px 0; padding-top: 5px; padding-bottom: 5px;';
         }
 
-
-
         // Start creating initial fields
         $fields1 = array(
             'type' => array(
@@ -248,15 +246,31 @@ class Field extends Form
 
         $models = Model\Field::getModels($config);
 
-        $f2mLabel = '<a href="#" onclick="addModel(); return false;">[+]</a> Model &amp; Type:';
+        $fields3['model_new_1'] = array(
+            'type'       => 'select',
+            'label'      => '<a href="#" onclick="addModel(); return false;">[+]</a> Model &amp; Type:',
+            'value'      => $models,
+            'attributes' => array(
+                'style'    => 'display: block; margin: 0 0 4px 0;',
+                'onchange' => 'changeModelTypes(this);'
+            )
+        );
+        $fields3['type_id_new_1'] = array(
+            'type'       => 'select',
+            'value'      => \Phire\Project::getModelTypes($models),
+            'attributes' => array(
+                'style' => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
+            )
+        );
+
         if ($id != 0) {
             $fieldToModels = Table\FieldsToModels::findBy(array('field_id' => $id));
             if (isset($fieldToModels->rows[0])) {
                 $i = 1;
                 foreach ($fieldToModels->rows as $f2m) {
-                    $fields3['model_' . $i] = array(
+                    $fields3['model_cur_' . $i] = array(
                         'type'       => 'select',
-                        'label'      => ($i == 1) ? $f2mLabel : '&nbsp;',
+                        'label'      => '&nbsp;',
                         'value'      => $models,
                         'marked'     => $f2m->model,
                         'attributes' => array(
@@ -264,7 +278,7 @@ class Field extends Form
                             'onchange' => 'changeModelTypes(this);'
                         )
                     );
-                    $fields3['type_id_' . $i] = array(
+                    $fields3['type_id_cur_' . $i] = array(
                         'type'       => 'select',
                         'value'      => \Phire\Project::getModelTypes(str_replace('\\', '_', $f2m->model)),
                         'marked'     => $f2m->type_id,
@@ -272,52 +286,17 @@ class Field extends Form
                             'style'  => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
                         )
                     );
-                    if ($i > 1) {
-                        $fields3['rm_model_' . $i] = array(
-                            'type'       => 'checkbox',
-                            'value'      => array(
-                                $f2m->field_id . '_' . $f2m->model . '_' . $f2m->type_id => 'Remove?'
-                            ),
-                        );
-                    }
+                    $fields3['rm_model_cur_' . $i] = array(
+                        'type'       => 'checkbox',
+                        'value'      => array(
+                            $f2m->field_id . '_' . $f2m->model . '_' . $f2m->type_id => 'Remove?'
+                        ),
+                    );
                     $i++;
                 }
-            } else {
-                $fields3['model_1'] = array(
-                    'type'       => 'select',
-                    'label'      => $f2mLabel,
-                    'value'      => $models,
-                    'attributes' => array(
-                        'style'    => 'display: block; margin: 0 0 4px 0;',
-                        'onchange' => 'changeModelTypes(this);'
-                    )
-                );
-                $fields3['type_id_1'] = array(
-                    'type'       => 'select',
-                    'value'      => \Phire\Project::getModelTypes($models),
-                    'attributes' => array(
-                        'style' => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
-                    )
-                );
             }
-        } else {
-            $fields3['model_1'] = array(
-                'type'       => 'select',
-                'label'      => $f2mLabel,
-                'value'      => $models,
-                'attributes' => array(
-                    'style'    => 'display: block; margin: 0 0 4px 0;',
-                    'onchange' => 'changeModelTypes(this);'
-                )
-            );
-            $fields3['type_id_1'] = array(
-                'type'       => 'select',
-                'value'      => \Phire\Project::getModelTypes($models),
-                'attributes' => array(
-                    'style' => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
-                )
-            );
         }
+
         $fields4 = array();
 
         $fields4['submit'] = array(

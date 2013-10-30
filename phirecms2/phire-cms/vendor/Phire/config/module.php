@@ -193,7 +193,11 @@ return array(
         // Exclude parameter for excluding model objects from field assignment
         'exclude_models' => array(
             'Phire\Model\Extension',
+            'Phire\Model\Field',
+            'Phire\Model\FieldGroup',
+            'Phire\Model\FieldValue',
             'Phire\Model\Install',
+            'Phire\Model\Phire',
             'Phire\Model\UserSession'
         ),
         // Encryption options for whichever encryption method you choose
