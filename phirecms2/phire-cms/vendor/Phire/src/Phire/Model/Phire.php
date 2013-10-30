@@ -10,6 +10,11 @@ class Phire extends AbstractModel
 {
 
     /**
+     * Modules array
+     */
+    protected $modules = array();
+
+    /**
      * Get content object
      *
      * @param  mixed   $id
@@ -174,6 +179,52 @@ class Phire extends AbstractModel
         }
 
         return $categoryAry;
+    }
+
+    /**
+     * Lazy load a module model
+     *
+     * @param  string $name
+     * @param  string $model
+     * @return self
+     */
+    public function loadModule($name, $model)
+    {
+        $name = strtolower($name);
+        $this->modules[$name] = $model;
+        return $this;
+    }
+
+    /**
+     * Get module model
+     *
+     * @param  string $name
+     * @param  mixed  $args
+     * @throws \Exception
+     * @return mixed
+     */
+    public function module($name, $args = null)
+    {
+        $name = strtolower($name);
+        if (!isset($this->modules[$name])) {
+            throw new \Exception('That module has not been loaded.');
+        }
+
+        if (is_string($this->modules[$name])) {
+            $class = $this->modules[$name];
+            if (null !== $args) {
+                if (!is_array($args)) {
+                    $args = array($args);
+                }
+                $reflect = new \ReflectionClass($class);
+                $result = $reflect->newInstanceArgs($args);
+            } else {
+                $result = new $class;
+            }
+            $this->modules[$name] = $result;
+        }
+
+        return $this->modules[$name];
     }
 
 }
