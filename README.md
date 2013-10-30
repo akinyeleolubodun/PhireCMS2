@@ -4,7 +4,7 @@ Welcome to Phire CMS 2.0.0
 RELEASE INFORMATION
 -------------------
 #### TBD ####
-Phire CMS 2.0.0 is in early stages of development - stay tuned!
+Phire CMS 2.0.0 is getting close to a beta release! Stay tuned! (October 30, 2013)
 
 
 REQUIREMENTS
