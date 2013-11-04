@@ -287,28 +287,6 @@ INSERT INTO "[{prefix}]navigation" ("id", "navigation", "spaces", "top_node", "t
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_to_navigation"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_navigation" (
-  "content_id" integer NOT NULL,
-  "navigation_id" integer NOT NULL,
-  "order" integer NOT NULL,
-  UNIQUE ("content_id", "navigation_id"),
-  CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
-
---
--- Dumping data for table "content_to_navigation"
---
-
-INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES (6001, 7001, 1);
-INSERT INTO "[{prefix}]content_to_navigation" ("content_id", "navigation_id", "order") VALUES (6002, 7001, 2);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "categories"
 --
 
@@ -339,6 +317,29 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
   CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "navigation_tree"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]navigation_tree" (
+  "navigation_id" integer NOT NULL,
+  "content_id" integer,
+  "category_id" integer,
+  "order" integer NOT NULL,
+  UNIQUE ("navigation_id", "content_id", "category_id"),
+  CONSTRAINT "fk_navigation_id" FOREIGN KEY ("navigation_id") REFERENCES "[{prefix}]navigation" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "fk_navigation_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+--
+-- Dumping data for table "navigation_tree"
+--
+
+INSERT INTO "[{prefix}]navigation_tree" ("navigation_id", "content_id", "category_id", "order") VALUES (7001, 6001, NULL, 1);
+INSERT INTO "[{prefix}]navigation_tree" ("navigation_id", "content_id", "category_id", "order") VALUES (7001, 6002, NULL, 2);
 
 -- --------------------------------------------------------
 

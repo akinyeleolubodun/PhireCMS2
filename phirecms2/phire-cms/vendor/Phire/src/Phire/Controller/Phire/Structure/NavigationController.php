@@ -204,7 +204,7 @@ class NavigationController extends AbstractController
             $navigation->process($this->request->getPost(), $this->request->getPath(1));
         }
 
-        Response::redirect($this->request->getBasePath());
+        Response::redirect($this->request->getBasePath() . '?saved=' . time());
     }
 
     /**

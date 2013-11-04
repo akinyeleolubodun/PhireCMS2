@@ -253,7 +253,7 @@ class Content extends Form
             $navOrder = array();
             $navsMarked = array();
             if ($mid != 0) {
-                $navs = Table\ContentToNavigation::findAll(null, array('content_id' => $mid));
+                $navs = Table\NavigationTree::findAll(null, array('content_id' => $mid));
                 if (isset($navs->rows[0])) {
                     foreach ($navs->rows as $nav) {
                         $navsMarked[] = $nav->navigation_id;

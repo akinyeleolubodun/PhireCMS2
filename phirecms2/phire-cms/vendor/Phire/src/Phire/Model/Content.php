@@ -745,9 +745,9 @@ class Content extends AbstractModel
         // Save content navs
         if (isset($fields['navigation_id'])) {
             foreach ($fields['navigation_id'] as $nav) {
-                $contentToNav = new Table\ContentToNavigation(array(
-                    'content_id'    => $content->id,
+                $contentToNav = new Table\NavigationTree(array(
                     'navigation_id' => $nav,
+                    'content_id'    => $content->id,
                     'order'         => (int)$_POST['navigation_order_' . $nav]
                 ));
                 $contentToNav->save();
@@ -892,9 +892,9 @@ class Content extends AbstractModel
         $this->data['uri'] = $content->uri;
 
         // Update content navs
-        $contentToNavigation = Table\ContentToNavigation::findBy(array('content_id' => $content->id));
+        $contentToNavigation = Table\NavigationTree::findBy(array('content_id' => $content->id));
         foreach ($contentToNavigation->rows as $nav) {
-            $contentToNav = Table\ContentToNavigation::findById(array($content->id, $nav->navigation_id));
+            $contentToNav = Table\NavigationTree::findById(array($nav->navigation_id, $content->id, null));
             if (isset($contentToNav->content_id)) {
                 $contentToNav->delete();
             }
@@ -902,7 +902,7 @@ class Content extends AbstractModel
 
         if (isset($_POST['navigation_id'])) {
             foreach ($_POST['navigation_id'] as $nav) {
-                $contentToNav = new Table\ContentToNavigation(array(
+                $contentToNav = new Table\NavigationTree(array(
                     'content_id'    => $content->id,
                     'navigation_id' => $nav,
                     'order'         => (int)$_POST['navigation_order_' . $nav]

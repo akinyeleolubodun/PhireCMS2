@@ -214,6 +214,18 @@ class Category extends AbstractModel
         $category->save();
         $this->data['id'] = $category->id;
 
+        // Save category navs
+        if (isset($fields['navigation_id'])) {
+            foreach ($fields['navigation_id'] as $nav) {
+                $categoryToNav = new Table\NavigationTree(array(
+                    'navigation_id' => $nav,
+                    'category_id'    => $category->id,
+                    'order'         => (int)$_POST['navigation_order_' . $nav]
+                ));
+                $categoryToNav->save();
+            }
+        }
+
         FieldValue::save($fields, $category->id);
     }
 
@@ -258,6 +270,26 @@ class Category extends AbstractModel
 
         $this->data['id'] = $category->id;
 
+        // Update category navs
+        $categoryToNavigation = Table\NavigationTree::findBy(array('category_id' => $category->id));
+        foreach ($categoryToNavigation->rows as $nav) {
+            $categoryToNav = Table\NavigationTree::findById(array($nav->navigation_id, null, $category->id));
+            if (isset($categoryToNav->category_id)) {
+                $categoryToNav->delete();
+            }
+        }
+
+        if (isset($_POST['navigation_id'])) {
+            foreach ($_POST['navigation_id'] as $nav) {
+                $categoryToNav = new Table\NavigationTree(array(
+                    'category_id'    => $category->id,
+                    'navigation_id' => $nav,
+                    'order'         => (int)$_POST['navigation_order_' . $nav]
+                ));
+                $categoryToNav->save();
+            }
+        }
+
         FieldValue::update($fields, $category->id);
     }
 
@@ -273,6 +305,15 @@ class Category extends AbstractModel
             foreach ($post['remove_categories'] as $id) {
                 $category = Table\Categories::findById($id);
                 if (isset($category->id)) {
+                    // Delete category navs
+                    $categoryToNavigation = Table\NavigationTree::findBy(array('category_id' => $category->id));
+                    foreach ($categoryToNavigation->rows as $nav) {
+                        $categoryToNav = Table\NavigationTree::findById(array($nav->navigation_id, null, $category->id));
+                        if (isset($categoryToNav->category_id)) {
+                            $categoryToNav->delete();
+                        }
+                    }
+
                     $category->delete();
                 }
 

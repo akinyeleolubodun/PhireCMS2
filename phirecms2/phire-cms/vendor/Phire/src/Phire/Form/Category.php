@@ -204,6 +204,29 @@ class Category extends Form
             )
         );
 
+        $navOrder = array();
+        $navsMarked = array();
+        if ($cid != 0) {
+            $navs = Table\NavigationTree::findAll(null, array('category_id' => $cid));
+            if (isset($navs->rows[0])) {
+                foreach ($navs->rows as $nav) {
+                    $navsMarked[] = $nav->navigation_id;
+                    $navOrder[$nav->navigation_id] = $nav->order;
+                }
+            }
+        }
+        $navsAry = array();
+        $navs = \Phire\Table\Navigation::findAll('id ASC');
+        foreach ($navs->rows as $nav) {
+            $navsAry[$nav->id] = '<strong style="display: block; float: left; width: 90px; font-size: 0.9em;">' . $nav->navigation . '</strong> <input style="margin: -4px 0 0 10px; padding: 2px; font-size: 0.9em;" type="text" name="navigation_order_' . $nav->id . '" value="' . (isset($navOrder[$nav->id]) ? $navOrder[$nav->id] : 0) . '" size="3" />';
+        }
+        $fields3['navigation_id'] = array(
+            'type'   => 'checkbox',
+            'label'  => 'Navigation / Order:',
+            'value'  => $navsAry,
+            'marked' => $navsMarked
+        );
+
         $flds = array($fields3, $fields1);
 
         if (count($fieldGroups) > 0) {

@@ -31,32 +31,46 @@ class Navigation extends AbstractModel
 
         foreach ($navigation->rows as $nav) {
 
-            $sql = Table\ContentToNavigation::getSql();
+            $sql = Table\NavigationTree::getSql();
             $sql->select(array(
-                'content_id',
                 'navigation_id',
-                'order',
-                'id',
-                'parent_id',
-                'title',
-                'uri'
+                'content_id',
+                'category_id',
+                DB_PREFIX . 'navigation_tree.order',
+                'cont_id'        => DB_PREFIX . 'content.id',
+                'cont_parent_id' => DB_PREFIX . 'content.parent_id',
+                'cont_title'     => DB_PREFIX . 'content.title',
+                'cont_uri'       => DB_PREFIX . 'content.uri',
+                'cat_id'         => DB_PREFIX . 'categories.id',
+                'cat_parent_id'  => DB_PREFIX . 'categories.parent_id',
+                'cat_title'      => DB_PREFIX . 'categories.title',
+                'cat_uri'        => DB_PREFIX . 'categories.uri'
             ))->where()->equalTo('navigation_id', $nav->id);
             $sql->select()->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN');
-            $sql->select()->orderBy('order', 'ASC');
+            $sql->select()->join(DB_PREFIX . 'categories', array('category_id', 'id'), 'LEFT JOIN');
+            $sql->select()->orderBy(DB_PREFIX . 'navigation_tree.order', 'ASC');
 
-            $content = Table\ContentToNavigation::execute($sql->render(true));
+            $navTree = Table\NavigationTree::execute($sql->render(true));
+
             $navChildren = array();
-            $parents = array('0' => '----');
-            if (isset($content->rows[0])) {
-                foreach ($content->rows as $c) {
-                    $parents[$c->id] = $c->title;
+            $contParents = array('0' => '----');
+            $catParents = array('0' => '----');
+            if (isset($navTree->rows[0])) {
+                foreach ($navTree->rows as $c) {
+                    if (null !== $c->cont_id) {
+                        $contParents[$c->cont_id] = $c->cont_title;
+                    } else if (null !== $c->cat_id) {
+                        $catParents[$c->cat_id] = $c->cat_title;
+                    }
                 }
                 $this->trackNav = array();
-                $navChildren = $this->getContentChildren($content->rows, null, true);
+                $navChildren = $this->getTreeChildren($navTree->rows, null, true);
                 $newChildren = array();
-                foreach ($content->rows as $c) {
-                    if (!in_array($c->id, $this->trackNav)) {
-                        $newChildren = array_merge($newChildren, $this->getContentChildren($content->rows, $c->parent_id, true));
+                foreach ($navTree->rows as $c) {
+                    if ((null !== $c->cont_id) && !in_array($c->cont_id, $this->trackNav)) {
+                        $newChildren = array_merge($newChildren, $this->getTreeChildren($navTree->rows, $c->cont_parent_id, true));
+                    } else if ((null !== $c->cat_id) && !in_array($c->cat_id, $this->trackNav)) {
+                        $newChildren = array_merge($newChildren, $this->getTreeChildren($navTree->rows, $c->cat_parent_id, true));
                     }
                 }
 
@@ -64,9 +78,10 @@ class Navigation extends AbstractModel
             }
 
             $navAry[] = array(
-                'nav'      => $nav,
-                'parents'  => $parents,
-                'children' => $this->getNavChildren($navChildren, array())
+                'nav'         => $nav,
+                'contParents' => $contParents,
+                'catParents'  => $catParents,
+                'children'    => $this->getNavChildren($navChildren, array())
             );
         }
 
@@ -85,15 +100,53 @@ class Navigation extends AbstractModel
         $navs = array();
 
         foreach ($navigations->rows as $nav) {
-            $sql = Table\Content::getSql();
+
+            $sql = Table\NavigationTree::getSql();
             $sql->select(array(
-                DB_PREFIX . 'content.id',
+                'navigation_id',
+                'content_id',
+                'category_id',
+                DB_PREFIX . 'navigation_tree.order',
+                'cont_id'        => DB_PREFIX . 'content.id',
+                'cont_parent_id' => DB_PREFIX . 'content.parent_id',
+                'cont_title'     => DB_PREFIX . 'content.title',
+                'cont_uri'       => DB_PREFIX . 'content.uri',
+                'cat_id'         => DB_PREFIX . 'categories.id',
+                'cat_parent_id'  => DB_PREFIX . 'categories.parent_id',
+                'cat_title'      => DB_PREFIX . 'categories.title',
+                'cat_uri'        => DB_PREFIX . 'categories.uri',
+                DB_PREFIX . 'content.status',
                 DB_PREFIX . 'content.type_id',
-                DB_PREFIX . 'content.parent_id',
                 DB_PREFIX . 'content.template',
-                DB_PREFIX . 'content.title',
-                DB_PREFIX . 'content.uri',
-                DB_PREFIX . 'content.slug',
+                DB_PREFIX . 'content.feed',
+                DB_PREFIX . 'content.force_ssl',
+                DB_PREFIX . 'content.created',
+                DB_PREFIX . 'content.updated',
+                DB_PREFIX . 'content.published',
+                DB_PREFIX . 'content.expired',
+                DB_PREFIX . 'content.created_by',
+                DB_PREFIX . 'content.updated_by',
+                'type_uri'       => DB_PREFIX . 'content_types.uri',
+            ))->where()->equalTo('navigation_id', $nav->id);
+            $sql->select()->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'categories', array('category_id', 'id'), 'LEFT JOIN');
+            $sql->select()->join(DB_PREFIX . 'content_types', array(DB_PREFIX . 'content.type_id', 'id'), 'LEFT JOIN');
+            $sql->select()->orderBy(DB_PREFIX . 'navigation_tree.order', 'ASC');
+/*
+            $sql = Table\NavigationTree::getSql();
+            $sql->select(array(
+                'cont_id'        => DB_PREFIX . 'content.id',
+                'cont_parent_id' => DB_PREFIX . 'content.parent_id',
+                'cont_title'     => DB_PREFIX . 'content.title',
+                'cont_uri'       => DB_PREFIX . 'content.uri',
+                'cont_slug'      => DB_PREFIX . 'content.slug',
+                'cat_id'         => DB_PREFIX . 'categories.id',
+                'cat_parent_id'  => DB_PREFIX . 'categories.parent_id',
+                'cat_title'      => DB_PREFIX . 'categories.title',
+                'cat_uri'        => DB_PREFIX . 'categories.uri',
+                'cat_slug'       => DB_PREFIX . 'categories.slug',
+                DB_PREFIX . 'content.type_id',
+                DB_PREFIX . 'content.template',
                 DB_PREFIX . 'content.feed',
                 DB_PREFIX . 'content.force_ssl',
                 DB_PREFIX . 'content.status',
@@ -103,9 +156,9 @@ class Navigation extends AbstractModel
                 DB_PREFIX . 'content.expired',
                 DB_PREFIX . 'content.created_by',
                 DB_PREFIX . 'content.updated_by',
-                'type_uri' => DB_PREFIX . 'content_types.uri',
-                DB_PREFIX . 'content_to_navigation.navigation_id',
-                DB_PREFIX . 'content_to_navigation.order',
+                //'type_uri' => DB_PREFIX . 'content_types.uri',
+                DB_PREFIX . 'navigation_tree.navigation_id',
+                DB_PREFIX . 'navigation_tree.order',
             ));
 
             // If it's a draft and a user is logged in
@@ -115,11 +168,15 @@ class Navigation extends AbstractModel
                 $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', \Phire\Model\Content::PUBLISHED, 'AND');
             }
 
-            $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
-            $sql->select()->join(DB_PREFIX . 'content_to_navigation', array('id', 'content_id'), 'LEFT JOIN');
-            $sql->select()->where()->equalTo(DB_PREFIX . 'content_to_navigation.navigation_id', $nav->id, 'AND');
+*/
+            //$sql->select()->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN');
+            //$sql->select()->join(DB_PREFIX . 'categories', array('category_id', 'id'), 'LEFT JOIN');
+            //$sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
+            //$sql->select()->where()->equalTo(DB_PREFIX . 'navigation_tree.navigation_id', $nav->id);
 
-            $sql->select()->orderBy(DB_PREFIX . 'content_to_navigation.order', 'ASC');
+            //$sql->select()->orderBy(DB_PREFIX . 'navigation_tree.order', 'ASC');
+
+            //echo $sql . '<br />' . PHP_EOL;
 
             $allContent = Table\Content::execute($sql->render(true));
 
@@ -200,7 +257,8 @@ class Navigation extends AbstractModel
                 );
 
                 if (isset($allContent->rows[0])) {
-                    $navChildren = $this->getContentChildren($allContent->rows, 0);
+                    $navChildren = $this->getTreeChildren($allContent->rows, 0);
+                    //print_r($navChildren);
                     if (count($navChildren) > 0) {
                         $navName = str_replace('-', '_', String::slug($nav->navigation));
                         $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
@@ -345,20 +403,21 @@ class Navigation extends AbstractModel
             if (strpos($key, 'navigation_order_') !== false) {
                 $key = str_replace('navigation_order_', '', $key);
                 $ids = explode('_', $key);
-                $navId = $ids[0];
-                $contentId = $ids[1];
-                $content2Nav = Table\ContentToNavigation::findById(array($contentId, $navId));
-                if (isset($content2Nav->content_id)) {
-                    $content2Nav->order = (int)$value;
-                    $content2Nav->update();
+                $navId = $ids[1];
+                $cId = $ids[2];
+                $idsAry = ($ids[0] == 'cont') ? array($navId, $cId, null) : array($navId, null, $cId);
+                $c2Nav = Table\NavigationTree::findById($idsAry);
+                if (isset($c2Nav->navigation_id)) {
+                    $c2Nav->order = (int)$value;
+                    $c2Nav->update();
                 }
             } else if (strpos($key, 'parent_id_') !== false) {
-                $id = str_replace('parent_id_', '', $key);
-                $content = Table\Content::findById($id);
-                if (isset($content->id)) {
+                $ids = explode('_', $key);
+                $c = ($ids[0] == 'cont') ? Table\Content::findById($ids[3]) : Table\Categories::findById($ids[3]);
+                if (isset($c->id)) {
                     $pId = ((int)$value == 0) ? null : (int)$value;
-                    $content->parent_id = $pId;
-                    $content->update();
+                    $c->parent_id = $pId;
+                    $c->update();
                 }
             }
         }
@@ -373,28 +432,48 @@ class Navigation extends AbstractModel
     }
 
     /**
-     * Recursive method to get content children
+     * Recursive method to get nav tree children
      *
      * @param  array   $content
      * @param  int     $pid
      * @param  boolean $override
      * @return array
      */
-    protected function getContentChildren($content, $pid, $override = false)
+    protected function getTreeChildren($content, $pid, $override = false)
     {
         $children = array();
         foreach ($content as $c) {
-            if ($c->parent_id == $pid) {
-                if (!in_array($c->id, $this->trackNav)) {
-                    $this->trackNav[] = $c->id;
-                }
-                $p = (array)$c;
-                $p['uri'] = BASE_PATH . $c->uri;
-                $p['href'] = $p['uri'];
-                $p['name'] = $c->title;
+            if (null !== $c->cont_id) {
+                if ($c->cont_parent_id == $pid) {
+                    if (!in_array($c->cont_id, $this->trackNav)) {
+                        $this->trackNav[] = $c->cont_id;
+                    }
+                    $p = (array)$c;
+                    $p['uri'] = BASE_PATH . $c->cont_uri;
+                    $p['href'] = $p['uri'];
+                    $p['name'] = $c->cont_title;
 
-                if (($override) || (\Phire\Model\Content::isAllowed($c))) {
-                    $p['children'] = $this->getContentChildren($content, $c->id, $override);
+                    $cont = $c;
+                    $cont->id        = $c->cont_id;
+                    $cont->parent_id = $c->cont_parent_id;
+                    $cont->title     = $c->cont_title;
+                    $cont->uri       = $c->cont_uri;
+                    if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
+                        $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override);
+                        $children[] = $p;
+                    }
+                }
+            } else if (null !== $c->cat_id) {
+                if ($c->cat_parent_id == $pid) {
+                    if (!in_array($c->cat_id, $this->trackNav)) {
+                        $this->trackNav[] = $c->cat_id;
+                    }
+                    $p = (array)$c;
+                    $p['uri'] = BASE_PATH . '/category' . $c->cat_uri;
+                    $p['href'] = $p['uri'];
+                    $p['name'] = $c->cat_title;
+
+                    $p['children'] = $this->getTreeChildren($content, $c->cat_id, $override);
                     $children[] = $p;
                 }
             }
@@ -443,16 +522,32 @@ class Navigation extends AbstractModel
      */
     protected function getNavChildren($children, $set, $depth = 0) {
         foreach ($children as $nav) {
-            $set[] = array(
-                'title'         => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $nav['title'],
-                'content_id'    => $nav['content_id'],
-                'parent_id'     => $nav['parent_id'],
-                'navigation_id' => $nav['navigation_id'],
-                'order'         => $nav['order'],
-                'children'      => $this->children($nav['content_id'])
-            );
-            if (count($nav['children']) > 0) {
-                $set = $this->getNavChildren($nav['children'], $set, ($depth + 1));
+            if (null !== $nav['cont_id']) {
+                $set[] = array(
+                    'title'         => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $nav['cont_title'],
+                    'content_id'    => $nav['cont_id'],
+                    'parent_id'     => $nav['cont_parent_id'],
+                    'navigation_id' => $nav['navigation_id'],
+                    'order'         => $nav['order'],
+                    'children'      => $this->children($nav['cont_id']),
+                    'isCategory'    => false
+                );
+                if (count($nav['children']) > 0) {
+                    $set = $this->getNavChildren($nav['children'], $set, ($depth + 1));
+                }
+            } else if (null !== $nav['cat_id']) {
+                $set[] = array(
+                    'title'         => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $depth) . '&gt; ' . $nav['cat_title'],
+                    'content_id'    => $nav['cat_id'],
+                    'parent_id'     => $nav['cat_parent_id'],
+                    'navigation_id' => $nav['navigation_id'],
+                    'order'         => $nav['order'],
+                    'children'      => $this->children($nav['cat_id']),
+                    'isCategory'    => true
+                );
+                if (count($nav['children']) > 0) {
+                    $set = $this->getNavChildren($nav['children'], $set, ($depth + 1));
+                }
             }
         }
 

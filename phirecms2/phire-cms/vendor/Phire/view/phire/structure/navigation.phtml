@@ -2,6 +2,7 @@
         <h1><?php echo $title; ?></h1>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'add')): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation/add">+ Add</a>
+        <div id="result" style="display: none;"></div>
 <?php endif; ?>
 <?php if (isset($form)): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation">Back</a>
@@ -22,7 +23,8 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
         $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div"><strong>Parent / Order</strong><br />';
         $navDiv .= '<form action="' . BASE_PATH .'/phire/structure/navigation/process/' . $nav['nav']->id . '" method="post">';
         foreach ($nav['children'] as $c):
-            $parents = $nav['parents'];
+            $parents = ($c['isCategory']) ? $nav['catParents'] : $nav['contParents'];
+            $prefix = ($c['isCategory']) ? 'cat_' : 'cont_';
             unset($parents[$c['content_id']]);
             if (count($c['children']) > 0):
                 foreach ($c['children'] as $cId):
@@ -31,9 +33,9 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
                     endif;
                 endforeach;
             endif;
-            $select = new \Pop\Form\Element\Select('parent_id_' . $c['content_id'], $parents, $c['parent_id']);
+            $select = new \Pop\Form\Element\Select($prefix . 'parent_id_' . $c['content_id'], $parents, $c['parent_id']);
             $select->setAttributes('style', 'padding: 1px; margin: 2px 2px 2px 0; width: 180px;');
-            $navDiv .= '<div style="margin: 6px 0 6px 0;">' . $select . '<input type="text" style="margin: 0 5px 0 0; padding: 2px; font-size: 1.0em; text-align: center;" name="navigation_order_' . $c['navigation_id'] . '_' . $c['content_id'] . '" size="2" value="' . $c['order'] . '" /> ' . $c['title'] . '</div>';
+            $navDiv .= '<div style="margin: 6px 0 6px 0;">' . $select . '<input type="text" style="margin: 0 5px 0 0; padding: 2px; font-size: 1.0em; text-align: center;" name="' . $prefix . 'navigation_order_' . $c['navigation_id'] . '_' . $c['content_id'] . '" size="2" value="' . $c['order'] . '" /> ' . $c['title'] . '</div>';
         endforeach;
         $navDiv .= '<input style="float: left;" class="small-save-btn" type="submit" name="submit" value="SAVE" /> <input style="float: left; margin: 3px 5px 0 15px;" type="checkbox" name="rm_nav" value="' . $nav['nav']->id . '" /> <span style="float: left; margin: 4px 0 0 0;">Remove?</span></form></div>';
     endif;
