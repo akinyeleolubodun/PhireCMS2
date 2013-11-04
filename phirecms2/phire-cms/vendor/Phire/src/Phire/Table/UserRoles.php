@@ -68,42 +68,44 @@ class UserRoles extends Record
             'resources' => array()
         );
 
-        $roles = self::findAll('id ASC', array('type_id' => $typeId));
-        if (isset($roles->rows[0])) {
-            foreach ($roles->rows as $role) {
-                $r = \Pop\Auth\Role::factory($role->name);
-                $results['resources'][$role->name] = array(
-                    'allow' => array(),
-                    'deny'  => array()
-                );
+        if (null !== $typeId) {
+            $roles = self::findAll('id ASC', array('type_id' => $typeId));
+            if (isset($roles->rows[0])) {
+                foreach ($roles->rows as $role) {
+                    $r = \Pop\Auth\Role::factory($role->name);
+                    $results['resources'][$role->name] = array(
+                        'allow' => array(),
+                        'deny'  => array()
+                    );
 
-                $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
+                    $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
 
-                if (isset($permissions->rows[0])) {
-                    foreach ($permissions->rows as $permission) {
-                        if (!isset($results['resources'][$role->name]['allow'][$permission->resource])) {
-                            if ($permission->allow) {
-                                $results['resources'][$role->name]['allow'][$permission->resource] = array();
-                            } else {
-                                if (!isset($results['resources'][$role->name]['deny'][$permission->resource])) {
-                                    $results['resources'][$role->name]['deny'][$permission->resource] = array();
+                    if (isset($permissions->rows[0])) {
+                        foreach ($permissions->rows as $permission) {
+                            if (!isset($results['resources'][$role->name]['allow'][$permission->resource])) {
+                                if ($permission->allow) {
+                                    $results['resources'][$role->name]['allow'][$permission->resource] = array();
+                                } else {
+                                    if (!isset($results['resources'][$role->name]['deny'][$permission->resource])) {
+                                        $results['resources'][$role->name]['deny'][$permission->resource] = array();
+                                    }
                                 }
                             }
-                        }
-                        if ($permission->permission != '') {
-                            $r->addPermission($permission->permission);
-                            if ($permission->resource != '') {
-                                if ($permission->allow) {
-                                    $results['resources'][$role->name]['allow'][$permission->resource][] = $permission->permission;
-                                } else {
-                                    $results['resources'][$role->name]['deny'][$permission->resource][] = $permission->permission;
+                            if ($permission->permission != '') {
+                                $r->addPermission($permission->permission);
+                                if ($permission->resource != '') {
+                                    if ($permission->allow) {
+                                        $results['resources'][$role->name]['allow'][$permission->resource][] = $permission->permission;
+                                    } else {
+                                        $results['resources'][$role->name]['deny'][$permission->resource][] = $permission->permission;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                $results['roles'][] = $r;
+                    $results['roles'][] = $r;
+                }
             }
         }
 
