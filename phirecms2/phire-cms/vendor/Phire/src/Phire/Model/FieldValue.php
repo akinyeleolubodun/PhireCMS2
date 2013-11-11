@@ -322,8 +322,6 @@ class FieldValue extends \Phire\Model\AbstractModel
                         if (isset($field->field_id)) {
                             if (!empty($realValue) && ($realValue != '[Encrypted]')) {
                                 $realValue = self::encrypt($realValue, $f->encryption, $encOptions);
-                            } else {
-                                $realValue = unserialize($field->value);
                             }
 
                             // If history tracking is available for this field, update history
