@@ -102,9 +102,13 @@ class Project extends P
                                         $act = null;
                                         $priority = 0;
                                         if (is_array($action)) {
-                                            if (isset($action['action'])) {
-                                                $act = $action['action'];
+                                            if (!isset($action['action'])) {
+                                                throw new Exception(
+                                                    "The 'action' parameter is not set for the '" . $event .
+                                                    "' event within the " . $d . " module configuration file."
+                                                );
                                             }
+                                            $act = $action['action'];
                                             $priority = (isset($action['priority']) ? $action['priority'] : 0);
                                         } else {
                                             $act = $action;
@@ -619,7 +623,6 @@ class Project extends P
         } else {
             return (count($errorMsgs) == 0) ? true : false;
         }
-
     }
 
 }
