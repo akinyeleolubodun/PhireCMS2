@@ -68,17 +68,23 @@ class AbstractController extends \Pop\Mvc\Controller
                 $tree = $this->view->phireNav->getTree();
 
                 // If the sub-children haven't been added yet
-                if (isset($tree[0]) && isset($tree[0]['children']) && isset($tree[0]['children'][0]) && !isset($tree[0]['children'][0]['children'])) {
+                if (isset($tree[0])) {
                     // And any content types to the main nav
                     $contentTypes = \Phire\Table\ContentTypes::findAll('order ASC');
                     if (isset($contentTypes->rows)) {
                         foreach ($contentTypes->rows as $type) {
+                            $perm = 'index_' . $type->id;
+                            if ($this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index') &&
+                                $this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $type->id)) {
+                                $perm = 'index';
+                            }
+
                             $this->view->phireNav->addLeaf('Content', array(
                                 'name'     => $type->name,
                                 'href'     => 'index/' . $type->id,
                                 'acl' => array(
                                     'resource'   => 'Phire\Controller\Phire\Content\IndexController',
-                                    'permission' => 'index_' . $type->id
+                                    'permission' => $perm
                                 )
                             ), 1);
                         }
@@ -88,12 +94,18 @@ class AbstractController extends \Pop\Mvc\Controller
                     $userTypes = \Phire\Table\UserTypes::findAll('id ASC');
                     if (isset($userTypes->rows)) {
                         foreach ($userTypes->rows as $type) {
+                            $perm = 'index_' . $type->id;
+                            if ($this->view->acl->isAuth('Phire\Controller\Phire\User\IndexController', 'index') &&
+                                $this->view->acl->isAuth('Phire\Controller\Phire\User\IndexController', 'index_' . $type->id)) {
+                                $perm = 'index';
+                            }
+
                             $this->view->phireNav->addLeaf('Users', array(
                                 'name'     => ucwords(str_replace('-', ' ', $type->type)),
                                 'href'     => 'index/' . $type->id,
                                 'acl' => array(
                                     'resource'   => 'Phire\Controller\Phire\User\IndexController',
-                                    'permission' => 'index_' . $type->id
+                                    'permission' => $perm
                                 )
                             ), 1);
                         }
@@ -103,7 +115,6 @@ class AbstractController extends \Pop\Mvc\Controller
                 $this->view->phireNav->rebuild();
                 $this->view->phireNav->nav()->setIndent('    ');
             }
-
         }
 
         if (isset($this->view->assets)) {
