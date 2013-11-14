@@ -276,7 +276,7 @@ class IndexController extends AbstractController
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
-                    0, false, 0
+                    0, false, 0, $this->project->getService('acl')
                 );
 
                 // If the form is submitted
