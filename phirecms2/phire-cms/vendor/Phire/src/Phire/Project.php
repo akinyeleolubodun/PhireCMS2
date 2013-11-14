@@ -30,6 +30,10 @@ class Project extends P
      */
     public function load($autoloader)
     {
+        // Load Phire any overriding Phire configuration
+        $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire');
+
+        // Check if Phire is installed
         self::isInstalled();
 
         $sess = Session::getInstance();
@@ -46,8 +50,6 @@ class Project extends P
             $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
         );
 
-        // Load Phire any overriding Phire configuration
-        $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire');
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
             $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
             if (isset($phireCfg['Phire'])) {
