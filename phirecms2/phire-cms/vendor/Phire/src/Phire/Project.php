@@ -181,7 +181,7 @@ class Project extends P
         }
 
         // If the path is the install path
-        if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') !== false)) {
+        if (($_SERVER['REQUEST_URI'] == BASE_PATH . APP_URI . '/install') || (strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install/') !== false)) {
             parent::run();
         // Else, load any user routes and initialize the ACL object
         } else {
