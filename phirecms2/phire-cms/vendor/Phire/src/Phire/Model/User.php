@@ -470,7 +470,7 @@ class User extends AbstractModel
             $verified = (isset($fields['verified'])) ? $fields['verified'] : $user->verified;
             $failedAttempts = (isset($fields['failed_attempts'])) ? $fields['failed_attempts'] : $user->failed_attempts;
 
-            $first = ((null === $user->role_id) && (null === $user->logins));
+            $first = ((null === $user->role_id) && (null === $user->logins) && ($type->login));
 
             // Save the user's updated data
             $user->role_id         = $roleId;
