@@ -34,9 +34,11 @@ class Field extends \Phire\Model\AbstractModel
             DB_PREFIX . 'fields_to_models.field_id',
             DB_PREFIX . 'fields_to_models.model',
             DB_PREFIX . 'fields_to_models.type_id',
+            DB_PREFIX . 'fields.label',
             'field_order' => DB_PREFIX . 'fields.order',
             DB_PREFIX . 'fields_to_groups.group_id',
             'group_order' => DB_PREFIX . 'field_groups.order',
+            DB_PREFIX . 'field_groups.dynamic',
         ))->join(DB_PREFIX . 'fields', array('field_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'fields_to_groups', array('field_id', 'field_id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'field_groups', array(DB_PREFIX . 'fields_to_groups.group_id', 'id'), 'LEFT JOIN');
@@ -238,7 +240,7 @@ class Field extends \Phire\Model\AbstractModel
                                     } else {
                                         $curFld['value'] = $v;
                                     }
-                                    if (isset($curFld['label'])) {
+                                    if (isset($curFld['label']) && ($dynamic)) {
                                         $curFld['label'] = '&nbsp;';
                                     }
                                     if (!isset($curFields[$field->id])) {
@@ -254,7 +256,7 @@ class Field extends \Phire\Model\AbstractModel
                                 } else {
                                     $curFld['value'] = $val;
                                 }
-                                if (isset($curFld['label'])) {
+                                if (isset($curFld['label']) && ($dynamic)) {
                                     $curFld['label'] = '&nbsp;';
                                 }
                                 if (!isset($curFields[$field->id])) {
