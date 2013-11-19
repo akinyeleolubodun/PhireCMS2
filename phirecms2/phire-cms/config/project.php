@@ -1,4 +1,7 @@
 <?php
+/**
+ * Phire CMS 2.0 Project Config File
+ */
 
 $config = array(
     'base'    => realpath($_SERVER['DOCUMENT_ROOT'] . APP_PATH),

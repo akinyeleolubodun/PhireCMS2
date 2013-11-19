@@ -29,6 +29,5 @@ class ContentTypes extends Record
      */
     protected $prefix = DB_PREFIX;
 
-
 }
 

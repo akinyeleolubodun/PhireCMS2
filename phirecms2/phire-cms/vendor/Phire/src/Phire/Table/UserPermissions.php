@@ -29,6 +29,5 @@ class UserPermissions extends Record
      */
     protected $prefix = DB_PREFIX;
 
-
 }
 

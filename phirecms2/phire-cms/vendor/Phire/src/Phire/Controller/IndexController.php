@@ -109,7 +109,7 @@ class IndexController extends AbstractController
         $content = new Model\Content(array('acl' => $this->project->getService('acl')));
         $content->getByUri($this->request->getRequestUri());
 
-        // Set breadcrumb and model object
+        // Set breadcrumb and Phire model object
         $this->view->set('breadcrumb', $content->getBreadcrumb())
                    ->set('phire', new Model\Phire());
 

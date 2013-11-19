@@ -549,6 +549,58 @@ class User extends AbstractModel
     }
 
     /**
+     * Verify user
+     *
+     * @return void
+     */
+    public function verify()
+    {
+        $user = Table\Users::findById($this->id);
+        if (isset($user->id)) {
+            $user->verified = 1;
+            $user->update();
+        }
+    }
+
+    /**
+     * Unsubscribe a user
+     *
+     * @param \Pop\Form\Form $form
+     * @return void
+     */
+    public function unsubscribe(\Pop\Form\Form $form)
+    {
+        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
+        $user = Table\Users::findBy(array('email' => $form->email));
+
+        if (isset($user->id)) {
+            // Get the base path and domain
+            $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+
+            // Set the recipient
+            $rcpt = array(
+                'name'   => $user->username,
+                'email'  => $user->email,
+                'domain' => $domain
+            );
+
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+                $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/unsubscribe.txt');
+            } else {
+                $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/unsubscribe.txt');
+            }
+
+            // Send email verification
+            $mail = new Mail($domain . ' - Unsubscribed', $rcpt);
+            $mail->from('noreply@' . $domain);
+            $mail->setText($mailTmpl);
+            $mail->send();
+
+            $user->delete();
+        }
+    }
+
+    /**
      * Remove user
      *
      * @param  array   $post
@@ -638,20 +690,6 @@ class User extends AbstractModel
     }
 
     /**
-     * Verify user
-     *
-     * @return void
-     */
-    public function verify()
-    {
-        $user = Table\Users::findById($this->id);
-        if (isset($user->id)) {
-            $user->verified = 1;
-            $user->update();
-        }
-    }
-
-    /**
      * Send password reminder to user
      *
      * @param  string      $email
@@ -707,44 +745,6 @@ class User extends AbstractModel
             $mail->from('noreply@' . $domain);
             $mail->setText($mailTmpl);
             $mail->send();
-        }
-    }
-
-    /**
-     * Unsubscribe a user
-     *
-     * @param \Pop\Form\Form $form
-     * @return void
-     */
-    public function unsubscribe(\Pop\Form\Form $form)
-    {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
-        $user = Table\Users::findBy(array('email' => $form->email));
-
-        if (isset($user->id)) {
-            // Get the base path and domain
-            $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-
-            // Set the recipient
-            $rcpt = array(
-                'name'   => $user->username,
-                'email'  => $user->email,
-                'domain' => $domain
-            );
-
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
-                $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/unsubscribe.txt');
-            } else {
-                $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/unsubscribe.txt');
-            }
-
-            // Send email verification
-            $mail = new Mail($domain . ' - Unsubscribed', $rcpt);
-            $mail->from('noreply@' . $domain);
-            $mail->setText($mailTmpl);
-            $mail->send();
-
-            $user->delete();
         }
     }
 

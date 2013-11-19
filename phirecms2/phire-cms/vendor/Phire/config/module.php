@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Phire CMS 2.0 Module Config File
+ */
 return array(
     'Phire' => new \Pop\Config(array(
         'base'   => realpath(__DIR__ . '/../'),
@@ -8,6 +10,7 @@ return array(
         'src'    => realpath(__DIR__ . '/../src'),
         //'view'   => realpath(__DIR__ . '/../view'),
         'dev'    => true,
+        // Main Phire Routes
         'routes' => array(
             '/' => 'Phire\Controller\IndexController',
             APP_URI => array(
@@ -38,6 +41,7 @@ return array(
                 '/config'   => 'Phire\Controller\Phire\ConfigController'
             )
         ),
+        // Main Phire Navigation
         'nav'    => array(
             array(
                 'name' => 'Content',
@@ -202,7 +206,9 @@ return array(
         ),
         // Encryption options for whichever encryption method you choose
         'encryptionOptions' => array(),
+        // Amount of revision history to store
         'history' => 5,
+        // CAPTCHA settings
         'captcha' => array(
             'expire'      => 300,
             'length'      => 4,

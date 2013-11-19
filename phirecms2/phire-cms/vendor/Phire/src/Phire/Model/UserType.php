@@ -152,8 +152,6 @@ class UserType extends AbstractModel
      */
     public function update(\Pop\Form\Form $form, $config)
     {
-        $encOptions = $config->encryptionOptions->asArray();
-
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 

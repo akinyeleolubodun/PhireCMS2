@@ -132,52 +132,6 @@ class Navigation extends AbstractModel
             $sql->select()->join(DB_PREFIX . 'categories', array('category_id', 'id'), 'LEFT JOIN');
             $sql->select()->join(DB_PREFIX . 'content_types', array(DB_PREFIX . 'content.type_id', 'id'), 'LEFT JOIN');
             $sql->select()->orderBy(DB_PREFIX . 'navigation_tree.order', 'ASC');
-/*
-            $sql = Table\NavigationTree::getSql();
-            $sql->select(array(
-                'cont_id'        => DB_PREFIX . 'content.id',
-                'cont_parent_id' => DB_PREFIX . 'content.parent_id',
-                'cont_title'     => DB_PREFIX . 'content.title',
-                'cont_uri'       => DB_PREFIX . 'content.uri',
-                'cont_slug'      => DB_PREFIX . 'content.slug',
-                'cat_id'         => DB_PREFIX . 'categories.id',
-                'cat_parent_id'  => DB_PREFIX . 'categories.parent_id',
-                'cat_title'      => DB_PREFIX . 'categories.title',
-                'cat_uri'        => DB_PREFIX . 'categories.uri',
-                'cat_slug'       => DB_PREFIX . 'categories.slug',
-                DB_PREFIX . 'content.type_id',
-                DB_PREFIX . 'content.template',
-                DB_PREFIX . 'content.feed',
-                DB_PREFIX . 'content.force_ssl',
-                DB_PREFIX . 'content.status',
-                DB_PREFIX . 'content.created',
-                DB_PREFIX . 'content.updated',
-                DB_PREFIX . 'content.published',
-                DB_PREFIX . 'content.expired',
-                DB_PREFIX . 'content.created_by',
-                DB_PREFIX . 'content.updated_by',
-                //'type_uri' => DB_PREFIX . 'content_types.uri',
-                DB_PREFIX . 'navigation_tree.navigation_id',
-                DB_PREFIX . 'navigation_tree.order',
-            ));
-
-            // If it's a draft and a user is logged in
-            if (isset($this->data['acl']) && ($this->data['acl']->isAuth())) {
-                $sql->select()->where()->notEqualTo(DB_PREFIX . 'content.status', 0, 'AND');
-            } else {
-                $sql->select()->where()->equalTo(DB_PREFIX . 'content.status', \Phire\Model\Content::PUBLISHED, 'AND');
-            }
-
-*/
-            //$sql->select()->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN');
-            //$sql->select()->join(DB_PREFIX . 'categories', array('category_id', 'id'), 'LEFT JOIN');
-            //$sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
-            //$sql->select()->where()->equalTo(DB_PREFIX . 'navigation_tree.navigation_id', $nav->id);
-
-            //$sql->select()->orderBy(DB_PREFIX . 'navigation_tree.order', 'ASC');
-
-            //echo $sql . '<br />' . PHP_EOL;
-
             $allContent = Table\Content::execute($sql->render(true));
 
             if (isset($allContent->rows[0])) {

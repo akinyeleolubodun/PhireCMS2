@@ -29,6 +29,5 @@ class ContentToRoles extends Record
      */
     protected $prefix = DB_PREFIX;
 
-
 }
 

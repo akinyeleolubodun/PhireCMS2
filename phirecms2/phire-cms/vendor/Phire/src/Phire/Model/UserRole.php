@@ -26,8 +26,8 @@ class UserRole extends AbstractModel
         // Get any exclude or override config values
         if (null !== $config) {
             $configAry = $config->asArray();
-            if (isset($configAry['exclude'])) {
-                $exclude = $configAry['exclude'];
+            if (isset($configAry['exclude_controllers'])) {
+                $exclude = $configAry['exclude_controllers'];
             }
             if (isset($configAry['override'])) {
                 $override = $configAry['override'];
