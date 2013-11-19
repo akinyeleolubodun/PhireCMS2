@@ -30,6 +30,8 @@ class Project extends P
      */
     public function load($autoloader)
     {
+        $events = array();
+
         // Load Phire any overriding Phire configuration
         $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire');
 
@@ -50,6 +52,7 @@ class Project extends P
             $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
         );
 
+        // Check for overriding Phire config
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
             $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
             if (isset($phireCfg['Phire'])) {
@@ -60,6 +63,11 @@ class Project extends P
                     $phireCfg['Phire']->nav = new \Pop\Config($nav);
                 }
                 $this->module('Phire')->merge($phireCfg['Phire']);
+
+                // Get any Phire event
+                if (null !== $this->module('Phire')->events) {
+                    $events['Phire'] = $this->module('Phire')->events->asArray();
+                }
             }
         };
 
@@ -97,32 +105,38 @@ class Project extends P
                                     $autoloader->register($d, $moduleCfg[$d]->src);
                                 }
 
-                                // Attach any event hooks
+                                // Get any module events
                                 if (null !== $moduleCfg[$d]->events) {
-                                    $events = $moduleCfg[$d]->events->asArray();
-                                    foreach ($events as $event => $action) {
-                                        $act = null;
-                                        $priority = 0;
-                                        if (is_array($action)) {
-                                            if (!isset($action['action'])) {
-                                                throw new Exception(
-                                                    "The 'action' parameter is not set for the '" . $event .
-                                                    "' event within the " . $d . " module configuration file."
-                                                );
-                                            }
-                                            $act = $action['action'];
-                                            $priority = (isset($action['priority']) ? $action['priority'] : 0);
-                                        } else {
-                                            $act = $action;
-                                        }
-                                        if (null !== $act) {
-                                            $this->attachEvent($event, $act, $priority);
-                                        }
-                                    }
+                                    $events[$d] = $this->module('Phire')->events->asArray();
                                 }
                                 $this->loadModule($moduleCfg);
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        // Attach any event hooks
+        if (count($events) > 0) {
+            foreach ($events as $module => $evts) {
+                foreach ($evts as $event => $action) {
+                    $act = null;
+                    $priority = 0;
+                    if (is_array($action)) {
+                        if (!isset($action['action'])) {
+                            throw new Exception(
+                                "The 'action' parameter is not set for the '" . $event .
+                                "' event within the " . $module . " module configuration file."
+                            );
+                        }
+                        $act = $action['action'];
+                        $priority = (isset($action['priority']) ? $action['priority'] : 0);
+                    } else {
+                        $act = $action;
+                    }
+                    if (null !== $act) {
+                        $this->attachEvent($event, $act, $priority);
                     }
                 }
             }
