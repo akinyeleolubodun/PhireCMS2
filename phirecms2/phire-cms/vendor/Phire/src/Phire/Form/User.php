@@ -283,7 +283,7 @@ class User extends Form
         $fields4['submit'] = array(
             'type'  => 'submit',
             'label' => '&nbsp;',
-            'value' => 'SAVE',
+            'value' => (strpos($action, '/register') !== false) ? 'REGISTER' : 'SAVE',
             'attributes' => array(
                 'class' => ((strpos($action, '/install/user') !== false) || ($profile)) ? 'update-btn' : 'save-btn'
             )
