@@ -6,7 +6,6 @@ namespace Phire\Controller\Phire\Extensions;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
-use Pop\Mvc\View;
 use Pop\Project\Project;
 use Pop\Web\Session;
 use Phire\Controller\AbstractController;

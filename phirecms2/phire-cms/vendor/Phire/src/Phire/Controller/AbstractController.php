@@ -4,7 +4,6 @@
  */
 namespace Phire\Controller;
 
-use Pop\Mvc\Controller;
 use Pop\Mvc\View;
 
 class AbstractController extends \Pop\Mvc\Controller

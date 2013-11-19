@@ -107,7 +107,7 @@ class Project extends P
 
                                 // Get any module events
                                 if (null !== $moduleCfg[$d]->events) {
-                                    $events[$d] = $this->module('Phire')->events->asArray();
+                                    $events[$d] = $moduleCfg[$d]->events->asArray();
                                 }
                                 $this->loadModule($moduleCfg);
                             }
