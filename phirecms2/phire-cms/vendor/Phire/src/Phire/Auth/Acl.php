@@ -94,8 +94,8 @@ class Acl extends A
                         $auth = true;
                     } else {
                         $auth = false;
-                        $uri = ($this->basePath == '') ? '/' : $this->basePath;
-                        \Pop\Http\Response::redirect($uri);
+                        //$uri = ($this->basePath == '') ? '/' : $this->basePath;
+                        //\Pop\Http\Response::redirect($uri);
                     }
                 // Else, validate the session and record the action
                 } else {
