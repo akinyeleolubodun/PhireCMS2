@@ -27,7 +27,7 @@ use Pop\Dom\Child;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.6.0
+ * @version    1.7.0
  */
 class Ups extends AbstractAdapter
 {
@@ -176,7 +176,7 @@ class Ups extends AbstractAdapter
     /**
      * Constructor
      *
-     * Method to instantiate an FedEx shipping adapter object
+     * Method to instantiate an UPS shipping adapter object
      *
      * @param  string  $accessKey
      * @param  string  $userId
@@ -292,7 +292,7 @@ class Ups extends AbstractAdapter
         foreach ($shipTo as $key => $value) {
             if (stripos($key, 'company') !== false) {
                 $this->shipTo['CompanyName'] = $value;
-            } else if ((strtolower($key) == 'addressline1') || (strtolower($key) == 'address1')) {
+            } else if ((strtolower($key) == 'addressline1') || (strtolower($key) == 'address1') || (strtolower($key) == 'address')) {
                 $this->shipTo['AddressLine1'] = $value;
             } else if ((strtolower($key) == 'addressline2') || (strtolower($key) == 'address2')) {
                 $this->shipTo['AddressLine2'] = $value;
@@ -384,22 +384,21 @@ class Ups extends AbstractAdapter
     public function send($verifyPeer = true)
     {
         $this->buildRateRequest();
-        $request = $this->accessRequest . $this->rateRequest;
+
         $options = array(
-            CURLOPT_URL            => $this->url,
-            CURLOPT_POST           => true,
-            CURLOPT_POSTFIELDS     => $request,
-            CURLOPT_HEADER         => false,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_URL        => $this->url,
+            CURLOPT_POST       => true,
+            CURLOPT_POSTFIELDS => $this->accessRequest . $this->rateRequest,
+            CURLOPT_HEADER     => false
         );
 
         if (!$verifyPeer) {
             $options[CURLOPT_SSL_VERIFYPEER] = false;
         }
 
-        $curl = new Curl($options);
-        $response = $curl->execute();
-        $this->response = simplexml_load_string($response);
+        $curl = new Curl($this->url, $options);
+        $curl->execute();
+        $this->response = simplexml_load_string($curl->getBody());
 
         $this->responseCode = (int)$this->response->Response->ResponseStatusCode;
 
@@ -518,9 +517,9 @@ class Ups extends AbstractAdapter
             $unit = new Child('UnitOfMeasurement');
             $unit->addChild(new Child('Code', $this->dimensions['UnitOfMeasurement']));
             $dimensions->addChild($unit)
-                ->addChild(new Child('Length', $this->dimensions['Length']))
-                ->addChild(new Child('Width', $this->dimensions['Width']))
-                ->addChild(new Child('Height', $this->dimensions['Height']));
+                       ->addChild(new Child('Length', $this->dimensions['Length']))
+                       ->addChild(new Child('Width', $this->dimensions['Width']))
+                       ->addChild(new Child('Height', $this->dimensions['Height']));
             $package->addChild($dimensions);
         }
 

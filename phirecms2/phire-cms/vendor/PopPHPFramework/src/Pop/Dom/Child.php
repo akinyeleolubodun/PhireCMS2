@@ -23,7 +23,7 @@ namespace Pop\Dom;
  * @author     Nick Sagona, III <nick@popphp.org>
  * @copyright  Copyright (c) 2009-2013 Moc 10 Media, LLC. (http://www.moc10media.com)
  * @license    http://www.popphp.org/license     New BSD License
- * @version    1.6.0
+ * @version    1.7.0
  */
 class Child extends AbstractDom
 {
@@ -130,7 +130,7 @@ class Child extends AbstractDom
      */
     public function setNodeName($name)
     {
-        $this->nodeName = strtolower($name);
+        $this->nodeName = $name;
         return $this;
     }
 
@@ -157,10 +157,10 @@ class Child extends AbstractDom
     {
         if (is_array($a)) {
             foreach ($a as $name => $value) {
-                $this->attributes[strtolower($name)] = $value;
+                $this->attributes[$name] = $value;
             }
         } else {
-            $this->attributes[strtolower($a)] = $v;
+            $this->attributes[$a] = $v;
         }
         return $this;
     }
