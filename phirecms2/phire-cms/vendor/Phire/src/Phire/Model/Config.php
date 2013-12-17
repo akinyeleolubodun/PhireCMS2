@@ -391,10 +391,10 @@ class Config extends AbstractModel
 
         if (array_key_exists($datetime, $dateTimeOptions)) {
             $dateTimeValue = $datetime;
-            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="customDatetime(this.value);" size="10" value="" /> <span id="custom-datetime"></span>';
+            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="phire.customDatetime(this.value);" size="10" value="" /> <span id="custom-datetime"></span>';
         } else {
             $dateTimeValue = 'custom';
-            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="customDatetime(this.value);" size="10" value="' . $datetime . '" /> <span id="custom-datetime">(' . date($datetime) . ')</span>';
+            $dateTimeOptions['custom'] = '<input type="text" style="padding: 2px;" name="custom_datetime" onkeyup="phire.customDatetime(this.value);" size="10" value="' . $datetime . '" /> <span id="custom-datetime">(' . date($datetime) . ')</span>';
         }
 
         $datetime = new Element\Radio('datetime_format', $dateTimeOptions, $dateTimeValue, '                    ');

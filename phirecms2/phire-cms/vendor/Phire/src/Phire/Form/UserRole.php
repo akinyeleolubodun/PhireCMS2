@@ -152,7 +152,7 @@ class UserRole extends Form
                     'value'      => $classes,
                     'marked'     => $permission->resource,
                     'attributes' => array(
-                        'onchange' => 'changePermissions(this);',
+                        'onchange' => 'phire.changePermissions(this);',
                         'style' => 'display: block;'
                     ),
                 );
@@ -189,9 +189,9 @@ class UserRole extends Form
         $fields3 = array(
             'resource_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<span class="label-pad-2"><a href="#" onclick="addResource(); return false;">[+]</a> Resource:</span><span class="label-pad-2">Action:</span><span class="label-pad-2">Type:</span><span class="label-pad-2">Permission:</span>',
+                'label'      => '<span class="label-pad-2"><a href="#" onclick="phire.addResource(); return false;">[+]</a> Resource:</span><span class="label-pad-2">Action:</span><span class="label-pad-2">Type:</span><span class="label-pad-2">Permission:</span>',
                 'attributes' => array(
-                    'onchange' => 'changePermissions(this);',
+                    'onchange' => 'phire.changePermissions(this);',
                     'style' => 'display: block; margin: 3px 0 3px 0;'
                 ),
                 'value'      => $classes
@@ -228,7 +228,7 @@ class UserRole extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#user-role-form', true);",
+                    'onclick' => "return phire.updateForm('#user-role-form', true);",
                     'class'   => 'update-btn'
                 )
             ),

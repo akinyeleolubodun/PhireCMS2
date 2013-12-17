@@ -79,7 +79,7 @@ class Field extends \Phire\Model\AbstractModel
                 // Get field label
                 if ($field->label != '') {
                     if (isset($groupAry[0]) && ($groupAry[0] == $field->id) && ($isDynamic)) {
-                        $fld['label'] = '<a href="#" onclick="addFields([' . implode(', ', $groupAry) . ']); return false;">[+]</a> ' . $field->label;
+                        $fld['label'] = '<a href="#" onclick="phire.addFields([' . implode(', ', $groupAry) . ']); return false;">[+]</a> ' . $field->label;
                     } else {
                         $fld['label'] = $field->label;
                     }
@@ -298,7 +298,7 @@ class Field extends \Phire\Model\AbstractModel
                             'value'      => $history,
                             'marked'     => 0,
                             'attributes' => array(
-                                'onchange' => "changeHistory(this, '" . BASE_PATH . APP_URI . "');"
+                                'onchange' => "phire.changeHistory(this, '" . BASE_PATH . APP_URI . "');"
                             )
                         );
                     }
@@ -320,7 +320,7 @@ class Field extends \Phire\Model\AbstractModel
                             'value'      => $editors,
                             'marked'     => $field->editor,
                             'attributes' => array(
-                                'onchange' => "changeEditor(this);"
+                                'onchange' => "phire.changeEditor(this);"
                             )
                         );
                     }

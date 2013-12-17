@@ -294,7 +294,7 @@ class User extends Form
                 'type'       => 'button',
                 'value'      => 'Update',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'onclick' => "return phire.updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class' => 'update-btn'
                 )
             );

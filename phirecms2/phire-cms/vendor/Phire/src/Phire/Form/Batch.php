@@ -23,7 +23,7 @@ class Batch extends Form
         $fields1 = array(
             'file_name_1' => array(
                 'type'       => 'file',
-                'label'      => '<a href="#" onclick="addBatchFields(); return false;">[+]</a> File / Title:',
+                'label'      => '<a href="#" onclick="phire.addBatchFields(); return false;">[+]</a> File / Title:',
                 'attributes' => array(
                     'size' => 40,
                     'style' => 'display: block; margin: 0 0 10px 0;'
@@ -81,7 +81,7 @@ class Batch extends Form
 
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'batch-form')
-             ->setAttributes('onsubmit', 'showLoading();');
+             ->setAttributes('onsubmit', 'phire.showLoading();');
     }
 
 }

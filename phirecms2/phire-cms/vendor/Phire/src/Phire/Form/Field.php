@@ -182,7 +182,7 @@ class Field extends Form
                     'hidden'           => 'hidden'
                 ),
                 'attributes' => array(
-                    'onchange' => 'toggleEditor(this);'
+                    'onchange' => 'phire.toggleEditor(this);'
                 )
             ),
             'editor' => array(
@@ -221,7 +221,7 @@ class Field extends Form
             ),
             'validator_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<a href="#" onclick="addValidator(); return false;">[+]</a> Field Validators:<br /><span style="font-size: 0.9em;">(Type / Value / Message)</span>',
+                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> Field Validators:<br /><span style="font-size: 0.9em;">(Type / Value / Message)</span>',
                 'value'      => $this->validators,
                 'attributes' => array('style' => $selectStyle)
             ),
@@ -248,11 +248,11 @@ class Field extends Form
 
         $fields3['model_new_1'] = array(
             'type'       => 'select',
-            'label'      => '<a href="#" onclick="addModel(); return false;">[+]</a> Model &amp; Type:',
+            'label'      => '<a href="#" onclick="phire.addModel(); return false;">[+]</a> Model &amp; Type:',
             'value'      => $models,
             'attributes' => array(
                 'style'    => 'display: block; margin: 0 0 4px 0;',
-                'onchange' => 'changeModelTypes(this);'
+                'onchange' => 'phire.changeModelTypes(this);'
             )
         );
         $fields3['type_id_new_1'] = array(
@@ -275,7 +275,7 @@ class Field extends Form
                         'marked'     => $f2m->model,
                         'attributes' => array(
                             'style'    => 'display: block; margin: 0 0 4px 0;',
-                            'onchange' => 'changeModelTypes(this);'
+                            'onchange' => 'phire.changeModelTypes(this);'
                         )
                     );
                     $fields3['type_id_cur_' . $i] = array(
@@ -311,7 +311,7 @@ class Field extends Form
             'type'       => 'button',
             'value'      => 'UPDATE',
             'attributes' => array(
-                'onclick' => "return updateForm('#field-form', true);",
+                'onclick' => "return phire.updateForm('#field-form', true);",
                 'class' => 'update-btn'
             )
         );

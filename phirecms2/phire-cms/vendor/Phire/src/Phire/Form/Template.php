@@ -211,7 +211,7 @@ class Template extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#template-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'onclick' => "return phire.updateForm('#template-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
                 )
             ),

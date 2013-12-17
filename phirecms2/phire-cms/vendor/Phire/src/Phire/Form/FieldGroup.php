@@ -62,7 +62,7 @@ class FieldGroup extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#field-group-form', false);",
+                    'onclick' => "return phire.updateForm('#field-group-form', false);",
                     'class' => 'update-btn',
                     'style' => 'width: 167px;'
                 )

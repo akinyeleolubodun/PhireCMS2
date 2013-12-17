@@ -47,7 +47,7 @@ class Media extends Form
 
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'media-form')
-             ->setAttributes('onsubmit', 'showLoading();');
+             ->setAttributes('onsubmit', 'phire.showLoading();');
     }
 
     /**

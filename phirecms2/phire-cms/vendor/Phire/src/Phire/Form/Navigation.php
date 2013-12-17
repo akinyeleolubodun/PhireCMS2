@@ -224,7 +224,7 @@ class Navigation extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#navigation-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'onclick' => "return phire.updateForm('#navigation-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class' => 'update-btn'
                 )
             ),

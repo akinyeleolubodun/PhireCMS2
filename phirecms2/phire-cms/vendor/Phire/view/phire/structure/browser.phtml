@@ -19,9 +19,13 @@
 <?php endif; ?>
 
     <script type="text/javascript">
-        var showLoading = function() {
-            document.getElementById('loading').style.display = 'block';
-        };
+        if (phire != undefined) {
+            var phire = {
+                showLoading : function() {
+                    document.getElementById('loading').style.display = 'block';
+                }
+            };
+        }
     </script>
 
     <style type="text/css">

@@ -170,7 +170,7 @@ class Content extends Form
                     'label'      => 'Parent:',
                     'value'      => $parents,
                     'attributes' => array(
-                        'onchange' => "slug(null, 'uri');",
+                        'onchange' => "phire.slug(null, 'uri');",
                         'style'    => 'min-width: 200px;'
                     )
                 ),
@@ -186,10 +186,10 @@ class Content extends Form
 
             $uri = array(
                 'type'       => 'text',
-                'label'      => 'URI:' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="slug(\'content_title\', \'uri\'); return false;">[ Generate URI ]</a>': null),
+                'label'      => 'URI:' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="phire.slug(\'content_title\', \'uri\'); return false;">[ Generate URI ]</a>': null),
                 'attributes' => array(
                     'size'    => 80,
-                    'onkeyup' => "slug(null, 'uri');"
+                    'onkeyup' => "phire.slug(null, 'uri');"
                 )
             );
             $titleAttributes = array(
@@ -197,7 +197,7 @@ class Content extends Form
                 'style'   => 'display: block;'
             );
             if ($mid == 0) {
-                $titleAttributes['onkeyup'] = "slug('content_title', 'uri');";
+                $titleAttributes['onkeyup'] = "phire.slug('content_title', 'uri');";
             }
         // Else, if type is a file
         } else {
@@ -400,7 +400,7 @@ class Content extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'onclick' => "return phire.updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
                 )
             )
@@ -411,7 +411,7 @@ class Content extends Form
                 'type'       => 'button',
                 'value'      => 'PREVIEW',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#content-form', true, true);",
+                    'onclick' => "return phire.updateForm('#content-form', true, true);",
                     'class'   => 'process-btn'
                 )
             );

@@ -121,7 +121,7 @@ class Category extends Form
                 'label'      => 'Parent:',
                 'value'      => $parents,
                 'attributes' => array(
-                    'onchange' => "catSlug(null, 'slug');"
+                    'onchange' => "phire.catSlug(null, 'slug');"
                 )
             ),
             'category_title' => array(
@@ -130,7 +130,7 @@ class Category extends Form
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 80,
-                    'onkeyup' => "catSlug('category_title', 'slug');"
+                    'onkeyup' => "phire.catSlug('category_title', 'slug');"
                 )
             ),
             'slug' => array(
@@ -139,7 +139,7 @@ class Category extends Form
                 'required'   => true,
                 'attributes' => array(
                     'size' => 80,
-                    'onkeyup' => "catSlug(null, 'slug');"
+                    'onkeyup' => "phire.catSlug(null, 'slug');"
                 )
             ),
             'order' => array(
@@ -190,7 +190,7 @@ class Category extends Form
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return updateForm('#category-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'onclick' => "return phire.updateForm('#category-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class' => 'update-btn'
                 )
             ),
