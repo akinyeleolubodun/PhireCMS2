@@ -103,7 +103,7 @@ var changePermissions = function(sel) {
 
     if (marked != 0) {
         var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-        var j = $().json.parse(jsonLoc + encodeURIComponent(marked.replace(/\\/g, '_')));
+        var j = $.json.parse(jsonLoc + encodeURIComponent(marked.replace(/\\/g, '_')));
         for (type in j.types) {
             if (type != 0) {
                 $('#type_' + cur + '_' + id).append('option', {"value" : type}, j.types[type]);
@@ -132,7 +132,7 @@ var slug = function(src, tar) {
             var parent = $('#parent_id').val();
             if (parent != contentParentId) {
                 contentParentId = parent;
-                var j = $().json.parse('../json/' + parent);
+                var j = $.json.parse('../json/' + parent);
                 contentParentUri = j.uri;
             }
         }
@@ -165,7 +165,7 @@ var catSlug = function(src, tar) {
             if (parent != categoryParentId) {
                 categoryParentId = parent;
                 var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-                var j = $().json.parse(jsonLoc + parent);
+                var j = $.json.parse(jsonLoc + parent);
                 categoryParentUri = j.uri;
             }
         }
@@ -187,7 +187,7 @@ var catSlug = function(src, tar) {
  * @return void
  */
 var customDatetime = function(val) {
-    var j = $().json.parse('./config/json/' + encodeURIComponent(val.replace(/\//g, '_')));
+    var j = $.json.parse('./config/json/' + encodeURIComponent(val.replace(/\//g, '_')));
     if ($('#custom-datetime')[0] != undefined) {
         var v = (j.format != '') ? '(' + j.format + ')' : '';
         $('#custom-datetime').val(v);
@@ -201,7 +201,7 @@ var customDatetime = function(val) {
  * @return void
  */
 var processForm = function(response) {
-    var j = $().json.parse(response.text);
+    var j = $.json.parse(response.text);
     if (j.updated != undefined) {
         if (j.redirect != undefined) {
             window.location.href = j.redirect;
@@ -316,7 +316,7 @@ var updateForm = function(form, ret, prev) {
         }
         var act = $(form).attrib('action');
         var url = act + ((act.indexOf('?') != -1) ? '&update=1' : '?update=1');
-        $().ajax(url, {status : {200 : processForm}, method : 'post', data : f});
+        $.ajax(url, {status : {200 : processForm}, method : 'post', data : f});
         return false;
     }
 };
@@ -559,7 +559,7 @@ var changeModelTypes = function(sel) {
 
     // Get new model types and create new select drop down
     var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-    var j = $().json.parse(jsonLoc + marked.replace(/\\/g, '_'));
+    var j = $.json.parse(jsonLoc + marked.replace(/\\/g, '_'));
     if (j.types[0] != undefined) {
         var types = [];
         for (key in j.types) {
@@ -589,7 +589,7 @@ var changeHistory = function(sel, basePath) {
     }
 
     if (marked != 0) {
-        var j = $().json.parse(basePath + '/structure/fields/json/history/' + modelId + '/' + fieldId + '/' + marked);
+        var j = $.json.parse(basePath + '/structure/fields/json/history/' + modelId + '/' + fieldId + '/' + marked);
         if ($('#field_' + j.fieldId)[0] != undefined) {
             if (typeof CKEDITOR !== 'undefined') {
                 if (CKEDITOR.instances['field_' + j.fieldId] != undefined) {
@@ -737,16 +737,16 @@ $(document).ready(function(){
             if (confirm('Your session is about to end. Do you wish to logout?')) {
                 window.location = url + '/logout';
             } else {
-                $().ajax(url + '/users/sessions/json');
+                $.ajax(url + '/users/sessions/json');
             }
 
         }, _exp * 1000);
     }
 
     // Check saved timestamp to determine if the saved div should display
-    if ($().get('saved') != undefined) {
+    if ($.query('saved') != undefined) {
         var ts = Math.round(new Date().getTime() / 1000);
-        var diff = Math.abs($().get('saved') - ts);
+        var diff = Math.abs($.query('saved') - ts);
         if (diff < 40) {
             if ($('#result')[0] != undefined) {
                 $('#result').css({
@@ -778,7 +778,7 @@ $(document).ready(function(){
                 var parent = $('#parent_id').val();
                 if (parent != contentParentId) {
                     contentParentId = parent;
-                    var j = $().json.parse('../json/' + parent);
+                    var j = $.json.parse('../json/' + parent);
                     contentParentUri = j.uri;
                     val = contentParentUri + $('#uri').val();
                 } else {
@@ -795,19 +795,19 @@ $(document).ready(function(){
             }
 
             // Check preview timestamp to determine if a preview window should be opened
-            if ($().get('preview') != undefined) {
+            if ($.query('preview') != undefined) {
                 var ts = Math.round(new Date().getTime() / 1000);
-                var diff = Math.abs($().get('preview') - ts);
+                var diff = Math.abs($.query('preview') - ts);
                 if (diff < 40) {
                     if ($('#uri-span')[0] != undefined) {
-                        window.open(decodeURIComponent($().get('base_path')) + $('#uri-span').val());
+                        window.open(decodeURIComponent($.query('base_path')) + $('#uri-span').val());
                     }
                 }
             }
         }
 
         curForm = '#content-form';
-        $().beforeunload(checkFormChange);
+        $.beforeunload(checkFormChange);
     }
 
     // For category form
@@ -820,7 +820,7 @@ $(document).ready(function(){
                 if (parent != categoryParentId) {
                     categoryParentId = parent;
                     var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-                    var j = $().json.parse(jsonLoc + parent);
+                    var j = $.json.parse(jsonLoc + parent);
                     categoryParentUri = j.uri;
                     val = categoryParentUri + $('#slug').val();
                 } else {
