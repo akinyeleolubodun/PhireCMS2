@@ -38,7 +38,7 @@ class AbstractController extends \Pop\Mvc\Controller
         }
 
         if (isset($this->view->assets)) {
-            $jsVars = '?_lang=' . $config->default_language;
+            $jsVars = '?lang=' . $config->default_language;
         }
 
         if (isset($sess->user)) {

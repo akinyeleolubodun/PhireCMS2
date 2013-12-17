@@ -22,38 +22,38 @@ var phire = {
     curErrors         : 0,
     curValue          : null,
     selIds            : [],
-    sysBasePath       : window.location.href,
+    sysBasePath       : null,
     addResource       : function() {
-        this.resourceCount++;
+        phire.resourceCount++;
 
         // Add resource select field
         jax('#resource_new_1').clone({
-            "name" : 'resource_new_' + this.resourceCount,
-            "id"   : 'resource_new_' + this.resourceCount
+            "name" : 'resource_new_' + phire.resourceCount,
+            "id"   : 'resource_new_' + phire.resourceCount
         }).appendTo(jax('#resource_new_1').parent());
 
         // Add permission select field
         jax('#permission_new_1').clone({
-            "name" : 'permission_new_' + this.resourceCount,
-            "id"   : 'permission_new_' + this.resourceCount
+            "name" : 'permission_new_' + phire.resourceCount,
+            "id"   : 'permission_new_' + phire.resourceCount
         }).appendTo(jax('#permission_new_1').parent());
 
         // Add type select field
         jax('#type_new_1').clone({
-            "name" : 'type_new_' + this.resourceCount,
-            "id"   : 'type_new_' + this.resourceCount
+            "name" : 'type_new_' + phire.resourceCount,
+            "id"   : 'type_new_' + phire.resourceCount
         }).appendTo(jax('#type_new_1').parent());
 
         // Add allow select field
         jax('#allow_new_1').clone({
-            "name" : 'allow_new_' + this.resourceCount,
-            "id"   : 'allow_new_' + this.resourceCount
+            "name" : 'allow_new_' + phire.resourceCount,
+            "id"   : 'allow_new_' + phire.resourceCount
         }).appendTo(jax('#allow_new_1').parent());
 
-        jax('#resource_new_' + this.resourceCount).val(jax('#resource_new_' + (this.resourceCount - 1) + ' > option:selected').val());
-        jax('#permission_new_' + this.resourceCount).val(jax('#permission_new_' + (this.resourceCount - 1) + ' > option:selected').val());
-        jax('#type_new_' + this.resourceCount).val(jax('#type_new_' + (this.resourceCount - 1) + ' > option:selected').val());
-        jax('#allow_new_' + this.resourceCount).val(jax('#allow_new_' + (this.resourceCount - 1) + ' > option:selected').val());
+        jax('#resource_new_' + phire.resourceCount).val(jax('#resource_new_' + (phire.resourceCount - 1) + ' > option:selected').val());
+        jax('#permission_new_' + phire.resourceCount).val(jax('#permission_new_' + (phire.resourceCount - 1) + ' > option:selected').val());
+        jax('#type_new_' + phire.resourceCount).val(jax('#type_new_' + (phire.resourceCount - 1) + ' > option:selected').val());
+        jax('#allow_new_' + phire.resourceCount).val(jax('#allow_new_' + (phire.resourceCount - 1) + ' > option:selected').val());
     },
     changePermissions : function(sel) {
         var cur = (sel.id.indexOf('cur_') != -1) ? 'cur' : 'new';
@@ -99,14 +99,14 @@ var phire = {
         if (jax('#uri-span')[0] != undefined) {
             if (jax('#parent_id')[0] != undefined) {
                 var parent = jax('#parent_id').val();
-                if (parent != this.contentParentId) {
-                    this.contentParentId = parent;
+                if (parent != phire.contentParentId) {
+                    phire.contentParentId = parent;
                     var j = jax.json.parse('../json/' + parent);
-                    this.contentParentUri = j.uri;
+                    phire.contentParentUri = j.uri;
                 }
             }
             var val = jax('#' + tar).val();
-            val = this.contentParentUri + val;
+            val = phire.contentParentUri + val;
             if ((val != '') && (val.substring(0, 1) != '/')) {
                 val = '/' + val;
             } else if (val == '') {
@@ -124,15 +124,15 @@ var phire = {
         if (jax('#slug-span')[0] != undefined) {
             if (jax('#parent_id')[0] != undefined) {
                 var parent = jax('#parent_id').val();
-                if (parent != this.categoryParentId) {
-                    this.categoryParentId = parent;
+                if (parent != phire.categoryParentId) {
+                    phire.categoryParentId = parent;
                     var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
                     var j = jax.json.parse(jsonLoc + parent);
-                    this.categoryParentUri = j.uri;
+                    phire.categoryParentUri = j.uri;
                 }
             }
             var val = jax('#' + tar).val();
-            val = this.categoryParentUri + val;
+            val = phire.categoryParentUri + val;
             if ((val != '') && (val.substring(0, 1) != '/')) {
                 val = '/' + val;
             } else if (val == '') {
@@ -161,7 +161,7 @@ var phire = {
                         "opacity"          : 0
                     });
                     jax('#result').val('Saved!');
-                    for (var i = 1; i <= this.curErrors; i++) {
+                    for (var i = 1; i <= phire.curErrors; i++) {
                         if (jax('#error-' + i)[0] != undefined) {
                             jax('#error-' + i).remove();
                         }
@@ -189,7 +189,7 @@ var phire = {
                         }
                     }
                     jax('#result').fade(100, {tween : 10, speed: 200});
-                    this.clear = setTimeout(this.clearStatus, 3000);
+                    phire.clear = setTimeout(phire.clearStatus, 3000);
                 }
             }
         } else {
@@ -200,13 +200,13 @@ var phire = {
                     "opacity"          : 0
                 });
                 jax('#result').val('Please correct the errors below.');
-                for (var i = 1; i <= this.curErrors; i++) {
+                for (var i = 1; i <= phire.curErrors; i++) {
                     if (jax('#error-' + i)[0] != undefined) {
                         jax('#error-' + i).remove();
                     }
                 }
                 jax('#result').fade(100, {tween : 10, speed: 200});
-                this.clear = setTimeout(this.clearStatus, 3000);
+                phire.clear = setTimeout(phire.clearStatus, 3000);
             }
             for (name in j) {
                 // Check if the error already exists via a PHP POST
@@ -217,15 +217,15 @@ var phire = {
                 }
                 // If error doesn't exists yet, append it
                 if (curErrorDivsHtml.indexOf(j[name].toString()) == -1) {
-                    this.curErrors++;
-                    jax(jax('#' + name).parent()).append('div', {"id" : 'error-' + this.curErrors, "class" : 'error'}, j[name]);
+                    phire.curErrors++;
+                    jax(jax('#' + name).parent()).append('div', {"id" : 'error-' + phire.curErrors, "class" : 'error'}, j[name]);
                 }
 
             }
         }
     },
     updateForm : function(form, ret, prev) {
-        this.submitted = true;
+        phire.submitted = true;
         if (ret) {
             if (prev != null) {
                 if (jax('#status')[0] != undefined) {
@@ -255,13 +255,13 @@ var phire = {
             }
             var act = jax(form).attrib('action');
             var url = act + ((act.indexOf('?') != -1) ? '&update=1' : '?update=1');
-            jax.ajax(url, {status : {200 : this.processForm}, method : 'post', data : f});
+            jax.ajax(url, {status : {200 : phire.processForm}, method : 'post', data : f});
             return false;
         }
     },
     clearStatus : function() {
         jax('#result').fade(0, {tween : 10, speed: 200});
-        clearTimeout(this.clear);
+        clearTimeout(phire.clear);
     },
     wipeErrors : function(a, hgt) {
         if (jax('#errors').height() > 50) {
@@ -273,27 +273,27 @@ var phire = {
         }
     },
     addBatchFields : function() {
-        this.batchCount++;
+        phire.batchCount++;
 
         // Add file name field
         jax('#file_name_1').clone({
-            "name" : 'file_name_' + this.batchCount,
-            "id"   : 'file_name_' + this.batchCount
+            "name" : 'file_name_' + phire.batchCount,
+            "id"   : 'file_name_' + phire.batchCount
         }).appendTo(jax('#file_name_1').parent());
 
         // Add file title field
         jax('#file_title_1').clone({
-            "name" : 'file_title_' + this.batchCount,
-            "id"   : 'file_title_' + this.batchCount
+            "name" : 'file_title_' + phire.batchCount,
+            "id"   : 'file_title_' + phire.batchCount
         }).appendTo(jax('#file_title_1').parent());
     },
     showLoading : function() {
         document.getElementById('loading').style.display = 'block';
     },
     checkFormChange : function() {
-        if (!this.submitted) {
+        if (!phire.submitted) {
             var change = false;
-            var f = jax(this.curForm)[0];
+            var f = jax(phire.curForm)[0];
             for (var i = 0; i < f.elements.length; i++) {
                 if ((f.elements[i].type == 'text') || (f.elements[i].type == 'textarea')) {
                     if (f.elements[i].value != f.elements[i].defaultValue) {
@@ -326,46 +326,46 @@ var phire = {
         }
     },
     addValidator : function() {
-        this.valCount++;
+        phire.valCount++;
 
         // Add validator select field
         jax('#validator_new_1').clone({
-            "name" : 'validator_new_' + this.valCount,
-            "id"   : 'validator_new_' + this.valCount
+            "name" : 'validator_new_' + phire.valCount,
+            "id"   : 'validator_new_' + phire.valCount
         }).appendTo(jax('#validator_new_1').parent());
 
         // Add validator value text field
         jax('#validator_value_new_1').clone({
-            "name" : 'validator_value_new_' + this.valCount,
-            "id"   : 'validator_value_new_' + this.valCount
+            "name" : 'validator_value_new_' + phire.valCount,
+            "id"   : 'validator_value_new_' + phire.valCount
         }).appendTo(jax('#validator_value_new_1').parent());
 
         // Add validator message text field
         jax('#validator_message_new_1').clone({
-            "name" : 'validator_message_new_' + this.valCount,
-            "id"   : 'validator_message_new_' + this.valCount
+            "name" : 'validator_message_new_' + phire.valCount,
+            "id"   : 'validator_message_new_' + phire.valCount
         }).appendTo(jax('#validator_message_new_1').parent());
     },
     addModel : function() {
-        var parentModelId = this.modelCount;
-        this.modelCount++;
+        var parentModelId = phire.modelCount;
+        phire.modelCount++;
 
         // Add model select field
         jax('#model_new_' + parentModelId).clone({
-            "name" : 'model_new_' + this.modelCount,
-            "id"   : 'model_new_' + this.modelCount
+            "name" : 'model_new_' + phire.modelCount,
+            "id"   : 'model_new_' + phire.modelCount
         }).appendTo(jax('#model_new_' + parentModelId).parent());
 
         // Add type_id text field
         jax('#type_id_new_' + parentModelId).clone({
-            "name"  : 'type_id_new_' + this.modelCount,
-            "id"    : 'type_id_new_' + this.modelCount,
+            "name"  : 'type_id_new_' + phire.modelCount,
+            "id"    : 'type_id_new_' + phire.modelCount,
             "value" : 0
         }).appendTo(jax('#type_id_new_' + parentModelId).parent());
 
         // Select marked clean up
         var sel1 = jax('#model_new_' + parentModelId)[0];
-        var sel2 = jax('#model_new_' + this.modelCount)[0];
+        var sel2 = jax('#model_new_' + phire.modelCount)[0];
         var marked1 = null;
         var marked2 = null;
 
@@ -459,8 +459,8 @@ var phire = {
         var fieldId = ids[1];
         var marked = jax('#' + sel.id + ' > option:selected').val();
 
-        if ((this.curValue == null) && (jax('#field_' + fieldId)[0] != undefined)) {
-            this.curValue = jax('#field_' + fieldId).val();
+        if ((phire.curValue == null) && (jax('#field_' + fieldId)[0] != undefined)) {
+            phire.curValue = jax('#field_' + fieldId).val();
         }
 
         if (marked != 0) {
@@ -479,12 +479,12 @@ var phire = {
             if (jax('#field_' + fieldId)[0] != undefined) {
                 if (typeof CKEDITOR !== 'undefined') {
                     if (CKEDITOR.instances['field_' + fieldId] != undefined) {
-                        CKEDITOR.instances['field_' + fieldId].setData(this.curValue);
+                        CKEDITOR.instances['field_' + fieldId].setData(phire.curValue);
                     }
                 } else if (typeof tinymce !== 'undefined') {
-                    tinymce.activeEditor.setContent(this.curValue);
+                    tinymce.activeEditor.setContent(phire.curValue);
                 }
-                jax('#field_' + fieldId).val(this.curValue);
+                jax('#field_' + fieldId).val(phire.curValue);
             }
         }
     },
@@ -512,9 +512,9 @@ var phire = {
             jax('#field_' + id).val(content);
             jax('#field_' + id).show();
         } else if (val == 'ckeditor') {
-            this.loadEditor('ckeditor', id);
+            phire.loadEditor('ckeditor', id);
         } else if (val == 'tinymce') {
-            this.loadEditor('tinymce', id);
+            phire.loadEditor('tinymce', id);
         }
     },
     toggleEditor : function(sel) {
@@ -528,29 +528,29 @@ var phire = {
         if (null != id) {
             var w = Math.round(jax('#field_' + id).width());
             var h = Math.round(jax('#field_' + id).height());
-            this.selIds = [{ "id" : id, "width" : w, "height" : h }];
+            phire.selIds = [{ "id" : id, "width" : w, "height" : h }];
         }
-        if (this.selIds.length > 0) {
-            for (var i = 0; i < this.selIds.length; i++) {
+        if (phire.selIds.length > 0) {
+            for (var i = 0; i < phire.selIds.length; i++) {
                 if (editor == 'ckeditor') {
-                    if (CKEDITOR.instances['field_' + this.selIds[i].id] == undefined) {
+                    if (CKEDITOR.instances['field_' + phire.selIds[i].id] == undefined) {
                         CKEDITOR.replace(
-                            'field_' + this.selIds[i].id,
+                            'field_' + phire.selIds[i].id,
                             {
-                                width  : this.selIds[i].width,
-                                height : this.selIds[i].height,
-                                filebrowserBrowseUrl      : this.sysBasePath + '/structure/fields/browser/file?editor=ckeditor',
-                                filebrowserImageBrowseUrl : this.sysBasePath + '/structure/fields/browser/image?editor=ckeditor',
+                                width  : phire.selIds[i].width,
+                                height : phire.selIds[i].height,
+                                filebrowserBrowseUrl      : phire.sysBasePath + '/structure/fields/browser/file?editor=ckeditor',
+                                filebrowserImageBrowseUrl : phire.sysBasePath + '/structure/fields/browser/image?editor=ckeditor',
                                 filebrowserWindowWidth    : '900',
                                 filebrowserWindowHeight   : '700'
                             }
                         );
                     }
                 } else if (editor == 'tinymce') {
-                    if (tinymce.editors['field_' + this.selIds[i].id] == undefined) {
+                    if (tinymce.editors['field_' + phire.selIds[i].id] == undefined) {
                         tinymce.init(
                             {
-                                selector              : "textarea#field_" + this.selIds[i].id,
+                                selector              : "textarea#field_" + phire.selIds[i].id,
                                 theme                 : "modern",
                                 plugins: [
                                     "advlist autolink lists link image hr", "searchreplace wordcount code fullscreen",
@@ -558,13 +558,13 @@ var phire = {
                                 ],
                                 image_advtab          : true,
                                 toolbar1              : "insertfile undo redo | styleselect | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image",
-                                width                 : this.selIds[i].width,
-                                height                : this.selIds[i].height,
+                                width                 : phire.selIds[i].width,
+                                height                : phire.selIds[i].height,
                                 relative_urls         : false,
                                 file_browser_callback : function(field_name, url, type, win) {
                                     tinymce.activeEditor.windowManager.open({
                                         title  : "Asset Browser",
-                                        url    : this.sysBasePath + '/structure/fields/browser/' + type + '?editor=tinymce',
+                                        url    : phire.sysBasePath + '/structure/fields/browser/' + type + '?editor=tinymce',
                                         width  : 900,
                                         height : 700
                                     }, {
@@ -582,17 +582,28 @@ var phire = {
     }
 };
 
-if (phire.sysBasePath.indexOf('/add') != -1) {
-    phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/add'));
-} else if (phire.sysBasePath.indexOf('/edit') != -1) {
-    phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/edit'));
-}
-phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.lastIndexOf('/'));
-
 /**
  * Document ready function to load the correct URI string into the URI span
  */
 jax(document).ready(function(){
+    phire.sysBasePath = window.location.href;
+
+    if (phire.sysBasePath.indexOf('/content') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/content'));
+    } else if (phire.sysBasePath.indexOf('/structure') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/structure'));
+    } else if (phire.sysBasePath.indexOf('/extensions') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/extensions'));
+    } else if (phire.sysBasePath.indexOf('/users') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/users'));
+    } else if (phire.sysBasePath.indexOf('/config') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/config'));
+    }
+
+    if (phire.sysBasePath.substring(0, -1) == '/') {
+        phire.sysBasePath = phire.sysBasePath.substring(0, (phire.sysBasePath.length - 1));
+    }
+
     if (typeof _exp != 'undefined') {
         phire.timeout = setInterval(function() {
             var url = decodeURIComponent(_base);
@@ -742,7 +753,7 @@ jax(document).ready(function(){
             var script = document.createElement("script");
             switch (selVal) {
                 case 'ckeditor':
-                    script.src = _jaxRoot + 'ckeditor/ckeditor.js';
+                    script.src = jax.root + 'ckeditor/ckeditor.js';
                     script.onload = script.onreadystatechange = function() {
                         if (typeof CKEDITOR != 'undefined') {
                             phire.loadEditor('ckeditor');
@@ -752,7 +763,7 @@ jax(document).ready(function(){
                     break;
 
                 case 'tinymce':
-                    script.src = _jaxRoot + 'tinymce/tinymce.min.js';
+                    script.src = jax.root + 'tinymce/tinymce.min.js';
                     script.onload = script.onreadystatechange = function() {
                         if (typeof tinymce != 'undefined') {
                             phire.loadEditor('tinymce');
