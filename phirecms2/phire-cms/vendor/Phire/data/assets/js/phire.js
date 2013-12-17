@@ -2,8 +2,6 @@
  * Phire CMS 2.0 Scripts
  */
 
-jax.noConflict();
-
 var phire = {
     clear             : null,
     curForm           : null,
