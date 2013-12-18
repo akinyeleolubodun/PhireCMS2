@@ -581,7 +581,7 @@ var phire = {
 };
 
 /**
- * Document ready function to load the correct URI string into the URI span
+ * Document ready function for Phire
  */
 jax(document).ready(function(){
     phire.sysBasePath = window.location.href;
