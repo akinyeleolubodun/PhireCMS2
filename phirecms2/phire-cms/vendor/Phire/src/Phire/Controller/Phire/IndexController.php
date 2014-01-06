@@ -87,16 +87,15 @@ class IndexController extends AbstractController
      */
     public function index()
     {
+        $content = new Model\Content();
+        $config = new Model\Config();
+
         $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Dashboard',
-            'subTitle' => 'Welcome to Phire CMS 2.0'
+            'title'    => 'Dashboard'
         ));
-
-        $content = new Model\Content();
-        $config = new Model\Config();
 
         $this->view->set('recent', $content->getRecent())
                    ->set('themes', $content->getThemes())
