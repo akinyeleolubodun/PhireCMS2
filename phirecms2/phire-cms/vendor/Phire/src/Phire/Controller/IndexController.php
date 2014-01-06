@@ -111,45 +111,50 @@ class IndexController extends AbstractController
         $this->view->set('breadcrumb', $content->getBreadcrumb())
                    ->set('phire', new Model\Phire());
 
-        // If page found, but requires SSL
-        if (isset($content->id) && (($_SERVER['SERVER_PORT'] != '443') && ($content->force_ssl))) {
-            Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        // Else, if page found and allowed
-        } else if (isset($content->id) && ($content->allowed)) {
-            $template = $this->getTemplate($content->template, 'index');
-            if (strpos($template, '[{categor') !== false) {
-                $this->view->merge(Model\Template::parseCategories($template));
-            }
-            $this->view->merge($content->getData());
-            $this->view->setTemplate($template);
-            $this->send();
-        // Else, check for date-based URI
-        } else {
-            $uri = $this->request->getRequestUri();
-            if (substr($uri, 0, 1) == '/') {
-                $uri = substr($uri, 1);
-            }
-            $date = $this->isDate($uri);
-            if (null !== $date) {
-                $content->getByDate($date);
-                if (isset($content->id) && ($content->allowed)) {
-                    $template = $this->getTemplate($content->template, 'index');
-                    $this->view->setTemplate($template);
-                    $this->view->merge($content->getData());
-                    $this->send();
-                } else if (isset($content->rows[0])) {
-                    $content->set('title', $date['match']);
-                    $template = $this->getTemplate($content->template, 'date');
-                    $this->view->setTemplate($template);
-                    $this->view->merge($content->getData());
-                    $this->send();
+        // If site is live
+        if ($this->isLive()) {
+            // If page found, but requires SSL
+            if (isset($content->id) && (($_SERVER['SERVER_PORT'] != '443') && ($content->force_ssl))) {
+                Response::redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            // Else, if page found and allowed
+            } else if (isset($content->id) && ($content->allowed)) {
+                $template = $this->getTemplate($content->template, 'index');
+                if (strpos($template, '[{categor') !== false) {
+                    $this->view->merge(Model\Template::parseCategories($template));
+                }
+                $this->view->merge($content->getData());
+                $this->view->setTemplate($template);
+                $this->send();
+            // Else, check for date-based URI
+            } else {
+                $uri = $this->request->getRequestUri();
+                if (substr($uri, 0, 1) == '/') {
+                    $uri = substr($uri, 1);
+                }
+                $date = $this->isDate($uri);
+                if (null !== $date) {
+                    $content->getByDate($date);
+                    if (isset($content->id) && ($content->allowed)) {
+                        $template = $this->getTemplate($content->template, 'index');
+                        $this->view->setTemplate($template);
+                        $this->view->merge($content->getData());
+                        $this->send();
+                    } else if (isset($content->rows[0])) {
+                        $content->set('title', $date['match']);
+                        $template = $this->getTemplate($content->template, 'date');
+                        $this->view->setTemplate($template);
+                        $this->view->merge($content->getData());
+                        $this->send();
+                    } else {
+                        $this->error();
+                    }
+                // Else, error page
                 } else {
                     $this->error();
                 }
-            // Else, error page
-            } else {
-                $this->error();
             }
+        } else {
+            $this->error();
         }
     }
 
@@ -180,16 +185,21 @@ class IndexController extends AbstractController
         // Set up breadcrumb
         $this->view->set('breadcrumb', $category->getBreadcrumb());
 
-        if (isset($category->id)) {
-            $tmpl = Table\Templates::findBy(array('name' => 'Category'));
-            $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
-            if (strpos($template, '[{categor') !== false) {
-                $this->view->merge(Model\Template::parseCategories($template));
+        // If site is live
+        if ($this->isLive()) {
+            if (isset($category->id)) {
+                $tmpl = Table\Templates::findBy(array('name' => 'Category'));
+                $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
+                if (strpos($template, '[{categor') !== false) {
+                    $this->view->merge(Model\Template::parseCategories($template));
+                }
+                $this->view->setTemplate($template);
+                $this->view->merge($category->getData());
+                $this->view->set('phire', new Model\Phire());
+                $this->send();
+            } else {
+                $this->error();
             }
-            $this->view->setTemplate($template);
-            $this->view->merge($category->getData());
-            $this->view->set('phire', new Model\Phire());
-            $this->send();
         } else {
             $this->error();
         }
@@ -211,29 +221,34 @@ class IndexController extends AbstractController
             $this->prepareView();
         }
 
-        // Set up navigation
-        $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
-        $this->view->merge($nav->getContentNav());
-        $this->view->set('category_nav', $nav->getCategoryNav())
-                   ->set('title', 'Search');
+        // If site is live
+        if ($this->isLive()) {
+            // Set up navigation
+            $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+            $this->view->merge($nav->getContentNav());
+            $this->view->set('category_nav', $nav->getCategoryNav())
+                       ->set('title', 'Search');
 
-        $content = new Model\Content();
-        $content->search($this->request);
-        $this->view->set('phire', new Model\Phire());
+            $content = new Model\Content();
+            $content->search($this->request);
+            $this->view->set('phire', new Model\Phire());
 
-        if (count($content->keys) == 0) {
-            $this->view->set('error', 'No search keywords were passed. Please try again.');
+            if (count($content->keys) == 0) {
+                $this->view->set('error', 'No search keywords were passed. Please try again.');
+            }
+
+            $tmpl = Table\Templates::findBy(array('name' => 'Search'));
+            $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
+            if (strpos($template, '[{categor') !== false) {
+                $this->view->merge(Model\Template::parseCategories($template));
+            }
+
+            $this->view->setTemplate($template);
+            $this->view->merge($content->getData());
+            $this->send();
+        } else {
+            $this->error();
         }
-
-        $tmpl = Table\Templates::findBy(array('name' => 'Search'));
-        $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
-        if (strpos($template, '[{categor') !== false) {
-            $this->view->merge(Model\Template::parseCategories($template));
-        }
-
-        $this->view->setTemplate($template);
-        $this->view->merge($content->getData());
-        $this->send();
     }
 
     /**
@@ -252,30 +267,35 @@ class IndexController extends AbstractController
             $this->prepareView();
         }
 
-        $this->view->set('title', 'Feed');
+        // If site is live
+        if ($this->isLive()) {
+            $this->view->set('title', 'Feed');
 
-        $lang = $this->view->default_language;
-        if (strpos($lang, '_') !== false) {
-            $lang = substr($lang, 0, strpos($lang, '_'));
+            $lang = $this->view->default_language;
+            if (strpos($lang, '_') !== false) {
+                $lang = substr($lang, 0, strpos($lang, '_'));
+            }
+
+            $headers = array(
+                'title'     => $_SERVER['HTTP_HOST'] . ' Feed',
+                'subtitle'  => $_SERVER['HTTP_HOST'] . ' Feed',
+                'link'      => 'http://' . $_SERVER['HTTP_HOST'] . '/',
+                'language'  => $lang,
+                'updated'   => date('Y-m-d H:i:s'),
+                'generator' => 'http://' . $_SERVER['HTTP_HOST'] . '/',
+                'author'    => 'Phire CMS Feed Generator'
+            );
+
+            $content = new Model\Content();
+            $feed = new \Pop\Feed\Writer(
+                $headers, $content->getFeed((int)$content->config('feed_limit')),
+                (int)$content->config('feed_type')
+            );
+
+            echo $feed->render(true);
+        } else {
+            $this->error();
         }
-
-        $headers = array(
-            'title'     => $_SERVER['HTTP_HOST'] . ' Feed',
-            'subtitle'  => $_SERVER['HTTP_HOST'] . ' Feed',
-            'link'      => 'http://' . $_SERVER['HTTP_HOST'] . '/',
-            'language'  => $lang,
-            'updated'   => date('Y-m-d H:i:s'),
-            'generator' => 'http://' . $_SERVER['HTTP_HOST'] . '/',
-            'author'    => 'Phire CMS Feed Generator'
-        );
-
-        $content = new Model\Content();
-        $feed = new \Pop\Feed\Writer(
-            $headers, $content->getFeed((int)$content->config('feed_limit')),
-            (int)$content->config('feed_type')
-        );
-
-        echo $feed->render(true);
     }
 
     /**

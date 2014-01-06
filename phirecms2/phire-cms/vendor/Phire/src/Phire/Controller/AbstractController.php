@@ -10,6 +10,17 @@ class AbstractController extends \Pop\Mvc\Controller
 {
 
     /**
+     * Site live flag
+     * @var boolean
+     */
+    protected $live = null;
+
+    public function isLive()
+    {
+        return $this->live;
+    }
+
+    /**
      * Prepare view method
      *
      * @param  string $template
@@ -20,6 +31,7 @@ class AbstractController extends \Pop\Mvc\Controller
     {
         $sess = \Pop\Web\Session::getInstance();
         $config = \Phire\Table\Config::getSystemConfig();
+        $this->live = (bool)$config->live;
         $jsVars = null;
 
         $this->view = View::factory($template, $data);
