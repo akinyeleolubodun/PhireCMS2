@@ -98,6 +98,8 @@ class UserType extends AbstractModel
         $type = Table\UserTypes::findById($id);
         if (isset($type->id)) {
             $typeValues = $type->getValues();
+            $typeValues['log_in'] = $typeValues['login'];
+            unset($typeValues['login']);
             $typeValues = array_merge($typeValues, FieldValue::getAll($id));
 
             $this->data = array_merge($this->data, $typeValues);
@@ -116,6 +118,7 @@ class UserType extends AbstractModel
         $fields = $form->getFields();
 
         $fields['type'] = String::slug($fields['type']);
+        $fields['login'] = $fields['log_in'];
         $fields['log_emails'] = str_replace(', ', ',', $fields['log_emails']);
         $fields['log_exclude'] = str_replace(', ', ',', $fields['log_exclude']);
 
@@ -123,6 +126,7 @@ class UserType extends AbstractModel
             $fields['default_role_id'] = null;
         }
 
+        unset($fields['log_in']);
         unset($fields['id']);
         unset($fields['submit']);
         unset($fields['update_value']);
@@ -156,6 +160,7 @@ class UserType extends AbstractModel
         $fields = $form->getFields();
 
         $fields['type'] = String::slug($fields['type']);
+        $fields['login'] = $fields['log_in'];
         $fields['log_emails'] = str_replace(', ', ',', $fields['log_emails']);
         $fields['log_exclude'] = str_replace(', ', ',', $fields['log_exclude']);
 
@@ -163,6 +168,7 @@ class UserType extends AbstractModel
             $fields['default_role_id'] = null;
         }
 
+        unset($fields['log_in']);
         unset($fields['submit']);
         unset($fields['update_value']);
         unset($fields['update']);

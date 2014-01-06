@@ -167,7 +167,7 @@ class UserType extends Form
             )
         );
         $fields2a = array(
-            'login' => array(
+            'log_in' => array(
                 'type'   => 'radio',
                 'label'  => 'Allow Login:',
                 'value'  => $yesNo,

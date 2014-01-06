@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a></a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>
 <?php
 if (isset($table)):
     echo $table;
