@@ -899,17 +899,17 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .remove-btn {
-    margin: 0;
+    margin: 3px 0 0 0;
     padding: 4px 0 6px 0;
     width: 120px;
-    height: 32px;
+    height: 28px;
     color: #fff;
     text-align: center;
     font-weight: bold;
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 1.2em;
+    font-size: 12px;
     background-color: #a51212;
 }
 
