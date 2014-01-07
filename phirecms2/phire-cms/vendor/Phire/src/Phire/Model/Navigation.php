@@ -211,7 +211,19 @@ class Navigation extends AbstractModel
                 );
 
                 if (isset($allContent->rows[0])) {
+                    $this->trackNav = array();
                     $navChildren = $this->getTreeChildren($allContent->rows, 0);
+                    $newChildren = array();
+                    foreach ($allContent->rows as $c) {
+                        if ((null !== $c->cont_id) && !in_array($c->cont_id, $this->trackNav)) {
+                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cont_parent_id));
+                        } else if ((null !== $c->cat_id) && !in_array($c->cat_id, $this->trackNav)) {
+                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cat_parent_id));
+                        }
+                    }
+
+                    $navChildren = array_merge($newChildren, $navChildren);
+
                     if (count($navChildren) > 0) {
                         $navName = str_replace('-', '_', String::slug($nav->navigation));
                         $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
@@ -413,19 +425,6 @@ class Navigation extends AbstractModel
                     $cont->uri       = $c->cont_uri;
                     if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
                         $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override);
-                        $children[] = $p;
-                    }
-                } else if (strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/structure/navigation') === false) {
-                    $p = (array)$c;
-                    $p['uri'] = BASE_PATH . $c->cont_uri;
-                    $p['href'] = $p['uri'];
-                    $p['name'] = $c->cont_title;
-                    $cont = $c;
-                    $cont->id        = $c->cont_id;
-                    $cont->parent_id = $c->cont_parent_id;
-                    $cont->title     = $c->cont_title;
-                    $cont->uri       = $c->cont_uri;
-                    if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
                         $children[] = $p;
                     }
                 }
