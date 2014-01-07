@@ -212,7 +212,6 @@ class Navigation extends AbstractModel
 
                 if (isset($allContent->rows[0])) {
                     $navChildren = $this->getTreeChildren($allContent->rows, 0);
-                    //print_r($navChildren);
                     if (count($navChildren) > 0) {
                         $navName = str_replace('-', '_', String::slug($nav->navigation));
                         $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
@@ -398,7 +397,7 @@ class Navigation extends AbstractModel
         $children = array();
         foreach ($content as $c) {
             if (null !== $c->cont_id) {
-                if ($c->cont_parent_id == $pid) {
+                if ($c->cont_parent_id === $pid) {
                     if (!in_array($c->cont_id, $this->trackNav)) {
                         $this->trackNav[] = $c->cont_id;
                     }
@@ -414,6 +413,19 @@ class Navigation extends AbstractModel
                     $cont->uri       = $c->cont_uri;
                     if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
                         $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override);
+                        $children[] = $p;
+                    }
+                } else if (strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/structure/navigation') === false) {
+                    $p = (array)$c;
+                    $p['uri'] = BASE_PATH . $c->cont_uri;
+                    $p['href'] = $p['uri'];
+                    $p['name'] = $c->cont_title;
+                    $cont = $c;
+                    $cont->id        = $c->cont_id;
+                    $cont->parent_id = $c->cont_parent_id;
+                    $cont->title     = $c->cont_title;
+                    $cont->uri       = $c->cont_uri;
+                    if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
                         $children[] = $p;
                     }
                 }
