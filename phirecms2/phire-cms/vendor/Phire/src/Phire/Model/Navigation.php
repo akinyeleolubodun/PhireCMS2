@@ -15,6 +15,8 @@ class Navigation extends AbstractModel
 
     protected $trackNav = array();
 
+    protected $trackNavNotAllowed = array();
+
     /**
      * Get all navigation method
      *
@@ -423,9 +425,11 @@ class Navigation extends AbstractModel
                     $cont->parent_id = $c->cont_parent_id;
                     $cont->title     = $c->cont_title;
                     $cont->uri       = $c->cont_uri;
-                    if (($override) || (\Phire\Model\Content::isAllowed($cont))) {
+                    if (($override) || (\Phire\Model\Content::isAllowed($cont) && (!in_array($c->cont_parent_id, $this->trackNavNotAllowed)))) {
                         $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override);
                         $children[] = $p;
+                    } else {
+                        $this->trackNavNotAllowed[] = $cont->cont_id;
                     }
                 }
             } else if (null !== $c->cat_id) {
