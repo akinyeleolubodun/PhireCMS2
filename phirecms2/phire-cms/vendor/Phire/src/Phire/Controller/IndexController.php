@@ -395,12 +395,19 @@ class IndexController extends AbstractController
             $this->prepareView();
         }
 
-        $content = new Model\Content();
+        // Set up navigations
+        $nav = new Model\Navigation(array('acl' => $this->project->getService('acl')));
+        $this->view->merge($nav->getContentNav());
+        $this->view->set('category_nav', $nav->getCategoryNav());
+
+        $content = new Model\Content(array('acl' => $this->project->getService('acl')));
+
         $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
         $code = (null !== $msg) ? 200 : 404;
 
         $this->view->set('title', $title)
                    ->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL)
+                   ->set('breadcrumb', $content->getBreadcrumb())
                    ->set('phire', new Model\Phire());
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));
