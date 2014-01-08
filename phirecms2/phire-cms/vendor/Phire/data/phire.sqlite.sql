@@ -247,7 +247,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
 --
 
 INSERT INTO "[{prefix}]content" ("id", "type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6001, 5001, NULL, 'Welcome', '/', '', 1, 0, 2);
-INSERT INTO "[{prefix}]content" ("id", "type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6002, 5001, 6001, 'About', '/about', 'about', 1, 0, 2)
+INSERT INTO "[{prefix}]content" ("id", "type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES (6002, 5001, 6001, 'About', '/about', 'about', 1, 0, 2);
 
 -- --------------------------------------------------------
 
