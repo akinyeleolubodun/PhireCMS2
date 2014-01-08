@@ -5,7 +5,7 @@
 #nav-flame {
     display: block;
     position: absolute;
-    z-index: 100000;
+    z-index: 100001;
     margin: 0;
     padding: 0;
     top: 0;
@@ -47,6 +47,7 @@
     display: block;
     float: left;
     height: 16px;
+    font-family: arial, helvetica, verdana, sans-serif;
     font-size: 11px;
     color: #fff;
     font-weight: normal;
@@ -56,6 +57,7 @@
 
 #phire-nav li > a:hover {
     background-color: #000;
+    font-family: arial, helvetica, verdana, sans-serif;
     text-decoration: underline;
 }
 
@@ -93,6 +95,7 @@
     display: block;
     width: 120px;
     min-height: 15px;
+    font-family: arial, helvetica, verdana, sans-serif;
     font-size: 10px;
     text-align: left;
     font-weight: normal;
@@ -103,6 +106,7 @@
 #phire-nav li > ul > li > a:hover {
     text-align: left;
     color: #bce6ff;
+    font-family: arial, helvetica, verdana, sans-serif;
     font-weight: normal;
     background-color: #1392db;
     text-decoration: underline;
