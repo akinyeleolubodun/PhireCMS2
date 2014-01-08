@@ -25,21 +25,25 @@ class Project extends P
      * Register and load any other modules
      *
      * @param  \Pop\Loader\Autoloader $autoloader
-     * @throws \Exception
+     * $param  string                 $docRoot
+     * @throws Exception
      * @return self
      */
-    public function load($autoloader)
+    public function load($autoloader, $docRoot = null)
     {
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        }
         $events = array();
 
         // Load Phire any overriding Phire configuration
-        $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire');
+        $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire', $docRoot);
 
         // Check if Phire is installed
         self::isInstalled();
 
         $sess = Session::getInstance();
-        $errors = self::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH, true);
+        $errors = self::checkDirs($docRoot . BASE_PATH . CONTENT_PATH, true, $docRoot);
         if (count($errors) > 0) {
             $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
         } else {
@@ -49,12 +53,12 @@ class Project extends P
         $modulesDirs = array(
             __DIR__ . '/../../../',
             __DIR__ . '/../../../../module/',
-            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
+            $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
         );
 
         // Check for overriding Phire config
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
-            $phireCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
+        if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
+            $phireCfg = include $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
             if (isset($phireCfg['Phire'])) {
                 // If the overriding config is set to allow changes, merge new nav with the original nav
                 // else, the entire original nav will be overwritten with the new nav.
@@ -83,7 +87,7 @@ class Project extends P
                         $ext = Table\Extensions::findBy(array('name' => $d));
                         if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
                             // Load assets
-                            $this->loadAssets($directory . $d . '/data', $d);
+                            $this->loadAssets($directory . $d . '/data', $d, $docRoot);
 
                             // Get module config
                             if (file_exists($directory . $d . '/config/module.php')) {
@@ -143,7 +147,7 @@ class Project extends P
         }
 
         // Add Phire CSS override file if it exists
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
+        if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
             $this->assets['css'] .= '    <style type="text/css">@import "' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css";</style>' . PHP_EOL;
         }
 
@@ -324,11 +328,16 @@ class Project extends P
     /**
      * Static method to get model types
      *
-     * @param mixed $model
+     * @param mixed  $model
+     * @param string $docRoot
      * @return array
      */
-    public static function getModelTypes($model)
+    public static function getModelTypes($model, $docRoot = null)
     {
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        }
+
         if (is_array($model)) {
             $aryVals = array_values($model);
             $model = array_shift($aryVals);
@@ -342,13 +351,13 @@ class Project extends P
         $dirs = array();
 
         // Get system and extension modules
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0])) {
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
-                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
+        if (file_exists($docRoot . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0])) {
+            if (file_exists($docRoot . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
+                $dirs[] = realpath($docRoot . BASE_PATH . APP_PATH . '/vendor/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
             }
-        } else if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0])) {
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
-                $dirs[] = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
+        } else if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0])) {
+            if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1])) {
+                $dirs[] = realpath($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $classAry[0] . '/src/' . $classAry[0] . '/' . $classAry[1]);
             }
         }
 
@@ -504,10 +513,16 @@ class Project extends P
      *
      * @param  string $d
      * @param  string $moduleName
+     * @param  string $docRoot
      * @return void
      */
-    protected function loadAssets($d, $moduleName)
+    protected function loadAssets($d, $moduleName, $docRoot = null)
     {
+
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        }
+
         clearstatcache();
 
         if (null === $this->assets) {
@@ -517,11 +532,11 @@ class Project extends P
             );
         }
 
-        $newModuleDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName);
+        $newModuleDir = $docRoot . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName);
         if (!file_exists($newModuleDir)) {
             mkdir($newModuleDir);
             chmod($newModuleDir, 0777);
-            copy($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/index.html', $newModuleDir . '/index.html');
+            copy($docRoot . BASE_PATH . CONTENT_PATH . '/assets/index.html', $newModuleDir . '/index.html');
             chmod($newModuleDir . '/index.html', 0777);
         }
 
@@ -530,11 +545,11 @@ class Project extends P
         // Check and install asset files
         foreach ($assetDirs as $assetDir) {
             if (file_exists($d . '/assets/' . $assetDir)) {
-                $newDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/' . $assetDir;
+                $newDir = $docRoot . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/' . $assetDir;
                 if (!file_exists($newDir)) {
                     mkdir($newDir);
                     chmod($newDir, 0777);
-                    copy($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/index.html', $newDir . '/index.html');
+                    copy($docRoot . BASE_PATH . CONTENT_PATH . '/assets/index.html', $newDir . '/index.html');
                     chmod($newDir . '/index.html', 0777);
                 }
                 $asDir = new Dir($d . '/assets/' . $assetDir, true, false, false);
@@ -588,12 +603,17 @@ class Project extends P
     /**
      * Determine whether or not the necessary system directories are writable or not.
      *
-     * @param  string $contentDir
+     * @param  string  $contentDir
      * @param  boolean $msgs
+     * @param  string  $docRoot
      * @return boolean|array
      */
-    public static function checkDirs($contentDir, $msgs = false)
+    public static function checkDirs($contentDir, $msgs = false, $docRoot = null)
     {
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        }
+
         $dir = new Dir($contentDir, true, true);
         $files = $dir->getFiles();
         $errorMsgs = array();
@@ -601,7 +621,7 @@ class Project extends P
         // Check if the necessary directories are writable for Windows.
         if (stripos(PHP_OS, 'win') !== false) {
             if ((@touch($contentDir . '/writetest.txt')) == false) {
-                $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
+                $errorMsgs[] = "The directory " . str_replace($docRoot, '', $contentDir) . " is not writable.";
             } else {
                 unlink($contentDir . '/writetest.txt');
                 clearstatcache();
@@ -609,7 +629,7 @@ class Project extends P
             foreach ($files as $value) {
                 if ((strpos($value, 'data') === false) && (strpos($value, 'ckeditor') === false) && (strpos($value, 'tinymce') === false) && (is_dir($value))) {
                     if ((@touch($value . '/writetest.txt')) == false) {
-                        $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $value) . " is not writable.";
+                        $errorMsgs[] = "The directory " . str_replace($docRoot, '', $value) . " is not writable.";
                     } else {
                         unlink($value . '/writetest.txt');
                         clearstatcache();
@@ -620,13 +640,13 @@ class Project extends P
         } else {
             clearstatcache();
             if (!is_writable($contentDir)) {
-                $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $contentDir) . " is not writable.";
+                $errorMsgs[] = "The directory " . str_replace($docRoot, '', $contentDir) . " is not writable.";
             }
             foreach ($files as $value) {
                 if ((strpos($value, 'data') === false) && (strpos($value, 'ckeditor') === false) && (strpos($value, 'tinymce') === false) && (is_dir($value))) {
                     clearstatcache();
                     if (!is_writable($value)) {
-                        $errorMsgs[] = "The directory " . str_replace($_SERVER['DOCUMENT_ROOT'], '', $value) . " is not writable.";
+                        $errorMsgs[] = "The directory " . str_replace($docRoot, '', $value) . " is not writable.";
                     }
                 }
             }
