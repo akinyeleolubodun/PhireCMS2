@@ -14,7 +14,7 @@ elseif (isset($types) && isset($types[0])): ?>
             <tr><th class="single-header">Content Types</th></tr>
 <?php foreach ($types as $type): ?>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $type->id)): ?>
-            <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/content/index<?php echo $type->id; ?>"><?php echo $type->name;?></a></td></tr>
+            <tr><td style="border-left: solid 1px #ccc; border-right: solid 1px #ccc;"><a href="<?php echo BASE_PATH . APP_URI; ?>/content/index/<?php echo $type->id; ?>"><?php echo $type->name;?></a></td></tr>
 <?php endif; ?>
 <?php endforeach; ?>
         </table>

@@ -107,7 +107,6 @@ class Field extends \Phire\Model\AbstractModel
                                             $id = $vAry[1];
                                             $name = (isset($vAry[2]) ? $vAry[2] : $vAry[1]);
                                             $valRows = $class::findAll($order);
-                                            $valAry['----'] = '----';
                                             if (isset($valRows->rows[0])) {
                                                 foreach ($valRows->rows as $vRow) {
                                                     $valAry[$vRow->{$id}] = $vRow->{$name};
@@ -125,7 +124,7 @@ class Field extends \Phire\Model\AbstractModel
                             $fld['value'] = $valAry;
                         // If the values are to be pulled from a database table
                         } else if (strpos($field->values, 'Table') !== false) {
-                            $valAry = array('----' => '----');
+                            $valAry = array();
                             if (strpos($field->values, ',') !== false) {
                                 $vAry = explode(',', $field->values);
                                 $class = $vAry[0];
