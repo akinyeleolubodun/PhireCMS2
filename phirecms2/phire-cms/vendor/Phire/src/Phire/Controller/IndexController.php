@@ -531,7 +531,7 @@ class IndexController extends AbstractController
         }
 
         // Check is the template file has a Content-Type override
-        if ($isFile) {
+        if (($isFile) && file_exists($t)) {
             $f = file_get_contents($t);
             if (strpos($f, 'Content-Type:') != false) {
                 $contentType = substr($f, (strpos($f, 'Content-Type:') + 13));

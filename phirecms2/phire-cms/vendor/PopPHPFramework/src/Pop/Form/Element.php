@@ -290,7 +290,6 @@ class Element extends Child
      */
     public function setMarked($marked)
     {
-
         $this->marked = ($this->isMultiple()) ? array() : null;
 
         if (is_array($marked)) {
@@ -409,6 +408,18 @@ class Element extends Child
     }
 
     /**
+     * Set validators
+     *
+     * @param  array $validators
+     * @return \Pop\Form\Element
+     */
+    public function setValidators(array $validators = array())
+    {
+        $this->validators = $validators;
+        return $this;
+    }
+
+    /**
      * Get form element object name.
      *
      * @return string
@@ -459,6 +470,16 @@ class Element extends Child
     }
 
     /**
+     * Get validators
+     *
+     * @return array
+     */
+    public function getValidators()
+    {
+        return $this->validators;
+    }
+
+    /**
      * Get whether the form element object is required.
      *
      * @return boolean
@@ -486,6 +507,17 @@ class Element extends Child
     public function hasErrors()
     {
         return (count($this->errors) > 0);
+    }
+
+    /**
+     * Clear errors.
+     *
+     * @return \Pop\Form\Element
+     */
+    public function clearErrors()
+    {
+        $this->errors = array();
+        return $this;
     }
 
     /**
