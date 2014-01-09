@@ -38,6 +38,12 @@ class Element extends Child
     protected $name = null;
 
     /**
+     * Element type
+     * @var string
+     */
+    protected $type = null;
+
+    /**
      * Form element value(s)
      * @var string|array
      */
@@ -126,6 +132,7 @@ class Element extends Child
     public function __construct($type, $name, $value = null, $marked = null, $indent = null)
     {
         $this->name = $name;
+        $this->type = $type;
 
         // Check the element type, else set the properties.
         if (!in_array($type, $this->allowedTypes)) {
@@ -420,6 +427,17 @@ class Element extends Child
     }
 
     /**
+     * Clear errors.
+     *
+     * @return \Pop\Form\Element
+     */
+    public function clearErrors()
+    {
+        $this->errors = array();
+        return $this;
+    }
+
+    /**
      * Get form element object name.
      *
      * @return string
@@ -427,6 +445,16 @@ class Element extends Child
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get form element object type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -507,17 +535,6 @@ class Element extends Child
     public function hasErrors()
     {
         return (count($this->errors) > 0);
-    }
-
-    /**
-     * Clear errors.
-     *
-     * @return \Pop\Form\Element
-     */
-    public function clearErrors()
-    {
-        $this->errors = array();
-        return $this;
     }
 
     /**
