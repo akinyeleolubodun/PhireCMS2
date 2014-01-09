@@ -207,7 +207,7 @@ return array(
         // Encryption options for whichever encryption method you choose
         'encryptionOptions' => array(),
         // Amount of revision history to store
-        'history' => 5,
+        'history' => 10,
         // CAPTCHA settings
         'captcha' => array(
             'expire'      => 300,
