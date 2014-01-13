@@ -166,27 +166,6 @@ class User extends Form
         $type = Table\UserTypes::findById($tid);
         $fields1 = array();
 
-        // If not a profile edit, add role field
-        if (!$profile) {
-            // Get roles for user type
-            $rolesAry = array('0' => '(Blocked)');
-
-            if ($tid != 0) {
-                $roles = Table\UserRoles::findBy(array('type_id' => $tid), 'id ASC');
-                foreach ($roles->rows as $role) {
-                    $rolesAry[$role->id] = $role->name;
-                }
-            }
-
-            $fields1['role_id'] = array(
-                'type'     => 'select',
-                'required' => true,
-                'label'    => 'User Role:',
-                'value'    => $rolesAry,
-                'marked'   => $type->default_role_id
-            );
-        }
-
         // Continue setting up initial user fields
         $fields1['email1'] = array(
             'type'       => 'text',
@@ -262,21 +241,6 @@ class User extends Form
             }
         }
 
-        // If not profile edit, add verify and attempts fields
-        if (!$profile) {
-            $fields3['verified'] = array(
-                'type'   => 'radio',
-                'label'  => 'Verified:',
-                'value'  => array('1' => 'Yes', '0' => 'No'),
-                'marked' => '0'
-            );
-            $fields3['failed_attempts'] = array(
-                'type'       => 'text',
-                'label'      => 'Failed Attempts:',
-                'attributes' => array('size' => 5)
-            );
-        }
-
         $fields4 = array();
 
         // Finish the initial fields
@@ -313,6 +277,39 @@ class User extends Form
             $fields4['update_value'] = array(
                 'type'  => 'hidden',
                 'value' => 0
+            );
+        }
+
+        // If not profile
+        if (!$profile) {
+            // Get roles for user type
+            $rolesAry = array('0' => '(Blocked)');
+
+            if ($tid != 0) {
+                $roles = Table\UserRoles::findBy(array('type_id' => $tid), 'id ASC');
+                foreach ($roles->rows as $role) {
+                    $rolesAry[$role->id] = $role->name;
+                }
+            }
+
+            $fields4['role_id'] = array(
+                'type'     => 'select',
+                'required' => true,
+                'label'    => 'User Role:',
+                'value'    => $rolesAry,
+                'marked'   => $type->default_role_id
+            );
+
+            $fields4['verified'] = array(
+                'type'   => 'radio',
+                'label'  => 'Verified:',
+                'value'  => array('1' => 'Yes', '0' => 'No'),
+                'marked' => '0'
+            );
+            $fields4['failed_attempts'] = array(
+                'type'       => 'text',
+                'label'      => 'Failed Attempts:',
+                'attributes' => array('size' => 5)
             );
         }
 
