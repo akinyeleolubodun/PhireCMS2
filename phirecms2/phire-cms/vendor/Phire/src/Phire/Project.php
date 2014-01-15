@@ -314,8 +314,8 @@ class Project extends P
                     )
                 ));
                 $phireNav->rebuild();
-                if (strpos($body, 'jax.3.1.0.min.js') === false) {
-                    $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.1.0.min.js"></script>' . PHP_EOL . '</head>', $body);
+                if (strpos($body, 'jax.3.2.0.min.js') === false) {
+                    $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.2.0.min.js"></script>' . PHP_EOL . '</head>', $body);
                 }
                 $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
                 $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
@@ -527,7 +527,7 @@ class Project extends P
 
         if (null === $this->assets) {
             $this->assets = array(
-                'js'  => PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.1.0.min.js"></script>' . PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.form.min.js"></script>' . PHP_EOL,
+                'js'  => PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.2.0.min.js"></script>' . PHP_EOL . '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.form.min.js"></script>' . PHP_EOL,
                 'css' => PHP_EOL
             );
         }

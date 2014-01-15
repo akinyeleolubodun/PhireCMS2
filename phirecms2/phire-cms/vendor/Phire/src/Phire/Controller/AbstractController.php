@@ -129,7 +129,7 @@ class AbstractController extends \Pop\Mvc\Controller
         }
 
         if (isset($this->view->assets)) {
-            $this->view->assets = str_replace('jax.3.1.0.min.js', 'jax.3.1.0.min.js' . $jsVars, $this->view->assets);
+            $this->view->assets = str_replace('jax.3.2.0.min.js', 'jax.3.2.0.min.js' . $jsVars, $this->view->assets);
         }
 
         // Set config object and system/site default data

@@ -373,7 +373,8 @@ class User extends AbstractModel
                 'cellpadding' => 0,
                 'cellspacing' => 0,
                 'border'      => 0
-            )
+            ),
+            'date' => 'D  M j, Y H:i:s'
         );
 
         $this->data['table']  = Html::encode($loginsAry, $options, $this->config()->pagination_limit, $this->config()->pagination_range);
