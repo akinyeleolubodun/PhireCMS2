@@ -118,6 +118,7 @@ class Navigation extends AbstractModel
                 'cat_title'      => DB_PREFIX . 'categories.title',
                 'cat_uri'        => DB_PREFIX . 'categories.uri',
                 DB_PREFIX . 'content.status',
+                DB_PREFIX . 'content.roles',
                 DB_PREFIX . 'content.type_id',
                 DB_PREFIX . 'content.template',
                 DB_PREFIX . 'content.feed',

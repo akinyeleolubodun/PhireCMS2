@@ -61,10 +61,11 @@ class Content extends AbstractModel
 
         // Get any content roles
         $rolesAry = array();
+
         if (isset($content->title)) {
-            $roles = Table\ContentToRoles::findAll(null, array('content_id' => $content->id));
-            foreach ($roles->rows as $role) {
-                $rolesAry[] = $role->role_id;
+            $roles = (null !== $content->roles) ? unserialize($content->roles) : array();
+            foreach ($roles as $id) {
+                $rolesAry[] = $id;
             }
         }
 
@@ -364,12 +365,13 @@ class Content extends AbstractModel
             9          => DB_PREFIX . 'content.feed',
             10         => DB_PREFIX . 'content.force_ssl',
             11         => DB_PREFIX . 'content.status',
-            12         => DB_PREFIX . 'content.created',
-            13         => DB_PREFIX . 'content.updated',
-            14         => DB_PREFIX . 'content.published',
-            15         => DB_PREFIX . 'content.expired',
-            16         => DB_PREFIX . 'content.created_by',
-            17         => DB_PREFIX . 'content.updated_by',
+            12         => DB_PREFIX . 'content.roles',
+            13         => DB_PREFIX . 'content.created',
+            14         => DB_PREFIX . 'content.updated',
+            15         => DB_PREFIX . 'content.published',
+            16         => DB_PREFIX . 'content.expired',
+            17         => DB_PREFIX . 'content.created_by',
+            18         => DB_PREFIX . 'content.updated_by',
             'type_uri' => DB_PREFIX . 'content_types.uri'
         ))->where()->equalTo(DB_PREFIX . 'content.uri', ':uri');
 
@@ -553,14 +555,17 @@ class Content extends AbstractModel
             }
 
             // Get roles
-            $roles = Table\ContentToRoles::findAll(null, array('content_id' => $id));
-            if (isset($roles->rows[0])) {
+            $content = Table\Content::findById($id);
+            $roles = (null !== $content->roles) ? unserialize($content->roles) : array();
+
+            if (isset($roles[0])) {
                 $rolesAry = array();
-                foreach ($roles->rows as $role) {
-                    $rolesAry[] = $role->role_id;
+                foreach ($roles as $id) {
+                    $rolesAry[] = $id;
                 }
                 $contentValues['roles'] = $rolesAry;
             }
+
             if (($contentValues['updated'] != '0000-00-00 00:00:00') && (null !== $contentValues['updated'])) {
                 $contentValues['updated'] = '<strong>Updated:</strong> ' . date($this->config->datetime_format, strtotime($contentValues['updated']));
                 if (null !== $contentValues['updated_by']) {
@@ -733,6 +738,7 @@ class Content extends AbstractModel
             'feed'       => (int)$fields['feed'],
             'force_ssl'  => ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null)),
             'status'     => ((isset($fields['status']) ? (int)$fields['status'] : null)),
+            'roles'      => ((isset($fields['roles']) ? serialize($fields['roles']) : null)),
             'created'    => date('Y-m-d H:i:s'),
             'updated'    => null,
             'published'  => $published,
@@ -768,17 +774,6 @@ class Content extends AbstractModel
             }
         }
 
-        // Save content roles
-        if (isset($fields['roles'])) {
-            foreach ($fields['roles'] as $role) {
-                $contentToRole = new Table\ContentToRoles(array(
-                    'content_id' => $content->id,
-                    'role_id'    => $role
-                ));
-                $contentToRole->save();
-            }
-        }
-
         FieldValue::save($fields, $content->id);
     }
 
@@ -797,8 +792,9 @@ class Content extends AbstractModel
         $content = Table\Content::findById($fields['id']);
 
         $parentId = null;
-        $uri = null;
-        $slug = null;
+        $uri      = null;
+        $slug     = null;
+        $expired  = null;
 
         if (isset($fields['parent_id'])) {
             $parentId = ((int)$fields['parent_id'] != 0) ? (int)$fields['parent_id'] : null;
@@ -885,6 +881,7 @@ class Content extends AbstractModel
         $content->feed       = (int)$fields['feed'];
         $content->force_ssl  = ((isset($fields['force_ssl']) ? (int)$fields['force_ssl'] : null));
         $content->status     = ((isset($fields['status']) ? (int)$fields['status'] : null));
+        $content->roles      = ((isset($fields['roles']) ? serialize($fields['roles']) : null));
         $content->updated    = date('Y-m-d H:i:s');
         $content->published  = $published;
         $content->expired    = $expired;
@@ -933,25 +930,6 @@ class Content extends AbstractModel
             }
         }
 
-        // Update content roles
-        $contentToRoles = Table\ContentToRoles::findBy(array('content_id' => $content->id));
-        foreach ($contentToRoles->rows as $role) {
-            $contentToRole = Table\ContentToRoles::findById(array($content->id, $role->role_id));
-            if (isset($contentToRole->content_id)) {
-                $contentToRole->delete();
-            }
-        }
-
-        if (isset($_POST['roles'])) {
-            foreach ($_POST['roles'] as $role) {
-                $contentToRole = new Table\ContentToRoles(array(
-                    'content_id' => $content->id,
-                    'role_id'    => $role
-                ));
-                $contentToRole->save();
-            }
-        }
-
         FieldValue::update($fields, $content->id);
     }
 
@@ -989,6 +967,7 @@ class Content extends AbstractModel
             'feed'       => $this->data['feed'],
             'force_ssl'  => $this->data['force_ssl'],
             'status'     => 0,
+            'roles'      => (isset($this->data['roles']) ? serialize($this->data['roles']) : null),
             'created'    => date('Y-m-d H:i:s'),
             'updated'    => null,
             'published'  => date('Y-m-d H:i:s'),
@@ -1009,18 +988,6 @@ class Content extends AbstractModel
                     'category_id' => $cat->category_id
                 ));
                 $contentToCategory->save();
-            }
-        }
-
-        // Save any content roles
-        $roles = Table\ContentToRoles::findAll(null, array('content_id' => $id));
-        if (isset($roles->rows[0])) {
-            foreach ($roles->rows as $role) {
-                $contentToRole = new Table\ContentToRoles(array(
-                    'content_id' => $content->id,
-                    'role_id'    => $role->role_id
-                ));
-                $contentToRole->save();
             }
         }
 

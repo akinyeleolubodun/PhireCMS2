@@ -41,7 +41,7 @@ class UserRoles extends Record
             $role = self::findById($roleId);
             $r = \Pop\Auth\Role::factory($role->name);
 
-            $permissions = unserialize($role->permissions);
+            $permissions = (null !== $role->permissions) ? unserialize($role->permissions) : array();
 
             foreach ($permissions as $permission) {
                 if ($permission['permission'] != '') {
@@ -78,7 +78,7 @@ class UserRoles extends Record
                         'deny'  => array()
                     );
 
-                    $permissions = unserialize($role->permissions);
+                    $permissions = (null !== $role->permissions) ? unserialize($role->permissions) : array();
 
                     if (isset($permissions[0])) {
                         foreach ($permissions as $permission) {

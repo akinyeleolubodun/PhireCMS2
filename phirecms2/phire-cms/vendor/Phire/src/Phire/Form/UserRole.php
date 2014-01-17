@@ -136,7 +136,7 @@ class UserRole extends Form
         // Get any current resource/permission fields
         if ($rid != 0) {
             $role = UserRoles::findById($rid);
-            $permissions = unserialize($role->permissions);
+            $permissions = (null !== $role->permissions) ? unserialize($role->permissions) : array();
             $i = 1;
             foreach ($permissions as $permission) {
                 if (strpos($permission['permission'], '_') !== false) {

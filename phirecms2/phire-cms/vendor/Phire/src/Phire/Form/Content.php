@@ -7,7 +7,6 @@ namespace Phire\Form;
 use Pop\File\Dir;
 use Pop\Form\Form;
 use Pop\Form\Element;
-use Pop\Http\Response;
 use Pop\Validator;
 use Phire\Model;
 use Phire\Table;

@@ -54,7 +54,7 @@ class FieldValue extends \Phire\Model\AbstractModel
             foreach ($fields->rows as $field) {
                 $f = Table\Fields::findById($field->field_id);
                 $value = unserialize($field->value);
-                $groupAry = Table\FieldsToGroups::getFieldGroup($field->field_id);
+                $groupAry = Table\Fields::getFieldGroup($field->field_id);
                 if (count($groupAry) > 0) {
                     if ($byName) {
                         if (is_array($value)) {

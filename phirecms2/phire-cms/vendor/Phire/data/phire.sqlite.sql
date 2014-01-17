@@ -213,6 +213,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "feed" integer,
   "force_ssl" integer,
   "status" integer,
+  "roles" text,
   "created" datetime,
   "updated" datetime,
   "published" datetime,
@@ -330,20 +331,6 @@ INSERT INTO "[{prefix}]navigation_tree" ("navigation_id", "content_id", "categor
 -- --------------------------------------------------------
 
 --
--- Table structure for table "content_to_roles"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_roles" (
-  "content_id" integer NOT NULL,
-  "role_id" integer NOT NULL,
-  UNIQUE ("content_id", "role_id"),
-  CONSTRAINT "fk_role_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_content_role_id" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table "templates"
 --
 
@@ -418,20 +405,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
 ) ;
 
 INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]fields', 11000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "fields_to_groups"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]fields_to_groups" (
-  "field_id" integer NOT NULL,
-  "group_id" integer NOT NULL,
-  UNIQUE ("field_id", "group_id"),
-  CONSTRAINT "fk_field_group_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "fk_group_field_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
 
 -- --------------------------------------------------------
 

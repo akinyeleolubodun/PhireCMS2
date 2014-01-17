@@ -5,8 +5,6 @@
 namespace Phire\Table;
 
 use Pop\Db\Record;
-use Pop\File\Dir;
-use Pop\File\File;
 use Phire\Model;
 
 class FieldValues extends Record
@@ -48,7 +46,7 @@ class FieldValues extends Record
                 $id = substr($id, 0, strpos($id, '_'));
             }
 
-            $groupAry = FieldsToGroups::getFieldGroup($id);
+            $groupAry = Fields::getFieldGroup($id);
             if ((count($groupAry) > 0) && (!in_array($groupAry, $groups))) {
                 $groups[] = $groupAry;
             }
@@ -58,4 +56,3 @@ class FieldValues extends Record
     }
 
 }
-
