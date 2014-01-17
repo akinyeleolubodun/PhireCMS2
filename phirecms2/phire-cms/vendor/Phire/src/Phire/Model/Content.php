@@ -121,9 +121,10 @@ class Content extends AbstractModel
     /**
      * Get recent content method
      *
+     * @param  int  $limit
      * @return array
      */
-    public function getRecent()
+    public function getRecent($limit = 10)
     {
         $recent = array();
 
@@ -143,7 +144,7 @@ class Content extends AbstractModel
         ))->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
           ->orderBy('created', 'DESC')
-          ->limit(10);
+          ->limit((int)$limit);
 
         $content = Table\Content::execute($sql->render(true));
 
@@ -380,6 +381,7 @@ class Content extends AbstractModel
             $contentValues = $content->getValues();
             $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
             $this->data = array_merge($this->data, $contentValues);
+            $this->filterContent();
         }
     }
 
@@ -401,6 +403,7 @@ class Content extends AbstractModel
             $contentValues = $content->getValues();
             $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
             $this->data = array_merge($this->data, $contentValues);
+            $this->filterContent();
         }
     }
 

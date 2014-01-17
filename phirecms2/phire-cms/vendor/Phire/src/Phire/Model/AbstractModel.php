@@ -158,6 +158,27 @@ abstract class AbstractModel
     }
 
     /**
+     * Method to filter the content and replace any placeholders
+     *
+     * @returns void
+     */
+    protected function filterContent()
+    {
+        $keys = array_keys($this->data);
+        foreach ($this->data as $key => $value) {
+            if (is_string($value)) {
+                $value = str_replace(array('[{base_path}]', '[{content_path}]'), array(BASE_PATH, CONTENT_PATH), $value);
+                foreach ($keys as $k) {
+                    if ((strpos($value, '[{' . $k . '}]') !== false) && ($this->data[$k])) {
+                        $value = str_replace('[{' . $k . '}]', $this->data[$k], $value);
+                    }
+                }
+                $this->data[$key] = $value;
+            }
+        }
+    }
+
+    /**
      * Get method to return the value of data[$name].
      *
      * @param  string $name
