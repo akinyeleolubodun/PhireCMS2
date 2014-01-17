@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_roles` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `type_id` int(16) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `permissions` text,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_role_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3002 ;
@@ -111,21 +112,6 @@ INSERT INTO `[{prefix}]user_roles` (`id`, `type_id`, `name`) VALUES
 (3001, 2001, 'Admin');
 
 ALTER TABLE `[{prefix}]user_types` ADD CONSTRAINT `fk_default_role` FOREIGN KEY (`default_role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_permissions`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]user_permissions` (
-  `role_id` int(16) NOT NULL,
-  `resource` varchar(255),
-  `permission` varchar(255),
-  `allow` int(1),
-  UNIQUE (`role_id`, `resource`, `permission`),
-  CONSTRAINT `fk_permission_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 

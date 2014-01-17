@@ -27,7 +27,7 @@ class Phire extends AbstractModel
 
         if (isset($content->id)) {
             $contentValues = $content->getValues();
-            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id));
+            $contentValues = $this->filterContent(array_merge($contentValues, FieldValue::getAll($content->id)));
         }
 
         return new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
@@ -46,7 +46,7 @@ class Phire extends AbstractModel
 
         if (isset($category->id)) {
             $categoryValues = $category->getValues();
-            $categoryValues = array_merge($categoryValues, FieldValue::getAll($category->id));
+            $categoryValues = $this->filterContent(array_merge($categoryValues, FieldValue::getAll($category->id)));
         }
 
         return new \ArrayObject($categoryValues, \ArrayObject::ARRAY_AS_PROPS);
@@ -140,7 +140,7 @@ class Phire extends AbstractModel
                 foreach ($content->rows as $cont) {
                     if (\Phire\Model\Content::isAllowed($cont)) {
                         $contentValues = (array)$cont;
-                        $contentValues = array_merge($contentValues, FieldValue::getAll($cont->id, true));
+                        $contentValues = $this->filterContent(array_merge($contentValues, FieldValue::getAll($cont->id, true)));
                         $contentAry[] = new \ArrayObject($contentValues, \ArrayObject::ARRAY_AS_PROPS);
                     }
                 }

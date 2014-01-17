@@ -240,13 +240,14 @@ class UserRole extends AbstractModel
 
         $role = new Table\UserRoles(array(
             'type_id' => $fields['type_id'],
-            'name'    => $fields['name']
+            'name'    => $fields['name'],
         ));
 
         $role->save();
         $this->data['id'] = $role->id;
 
         // Add new permissions if any
+        $perms = array();
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'resource_new_') !== false) {
                 $id = substr($key, (strrpos($key, '_') + 1));
@@ -255,16 +256,17 @@ class UserRole extends AbstractModel
                     if ($perm != '') {
                         $perm .= (($_POST['type_new_' . $id] != '0') ? '_' . $_POST['type_new_' . $id] : '');
                     }
-                    $permission = new Table\UserPermissions(array(
-                        'role_id'    => $role->id,
+                    $perms[] = array(
                         'resource'   => $value,
                         'permission' => $perm,
                         'allow'      => (int)$_POST['allow_new_' . $id]
-                    ));
-                    $permission->save();
+                    );
                 }
             }
         }
+
+        $role->permissions = serialize($perms);
+        $role->update();
 
         FieldValue::save($fields, $role->id);
     }
@@ -289,11 +291,8 @@ class UserRole extends AbstractModel
             $this->data['id'] = $role->id;
         }
 
-        // Delete all resource/permissions to re-enter them
-        $permissions = new Table\UserPermissions();
-        $permissions->delete(array('role_id' => $role->id));
-
         // Add new permissions if any
+        $perms = array();
         foreach ($_POST as $key => $value) {
             if ((strpos($key, 'resource_new_') !== false) || (strpos($key, 'resource_cur_') !== false)) {
                 $id = substr($key, (strrpos($key, '_') + 1));
@@ -303,13 +302,11 @@ class UserRole extends AbstractModel
                     if ($perm != '') {
                         $perm .= (($_POST['type_' . $cur . '_' . $id] != '0') ? '_' . $_POST['type_' . $cur . '_' . $id] : '');
                     }
-                    $permission = new Table\UserPermissions(array(
-                        'role_id'    => $role->id,
+                    $perms[] = array(
                         'resource'   => $value,
                         'permission' => $perm,
                         'allow'      => (int)$_POST['allow_' . $cur . '_' . $id]
-                    ));
-                    $permission->save();
+                    );
                 }
             }
         }
@@ -317,14 +314,16 @@ class UserRole extends AbstractModel
         // Remove and resource/permissions
         foreach ($_POST as $key => $value) {
             if ((strpos($key, 'rm_resource_') !== false) && isset($value[0])) {
-                $ids = explode('_', $value[0]);
-                $perm = (count($ids) == 4) ? $ids[2] . '_' . $ids[3] : $ids[2];
-                $permission = Table\UserPermissions::findById(array($ids[0], $ids[1], $perm));
-                if (isset($permission->role_id)) {
-                    $permission->delete();
+                foreach ($perms as $k => $perm) {
+                    if (($role->id . '_' . $perm['resource'] . '_' . $perm['permission']) == $value[0]) {
+                        unset($perms[$k]);
+                    }
                 }
             }
         }
+
+        $role->permissions = serialize($perms);
+        $role->update();
 
         FieldValue::update($fields, $role->id);
     }

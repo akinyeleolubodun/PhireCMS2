@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "type_id" integer NOT NULL,
   "name" varchar NOT NULL,
+  "permissions" text,
   UNIQUE ("id"),
   CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
@@ -121,21 +122,6 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_roles', 3000
 
 INSERT INTO "[{prefix}]user_roles" ("id", "type_id", "name") VALUES
 (3001, 2001, 'Admin');
-
--- --------------------------------------------------------
-
---
--- Table structure for table "user_permissions"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]user_permissions" (
-  "role_id" integer NOT NULL,
-  "resource" varchar,
-  "permission" varchar,
-  "allow" integer,
-  UNIQUE ("role_id", "resource", "permission"),
-  CONSTRAINT "fk_permission_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
 
 -- --------------------------------------------------------
 

@@ -7,7 +7,7 @@ namespace Phire\Form;
 use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
-use Phire\Table\UserPermissions;
+use Phire\Table\UserRoles;
 use Phire\Table\UserTypes;
 
 class UserRole extends Form
@@ -135,22 +135,23 @@ class UserRole extends Form
 
         // Get any current resource/permission fields
         if ($rid != 0) {
-            $permissions = UserPermissions::findAll(null, array('role_id' => $rid));
+            $role = UserRoles::findById($rid);
+            $permissions = unserialize($role->permissions);
             $i = 1;
-            foreach ($permissions->rows as $permission) {
-                if (strpos($permission->permission, '_') !== false) {
-                    $permAry = explode('_', $permission->permission);
+            foreach ($permissions as $permission) {
+                if (strpos($permission['permission'], '_') !== false) {
+                    $permAry = explode('_', $permission['permission']);
                     $p = $permAry[0];
                     $t = $permAry[1];
                 } else {
-                    $p = $permission->permission;
+                    $p = $permission['permission'];
                     $t = '0';
                 }
                 $fields2['resource_cur_' . $i] = array(
                     'type'       => 'select',
                     'label'      => "&nbsp;",
                     'value'      => $classes,
-                    'marked'     => $permission->resource,
+                    'marked'     => $permission['resource'],
                     'attributes' => array(
                         'onchange' => 'phire.changePermissions(this);',
                         'style' => 'display: block;'
@@ -158,13 +159,13 @@ class UserRole extends Form
                 );
                 $fields2['permission_cur_' . $i] = array(
                     'type'       => 'select',
-                    'value'      => $classActions[$permission->resource],
+                    'value'      => $classActions[$permission['resource']],
                     'marked'     => $p,
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
                 );
                 $fields2['type_cur_' . $i] = array(
                     'type'       => 'select',
-                    'value'      => $classTypes[$permission->resource],
+                    'value'      => $classTypes[$permission['resource']],
                     'marked'     => $t,
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
                 );
@@ -174,12 +175,12 @@ class UserRole extends Form
                         '1' => 'allow',
                         '0' => 'deny'
                     ),
-                    'marked'     => $permission->allow,
+                    'marked'     => $permission['allow'],
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
                 );
                 $fields2['rm_resource_' . $i] = array(
                     'type'       => 'checkbox',
-                    'value'      => array($permission->role_id . '_' . $permission->resource . '_' . $permission->permission => 'Remove?')
+                    'value'      => array($rid . '_' . $permission['resource'] . '_' . $permission['permission'] => 'Remove?')
                 );
                 $i++;
             }

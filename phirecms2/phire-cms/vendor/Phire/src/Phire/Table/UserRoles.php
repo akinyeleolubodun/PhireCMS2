@@ -41,11 +41,11 @@ class UserRoles extends Record
             $role = self::findById($roleId);
             $r = \Pop\Auth\Role::factory($role->name);
 
-            $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
+            $permissions = unserialize($role->permissions);
 
-            foreach ($permissions->rows as $permission) {
-                if ($permission->permission != '') {
-                    $r->addPermission($permission->permission);
+            foreach ($permissions as $permission) {
+                if ($permission['permission'] != '') {
+                    $r->addPermission($permission['permission']);
                 }
             }
         } else {
@@ -78,26 +78,26 @@ class UserRoles extends Record
                         'deny'  => array()
                     );
 
-                    $permissions = \Phire\Table\UserPermissions::findAll(null, array('role_id' => $role->id));
+                    $permissions = unserialize($role->permissions);
 
-                    if (isset($permissions->rows[0])) {
-                        foreach ($permissions->rows as $permission) {
-                            if (!isset($results['resources'][$role->name]['allow'][$permission->resource])) {
-                                if ($permission->allow) {
-                                    $results['resources'][$role->name]['allow'][$permission->resource] = array();
+                    if (isset($permissions[0])) {
+                        foreach ($permissions as $permission) {
+                            if (!isset($results['resources'][$role->name]['allow'][$permission['resource']])) {
+                                if ($permission['allow']) {
+                                    $results['resources'][$role->name]['allow'][$permission['resource']] = array();
                                 } else {
-                                    if (!isset($results['resources'][$role->name]['deny'][$permission->resource])) {
-                                        $results['resources'][$role->name]['deny'][$permission->resource] = array();
+                                    if (!isset($results['resources'][$role->name]['deny'][$permission['resource']])) {
+                                        $results['resources'][$role->name]['deny'][$permission['resource']] = array();
                                     }
                                 }
                             }
-                            if ($permission->permission != '') {
-                                $r->addPermission($permission->permission);
-                                if ($permission->resource != '') {
-                                    if ($permission->allow) {
-                                        $results['resources'][$role->name]['allow'][$permission->resource][] = $permission->permission;
+                            if ($permission['permission'] != '') {
+                                $r->addPermission($permission['permission']);
+                                if ($permission['resource'] != '') {
+                                    if ($permission['allow']) {
+                                        $results['resources'][$role->name]['allow'][$permission['resource']][] = $permission['permission'];
                                     } else {
-                                        $results['resources'][$role->name]['deny'][$permission->resource][] = $permission->permission;
+                                        $results['resources'][$role->name]['deny'][$permission['resource']][] = $permission['permission'];
                                     }
                                 }
                             }
