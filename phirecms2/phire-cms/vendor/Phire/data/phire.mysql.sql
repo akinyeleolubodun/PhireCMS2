@@ -377,24 +377,10 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]fields` (
   `order` int(16) NOT NULL,
   `required` int(1) NOT NULL,
   `editor` varchar(255),
+  `models` text,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11001 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fields_to_models`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]fields_to_models` (
-  `field_id` int(16) NOT NULL,
-  `model` varchar(255) NOT NULL,
-  `type_id` int(16),
-  UNIQUE (`field_id`, `model`, `type_id`),
-  CONSTRAINT `fk_field_id_model` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
-
 
 -- --------------------------------------------------------
 

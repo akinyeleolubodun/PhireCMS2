@@ -264,15 +264,16 @@ class Field extends Form
         );
 
         if ($id != 0) {
-            $fieldToModels = Table\FieldsToModels::findBy(array('field_id' => $id));
-            if (isset($fieldToModels->rows[0])) {
+            $field = Table\Fields::findById($id);
+            $fieldToModels = (null !== $field->models) ? unserialize($field->models) : array();
+            if (isset($fieldToModels[0])) {
                 $i = 1;
-                foreach ($fieldToModels->rows as $f2m) {
+                foreach ($fieldToModels as $f2m) {
                     $fields3['model_cur_' . $i] = array(
                         'type'       => 'select',
                         'label'      => '&nbsp;',
                         'value'      => $models,
-                        'marked'     => $f2m->model,
+                        'marked'     => $f2m['model'],
                         'attributes' => array(
                             'style'    => 'display: block; margin: 0 0 4px 0;',
                             'onchange' => 'phire.changeModelTypes(this);'
@@ -280,8 +281,8 @@ class Field extends Form
                     );
                     $fields3['type_id_cur_' . $i] = array(
                         'type'       => 'select',
-                        'value'      => \Phire\Project::getModelTypes(str_replace('\\', '_', $f2m->model)),
-                        'marked'     => $f2m->type_id,
+                        'value'      => \Phire\Project::getModelTypes(str_replace('\\', '_', $f2m['model'])),
+                        'marked'     => $f2m['type_id'],
                         'attributes' => array(
                             'style'  => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
                         )
@@ -289,7 +290,7 @@ class Field extends Form
                     $fields3['rm_model_cur_' . $i] = array(
                         'type'       => 'checkbox',
                         'value'      => array(
-                            $f2m->field_id . '_' . $f2m->model . '_' . $f2m->type_id => 'Remove?'
+                            $field->id . '_' . $f2m['model'] . '_' . $f2m['type_id'] => 'Remove?'
                         ),
                     );
                     $i++;

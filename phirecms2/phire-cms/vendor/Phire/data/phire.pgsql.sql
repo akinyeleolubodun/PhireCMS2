@@ -420,25 +420,12 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
   "order" integer NOT NULL,
   "required" integer NOT NULL,
   "editor" varchar(255),
+  "models" text,
   PRIMARY KEY ("id"),
   CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
 ALTER SEQUENCE field_id_seq OWNED BY "[{prefix}]fields"."id";
-
--- --------------------------------------------------------
-
---
--- Table structure for table "fields_to_models"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]fields_to_models" (
-  "field_id" integer NOT NULL,
-  "model" varchar(255) NOT NULL,
-  "type_id" integer,
-  UNIQUE ("field_id", "model", "type_id"),
-  CONSTRAINT "fk_field_id_model" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
 
 -- --------------------------------------------------------
 

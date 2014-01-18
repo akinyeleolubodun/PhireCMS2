@@ -156,6 +156,8 @@ class ContentType extends AbstractModel
                             }
                         }
                     }
+
+                    \Phire\Table\Fields::deleteByType($type->id);
                     $type->delete();
                 }
 

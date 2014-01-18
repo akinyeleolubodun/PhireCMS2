@@ -29,29 +29,13 @@ class Field extends \Phire\Model\AbstractModel
         $hasFile = false;
 
         // Get fields
-        $sql = Table\FieldsToModels::getSql();
-        $sql->select(array(
-            DB_PREFIX . 'fields_to_models.field_id',
-            DB_PREFIX . 'fields_to_models.model',
-            DB_PREFIX . 'fields_to_models.type_id',
-            DB_PREFIX . 'fields.label',
-            'field_order' => DB_PREFIX . 'fields.order',
-            DB_PREFIX . 'fields.group_id',
-            'group_order' => DB_PREFIX . 'field_groups.order',
-            DB_PREFIX . 'field_groups.dynamic',
-        ))->join(DB_PREFIX . 'fields', array('field_id', 'id'), 'LEFT JOIN')
-          ->join(DB_PREFIX . 'field_groups', array(DB_PREFIX . 'fields.group_id', 'id'), 'LEFT JOIN');
-
-        $sql->select()->where()->equalTo('model', ':model');
-        $sql->select()->orderBy('group_order', 'ASC')->orderBy('field_order', 'ASC');;
-
-        $fieldsToModel = Table\FieldsToModels::execute($sql->render(true), array('model' => $model));
         $fields = array();
-        foreach ($fieldsToModel->rows as $f2m) {
-            if (($f2m->type_id == 0) || ($tid == $f2m->type_id)) {
-                $field = Table\Fields::findById($f2m->field_id);
-                if (isset($field->id)) {
-                    $fields[] = $field;
+        $flds = Table\Fields::findAll('order ASC');
+        foreach ($flds->rows as $f) {
+            $models = (null !== $f->models) ? unserialize($f->models) : array();
+            foreach ($models as $m) {
+                if (($m['model'] == $model) && ($m['type_id'] == $tid)) {
+                    $fields[] = $f;
                 }
             }
         }
@@ -618,7 +602,7 @@ class Field extends \Phire\Model\AbstractModel
                 'border'      => 0
             ),
             'exclude' => array(
-                'group_id', 'values', 'default_values', 'attributes', 'validators', 'encryption', 'editor'
+                'group_id', 'values', 'default_values', 'attributes', 'validators', 'encryption', 'editor', 'models'
             ),
             'name'   => $name,
             'indent' => '        '
@@ -646,10 +630,6 @@ class Field extends \Phire\Model\AbstractModel
         $field = Table\Fields::findById($id);
         if (isset($field->id)) {
             $fieldValues = $field->getValues();
-            //$f2g = Table\FieldsToGroups::findBy(array('field_id' => $field->id));
-            //if (isset($f2g->field_id)) {
-            //    $fieldValues['group_id'] = $f2g->group_id;
-            //}
             $this->data = array_merge($this->data, $fieldValues);
         }
     }
@@ -864,7 +844,7 @@ class Field extends \Phire\Model\AbstractModel
         }
 
         $field = new Table\Fields(array(
-            'group_id'       => (int)$fields['group_id'],
+            'group_id'       => (((int)$fields['group_id'] > 0) ? (int)$fields['group_id'] : null),
             'type'           => $fields['type'],
             'name'           => $fields['name'],
             'label'          => $fields['label'],
@@ -881,18 +861,22 @@ class Field extends \Phire\Model\AbstractModel
         $field->save();
         $this->data['id'] = $field->id;
 
+        $models = array();
+
         // Save field to model relationships
         foreach ($_POST as $key => $value) {
             if ((strpos($key, 'model_new_') !== false) && ($value != '0')) {
                 $id = substr($key, (strrpos($key, '_') + 1));
-                $fieldToModel = new Table\FieldsToModels(array(
-                    'field_id' => $field->id,
+                $models[] = array(
                     'model'    => $value,
                     'type_id'  => (int)$_POST['type_id_new_' . $id]
-                ));
-                $fieldToModel->save();
+                );
             }
         }
+
+
+        $field->models = serialize($models);
+        $field->update();
     }
 
     /**
@@ -931,7 +915,7 @@ class Field extends \Phire\Model\AbstractModel
         $validators = array_merge($curValidators, $newValidators);
 
         $field = Table\Fields::findById($fields['id']);
-        $field->group_id       = (int)$fields['group_id'];
+        $field->group_id       = (((int)$fields['group_id'] > 0) ? (int)$fields['group_id'] : null);
         $field->type           = $fields['type'];
         $field->name           = $fields['name'];
         $field->label          = $fields['label'];
@@ -946,40 +930,35 @@ class Field extends \Phire\Model\AbstractModel
         $field->update();
         $this->data['id'] = $field->id;
 
-        $f2m = new Table\FieldsToModels();
-        $f2m->delete(array('field_id' => $field->id));
-
         $removed = array();
 
-        // Remove field to model relationships
-        foreach ($_POST as $key => $value) {
-            if (strpos($key, 'rm_model_') !== false) {
-                $values = explode('_', $value[0]);
-                $removed[] = array(
-                    'field_id' => $values[0],
-                    'model'    => $values[1],
-                    'type_id'  => $values[2]
-                );
-            }
-        }
+        $models = array();
 
         // Save field to model relationships
         foreach ($_POST as $key => $value) {
             if ((substr($key, 0, 6) == 'model_') && ($value != '0')) {
                 $cur = (strpos($key, 'new_') !== false) ? 'new_' : 'cur_';
                 $id = substr($key, (strrpos($key, '_') + 1));
-                $values = array(
-                    'field_id' => $field->id,
+                $models[] = array(
                     'model'    => $value,
                     'type_id'  => (int)$_POST['type_id_' . $cur . $id]
                 );
+            }
+        }
 
-                if (!in_array($values, $removed)) {
-                    $fieldToModel = new Table\FieldsToModels($values);
-                    $fieldToModel->save();
+        // Remove field to model relationships
+        foreach ($_POST as $key => $value) {
+            if ((strpos($key, 'rm_model_') !== false) && isset($value[0])) {
+                foreach ($models as $k => $model) {
+                    if (($field->id . '_' . $model['model'] . '_' . $model['type_id']) == $value[0]) {
+                        unset($models[$k]);
+                    }
                 }
             }
         }
+
+        $field->models = serialize($models);
+        $field->update();
     }
 
     /**

@@ -8,8 +8,6 @@ use Pop\Archive\Archive;
 use Pop\Data\Type\Html;
 use Pop\File\Dir;
 use Pop\File\File;
-use Pop\Filter\String;
-use Pop\Nav\Nav;
 use Pop\Web\Session;
 use Phire\Table;
 
@@ -450,11 +448,11 @@ class Content extends AbstractModel
                         $sql->select(array(
                             DB_PREFIX . 'field_values.field_id',
                             DB_PREFIX . 'field_values.model_id',
-                            DB_PREFIX . 'field_values.value',
-                            DB_PREFIX . 'fields_to_models.model'
-                        ))->join(DB_PREFIX . 'fields_to_models', array('field_id', 'field_id'), 'LEFT_JOIN');
+                            DB_PREFIX . 'field_values.value'
+                        ));
                         $sql->select()
-                            ->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id')->like('value', ':value');
+                            ->where()
+                            ->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id')->like('value', ':value');
 
                         // Execute field values SQL
                         $fieldValues = Table\FieldValues::execute(
@@ -468,26 +466,9 @@ class Content extends AbstractModel
                         // If field values are found, extrapolate the table class from the model class
                         if (isset($fieldValues->rows[0])) {
                             foreach ($fieldValues->rows as $fv) {
-                                $tableClass = str_replace('Model', 'Table', $fv->model);
-                                if (!class_exists($tableClass, false)) {
-                                    if (substr($tableClass, -1) == 's') {
-                                        $tableClass = substr($tableClass, 0, -1);
-                                    } else {
-                                        $tableClass .= 's';
-                                    }
-                                    if (!class_exists($tableClass, false)) {
-                                        if (substr($tableClass, -1) == 'y') {
-                                            $tableClass = substr($tableClass, 0, -1) . 'ies';
-                                            if (!class_exists($tableClass, false)) {
-                                                $tableClass = null;
-                                            }
-                                        }
-                                    }
-                                }
-
                                 // If table class is found, find model object
-                                if ((null !== $tableClass) && (!in_array($fv->model_id, $track))) {
-                                    $cont = $tableClass::findById($fv->model_id);
+                                if (!in_array($fv->model_id, $track)) {
+                                    $cont = Table\Content::findById($fv->model_id);
                                     if (isset($cont->id)) {
                                         $results[] = $cont;
                                         $track[] = $fv->model_id;

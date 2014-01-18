@@ -218,12 +218,9 @@ class UserType extends AbstractModel
             foreach ($post['remove_types'] as $id) {
                 $type = Table\UserTypes::findById($id);
                 if (isset($type->id)) {
+                    \Phire\Table\Fields::deleteByType($type->id);
                     $type->delete();
                 }
-
-                $fields = new \Phire\Table\FieldsToModels();
-                $fields->delete(array('type_id' => $id));
-                FieldValue::remove($id);
             }
         }
     }

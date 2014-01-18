@@ -64,5 +64,59 @@ class Fields extends Record
         return $groupAry;
     }
 
+    /**
+     * Static method to delete by model
+     *
+     * @param  string $model
+     * @return void
+     */
+    public static function deleteByModel($model)
+    {
+        $fields = static::findAll();
+
+        foreach ($fields->rows as $field) {
+            if (null !== $field->models) {
+                $models = unserialize($fields->models);
+                foreach ($models as $k => $m) {
+                    if ($m['model'] == $model) {
+                        unset($models[$k]);
+                    }
+                }
+                $fld = static::findById($field->id);
+                if (isset($fld->id)) {
+                    $fld = serialize($models);
+                    $fld->save();
+                }
+            }
+        }
+    }
+
+    /**
+     * Static method to delete by type
+     *
+     * @param  int $id
+     * @return void
+     */
+    public static function deleteByType($id)
+    {
+        $fields = static::findAll();
+
+        foreach ($fields->rows as $field) {
+            if (null !== $field->models) {
+                $models = unserialize($fields->models);
+                foreach ($models as $k => $m) {
+                    if ($m['type_id'] == $id) {
+                        unset($models[$k]);
+                    }
+                }
+                $fld = static::findById($field->id);
+                if (isset($fld->id)) {
+                    $fld = serialize($models);
+                    $fld->save();
+                }
+            }
+        }
+    }
+
 }
 
