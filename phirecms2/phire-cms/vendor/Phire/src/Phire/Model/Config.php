@@ -194,10 +194,10 @@ class Config extends AbstractModel
         $systemTitle->setAttributes('size', 40)
                     ->setAttributes('style', 'padding: 5px;');
 
-        // Set site email form element
-        $siteEmail = new Element('text', 'site_email', html_entity_decode($config['site_email'], ENT_QUOTES, 'UTF-8'));
-        $siteEmail->setAttributes('size', 40)
-                  ->setAttributes('style', 'padding: 5px;');
+        // Set system email form element
+        $systemEmail = new Element('text', 'system_email', html_entity_decode($config['system_email'], ENT_QUOTES, 'UTF-8'));
+        $systemEmail->setAttributes('size', 40)
+                    ->setAttributes('style', 'padding: 5px;');
 
         // Set site title form element
         $siteTitle = new Element('text', 'site_title', html_entity_decode($config['site_title'], ENT_QUOTES, 'UTF-8'));
@@ -262,7 +262,7 @@ class Config extends AbstractModel
 
         $formattedConfig['settings'] = array(
             'system_title'        => $systemTitle,
-            'site_email'          => $siteEmail,
+            'system_email'        => $systemEmail,
             'site_title'          => $siteTitle,
             'separator'           => $separator,
             'default_language'    => $lang,

@@ -34,7 +34,7 @@ class Field extends \Phire\Model\AbstractModel
         foreach ($flds->rows as $f) {
             $models = (null !== $f->models) ? unserialize($f->models) : array();
             foreach ($models as $m) {
-                if (($m['model'] == $model) && ($m['type_id'] == $tid)) {
+                if (($m['model'] == $model) && (($m['type_id'] == $tid) || ($m['type_id'] == 0))) {
                     $fields[] = $f;
                 }
             }

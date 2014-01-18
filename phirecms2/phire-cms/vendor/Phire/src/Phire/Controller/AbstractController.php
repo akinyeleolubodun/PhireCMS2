@@ -134,7 +134,7 @@ class AbstractController extends \Pop\Mvc\Controller
 
         // Set config object and system/site default data
         $this->view->set('system_title', $config->system_title)
-                   ->set('site_email', $config->site_email)
+                   ->set('system_email', $config->system_email)
                    ->set('site_title', $config->site_title)
                    ->set('separator', $config->separator)
                    ->set('default_language', $config->default_language)

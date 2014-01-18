@@ -36,7 +36,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('php_version', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('installed_on', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('updated_on', '0000-00-00 00:00:00');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_title', 'Phire CMS 2.0');
-INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('site_email', '');
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_email', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('site_title', 'Default Site Title');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('separator', '&gt;');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('default_language', 'en_US');

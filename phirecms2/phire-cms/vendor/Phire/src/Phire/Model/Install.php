@@ -200,7 +200,7 @@ class Install
             'domain' => $domain
         );
 
-        $config = \Phire\Table\Config::findById('site_email');
+        $config = \Phire\Table\Config::findById('system_email');
         $config->value = $form->email1;
         $config->update();
 
