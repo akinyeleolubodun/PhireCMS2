@@ -872,4 +872,13 @@ jax(document).ready(function(){
             }
         });
     }
+    if ($('#sites-remove-form')[0] != undefined) {
+        $('#checkall').click(function(){
+            if (this.checked) {
+                $('#sites-remove-form').checkAll(this.value);
+            } else {
+                $('#sites-remove-form').uncheckAll(this.value);
+            }
+        });
+    }
 });

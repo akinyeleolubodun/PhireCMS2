@@ -178,7 +178,7 @@ class TemplatesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $template->getData(),
+                        $template->getData(null, false),
                         array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

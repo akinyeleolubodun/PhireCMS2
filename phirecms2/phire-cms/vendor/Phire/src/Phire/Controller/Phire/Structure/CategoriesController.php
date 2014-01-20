@@ -177,7 +177,7 @@ class CategoriesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $category->getData(),
+                        $category->getData(null, false),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

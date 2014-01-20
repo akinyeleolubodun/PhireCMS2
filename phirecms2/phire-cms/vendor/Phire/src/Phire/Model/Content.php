@@ -190,6 +190,7 @@ class Content extends AbstractModel
         $sql->select(array(
             DB_PREFIX . 'content.id',
             DB_PREFIX . 'content.parent_id',
+            DB_PREFIX . 'content.site_id',
             DB_PREFIX . 'content.type_id',
             DB_PREFIX . 'content_types.name',
             'type_uri' => DB_PREFIX . 'content_types.uri',
@@ -279,7 +280,7 @@ class Content extends AbstractModel
             ),
             'date' => 'M j, Y',
             'exclude' => array(
-                'parent_id', 'type_id', 'type_uri', 'name', 'order', 'created_by', 'user_id', 'published', 'expired'
+                'parent_id', 'site_id', 'type_id', 'type_uri', 'name', 'order', 'created_by', 'user_id', 'published', 'expired'
             ),
             'indent' => '        '
         );
@@ -295,25 +296,32 @@ class Content extends AbstractModel
         foreach ($content->rows as $content) {
             $c = (array)$content;
 
+            if ((int)$c['site_id'] != 0) {
+                $site = Table\Sites::findById($c['site_id']);
+                $domain = $site->domain;
+            } else {
+                $domain = $_SERVER['HTTP_HOST'];
+            }
+
             // Track open authoring
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
                 $ids[] = $c['id'];
             } else {
                 if (($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')) &&
                     ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $typeId))) {
-                    $c['title'] = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
+                    $c['title'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
                 }
             }
 
             // Adjust URI link based on URI or file
             if (substr($c['uri'], 0, 1) == '/') {
                 $c['status'] = (isset($c['status'])) ? $status[$c['status']] : '';
-                $c['uri'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $c['uri'] . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $c['uri'] . '</a>';
+                $c['uri'] = '<a href="http://' . $domain . BASE_PATH . $c['uri'] . '" target="_blank">http://' . $domain . BASE_PATH . $c['uri'] . '</a>';
             } else {
                 $fileInfo = self::getFileIcon($c['uri']);
-                $c['status'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="32" /></a>';
+                $c['status'] = '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="32" /></a>';
                 $c['size'] = $fileInfo['fileSize'];
-                $c['uri'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
+                $c['uri'] = '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
             }
             $c['created_date'] = $c['created'];
             // Add copy link
@@ -588,10 +596,17 @@ class Content extends AbstractModel
             if (((null === $c->status) || ($c->status == self::PUBLISHED)) &&
                 (strtotime($c->published) <= time()) &&
                 ((null === $c->expired) || ((null !== $c->expired) && (strtotime($c->expired) >= time())))) {
+
+                if ((int)$c->site_id != 0) {
+                    $site = Table\Sites::findById($c->site_id);
+                    $domain = $site->domain;
+                } else {
+                    $domain = $_SERVER['HTTP_HOST'];
+                }
                 $uri = (null !== $c->status) ? $c['uri'] : CONTENT_PATH . '/media/' . $c['uri'];
                 $entries[] = array(
                     'title'    => $c->title,
-                    'link'     => 'http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $uri,
+                    'link'     => 'http://' . $domain . BASE_PATH . $uri,
                     'updated'  => $c['published'],
                     'summary'  => $c->title
                 );
@@ -710,6 +725,7 @@ class Content extends AbstractModel
         }
 
         $content = new Table\Content(array(
+            'site_id'    => (int)$fields['site_id'],
             'type_id'    => $fields['type_id'],
             'parent_id'  => $parentId,
             'template'   => ((isset($fields['template']) && ($fields['template'] != '0')) ? $fields['template'] : null),
@@ -853,6 +869,7 @@ class Content extends AbstractModel
             }
         }
 
+        $content->site_id    = (int)$fields['site_id'];
         $content->type_id    = $fields['type_id'];
         $content->parent_id  = $parentId;
         $content->template   = ((isset($fields['template']) && ($fields['template'] != '0')) ? $fields['template'] : null);

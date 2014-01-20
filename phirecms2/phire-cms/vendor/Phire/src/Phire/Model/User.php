@@ -386,10 +386,9 @@ class User extends AbstractModel
      *
      * @param  \Pop\Form\Form $form
      * @param  \Pop\Config    $config
-     * @param  boolean        $install
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $config, $install = false)
+    public function save(\Pop\Form\Form $form, $config)
     {
         $encOptions = $config->encryptionOptions->asArray();
 
@@ -413,10 +412,6 @@ class User extends AbstractModel
         // Set verified or not
         if (!isset($fields['verified'])) {
             $fields['verified'] = ($type->verification) ? 0 : 1;
-        }
-
-        if ($install) {
-            $fields['site_ids'] = array(0);
         }
 
         // Save the new user
@@ -492,6 +487,7 @@ class User extends AbstractModel
             $sess->last_user_id = $user->id;
             if ($sess->user->id == $user->id) {
                 $sess->user->username = $user->username;
+                $sess->user->site_ids = (isset($fields['site_ids']) ? $fields['site_ids'] : array());
             }
 
             $user->update();

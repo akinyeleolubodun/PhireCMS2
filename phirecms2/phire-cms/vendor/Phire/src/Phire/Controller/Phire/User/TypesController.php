@@ -182,7 +182,7 @@ class TypesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $type->getData(),
+                        $type->getData(null, false),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

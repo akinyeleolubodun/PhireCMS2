@@ -184,7 +184,7 @@ class RolesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $role->getData(),
+                        $role->getData(null, false),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

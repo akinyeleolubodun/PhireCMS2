@@ -145,15 +145,20 @@ abstract class AbstractModel
     /**
      * Get model data
      *
-     * @param  string $key
+     * @param  string  $key
+     * @param  boolean $user
      * @return mixed
      */
-    public function getData($key = null)
+    public function getData($key = null, $user = true)
     {
         if (null !== $key) {
             return (isset($this->data[$key])) ? $this->data[$key] : null;
         } else {
-            return $this->data;
+            $data = $this->data;
+            if (!$user) {
+                unset($data['user']);
+            }
+            return $data;
         }
     }
 

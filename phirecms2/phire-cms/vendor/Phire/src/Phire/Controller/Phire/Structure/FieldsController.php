@@ -177,7 +177,7 @@ class FieldsController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $field->getData(),
+                        $field->getData(null, false),
                         array('htmlentities'),
                         array(array(ENT_QUOTES, 'UTF-8'))
                     );

@@ -235,9 +235,8 @@ class IndexController extends AbstractController
                     }
                 // Else, render the form
                 } else {
-                    $userData = $user->getData();
+                    $userData = $user->getData(null, false);
                     $userData['site_ids'] = unserialize($userData['site_ids']);
-                    unset($userData['user']);
                     $form->setFieldValues(
                         $userData,
                         array('strip_tags', 'htmlentities'),

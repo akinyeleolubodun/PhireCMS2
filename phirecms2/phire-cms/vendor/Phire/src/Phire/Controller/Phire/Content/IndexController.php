@@ -255,7 +255,7 @@ class IndexController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $content->getData(),
+                        $content->getData(null, false),
                         array('htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

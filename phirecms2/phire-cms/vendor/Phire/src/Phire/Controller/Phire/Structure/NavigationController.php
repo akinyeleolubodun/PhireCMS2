@@ -176,7 +176,7 @@ class NavigationController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $navigation->getData(),
+                        $navigation->getData(null, false),
                         array('strip_tags', 'htmlentities'),
                         array(null, array(ENT_QUOTES, 'UTF-8'))
                     );

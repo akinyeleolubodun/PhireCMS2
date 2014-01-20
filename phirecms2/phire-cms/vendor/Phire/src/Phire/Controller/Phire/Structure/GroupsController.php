@@ -170,7 +170,7 @@ class GroupsController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $group->getData(),
+                        $group->getData(null, false),
                         array('htmlentities'),
                         array(array(ENT_QUOTES, 'UTF-8'))
                     );

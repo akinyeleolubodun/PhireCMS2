@@ -40,7 +40,7 @@ class Site extends \Phire\Model\AbstractModel
         }
 
         if ($this->data['acl']->isAuth('Phire\Controller\Config\SitesController', 'edit')) {
-            $domain = '<a href="' . BASE_PATH . APP_URI . '/sites/edit/[{id}]">[{domain}]</a>';
+            $domain = '<a href="' . BASE_PATH . APP_URI . '/config/sites/edit/[{id}]">[{domain}]</a>';
         } else {
             $domain = '[{domain}]';
         }
@@ -48,7 +48,7 @@ class Site extends \Phire\Model\AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'sites-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/sites/remove',
+                'action'  => BASE_PATH . APP_URI . '/config/sites/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
@@ -245,6 +245,29 @@ class Site extends \Phire\Model\AbstractModel
             foreach ($post['remove_sites'] as $id) {
                 $site = Table\Sites::findById($id);
                 if (isset($site->id)) {
+                    $content = Table\Content::findAll();
+                    foreach ($content->rows as $content) {
+                        if ($content->site_id == $site->id) {
+                            $content->site_id = 0;
+                            $content->update;
+                        }
+                    }
+
+                    $users = Table\Users::findAll();
+                    foreach ($users->rows as $user) {
+                        $siteIds = unserialize($user->site_ids);
+                        if (in_array($site->id, $siteIds)) {
+                            $key = array_search($site->id, $siteIds);
+                            unset($siteIds[$key]);
+                            $user->site_ids = serialize($siteIds);
+                            $user->update();
+                        }
+                        if ($content->site_id == $site->id) {
+                            $content->site_id = 0;
+                            $content->update;
+                        }
+                    }
+
                     $site->delete();
                 }
             }
