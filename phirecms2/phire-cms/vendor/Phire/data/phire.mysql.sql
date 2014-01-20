@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]users` (
   `verified` int(1),
   `logins` text,
   `failed_attempts` int(16),
+  `site_ids` text,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_user_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -189,6 +190,7 @@ INSERT INTO `[{prefix}]content_types` (`id`, `name`, `uri`, `order`) VALUES
 
 CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
+  `site_id` int(16),
   `type_id` int(16),
   `parent_id` int(16),
   `template` varchar(255),
@@ -216,9 +218,9 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
 -- Dumping data for table `content`
 --
 
-INSERT INTO `[{prefix}]content` (`id`, `type_id`, `parent_id`, `title`, `uri`, `slug`, `feed`, `force_ssl`, `status`) VALUES
-(6001, 5001, NULL, 'Welcome', '/', '', 1, 0, 2),
-(6002, 5001, 6001, 'About', '/about', 'about', 1, 0, 2);
+INSERT INTO `[{prefix}]content` (`id`, `site_id`, `type_id`, `parent_id`, `title`, `uri`, `slug`, `feed`, `force_ssl`, `status`) VALUES
+(6001, 0, 5001, NULL, 'Welcome', '/', '', 1, 0, 2),
+(6002, 0, 5001, 6001, 'About', '/about', 'about', 1, 0, 2);
 
 -- --------------------------------------------------------
 
@@ -397,3 +399,19 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]field_values` (
   UNIQUE (`field_id`, `model_id`),
   CONSTRAINT `fk_field_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sites`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(255) NOT NULL,
+  `document_root` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `force_ssl` int(1) NOT NULL,
+  `live` int(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13001 ;

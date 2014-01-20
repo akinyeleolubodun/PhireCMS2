@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
   "verified" integer,
   "logins" text,
   "failed_attempts" integer,
+  "site_ids" text,
   PRIMARY KEY ("id"),
   CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
@@ -211,6 +212,7 @@ CREATE SEQUENCE content_id_seq START 6001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   "id" integer NOT NULL DEFAULT nextval('content_id_seq'),
+  "site_id" integer,
   "type_id" integer,
   "parent_id" integer,
   "template" varchar(255),
@@ -240,9 +242,9 @@ ALTER SEQUENCE content_id_seq OWNED BY "[{prefix}]content"."id";
 -- Dumping data for table "content"
 --
 
-INSERT INTO "[{prefix}]content" ("type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES
-(5001, NULL, 'Welcome', '/', '', 1, 0, 2),
-(5001, 6001, 'About', '/about', 'about', 1, 0, 2);
+INSERT INTO "[{prefix}]content" ("site_id", type_id", "parent_id", "title", "uri", "slug", "feed", "force_ssl", "status") VALUES
+(0, 5001, NULL, 'Welcome', '/', '', 1, 0, 2),
+(0, 5001, 6001, 'About', '/about', 'about', 1, 0, 2);
 
 -- --------------------------------------------------------
 
@@ -442,3 +444,23 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
   UNIQUE ("field_id", "model_id"),
   CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "sites"
+--
+
+CREATE SEQUENCE site_id_seq START 13001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
+  "id" integer NOT NULL DEFAULT nextval('site_id_seq'),
+  "site_domain" varchar(255) NOT NULL,
+  "site_document_root" varchar(255) NOT NULL,
+  "site_title" varchar(255) NOT NULL,
+  "force_ssl" integer  NOT NULL,
+  "live" integer NOT NULL,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE site_id_seq OWNED BY "[{prefix}]sites"."id";

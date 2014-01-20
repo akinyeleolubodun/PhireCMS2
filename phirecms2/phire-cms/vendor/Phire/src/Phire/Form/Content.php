@@ -236,7 +236,25 @@ class Content extends Form
 
         $fields1['uri'] =  $uri;
 
-        $fields4 = array();
+        $sess = \Pop\Web\Session::getInstance();
+        $siteIds = array(0 => $_SERVER['HTTP_HOST']);
+
+        $sites = Table\Sites::findAll();
+        foreach ($sites->rows as $site) {
+            if (in_array($site->id, $sess->user->site_ids)) {
+                $siteIds[$site->id] = $site->domain;
+            }
+        }
+
+        $fields4 = array(
+            'site_id' => array(
+                'type'       => 'select',
+                'label'      => 'Site:',
+                'value'      => $siteIds,
+                'marked'     => 0,
+                'attributes' => array('style' => 'min-width: 200px;')
+            )
+        );
 
         // Add nav include and roles
         if (!$this->hasFile) {
@@ -248,7 +266,8 @@ class Content extends Form
                     1 => 'Draft',
                     2 => 'Published'
                 ),
-                'marked' => 0
+                'marked'     => 0,
+                'attributes' => array('style' => 'min-width: 200px;')
             );
 
             $navOrder = array();

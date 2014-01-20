@@ -2,7 +2,7 @@
 /**
  * @namespace
  */
-namespace Phire\Controller\Phire;
+namespace Phire\Controller\Phire\Config;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
@@ -12,7 +12,7 @@ use Phire\Form;
 use Phire\Model;
 use Phire\Table;
 
-class ConfigController extends AbstractController
+class IndexController extends AbstractController
 {
 
     /**
@@ -28,16 +28,16 @@ class ConfigController extends AbstractController
     {
         if (null === $viewPath) {
             $cfg = $project->module('Phire')->asArray();
-            $viewPath = __DIR__ . '/../../../../view/phire';
+            $viewPath = __DIR__ . '/../../../../../view/phire/config';
 
             if (isset($cfg['view'])) {
                 $class = get_class($this);
                 if (is_array($cfg['view']) && isset($cfg['view'][$class])) {
                     $viewPath = $cfg['view'][$class];
                 } else if (is_array($cfg['view']) && isset($cfg['view']['*'])) {
-                    $viewPath = $cfg['view']['*'];
+                    $viewPath = $cfg['view']['*'] . '/config';
                 } else if (is_string($cfg['view'])) {
-                    $viewPath = $cfg['view'];
+                    $viewPath = $cfg['view'] . '/config';
                 }
             }
         }
@@ -52,7 +52,7 @@ class ConfigController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/config.phtml', array(
+        $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),

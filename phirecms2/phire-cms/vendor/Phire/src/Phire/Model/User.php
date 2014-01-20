@@ -83,6 +83,7 @@ class User extends AbstractModel
             $sess->user = new \ArrayObject(
                 array(
                     'id'            => $user->id,
+                    'site_ids'      => unserialize($user->site_ids),
                     'type_id'       => $user->type_id,
                     'type'          => $type->type,
                     'typeUri'       => $typeUri,
@@ -385,9 +386,10 @@ class User extends AbstractModel
      *
      * @param  \Pop\Form\Form $form
      * @param  \Pop\Config    $config
+     * @param  boolean        $install
      * @return void
      */
-    public function save(\Pop\Form\Form $form, $config)
+    public function save(\Pop\Form\Form $form, $config, $install = false)
     {
         $encOptions = $config->encryptionOptions->asArray();
 
@@ -413,6 +415,10 @@ class User extends AbstractModel
             $fields['verified'] = ($type->verification) ? 0 : 1;
         }
 
+        if ($install) {
+            $fields['site_ids'] = array(0);
+        }
+
         // Save the new user
         $user = new Table\Users(array(
             'type_id'         => $fields['type_id'],
@@ -422,7 +428,8 @@ class User extends AbstractModel
             'email'           => $fields['email1'],
             'verified'        => $fields['verified'],
             'logins'          => null,
-            'failed_attempts' => 0
+            'failed_attempts' => 0,
+            'site_ids'        => (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array()))
         ));
         $user->save();
         $this->data['id'] = $user->id;
@@ -479,6 +486,7 @@ class User extends AbstractModel
             $user->email           = $fields['email1'];
             $user->verified        = $verified;
             $user->failed_attempts = $failedAttempts;
+            $user->site_ids        = (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array()));
 
             $sess = Session::getInstance();
             $sess->last_user_id = $user->id;

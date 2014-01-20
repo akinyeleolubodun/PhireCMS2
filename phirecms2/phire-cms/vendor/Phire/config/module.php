@@ -38,7 +38,10 @@ return array(
                     '/sessions' => 'Phire\Controller\Phire\User\SessionsController',
                     '/types'    => 'Phire\Controller\Phire\User\TypesController'
                 ),
-                '/config'   => 'Phire\Controller\Phire\ConfigController'
+                '/config' => array(
+                    '/'      => 'Phire\Controller\Phire\Config\IndexController',
+                    '/sites' => 'Phire\Controller\Phire\Config\SitesController'
+                )
             )
         ),
         // Main Phire Navigation
@@ -183,8 +186,18 @@ return array(
                 'name'     => 'Configuration',
                 'href'     => BASE_PATH . APP_URI . '/config',
                 'acl' => array(
-                    'resource'   => 'Phire\Controller\Phire\ConfigController',
+                    'resource'   => 'Phire\Controller\Phire\Config\IndexController',
                     'permission' => 'index'
+                ),
+                'children' => array(
+                    array(
+                        'name' => 'Sites',
+                        'href' => 'sites',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Config\SitesController',
+                            'permission' => 'index'
+                        )
+                    )
                 )
             )
         ),
