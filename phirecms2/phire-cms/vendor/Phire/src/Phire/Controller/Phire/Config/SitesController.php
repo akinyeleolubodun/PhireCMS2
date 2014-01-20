@@ -140,7 +140,7 @@ class SitesController extends AbstractController
             if (isset($site->id)) {
                 $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites ' . $this->view->separator . ' ' . $site->domain);
                 $form = new Form\Site(
-                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
+                    $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $site->id
                 );
 
                 // If form is submitted

@@ -155,10 +155,19 @@ class Field extends \Phire\Model\AbstractModel
                         $fileValue = Table\FieldValues::findById(array($field->id, $mid));
                         if (isset($fileValue->field_id)) {
                             $fileName = unserialize($fileValue->value);
-                            $fileInfo = \Phire\Model\Content::getFileIcon($fileName);
-                            $fld['label'] .= ' <em>(Replace?)</em><br /><a href="' .
-                                BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
-                                BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                            $fileContent = Table\Content::findById($mid);
+                            if (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) {
+                                $site = Table\Sites::findById((int)$fileContent->site_id);
+                                $domain = $site->domain;
+                                $docRoot = $site->document_root;
+                            } else {
+                                $domain = $_SERVER['HTTP_HOST'];
+                                $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                            }
+                            $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                            $fld['label'] .= ' <em>(Replace?)</em><br /><a href="http://' .
+                                $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                                $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                 $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
 
                             $fld['required'] = false;
@@ -354,11 +363,20 @@ class Field extends \Phire\Model\AbstractModel
                                     $fileName = $f['value'];
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName);
-                                        $f['label'] = '<em>Replace?</em><br /><a href="' .
-                                        BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
-                                        BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
-                                        $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
+                                        $fileContent = Table\Content::findBy(array('uri' => $fileName));
+                                        if (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) {
+                                            $site = Table\Sites::findById((int)$fileContent->site_id);
+                                            $domain = $site->domain;
+                                            $docRoot = $site->document_root;
+                                        } else {
+                                            $domain = $_SERVER['HTTP_HOST'];
+                                            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                        }
+                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                                        $f['label'] = '<em>Replace?</em><br /><a href="http://' .
+                                            $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                                            $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                                            $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
                                         $f['label'] = 'Replace?';
                                     }
@@ -374,10 +392,19 @@ class Field extends \Phire\Model\AbstractModel
                                     $fileName = $f['value'];
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName);
-                                        $f['label'] = '<em >Replace?</em><br /><a href="' .
-                                            BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
-                                            BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                                        $fileContent = Table\Content::findBy(array('uri' => $fileName));
+                                        if (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) {
+                                            $site = Table\Sites::findById((int)$fileContent->site_id);
+                                            $domain = $site->domain;
+                                            $docRoot = $site->document_root;
+                                        } else {
+                                            $domain = $_SERVER['HTTP_HOST'];
+                                            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                        }
+                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                                        $f['label'] = '<em >Replace?</em><br /><a href="http://' .
+                                            $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                                            $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
                                         $f['label'] = 'Replace?';
@@ -647,6 +674,7 @@ class Field extends \Phire\Model\AbstractModel
         $sql = \Phire\Table\Content::getSql();
         $sql->select(array(
             'content_id'      => DB_PREFIX . 'content.id',
+            'content_site_id' => DB_PREFIX . 'content.site_id',
             'content_type_id' => DB_PREFIX . 'content.type_id',
             'content_uri'     => DB_PREFIX . 'content.uri',
             'content_title'   => DB_PREFIX . 'content.title',
@@ -675,14 +703,22 @@ class Field extends \Phire\Model\AbstractModel
 
         // Format the select column
         foreach ($contentRows as $key => $value) {
-            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri);
+            if ((int)$value->content_site_id != 0) {
+                $site = Table\Sites::findById((int)$value->content_site_id);
+                $domain = $site->domain;
+                $docRoot = $site->document_root;
+            } else {
+                $domain = $_SERVER['HTTP_HOST'];
+                $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            }
+            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot);
             $value->file_icon = $fileInfo['fileIcon'];
             $value->file_size = $fileInfo['fileSize'];
 
-            $select = '[ <a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+            $select = '[ <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
             foreach ($sizes as $size) {
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
-                    $select .= ' | <a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+                if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
+                    $select .= ' | <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
                 }
             }
             $select .= ' ]';
@@ -708,6 +744,7 @@ class Field extends \Phire\Model\AbstractModel
         $sql = \Phire\Table\Content::getSql();
         $sql->select(array(
             'content_id'      => DB_PREFIX . 'content.id',
+            'content_site_id' => DB_PREFIX . 'content.site_id',
             'content_type_id' => DB_PREFIX . 'content.type_id',
             'content_uri'     => DB_PREFIX . 'content.uri',
             'content_title'   => DB_PREFIX . 'content.title',
@@ -731,14 +768,22 @@ class Field extends \Phire\Model\AbstractModel
 
         // Format the select column
         foreach ($contentRows as $key => $value) {
-            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri);
+            if ((int)$value->content_site_id != 0) {
+                $site = Table\Sites::findById((int)$value->content_site_id);
+                $domain = $site->domain;
+                $docRoot = $site->document_root;
+            } else {
+                $domain = $_SERVER['HTTP_HOST'];
+                $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            }
+            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot);
             $value->file_icon = $fileInfo['fileIcon'];
             $value->file_size = $fileInfo['fileSize'];
 
-            $select = '[ <a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+            $select = '[ <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
             foreach ($sizes as $size) {
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
-                    $select .= ' | <a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+                if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
+                    $select .= ' | <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
                 }
             }
             $select .= ' ]';
@@ -751,6 +796,7 @@ class Field extends \Phire\Model\AbstractModel
         $sql = \Phire\Table\Content::getSql();
         $sql->select(array(
             'content_id'      => DB_PREFIX . 'content.id',
+            'content_site_id' => DB_PREFIX . 'content.site_id',
             'content_type_id' => DB_PREFIX . 'content.type_id',
             'content_uri'     => DB_PREFIX . 'content.uri',
             'content_title'   => DB_PREFIX . 'content.title',
@@ -765,7 +811,13 @@ class Field extends \Phire\Model\AbstractModel
 
         // Format the select column
         foreach ($uriRows as $key => $value) {
-            $value->select = '[ <a href="' . BASE_PATH . $value->content_uri . '" onclick="' . $onclick . '">URI</a> ]';
+            if ((int)$value->content_site_id != 0) {
+                $site = Table\Sites::findById((int)$value->content_site_id);
+                $domain = $site->domain;
+            } else {
+                $domain = $_SERVER['HTTP_HOST'];
+            }
+            $value->select = '[ <a href="http://' . $domain . BASE_PATH . $value->content_uri . '" onclick="' . $onclick . '">URI</a> ]';
             $uriRows[$key] = $value;
         }
 

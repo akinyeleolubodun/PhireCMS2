@@ -10,7 +10,14 @@
             <tr><th colspan="5">Recent Content</th></tr>
             <tr><th class="recent-header" style="background-color: #efefef;">Type</th><th class="recent-header" style="background-color: #efefef;">Title</th><th class="recent-header" style="background-color: #efefef;">URI</th><th class="recent-header" style="background-color: #efefef;">Created</th><th class="recent-header" style="background-color: #efefef;">Status</th></tr>
 <?php foreach ($recent as $content):
-    $link = ($content->type_uri == 0) ? '<a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="' . BASE_PATH . $content->uri . '" target="_blank">http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . $content->uri . '</a>';
+if (in_array($content->site_id, $user->site_ids)):
+    if ((int)$content->site_id > 0):
+        $site = \Phire\Table\Sites::findById((int)$content->site_id);
+        $domain = $site->domain;
+    else:
+        $domain = $_SERVER['HTTP_HOST'];
+    endif;
+    $link = ($content->type_uri == 0) ? '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="http://' . $domain . BASE_PATH . $content->uri . '" target="_blank">http://' . $domain . BASE_PATH . $content->uri . '</a>';
     if (null !== $content->status):
         switch ($content->status):
             case 0:
@@ -39,7 +46,9 @@
     endif;
 ?>
             <tr><td><?php echo $typeLink; ?></td><td><?php echo $title; ?></td><td><?php echo $link; ?></td><td><?php echo date($datetime_format, strtotime($content->created)); ?></td><td><?php echo $status; ?></td></tr>
-<?php endforeach; ?>
+<?php
+endif;
+endforeach; ?>
         </table>
         <table class="dashboard-table" cellpadding="0" cellspacing="0">
             <tr><th colspan="2">Extensions</th></tr>

@@ -65,6 +65,8 @@ class IndexController extends AbstractController
             $content->getAll($this->request->getPath(1), $this->request->getQuery('sort'), $this->request->getQuery('page'));
             $this->view->set('typeId', $this->request->getPath(1))
                        ->set('table', $content->table)
+                       ->set('searchTitle', $content->searchTitle)
+                       ->set('sitesSearch', $content->sitesSearch)
                        ->set('title', $this->view->title . ' '. $this->view->separator . ' '. $content->title)
                        ->set('type', $content->type)
                        ->set('typeUri', $content->typeUri);
@@ -204,7 +206,9 @@ class IndexController extends AbstractController
             $content->getById($this->request->getPath(1));
 
             // If content object is found and valid
-            if (isset($content->id)) {
+            if (isset($content->id) && !in_array($content->site_id, $content->user->site_ids)) {
+                Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
+            } else if (isset($content->id)) {
                 $type = Table\ContentTypes::findById($content->type_id);
                 $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
                            ->set('typeUri', $type->uri)

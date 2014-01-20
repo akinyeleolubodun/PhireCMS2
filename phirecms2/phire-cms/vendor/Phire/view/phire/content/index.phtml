@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
 <?php if (isset($table)): ?>
-        <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="Search" id="submit" class="search-btn" name="submit" /> <input type="text" name="search_title" id="search-title" size="20" value="" /></div></form>
+        <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="Search" id="submit" class="search-btn" name="submit" /> <?php echo $sitesSearch; ?> <input type="text" name="search_title" id="search-title" size="20" value="<?php echo $searchTitle; ?>" /></div></form>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a>
 <?php endif; ?>

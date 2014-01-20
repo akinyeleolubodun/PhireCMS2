@@ -16,14 +16,29 @@ class Site extends F
      *
      * @param  string $action
      * @param  string $method
+     * @param  int    $sid
      * @return self
      */
-    public function __construct($action = null, $method = 'post')
+    public function __construct($action = null, $method = 'post', $sid = 0)
     {
-        $fields1 = array(
-        );
+        $fieldGroups = array();
+        $dynamicFields = false;
 
-        $fields2 = array(
+        $model = str_replace('Form', 'Model', get_class($this));
+        $newFields = \Phire\Model\Field::getByModel($model, 0, $sid);
+        if ($newFields['dynamic']) {
+            $dynamicFields = true;
+        }
+        if ($newFields['hasFile']) {
+            $this->hasFile = true;
+        }
+        foreach ($newFields as $key => $value) {
+            if (is_numeric($key)) {
+                $fieldGroups[] = $value;
+            }
+        }
+
+        $fields1 = array(
             'domain' => array(
                 'type'       => 'text',
                 'label'      => 'Domain:',
@@ -41,7 +56,9 @@ class Site extends F
                 'label'      => 'Title:',
                 'required'   => true,
                 'attributes' => array('size' => 60)
-            ),
+            )
+        );
+        $fields2 = array(
             'force_ssl' => array(
                 'type'     => 'radio',
                 'label'    => 'Force SSL:',
@@ -67,15 +84,17 @@ class Site extends F
                 'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
-                    'class' => 'save-btn'
+                    'class' => 'save-btn',
+                    'style' => 'width: 216px;'
                 )
             ),
             'update' => array(
                 'type'       => 'button',
                 'value'      => 'UPDATE',
                 'attributes' => array(
-                    'onclick' => "return phire.updateForm('#site-form', false);",
-                    'class' => 'update-btn'
+                    'onclick' => "return phire.updateForm('#content-type-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'class'   => 'update-btn',
+                    'style'   => 'width: 216px;'
                 )
             ),
             'id' => array(
@@ -88,12 +107,19 @@ class Site extends F
             ),
         );
 
-        $this->initFieldsValues = array($fields1, $fields2);
+        $allFields = array($fields1);
+        if (count($fieldGroups) > 0) {
+            foreach ($fieldGroups as $fg) {
+                $allFields[] = $fg;
+            }
+        }
+        $allFields[] = $fields2;
+
+        $this->initFieldsValues = $allFields;
 
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'site-form');
     }
-
 
     /**
      * Set the field values

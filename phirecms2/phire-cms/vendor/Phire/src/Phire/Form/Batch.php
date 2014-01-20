@@ -6,6 +6,7 @@ namespace Phire\Form;
 
 use Pop\Form\Form;
 use Pop\Validator;
+use Phire\Table;
 
 class Batch extends Form
 {
@@ -20,6 +21,16 @@ class Batch extends Form
      */
     public function __construct($action = null, $method = 'post', $tid = 0)
     {
+        $sess = \Pop\Web\Session::getInstance();
+        $siteIds = array(0 => $_SERVER['HTTP_HOST']);
+
+        $sites = Table\Sites::findAll();
+        foreach ($sites->rows as $site) {
+            if (in_array($site->id, $sess->user->site_ids)) {
+                $siteIds[$site->id] = $site->domain;
+            }
+        }
+
         $fields1 = array(
             'file_name_1' => array(
                 'type'       => 'file',
@@ -33,7 +44,7 @@ class Batch extends Form
                 'type'       => 'text',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 10px 0;'
+                    'style' => 'display: block; margin: 0 0 10px 0; padding: 7px 4px 7px 4px; margin: 0px 0px 10px 0;'
                 )
             )
         );
@@ -53,6 +64,13 @@ class Batch extends Form
                     'type'  => 'hidden',
                     'value' => $tid
                 ),
+                'site_id' => array(
+                    'type'       => 'select',
+                    'label'      => 'Site:',
+                    'value'      => $siteIds,
+                    'marked'     => 0,
+                    'attributes' => array('style' => 'min-width: 200px;')
+                ),
                 'submit' => array(
                     'type'  => 'submit',
                     'label' => '&nbsp;',
@@ -67,6 +85,13 @@ class Batch extends Form
             $fields1['type_id'] = array(
                 'type'  => 'hidden',
                 'value' => $tid
+            );
+            $fields1['site_id'] = array(
+                'type'       => 'select',
+                'label'      => 'Site:',
+                'value'      => $siteIds,
+                'marked'     => 0,
+                'attributes' => array('style' => 'min-width: 200px;')
             );
             $fields1['submit'] = array(
                 'type'  => 'submit',

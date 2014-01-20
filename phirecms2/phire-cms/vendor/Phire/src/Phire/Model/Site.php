@@ -95,7 +95,9 @@ class Site extends \Phire\Model\AbstractModel
     {
         $site = Table\Sites::findById($id);
         if (isset($site->id)) {
-            $this->data = array_merge($this->data, $site->getValues());
+            $siteValues = $site->getValues();
+            $siteValues = array_merge($siteValues, FieldValue::getAll($id));
+            $this->data = array_merge($this->data, $siteValues);
         }
     }
 
@@ -120,6 +122,8 @@ class Site extends \Phire\Model\AbstractModel
 
         $site->save();
         $this->data['id'] = $site->id;
+
+        FieldValue::save($fields, $site->id);
 
         mkdir($fields['document_root'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
         mkdir($fields['document_root'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions');
@@ -187,6 +191,8 @@ class Site extends \Phire\Model\AbstractModel
 
         $site->update();
         $this->data['id'] = $site->id;
+
+        FieldValue::update($fields, $site->id);
 
         if ($oldDocRoot != $fields['document_root']) {
             mkdir($fields['document_root'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');

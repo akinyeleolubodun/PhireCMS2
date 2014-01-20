@@ -425,6 +425,13 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #search-title {
     padding: 2px 5px 3px 5px;
     height: 15px;
+    font-size: 0.9em;
+}
+
+#sites_search {
+    margin: 0 5px 0 0;
+    padding: 1px 2px 1px 2px;
+    font-size: 0.9em;
 }
 
 #content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form, #field-form, #field-group-form {
@@ -601,7 +608,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #loading img {
     display: block;
-    margin: 30% auto auto auto;
+    margin: 25% auto auto auto;
 }
 
 #result {

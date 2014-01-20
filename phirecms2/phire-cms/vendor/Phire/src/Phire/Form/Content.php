@@ -208,10 +208,18 @@ class Content extends Form
             if ($mid != 0) {
                 $content = Table\Content::findById($mid);
                 if (isset($content->id)) {
-                    $fileInfo = Model\Content::getFileIcon($content->uri);
-                    $label = '<em>Replace?</em><br /><a href="' .
-                        BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="' .
-                        BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
+                    if ((int)$content->site_id != 0) {
+                        $site = Table\Sites::findById((int)$content->site_id);
+                        $domain = $site->domain;
+                        $docRoot = $site->document_root;
+                    } else {
+                        $domain = $_SERVER['HTTP_HOST'];
+                        $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    }
+                    $fileInfo = Model\Content::getFileIcon($content->uri, $docRoot);
+                    $label = '<em>Replace?</em><br /><a href="http://' .
+                        $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                        $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
                         $content->uri . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                     $required = false;
                 }
