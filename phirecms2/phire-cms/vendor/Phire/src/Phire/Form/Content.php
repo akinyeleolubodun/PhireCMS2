@@ -81,7 +81,8 @@ class Content extends Form
             $type = Table\ContentTypes::findById($_POST['type_id']);
             if ($type->uri) {
                 $uri = Table\Content::findBy(array('slug' => $this->uri));
-                if (($type->uri) && (isset($uri->id)) && ((int)$this->parent_id == (int)$uri->parent_id)  && ($this->id != $uri->id)) {
+                if (($type->uri) && (isset($uri->id)) && ((int)$this->parent_id == (int)$uri->parent_id) &&
+                    ($this->id != $uri->id) && ($this->site_id == $uri->site_id)) {
                     if ($this->uri == '') {
                         $this->getElement('uri')
                              ->addValidator(new Validator\NotEmpty($this->uri, 'The root URI already exists.'));

@@ -123,6 +123,16 @@ class Site extends \Phire\Model\AbstractModel
         $site->save();
         $this->data['id'] = $site->id;
 
+        $user = Table\Users::findById($this->data['user']->id);
+        $siteIds = unserialize($user->site_ids);
+        $siteIds[] = $site->id;
+        $user->site_ids = serialize($siteIds);
+        $user->update();
+
+        $sess = \Pop\Web\Session::getInstance();
+        $sess->user->site_ids = $siteIds;
+
+
         FieldValue::save($fields, $site->id);
 
         mkdir($fields['document_root'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
@@ -254,8 +264,13 @@ class Site extends \Phire\Model\AbstractModel
                     $content = Table\Content::findAll();
                     foreach ($content->rows as $content) {
                         if ($content->site_id == $site->id) {
-                            $content->site_id = 0;
-                            $content->update;
+                            $c = Table\Content::findById($content->id);
+                            if (isset($c->id)) {
+                                if (substr($c->uri, 0, 1) != '/') {
+                                    \Phire\Model\Content::removeMedia($c->uri, $site->document_root);
+                                }
+                                $c->delete();
+                            }
                         }
                     }
 
@@ -265,12 +280,11 @@ class Site extends \Phire\Model\AbstractModel
                         if (in_array($site->id, $siteIds)) {
                             $key = array_search($site->id, $siteIds);
                             unset($siteIds[$key]);
-                            $user->site_ids = serialize($siteIds);
-                            $user->update();
-                        }
-                        if ($content->site_id == $site->id) {
-                            $content->site_id = 0;
-                            $content->update;
+                            $u = Table\Users::findById($user->id);
+                            if (isset($u->id)) {
+                                $u->site_ids = serialize($siteIds);
+                                $u->update();
+                            }
                         }
                     }
 

@@ -285,6 +285,7 @@ class IndexController extends AbstractController
         } else {
             $content = new Model\Content();
             $content->getById($this->request->getPath(1));
+
             if (isset($content->id)) {
                 $content->copy();
                 Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);

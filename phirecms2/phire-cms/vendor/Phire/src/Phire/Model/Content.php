@@ -428,12 +428,19 @@ class Content extends AbstractModel
         $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');
         $content = Table\Content::execute($sql->render(true), array('uri' => $uri));
 
-        if (isset($content->id)) {
-            $this->data['allowed'] = self::isAllowed($content);
-            $contentValues = $content->getValues();
-            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
-            $this->data = array_merge($this->data, $contentValues);
-            $this->filterContent();
+        if (isset($content->rows[0])) {
+            $contentMatch = null;
+            $site = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+            $siteId = (isset($site->id)) ? (int)$site->id : 0;
+            foreach ($content->rows as $content) {
+                if ((int)$content->site_id == $siteId) {
+                    $this->data['allowed'] = self::isAllowed($content);
+                    $contentValues = (array)$content;
+                    $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
+                    $this->data = array_merge($this->data, $contentValues);
+                    $this->filterContent();
+                }
+            }
         }
     }
 
@@ -597,6 +604,8 @@ class Content extends AbstractModel
                     $rolesAry[] = $id;
                 }
                 $contentValues['roles'] = $rolesAry;
+            } else {
+                $contentValues['roles'] = array();
             }
 
             if (($contentValues['updated'] != '0000-00-00 00:00:00') && (null !== $contentValues['updated'])) {
@@ -610,7 +619,6 @@ class Content extends AbstractModel
             } else {
                 $contentValues['updated'] = '<strong>Updated:</strong> Never';
             }
-
 
             $contentValues['typeUri'] = $type->uri;
             $contentValues = array_merge($contentValues, FieldValue::getAll($id));
