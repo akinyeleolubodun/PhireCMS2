@@ -339,6 +339,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
 CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `file` varchar(255) NOT NULL,
   `type` int(1) NOT NULL,
   `active` int(1) NOT NULL,
   `assets` text,

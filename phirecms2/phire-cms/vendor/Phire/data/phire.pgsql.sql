@@ -374,6 +374,7 @@ CREATE SEQUENCE extension_id_seq START 10001;
 CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
   "id" integer NOT NULL DEFAULT nextval('extension_id_seq'),
   "name" varchar(255) NOT NULL,
+  "file" varchar(255) NOT NULL,
   "type" integer NOT NULL,
   "active" integer NOT NULL,
   "assets" text,

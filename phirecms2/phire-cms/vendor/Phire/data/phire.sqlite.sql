@@ -358,6 +358,7 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 9000)
 CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" varchar NOT NULL,
+  "file" varchar NOT NULL,
   "type" integer NOT NULL,
   "active" integer NOT NULL,
   "assets" text,

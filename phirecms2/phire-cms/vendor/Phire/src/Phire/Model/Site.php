@@ -179,6 +179,25 @@ class Site extends \Phire\Model\AbstractModel
         chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
         chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
         chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+
+        // Copy any themes over
+        $themes = Table\Extensions::findAll(null, array('type' => 0));
+        if (isset($themes->rows[0])) {
+            $themePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+            foreach ($themes->rows as $theme) {
+                if (!file_exists($themePath . '/' . $theme->name)) {
+                    copy(
+                        $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->file,
+                        $themePath . '/' . $theme->file
+                    );
+                    $archive = new \Pop\Archive\Archive($themePath . '/' . $theme->file);
+                    $archive->extract($themePath . '/');
+                    if ((stripos($theme->file, 'gz') || stripos($theme->file, 'bz')) && (file_exists($themePath . '/' . $theme->name . '.tar'))) {
+                        unlink($themePath . '/' . $theme->name . '.tar');
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -252,6 +271,25 @@ class Site extends \Phire\Model\AbstractModel
             chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
             chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
             chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+
+            // Copy any themes over
+            $themes = Table\Extensions::findAll(null, array('type' => 0));
+            if (isset($themes->rows[0])) {
+                $themePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+                foreach ($themes->rows as $theme) {
+                    if (!file_exists($themePath . '/' . $theme->name)) {
+                        copy(
+                            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->file,
+                            $themePath . '/' . $theme->file
+                        );
+                        $archive = new \Pop\Archive\Archive($themePath . '/' . $theme->file);
+                        $archive->extract($themePath . '/');
+                        if ((stripos($theme->file, 'gz') || stripos($theme->file, 'bz')) && (file_exists($themePath . '/' . $theme->name . '.tar'))) {
+                            unlink($themePath . '/' . $theme->name . '.tar');
+                        }
+                    }
+                }
+            }
         }
     }
 

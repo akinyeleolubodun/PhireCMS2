@@ -225,6 +225,7 @@ class Extension extends AbstractModel
 
                 $ext = new Table\Extensions(array(
                     'name'   => $name,
+                    'file'   => $theme,
                     'type'   => 0,
                     'active' => 0,
                     'assets' => serialize(array(
@@ -348,6 +349,7 @@ class Extension extends AbstractModel
 
                     $ext = new Table\Extensions(array(
                         'name'   => $name,
+                        'file'   => $module,
                         'type'   => 1,
                         'active' => 1,
                         'assets' => serialize(array(
