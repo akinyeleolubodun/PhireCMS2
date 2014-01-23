@@ -44,7 +44,7 @@ class Batch extends Form
                 'type'       => 'text',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 10px 0; padding: 7px 4px 7px 4px; margin: 0px 0px 10px 0;'
+                    'style' => 'display: block; margin: 0 0 10px 0; padding: 6px 4px 6px 4px; margin: 0px 0px 10px 0;'
                 )
             )
         );

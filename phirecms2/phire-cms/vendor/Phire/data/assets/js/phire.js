@@ -604,13 +604,39 @@ jax(document).ready(function(){
 
     if (typeof _exp != 'undefined') {
         phire.timeout = setInterval(function() {
-            var url = decodeURIComponent(_base);
-            if (confirm('Your session is about to end. Do you wish to logout?')) {
-                window.location = url + '/logout';
-            } else {
-                jax.ajax(url + '/users/sessions/json');
-            }
+            if (jax('#logout-warning-back')[0] == undefined) {
+                var url = decodeURIComponent(_base);
+                jax('body').append('div', {id : 'logout-warning-back'});
+                jax('body').append('div', {id : 'logout-warning'}, '<h3 style="margin: 30px 0 10px 0; font-size: bold;">Your session is about to end.</h3><h4 id="countdown">30</h4><a href="#" id="continue">Continue</a> <a href="' + url + '/logout" id="logout">Logout</a>');
+                jax('#logout-warning-back').css({
+                    "opacity" : 80,
+                    "width"   : jax().width() + 'px',
+                    "height"  : jax().height() + 'px',
+                    "display" : 'block'
+                });
+                jax('#logout-warning').css({
+                    "left" : Math.round((jax().width() / 2) - 170) + 'px'
+                });
 
+                var countDown = setInterval(function(){
+                    var sec = parseInt(jax('#countdown').val());
+                    if (sec > 0) {
+                        var newSec = sec - 1;
+                        jax('#countdown').val(newSec);
+                    } else {
+                        window.location = url;
+                    }
+                }, 1000);
+
+                jax('#continue').click(function(){
+                    clearInterval(countDown);
+                    jax('#logout-warning-back').remove();
+                    jax('#logout-warning').remove();
+                    jax.ajax(url + '/users/sessions/json');
+                    console.log('continue');
+                    return false;
+                });
+            }
         }, _exp * 1000);
     }
 

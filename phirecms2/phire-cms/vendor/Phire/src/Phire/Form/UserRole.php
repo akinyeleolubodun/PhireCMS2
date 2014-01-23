@@ -86,16 +86,19 @@ class UserRole extends Form
         // Create initial fields
         $fields1 = array(
             'type_id' => array(
-                'type'     => 'select',
-                'required' => true,
-                'label'    => 'User Type:',
-                'value'    => $typesAry
+                'type'       => 'select',
+                'required'   => true,
+                'label'      => 'User Type:',
+                'value'      => $typesAry,
+                'attributes' => array(
+                    'style'  => 'min-width: 200px;'
+                )
             ),
             'name' => array(
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
-                'attributes' => array('size' => 55)
+                'attributes' => array('size' => 73)
             )
         );
 

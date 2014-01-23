@@ -146,25 +146,18 @@ class Template extends Form
             'parent_id' => array(
                 'type'       => 'select',
                 'label'      => 'Parent:',
-                'value'      => $parents
+                'value'      => $parents,
+                'attributes' => array(
+                    'style'    => 'min-width: 280px;'
+                )
             ),
             'name' => array(
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
                 'attributes' => array(
-                    'size'    => 80
+                    'size'    => 97
                 )
-            ),
-            'content_type' => array(
-                'type'  => 'select',
-                'label' => 'Content Type:',
-                'value' => self::$contentTypes
-            ),
-            'device' => array(
-                'type'  => 'select',
-                'label' => 'Device:',
-                'value' => self::$mobileTemplates
             )
         );
 
@@ -193,7 +186,8 @@ class Template extends Form
                 'required'   => true,
                 'attributes' => array(
                     'rows'    => 25,
-                    'cols'    => 110
+                    'cols'    => 110,
+                    'style'   => 'width: 100%;'
                 )
             )
         );
@@ -223,6 +217,22 @@ class Template extends Form
                 'type'  => 'hidden',
                 'value' => 0
             ),
+            'content_type' => array(
+                'type'  => 'select',
+                'label' => 'Content Type:',
+                'value' => self::$contentTypes,
+                'attributes' => array(
+                    'style'    => 'min-width: 200px;'
+                )
+            ),
+            'device' => array(
+                'type'  => 'select',
+                'label' => 'Device:',
+                'value' => self::$mobileTemplates,
+                'attributes' => array(
+                    'style'    => 'min-width: 200px;'
+                )
+            )
         );
 
         $flds = array($fields4, $fields1);

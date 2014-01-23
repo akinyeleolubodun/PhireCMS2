@@ -96,45 +96,6 @@ class UserType extends Form
                 'required'   => true,
                 'attributes' => array('size' => 40)
             ),
-            'default_role_id' => array(
-                'type'   => 'select',
-                'label'  => 'Default Role:',
-                'value'  => $rolesAry
-            ),
-            'global_access' => array(
-                'type'   => 'select',
-                'label'  => 'Allow Global Access:',
-                'value'  => $yesNo,
-                'marked' => '0'
-            ),
-            'allowed_attempts' => array(
-                'type'       => 'text',
-                'label'      => 'Allowed Attempts:',
-                'attributes' => array('size' => 10),
-                'value'      => '0'
-            ),
-            'session_expiration' => array(
-                'type'       => 'text',
-                'label'      => 'Session Expiration:',
-                'attributes' => array('size' => 10),
-                'value'      => '0'
-            ),
-            'password_encryption' => array(
-                'type'  => 'select',
-                'label' => 'Password Encryption:',
-                'value' => array(
-                    '1' => 'MD5',
-                    '2' => 'SHA1',
-                    '3' => 'Crypt',
-                    '4' => 'Bcrypt',
-                    '5' => 'Mcrypt (2-Way)',
-                    '6' => 'Crypt_MD5',
-                    '7' => 'Crypt_SHA256',
-                    '8' => 'Crypt_SHA512',
-                    '0' => 'None'
-                ),
-                'marked' => '4'
-            ),
             'ip_allowed' => array(
                 'type'       => 'text',
                 'label'      => 'IPs Allowed:',
@@ -285,6 +246,51 @@ class UserType extends Form
         $fields4['update_value'] = array(
             'type'  => 'hidden',
             'value' => 0
+        );
+        $fields4['default_role_id'] = array(
+            'type'   => 'select',
+            'label'  => 'Default Role:',
+            'value'  => $rolesAry,
+            'attributes' => array(
+                'style' => 'min-width: 200px;'
+            )
+        );
+        $fields4['password_encryption'] = array(
+            'type'  => 'select',
+            'label' => 'Password Encryption:',
+            'value' => array(
+                '1' => 'MD5',
+                '2' => 'SHA1',
+                '3' => 'Crypt',
+                '4' => 'Bcrypt',
+                '5' => 'Mcrypt (2-Way)',
+                '6' => 'Crypt_MD5',
+                '7' => 'Crypt_SHA256',
+                '8' => 'Crypt_SHA512',
+                '0' => 'None'
+            ),
+            'marked' => '4',
+            'attributes' => array(
+                'style' => 'min-width: 200px;'
+            )
+        );
+        $fields4['global_access'] = array(
+            'type'   => 'select',
+            'label'  => 'Allow Global Access:',
+            'value'  => $yesNo,
+            'marked' => '0'
+        );
+        $fields4['allowed_attempts'] = array(
+            'type'       => 'text',
+            'label'      => 'Allowed Attempts:',
+            'attributes' => array('size' => 3),
+            'value'      => '0'
+        );
+        $fields4['session_expiration'] = array(
+            'type'       => 'text',
+            'label'      => 'Session Expiration: <span style="font-size: 0.9em; font-weight: normal;">(Minutes)</span>',
+            'attributes' => array('size' => 3),
+            'value'      => '0'
         );
 
         $allFields = array($fields4, $fields1, $fields2a, $fields2b);

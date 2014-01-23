@@ -308,7 +308,7 @@ class User extends Form
             );
 
             $fields4['verified'] = array(
-                'type'   => 'radio',
+                'type'   => 'select',
                 'label'  => 'Verified:',
                 'value'  => array('1' => 'Yes', '0' => 'No'),
                 'marked' => '0'
@@ -316,7 +316,7 @@ class User extends Form
             $fields4['failed_attempts'] = array(
                 'type'       => 'text',
                 'label'      => 'Failed Attempts:',
-                'attributes' => array('size' => 5)
+                'attributes' => array('size' => 3)
             );
             $fields4['site_ids'] = array(
                 'type'  => 'checkbox',

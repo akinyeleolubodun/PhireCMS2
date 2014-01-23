@@ -173,7 +173,7 @@ class Content extends Form
                     'value'      => $parents,
                     'attributes' => array(
                         'onchange' => "phire.slug(null, 'uri');",
-                        'style'    => 'min-width: 200px;'
+                        'style'    => 'min-width: 280px;'
                     )
                 ),
                 'template' => array(
@@ -181,7 +181,7 @@ class Content extends Form
                     'label'      => 'Template:',
                     'value'      => $this->getTemplates($cfg),
                     'attributes' => array(
-                        'style'    => 'min-width: 200px;'
+                        'style'    => 'min-width: 280px;'
                     )
                 )
             );

@@ -182,6 +182,7 @@ class Field extends Form
                     'hidden'           => 'hidden'
                 ),
                 'attributes' => array(
+                    'style'    => 'min-width: 200px;',
                     'onchange' => 'phire.toggleEditor(this);'
                 )
             ),
@@ -197,27 +198,27 @@ class Field extends Form
                 'type'       => 'text',
                 'label'      => 'Field Name:',
                 'required'   => true,
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 64)
             ),
             'label' => array(
                 'type'       => 'text',
                 'label'      => 'Field Label:',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 64)
             ),
             'values' => array(
                 'type'       => 'text',
-                'label'      => 'Field Values:<br /><span style="font-size: 0.9em;">(Pipe delimited)</span>',
-                'attributes' => array('size' => 40)
+                'label'      => 'Field Values: <span style="font-size: 0.9em; font-weight: normal;">(Pipe delimited)</span>',
+                'attributes' => array('size' => 64)
             ),
             'default_values' => array(
                 'type'       => 'text',
-                'label'      => 'Default Field Values:<br /><span style="font-size: 0.9em;">(Pipe delimited)</span>',
-                'attributes' => array('size' => 40)
+                'label'      => 'Default Field Values: <span style="font-size: 0.9em; font-weight: normal;">(Pipe delimited)</span>',
+                'attributes' => array('size' => 64)
             ),
             'attributes' => array(
                 'type'       => 'text',
                 'label'      => 'Field Attributes:',
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 64)
             ),
             'validator_new_1' => array(
                 'type'       => 'select',
@@ -316,16 +317,6 @@ class Field extends Form
                 'class' => 'update-btn'
             )
         );
-
-        $fields4['required'] = array(
-            'type'   => 'radio',
-            'label'  => 'Required:',
-            'value'  => array(
-                '0' => 'No',
-                '1' => 'Yes'
-            ),
-            'marked' => 0
-        );
         $fields4['group_id'] = array(
             'type'   => 'select',
             'label'  => 'Field Group:',
@@ -335,30 +326,39 @@ class Field extends Form
             )
         );
         $fields4['encryption'] = array(
-             'type'       => 'select',
-             'label'  => 'Encryption:',
-             'value' => array(
-                 '0' => 'None',
-                 '1' => 'MD5',
-                 '2' => 'SHA1',
-                 '3' => 'Crypt',
-                 '4' => 'Bcrypt',
-                 '5' => 'Mcrypt (2-Way)',
-                 '6' => 'Crypt_MD5',
-                 '7' => 'Crypt_SHA256',
-                 '8' => 'Crypt_SHA512',
-             ),
-             'marked'     => 0,
-             'attributes' => array(
-                 'style' => 'display: block; min-width: 150px;'
-             )
-         );
-         $fields4['order'] = array(
-             'type'       => 'text',
-             'label'      => 'Order:',
-             'value'      => 0,
-             'attributes' => array('size' => 3)
-         );
+            'type'       => 'select',
+            'label'  => 'Encryption:',
+            'value' => array(
+                '0' => 'None',
+                '1' => 'MD5',
+                '2' => 'SHA1',
+                '3' => 'Crypt',
+                '4' => 'Bcrypt',
+                '5' => 'Mcrypt (2-Way)',
+                '6' => 'Crypt_MD5',
+                '7' => 'Crypt_SHA256',
+                '8' => 'Crypt_SHA512',
+            ),
+            'marked'     => 0,
+            'attributes' => array(
+                'style' => 'display: block; min-width: 150px;'
+            )
+        );
+        $fields4['required'] = array(
+            'type'   => 'select',
+            'label'  => 'Required:',
+            'value'  => array(
+                '0' => 'No',
+                '1' => 'Yes'
+            ),
+            'marked' => 0
+        );
+        $fields4['order'] = array(
+            'type'       => 'text',
+            'label'      => 'Order:',
+            'value'      => 0,
+            'attributes' => array('size' => 3)
+        );
 
         $fields4['id'] = array(
             'type'  => 'hidden',

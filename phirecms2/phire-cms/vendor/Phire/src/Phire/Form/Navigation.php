@@ -168,28 +168,6 @@ class Navigation extends Form
                 'attributes' => array(
                     'size'    => 40
                 )
-            ),
-            'on_class' => array(
-                'type'       => 'text',
-                'label'      => '&quot;On&quot; Class:',
-                'attributes' => array(
-                    'size'    => 15
-                )
-            ),
-            'off_class' => array(
-                'type'       => 'text',
-                'label'      => '&quot;Off&quot; Class:',
-                'attributes' => array(
-                    'size'    => 15
-                )
-            ),
-            'spaces' => array(
-                'type'       => 'text',
-                'label'      => 'Indentation Spaces:',
-                'attributes' => array(
-                    'size'    => 15
-                ),
-                'value'      => 4
             )
         );
 
@@ -235,6 +213,28 @@ class Navigation extends Form
             'update_value' => array(
                 'type'  => 'hidden',
                 'value' => 0
+            ),
+            'on_class' => array(
+                'type'       => 'text',
+                'label'      => '&quot;On&quot; Class:',
+                'attributes' => array(
+                    'size'    => 15
+                )
+            ),
+            'off_class' => array(
+                'type'       => 'text',
+                'label'      => '&quot;Off&quot; Class:',
+                'attributes' => array(
+                    'size'    => 15
+                )
+            ),
+            'spaces' => array(
+                'type'       => 'text',
+                'label'      => 'Indentation Spaces:',
+                'attributes' => array(
+                    'size'    => 3
+                ),
+                'value'      => 4
             )
         );
 

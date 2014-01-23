@@ -441,7 +441,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
 #content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
-#navigation-form-field-group-1, #field-form-field-group-1 {
+#navigation-form-field-group-1, #field-form-field-group-1, #user-type-form-field-group-1 {
     margin: 0 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;
@@ -450,7 +450,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     border-left: solid 1px #ccc;
 }
 
-#content-form-field-group-1 fieldset, #field-form-field-group-1 fieldset {
+#content-form-field-group-1 fieldset, #category-form-field-group-1 fieldset,
+#field-form-field-group-1 fieldset, #user-form-field-group-1 fieldset {
     width: 250px;
     margin: 0 0 10px 0;
     padding: 5px 0 5px 0;
@@ -509,15 +510,6 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     overflow: auto;
 }
 
-#user-type-form-field-group-1 {
-    margin: 0 0 40px 10px;
-    padding: 0 0 40px 10px;
-    float: right;
-    width: 290px;
-    min-height: 750px;
-    border-left: solid 1px #ccc;
-}
-
 #user-type-form-field-group-2 {
     margin: 0;
     padding: 0;
@@ -536,13 +528,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     border-left: solid 1px #ccc;
 }
 
-#user-type-form-field-group-3 dt, #user-type-form-field-group-4 dt {
-    clear: left;
-    display: block;
-    margin: 0;
-    padding: 12px 0 2px 0;
-    font-weight: bold;
+#user-type-form-field-group-3 fieldset, #user-type-form-field-group-4 fieldset {
     width: 200px;
+    margin: 0 0 10px 0;
+    padding: 5px 0 5px 0;
     border-top: solid 1px #ccc;
 }
 
@@ -681,6 +670,75 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     margin: 0;
     padding: 0 0 20px 0;
     overflow: auto;
+}
+
+#logout-warning-back {
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 100000;
+    background-color: #000;
+    display: none;
+}
+
+#logout-warning {
+    top: 190px;
+    margin: 0;
+    padding: 20px;
+    position: absolute;
+    z-index: 100001;
+    background-color: #fff;
+    width: 300px;
+    height: 180px;
+    display: block;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#countdown {
+    margin: 0;
+    padding: 0;
+    font-size: 2.0em;
+    text-align: center;
+    font-weight: normal;
+}
+
+#continue {
+    margin: 30px 10px 0 0;
+    padding: 10px;
+    width: 90px;
+    display: inline-block;
+    color: #fff;
+    text-align: center;
+    background-color: #5a8c1d;
+    border-radius: 7px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+#continue:hover {
+    text-decoration: none;
+    background-color: #75b724;
+}
+
+#logout {
+    margin: 30px 0 0 10px;
+    padding: 10px;
+    width: 90px;
+    display: inline-block;
+    color: #fff;
+    text-align: center;
+    background-color: #a51212;
+    border-radius: 7px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+#logout:hover {
+    text-decoration: none;
+    background-color: #c91414;
 }
 
 #footer {
