@@ -20,6 +20,7 @@ var phire = {
     curErrors         : 0,
     curValue          : null,
     selIds            : [],
+    basePath          : null,
     sysBasePath       : null,
     addResource       : function() {
         phire.resourceCount++;
@@ -602,6 +603,8 @@ jax(document).ready(function(){
         phire.sysBasePath = phire.sysBasePath.substring(0, (phire.sysBasePath.length - 1));
     }
 
+    phire.basePath = phire.sysBasePath.substring(0, phire.sysBasePath.lastIndexOf('/'));
+
     if (typeof _exp != 'undefined') {
         phire.timeout = setInterval(function() {
             if (jax('#logout-warning-back')[0] == undefined) {
@@ -910,13 +913,16 @@ jax(document).ready(function(){
             }
         });
     }
-    if ($('#sites-remove-form')[0] != undefined) {
-        $('#checkall').click(function(){
+    if (jax('#sites-remove-form')[0] != undefined) {
+        jax('#checkall').click(function(){
             if (this.checked) {
-                $('#sites-remove-form').checkAll(this.value);
+                jax('#sites-remove-form').checkAll(this.value);
             } else {
-                $('#sites-remove-form').uncheckAll(this.value);
+                jax('#sites-remove-form').uncheckAll(this.value);
             }
         });
+    }
+    if (jax('#site-migration-form')[0] != undefined) {
+        jax(jax('#site_from').parent()).attrib('class', 'blue-arrow');
     }
 });

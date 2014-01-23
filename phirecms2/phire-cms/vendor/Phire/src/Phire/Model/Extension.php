@@ -139,6 +139,13 @@ class Extension extends AbstractModel
      */
     public function installThemes()
     {
+        $docRoots = array();
+
+        $sites = Table\Sites::findAll();
+        foreach ($sites->rows as $site) {
+            $docRoots[] = $site->document_root;
+        }
+
         try {
             $themePath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes';
             if (!is_writable($themePath)) {
@@ -226,6 +233,16 @@ class Extension extends AbstractModel
                     ))
                 ));
                 $ext->save();
+
+                foreach ($docRoots as $docRoot) {
+                    $altThemePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+                    copy($themePath . '/' . $theme, $altThemePath . '/' . $theme);
+                    $archive = new Archive($altThemePath . '/' . $theme);
+                    $archive->extract($altThemePath . '/');
+                    if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($altThemePath . '/' . $name . '.tar'))) {
+                        unlink($altThemePath . '/' . $name . '.tar');
+                    }
+                }
             }
             if (isset($ext->id)) {
                 $ext->active = 1;
@@ -405,6 +422,13 @@ class Extension extends AbstractModel
 
         $active = false;
         if (isset($post['remove_themes'])) {
+            $docRoots = array($_SERVER['DOCUMENT_ROOT']);
+
+            $sites = Table\Sites::findAll();
+            foreach ($sites->rows as $site) {
+                $docRoots[] = $site->document_root;
+            }
+
             foreach ($post['remove_themes'] as $id) {
                 $ext = Table\Extensions::findById($id);
 
@@ -431,18 +455,20 @@ class Extension extends AbstractModel
                         }
                     }
 
-                    $contentPath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH;
-                    $exts = array('.zip', '.tar.gz', '.tar.bz2', '.tgz', '.tbz', '.tbz2');
+                    foreach ($docRoots as $docRoot) {
+                        $contentPath = $docRoot . BASE_PATH . CONTENT_PATH;
+                        $exts = array('.zip', '.tar.gz', '.tar.bz2', '.tgz', '.tbz', '.tbz2');
 
-                    if (file_exists($contentPath . '/extensions/themes/' . $ext->name)) {
-                        $dir = new Dir($contentPath . '/extensions/themes/' . $ext->name);
-                        $dir->emptyDir(null, true);
-                    }
+                        if (file_exists($contentPath . '/extensions/themes/' . $ext->name)) {
+                            $dir = new Dir($contentPath . '/extensions/themes/' . $ext->name);
+                            $dir->emptyDir(null, true);
+                        }
 
-                    foreach ($exts as $e) {
-                        if (file_exists($contentPath . '/extensions/themes/' . $ext->name . $e) &&
-                            is_writable($contentPath . '/extensions/themes/' . $ext->name . $e)) {
-                            unlink($contentPath . '/extensions/themes/' . $ext->name . $e);
+                        foreach ($exts as $e) {
+                            if (file_exists($contentPath . '/extensions/themes/' . $ext->name . $e) &&
+                                is_writable($contentPath . '/extensions/themes/' . $ext->name . $e)) {
+                                unlink($contentPath . '/extensions/themes/' . $ext->name . $e);
+                            }
                         }
                     }
 

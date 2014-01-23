@@ -162,6 +162,8 @@ class Field extends Form
             $selectStyle = 'display: block; margin: 0 0 6px 0; padding-top: 5px; padding-bottom: 5px;';
         } else if ($browser->isChrome()) {
             $selectStyle = 'display: block; margin: 0 0 5px 0; padding-top: 5px; padding-bottom: 5px;';
+        } else {
+            $selectStyle = 'display: block; margin: 0 0 4px 0; padding-top: 3px; padding-bottom: 4px;';
         }
 
         // Start creating initial fields

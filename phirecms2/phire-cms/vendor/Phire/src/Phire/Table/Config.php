@@ -103,6 +103,13 @@ class Config extends Record
         $config['media_max_filesize_formatted'] = $maxSize;
         $config['media_allowed_types'] = $allowedTypes;
 
+        $site = Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+        if (isset($site->id)) {
+            $config['site_title'] = $site->title;
+            $config['force_ssl']  = $site->force_ssl;
+            $config['live']       = $site->live;
+        }
+
         return new \ArrayObject($config, \ArrayObject::ARRAY_AS_PROPS);
     }
 
@@ -134,6 +141,17 @@ class Config extends Record
         $cfg = static::findById('php_version');
         $cfg->value = $server->getPhp();
         $cfg->update();
+    }
+
+    /**
+     * Static method to get media sizes
+     *
+     * @return array
+     */
+    public static function getMediaSizes()
+    {
+        $mediaActions = unserialize(static::findById('media_actions')->value);
+        return array_keys($mediaActions);
     }
 
 }

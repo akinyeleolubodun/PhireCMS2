@@ -3,6 +3,8 @@
 <?php
 if (isset($main_nav)):
     echo $main_nav;
+elseif (isset($dev_nav)):
+    echo $dev_nav;
 endif;
 ?>
 <?php if (isset($breadcrumb)): ?>
@@ -14,7 +16,5 @@ endif;
     echo $category_nav;
 endif;
 ?>
-    <p>
-        This is the default template for Phire CMS.
-    </p>
+<?php echo $content; ?>
 <?php include __DIR__ . '/footer.phtml'; ?>

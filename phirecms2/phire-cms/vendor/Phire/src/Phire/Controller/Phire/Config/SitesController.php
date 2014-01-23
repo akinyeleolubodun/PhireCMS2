@@ -83,6 +83,7 @@ class SitesController extends AbstractController
         $form = new Form\Site(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
         );
+
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
@@ -186,6 +187,46 @@ class SitesController extends AbstractController
             } else {
                 Response::redirect($this->request->getBasePath());
             }
+        }
+    }
+
+    /**
+     * Site migrate method
+     *
+     * @return void
+     */
+    public function migrate()
+    {
+        $this->prepareView($this->viewPath . '/sites.phtml', array(
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav'),
+        ));
+
+        $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites ' . $this->view->separator . ' Migrate');
+
+        $form = new Form\Migrate(
+            $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
+        );
+
+        if ($this->request->isPost()) {
+            $form->setFieldValues(
+                $this->request->getPost(),
+                array('htmlentities'),
+                array(array(ENT_QUOTES, 'UTF-8'))
+            );
+
+            if ($form->isValid()) {
+                $site = new Model\Site();
+                $site->migrate($form);
+                //Response::redirect($this->request->getBasePath());
+            } else {
+                $this->view->set('form', $form);
+                $this->send();
+            }
+        } else {
+            $this->view->set('form', $form);
+            $this->send();
         }
     }
 

@@ -548,6 +548,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 0;
 }
 
+#site-migration-form-field-group-1 {
+    clear: both;
+    margin: 0;
+    padding: 20px 0 0 0;
+}
+
 #uri-span, #slug-span {
     margin: 0;
     padding: 5px;
@@ -1238,6 +1244,11 @@ th.config-header > a:hover {
     width: 155px;
 }
 
+.label-pad-3 {
+    display: inline-block;
+    width: 305px;
+}
+
 .nav-div {
     margin: 5px 0 5px 0;
     padding: 2px 0 2px 0;
@@ -1261,4 +1272,10 @@ th.config-header > a:hover {
 .small-link, .small-link:hover {
     font-weight: normal;
     font-size: 0.9em;
+}
+
+.blue-arrow {
+    background-image: url(../img/blue-arrow.gif);
+    background-repeat: no-repeat;
+    background-position: right center;
 }
