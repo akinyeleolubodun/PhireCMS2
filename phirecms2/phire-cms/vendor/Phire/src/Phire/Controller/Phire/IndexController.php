@@ -113,8 +113,12 @@ class IndexController extends AbstractController
      */
     public function login($redirect = null)
     {
+        $site = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+        // Prevent attempting to log into the system from other sites
+        if (isset($site->id) && (strtolower($this->type->type) == 'user')) {
+            Response::redirect('http://' . $site->domain . BASE_PATH);
         // If user type is not found, 404
-        if (!isset($this->type->id)) {
+        } else if (!isset($this->type->id)) {
             $this->error();
         // If login is not allowed
         } else if (!$this->type->login) {

@@ -6,6 +6,7 @@ namespace Phire\Form;
 
 use Pop\Form\Form;
 use Pop\Validator;
+use Phire\Table;
 
 class Login extends Form
 {
@@ -81,6 +82,20 @@ class Login extends Form
                 } else {
                     $this->getElement('username')
                          ->addValidator(new Validator\NotEqual($this->username, $result));
+                }
+            }
+
+            // Check the user's allowed sites
+            if (strtolower($type->type) != 'user') {
+                $u = Table\Users::findBy(array('username' => $this->username));
+                if (isset($u->id)) {
+                    $siteIds = unserialize($u->site_ids);
+                    $site = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+                    $siteId = (isset($site->id)) ? $site->id : '0';
+                    if (!in_array($siteId, $siteIds)) {
+                        $this->getElement('username')
+                             ->addValidator(new Validator\NotEqual($this->username, 'That user is not allowed on this site.'));
+                    }
                 }
             }
         }

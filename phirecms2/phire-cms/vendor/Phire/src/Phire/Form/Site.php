@@ -135,26 +135,31 @@ class Site extends F
 
         // Add validators for checking dupe names and devices
         if (($_POST) && isset($_POST['id'])) {
+
             $site = Table\Sites::findBy(array('domain' => $this->domain));
             if ((isset($site->id) && ($this->id != $site->id)) || ($this->domain == $_SERVER['HTTP_HOST'])) {
                 $this->getElement('domain')
                      ->addValidator(new Validator\NotEqual($this->domain, 'That site domain already exists.'));
             }
-            if (!file_exists($this->document_root)) {
+
+            $docRoot = ((substr($this->document_root, -1) == '/') || (substr($this->document_root, -1) == "\\")) ?
+                substr($this->document_root, 0, -1) : $this->document_root;
+
+            if (!file_exists($docRoot)) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($this->document_root, 'That site document root does not exists.'));
-            } else if (!file_exists($this->document_root . DIRECTORY_SEPARATOR . BASE_PATH)) {
+                     ->addValidator(new Validator\NotEqual($docRoot, 'That site document root does not exists.'));
+            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH)) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($this->document_root, 'The base path does not exist under that document root.'));
-            } else if (!file_exists($this->document_root . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . 'index.php')) {
+                     ->addValidator(new Validator\NotEqual($docRoot, 'The base path does not exist under that document root.'));
+            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . 'index.php')) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($this->document_root, 'The index controller does not exist under that document root and base path.'));
-            } else if (!file_exists($this->document_root . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
+                     ->addValidator(new Validator\NotEqual($docRoot, 'The index controller does not exist under that document root and base path.'));
+            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($this->document_root, 'The content path does not exist under that document root and base path.'));
-            } else if (!is_writable($this->document_root . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
+                     ->addValidator(new Validator\NotEqual($docRoot, 'The content path does not exist under that document root and base path.'));
+            } else if (!is_writable($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
                 $this->getElement('document_root')
-                    ->addValidator(new Validator\NotEqual($this->document_root, 'The content path is not writable under that document root and base path.'));
+                    ->addValidator(new Validator\NotEqual($docRoot, 'The content path is not writable under that document root and base path.'));
             }
         }
 

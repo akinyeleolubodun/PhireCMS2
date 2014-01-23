@@ -292,11 +292,11 @@ class User extends Form
                 }
             }
 
-            $siteIds = array(0 => $_SERVER['HTTP_HOST']);
+            $siteIds = array('0' => $_SERVER['HTTP_HOST']);
 
             $sites = Table\Sites::findAll();
             foreach ($sites->rows as $site) {
-                $siteIds[$site->id] = $site->domain;
+                $siteIds[(string)$site->id] = $site->domain;
             }
 
             $fields4['role_id'] = array(
