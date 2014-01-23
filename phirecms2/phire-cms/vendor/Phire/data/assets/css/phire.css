@@ -149,7 +149,7 @@ textarea {
 input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, select:focus, textarea:focus {
     border: solid 1px #52b2e5;
     background-color: #efefef;
-    box-shadow: 0px 0px 5px 2px #8cd6ff;
+    box-shadow: 0 0 5px 2px #8cd6ff;
 }
 
 /* ID Definitions */
@@ -179,7 +179,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 100%;
     height: 160px;
     background-color: #211f1e;
-    box-shadow: inset 0px 0px 60px 20px #000;
+    box-shadow: inset 0 0 60px 20px #000;
 }
 
 #install-header h2, #login-header h2 {
@@ -251,7 +251,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 310px;
     background-color: #fff;
     border-radius: 20px;
-    box-shadow: 0px 0px 15px 5px #d3cac6;
+    box-shadow: 0 0 15px 5px #d3cac6;
 }
 
 #login-form input[type=text], #login-form input[type=password], #forgot-form input[type=text] {
@@ -298,7 +298,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     background-position: 25px center;
     background-repeat: no-repeat;
     background-color: #211f1e;
-    box-shadow: inset 0px 0px 20px 2px #000;
+    box-shadow: inset 0 0 20px 2px #000;
     border-bottom: solid 1px #353331;
 }
 
@@ -695,6 +695,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     display: block;
     border-radius: 10px;
     text-align: center;
+    box-shadow: 0 0 12px 6px #000;
 }
 
 #countdown {

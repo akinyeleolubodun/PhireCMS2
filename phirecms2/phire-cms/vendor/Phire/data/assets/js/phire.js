@@ -611,12 +611,24 @@ jax(document).ready(function(){
                 jax('#logout-warning-back').css({
                     "opacity" : 80,
                     "width"   : jax().width() + 'px',
-                    "height"  : jax().height() + 'px',
+                    "height"  : jax().getScrollHeight() + 'px',
                     "display" : 'block'
                 });
                 jax('#logout-warning').css({
                     "left" : Math.round((jax().width() / 2) - 170) + 'px'
                 });
+
+                var resizeLogout = function() {
+                    jax('#logout-warning-back').css({
+                        "width"   : jax().width() + 'px',
+                        "height"  : jax().getScrollHeight() + 'px'
+                    });
+                    jax('#logout-warning').css({
+                        "left" : Math.round((jax().width() / 2) - 170) + 'px'
+                    });
+                };
+
+                jax().on('resize', resizeLogout);
 
                 var countDown = setInterval(function(){
                     var sec = parseInt(jax('#countdown').val());
@@ -630,10 +642,10 @@ jax(document).ready(function(){
 
                 jax('#continue').click(function(){
                     clearInterval(countDown);
+                    jax().off('resize', resizeLogout);
                     jax('#logout-warning-back').remove();
                     jax('#logout-warning').remove();
-                    jax.ajax(url + '/users/sessions/json');
-                    console.log('continue');
+                    jax.ajax(url + '/session');
                     return false;
                 });
             }

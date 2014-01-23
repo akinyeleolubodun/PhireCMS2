@@ -107,12 +107,12 @@ class Fields extends Record
                 foreach ($models as $k => $m) {
                     if ($m['type_id'] == $id) {
                         unset($models[$k]);
+                        $fld = static::findById($field->id);
+                        if (isset($fld->id)) {
+                            $fld = serialize($models);
+                            $fld->save();
+                        }
                     }
-                }
-                $fld = static::findById($field->id);
-                if (isset($fld->id)) {
-                    $fld = serialize($models);
-                    $fld->save();
                 }
             }
         }

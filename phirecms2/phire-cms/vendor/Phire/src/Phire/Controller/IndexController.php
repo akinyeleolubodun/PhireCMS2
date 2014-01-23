@@ -495,8 +495,14 @@ class IndexController extends AbstractController
                             $isFile = false;
                             $t =  $tmpl[$device]['template'];
                             $this->response->setHeader('Content-Type', $tmpl[$device]['content_type']);
+                        // If there is a template object, fall back on the desktop template
+                        } else if (isset($tmpl['desktop'])) {
+                            $isFile = false;
+                            $t =  $tmpl['desktop']['template'];
+                            $this->response->setHeader('Content-Type', $tmpl['desktop']['content_type']);
                         }
                     }
+
                     $t = Model\Template::parse($t, $template);
                 }
             // Else, if the template is a file

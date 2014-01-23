@@ -81,25 +81,6 @@ class SessionsController extends AbstractController
     }
 
     /**
-     * Method to use a JSON request to reset a user's last session action
-     *
-     * @return void
-     */
-    public function json()
-    {
-        $session = new Model\UserSession();
-
-        // Update user session last action
-        if (isset($session->user->sess_id)) {
-            $userSession = Table\UserSessions::findById($session->user->sess_id);
-            if (isset($userSession->id) && ($userSession->user_id == $session->user->id)) {
-                $userSession->last = date('Y-m-d H:i:s');
-                $userSession->save();
-            }
-        }
-    }
-
-    /**
      * Error method
      *
      * @return void

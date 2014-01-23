@@ -52,13 +52,13 @@ class AbstractController extends \Pop\Mvc\Controller
         if (isset($this->view->assets)) {
             $jsVars = '?lang=' . $config->default_language;
         }
-
         if (isset($sess->user)) {
             // Set the timeout warning, giving a 30 second buffer to act
             if (isset($this->view->assets)) {
                 if (isset($this->view->acl) && ($this->view->acl->getType()->session_expiration > 0) && ($this->view->acl->getType()->timeout_warning)) {
                     $exp = ($this->view->acl->getType()->session_expiration * 60) - 30;
-                    $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode(BASE_PATH . APP_URI);
+                    $uri = BASE_PATH . ((strtolower($this->view->acl->getType()->type) != 'user') ? '/' . strtolower($this->view->acl->getType()->type) : APP_URI);
+                    $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode($uri);
                 }
             }
 

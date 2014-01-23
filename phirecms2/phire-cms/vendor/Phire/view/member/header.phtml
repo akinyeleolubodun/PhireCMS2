@@ -12,7 +12,7 @@
 <body>
 <div id="phire-container">
     <div id="phire-header">
-        <a class="home-logo" href="<?php echo ((BASE_PATH . APP_URI) != '') ? BASE_PATH . APP_URI : '/'; ?>">Home</a>
+        <a class="home-logo" href="<?php echo ((BASE_PATH . $user->typeUri) != '') ? BASE_PATH . $user->typeUri : '/'; ?>">Home</a>
 <?php if (isset($user) && isset($user->username)): ?>
         <div id="logged-in">
             <strong class="pad">Logged in as:</strong> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/profile"><?php echo $user->username; ?></a> <span class="pad">|</span> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/unsubscribe">Unsubscribe</a> <span class="pad">|</span> <a href="<?php echo BASE_PATH . $user->typeUri; ?>/logout">Logout</a><br />
