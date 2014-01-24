@@ -346,6 +346,13 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
 
+--
+-- Dumping data for table `extensions`
+--
+
+INSERT INTO `[{prefix}]extensions` (`id`, `name`, `file`, `type`, `active`, `assets`) VALUES
+(10001, 'default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:7:{i:0;s:12:"header.phtml";i:1;s:11:"error.phtml";i:2;s:12:"search.phtml";i:3;s:10:"date.phtml";i:4;s:14:"category.phtml";i:5;s:12:"footer.phtml";i:6;s:11:"index.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
+
 -- --------------------------------------------------------
 
 --

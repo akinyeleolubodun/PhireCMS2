@@ -1,11 +1,17 @@
-<?php include __DIR__ . '/header.phtml'; ?>
-    <h1 class="error"><?php echo $title; ?></h1>
-<?php
-if (isset($main_nav)):
-    echo $main_nav;
-endif;
-?>
-    <p>
-        <?php echo $msg; ?>
-    </p>
-<?php include __DIR__ . '/footer.phtml'; ?>
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title><?php echo $site_title . ' ' . $separator . ' ' . $title; ?></title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+    <h1 style="color: #f00;"><?php echo $title; ?></h1>
+<?php if (isset($msg): ?>
+<?php echo $msg; ?>
+<?php endif; ?>
+</body>
+</html>
