@@ -36,15 +36,21 @@ class Categories extends Record
      */
     public static function getCategoriesWithCount()
     {
+        $site = Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+        $siteId = (isset($site->id)) ? $site->id : '0';
+
         // Create SQL object and get first SQL result set of
         // content to category where content object is published or a file
         $firstSql = \Phire\Table\ContentToCategories::getSql();
         $firstSql->select(array(
             'content_id',
             'category_id',
+            'site_id',
             'status'
         ))->join(DB_PREFIX . 'content', array('content_id', 'id'), 'LEFT JOIN')
-          ->where()->isNull('status', 'OR')->equalTo('status', 2, 'OR');
+          ->where()->isNull('status', 'OR')
+                   ->equalTo('status', 2, 'OR')
+                   ->equalTo('site_id', $siteId);
 
         $firstSql->setAlias('content_live');
 

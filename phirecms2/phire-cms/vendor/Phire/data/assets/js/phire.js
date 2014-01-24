@@ -500,13 +500,16 @@ var phire = {
                 CKEDITOR.instances['field_' + id].destroy();
             } else if (typeof tinymce !== 'undefined') {
                 content = tinymce.activeEditor.getContent();
-                var par = jax('#field_' + id).parent();
-                var children = par.childNodes;
-                for (var i = 0; i < children.length; i++) {
-                    if (children[i].nodeName == 'DIV') {
-                        par.removeChild(children[i]);
-                    }
-                }
+                tinymce.get('field_' + id).hide();
+                //tinymce.editors['field_' + id] = undefined;
+                //var par = jax('#field_' + id).parent();
+                //var children = par.childNodes;
+                //for (var i = 0; i < children.length; i++) {
+                //    if (children[i].nodeName == 'DIV') {
+                //        par.removeChild(children[i]);
+                //    }
+                //}
+                //tinymce.remove('#field_' + id);
             }
             jax('#field_' + id).val(content);
             jax('#field_' + id).show();
@@ -529,6 +532,7 @@ var phire = {
             var h = Math.round(jax('#field_' + id).height());
             phire.selIds = [{ "id" : id, "width" : w, "height" : h }];
         }
+
         if (phire.selIds.length > 0) {
             for (var i = 0; i < phire.selIds.length; i++) {
                 if (editor == 'ckeditor') {
@@ -560,6 +564,8 @@ var phire = {
                                 width                 : phire.selIds[i].width,
                                 height                : phire.selIds[i].height,
                                 relative_urls         : false,
+                                convert_urls          : 0,
+                                remove_script_host    : 0,
                                 file_browser_callback : function(field_name, url, type, win) {
                                     tinymce.activeEditor.windowManager.open({
                                         title  : "Asset Browser",
@@ -574,6 +580,8 @@ var phire = {
                                 }
                             }
                         );
+                    } else {
+                        tinymce.get('field_' + phire.selIds[i].id).show();
                     }
                 }
             }

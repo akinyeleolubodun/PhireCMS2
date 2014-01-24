@@ -29,5 +29,16 @@ class Sites extends Record
      */
     protected $prefix = DB_PREFIX;
 
+    /**
+     * Static method to get current site root
+     *
+     * @return string
+     */
+    public static function getBasePath()
+    {
+        $site = static::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+        return (isset($site->id)) ? $site->base_path : BASE_PATH;
+    }
+
 }
 

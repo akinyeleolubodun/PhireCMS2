@@ -106,8 +106,11 @@ class Config extends Record
         $site = Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
         if (isset($site->id)) {
             $config['site_title'] = $site->title;
+            $config['base_path']  = $site->base_path;
             $config['force_ssl']  = $site->force_ssl;
             $config['live']       = $site->live;
+        } else {
+            $config['base_path']  = BASE_PATH;
         }
 
         return new \ArrayObject($config, \ArrayObject::ARRAY_AS_PROPS);

@@ -39,6 +39,12 @@ class Site extends F
         }
 
         $fields1 = array(
+            'title' => array(
+                'type'       => 'text',
+                'label'      => 'Title:',
+                'required'   => true,
+                'attributes' => array('size' => 60)
+            ),
             'domain' => array(
                 'type'       => 'text',
                 'label'      => 'Domain:',
@@ -51,18 +57,17 @@ class Site extends F
                 'required'   => true,
                 'attributes' => array('size' => 60)
             ),
-            'title' => array(
+            'base_path' => array(
                 'type'       => 'text',
-                'label'      => 'Title:',
-                'required'   => true,
-                'attributes' => array('size' => 60)
+                'label'      => 'Base Path:',
+                'attributes' => array('size' => 60),
+                'value'      => BASE_PATH
             )
         );
         $fields2 = array(
             'force_ssl' => array(
                 'type'     => 'radio',
                 'label'    => 'Force SSL:',
-                'required' => true,
                 'value' => array(
                     '0' => 'No',
                     '1' => 'Yes'
@@ -72,7 +77,6 @@ class Site extends F
             'live' => array(
                 'type'     => 'radio',
                 'label'    => 'Live:',
-                'required' => true,
                 'value'    => array(
                     '0' => 'No',
                     '1' => 'Yes'
@@ -145,21 +149,32 @@ class Site extends F
             $docRoot = ((substr($this->document_root, -1) == '/') || (substr($this->document_root, -1) == "\\")) ?
                 substr($this->document_root, 0, -1) : $this->document_root;
 
+            if ($this->base_path != '') {
+                $basePath = ((substr($this->base_path, 0, 1) != '/') || (substr($this->base_path, 0, 1) != "\\")) ?
+                    '/' . $this->base_path : $this->base_path;
+
+                if ((substr($basePath, -1) == '/') || (substr($basePath, -1) == "\\")) {
+                    $basePath = substr($basePath, 0, -1);
+                }
+            } else {
+                $basePath = '';
+            }
+
             if (!file_exists($docRoot)) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($docRoot, 'That site document root does not exists.'));
-            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH)) {
-                $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($docRoot, 'The base path does not exist under that document root.'));
-            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . 'index.php')) {
-                $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($docRoot, 'The index controller does not exist under that document root and base path.'));
-            } else if (!file_exists($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
-                $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($docRoot, 'The content path does not exist under that document root and base path.'));
-            } else if (!is_writable($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
-                $this->getElement('document_root')
-                    ->addValidator(new Validator\NotEqual($docRoot, 'The content path is not writable under that document root and base path.'));
+                     ->addValidator(new Validator\NotEqual($this->document_root, 'That site document root does not exists.'));
+            } else if (!file_exists($docRoot . $basePath)) {
+                $this->getElement('base_path')
+                     ->addValidator(new Validator\NotEqual($this->base_path, 'The base path does not exist under that document root.'));
+            } else if (!file_exists($docRoot . $basePath . DIRECTORY_SEPARATOR . 'index.php')) {
+                $this->getElement('base_path')
+                     ->addValidator(new Validator\NotEqual($this->base_path, 'The index controller does not exist under that document root and base path.'));
+            } else if (!file_exists($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
+                $this->getElement('base_path')
+                     ->addValidator(new Validator\NotEqual($this->base_path, 'The content path does not exist under that document root and base path.'));
+            } else if (!is_writable($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
+                $this->getElement('base_path')
+                    ->addValidator(new Validator\NotEqual($this->base_path, 'The content path is not writable under that document root and base path.'));
             }
         }
 

@@ -4,10 +4,8 @@
  */
 namespace Phire\Model;
 
-use Pop\Data\Type\Html;
 use Pop\Filter\String;
 use Pop\Nav\Nav;
-use Pop\Web\Session;
 use Phire\Table;
 
 class Navigation extends AbstractModel
@@ -216,14 +214,16 @@ class Navigation extends AbstractModel
                 );
 
                 if (isset($allContent->rows[0])) {
+                    $basePath = Table\Sites::getBasePath();
+
                     $this->trackNav = array();
-                    $navChildren = $this->getTreeChildren($allContent->rows, 0);
+                    $navChildren = $this->getTreeChildren($allContent->rows, 0, $basePath);
                     $newChildren = array();
                     foreach ($allContent->rows as $c) {
                         if ((null !== $c->cont_id) && !in_array($c->cont_id, $this->trackNav)) {
-                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cont_parent_id));
+                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cont_parent_id, false, $basePath));
                         } else if ((null !== $c->cat_id) && !in_array($c->cat_id, $this->trackNav)) {
-                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cat_parent_id));
+                            $newChildren = array_merge($newChildren, $this->getTreeChildren($allContent->rows, $c->cat_parent_id, false, $basePath));
                         }
                     }
 
@@ -263,7 +263,7 @@ class Navigation extends AbstractModel
                 ),
                 'on' => 'category-nav-on'
             );
-            $navChildren = $this->getCategoryChildren($categories->rows, 0, true);
+            $navChildren = $this->getCategoryChildren($categories->rows, 0, true, Table\Sites::getBasePath());
             if (count($navChildren) > 0) {
                 $nav = new Nav($navChildren, $catConfig);
                 $nav->nav()->setIndent('    ');
@@ -407,10 +407,15 @@ class Navigation extends AbstractModel
      * @param  array   $content
      * @param  int     $pid
      * @param  boolean $override
+     * @param  string  $basePath
      * @return array
      */
-    protected function getTreeChildren($content, $pid, $override = false)
+    protected function getTreeChildren($content, $pid, $override = false, $basePath = null)
     {
+        if (null === $basePath) {
+            $basePath = BASE_PATH;
+        }
+
         $children = array();
         foreach ($content as $c) {
             if (null !== $c->cont_id) {
@@ -419,7 +424,7 @@ class Navigation extends AbstractModel
                         $this->trackNav[] = $c->cont_id;
                     }
                     $p = (array)$c;
-                    $p['uri'] = BASE_PATH . $c->cont_uri;
+                    $p['uri'] = $basePath . $c->cont_uri;
                     $p['href'] = $p['uri'];
                     $p['name'] = $c->cont_title;
 
@@ -429,7 +434,7 @@ class Navigation extends AbstractModel
                     $cont->title     = $c->cont_title;
                     $cont->uri       = $c->cont_uri;
                     if (($override) || (\Phire\Model\Content::isAllowed($cont) && (!in_array($c->cont_parent_id, $this->trackNavNotAllowed)))) {
-                        $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override);
+                        $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override, $basePath);
                         $children[] = $p;
                     } else {
                         $this->trackNavNotAllowed[] = $cont->cont_id;
@@ -441,11 +446,11 @@ class Navigation extends AbstractModel
                         $this->trackNav[] = $c->cat_id;
                     }
                     $p = (array)$c;
-                    $p['uri'] = BASE_PATH . '/category' . $c->cat_uri;
+                    $p['uri'] = $basePath . '/category' . $c->cat_uri;
                     $p['href'] = $p['uri'];
                     $p['name'] = $c->cat_title;
 
-                    $p['children'] = $this->getTreeChildren($content, $c->cat_id, $override);
+                    $p['children'] = $this->getTreeChildren($content, $c->cat_id, $override, $basePath);
                     $children[] = $p;
                 }
             }
@@ -460,15 +465,20 @@ class Navigation extends AbstractModel
      * @param array   $category
      * @param int     $pid
      * @param boolean $count
+     * @param string  $basePath
      * @return  array
      */
-    protected function getCategoryChildren($category, $pid, $count = false)
+    protected function getCategoryChildren($category, $pid, $count = false, $basePath = null)
     {
+        if (null === $basePath) {
+            $basePath = BASE_PATH;
+        }
+
         $children = array();
         foreach ($category as $c) {
             if ($c->parent_id == $pid) {
                 $p = (array)$c;
-                $p['uri'] = BASE_PATH . '/category'  . $c->uri;
+                $p['uri'] = $basePath . '/category'  . $c->uri;
                 $p['href'] = $p['uri'];
                 $p['name'] = $c->title;
 
@@ -476,7 +486,7 @@ class Navigation extends AbstractModel
                     $p['name'] .= ' (' . ((isset($c->num)) ? (int)$c->num : 0). ')';
                 }
 
-                $p['children'] = $this->getCategoryChildren($category, $c->id, $count);
+                $p['children'] = $this->getCategoryChildren($category, $c->id, $count, $basePath);
                 $children[] = $p;
             }
         }

@@ -6,6 +6,7 @@ namespace Phire\Form;
 
 use Pop\Form\Form;
 use Pop\Validator;
+use Phire\Table;
 
 class Media extends Form
 {
@@ -19,6 +20,16 @@ class Media extends Form
      */
     public function __construct($action = null, $method = 'post')
     {
+        $sess = \Pop\Web\Session::getInstance();
+        $siteIds = array(0 => $_SERVER['HTTP_HOST']);
+
+        $sites = Table\Sites::findAll();
+        foreach ($sites->rows as $site) {
+            if (in_array($site->id, $sess->user->site_ids)) {
+                $siteIds[$site->id] = $site->domain;
+            }
+        }
+
         $typesAry = array();
         $types = \Phire\Table\ContentTypes::findAll('order ASC', array('uri' => 0));
         foreach ($types->rows as $type) {
@@ -26,6 +37,12 @@ class Media extends Form
         }
 
         $this->initFieldsValues = array(
+            'site_id' => array(
+                'type'       => 'select',
+                'value'      => $siteIds,
+                'marked'     => 0,
+                'attributes' => array('style' => 'width: 150px;')
+            ),
             'type_id' => array(
                 'type'     => 'select',
                 'required' => true,
@@ -34,7 +51,10 @@ class Media extends Form
             'uri' => array(
                 'type'       => 'file',
                 'required'   => true,
-                'attributes' => array('size' => 30)
+                'attributes' => array(
+                    'size' => 20,
+                    'style' => 'width: 200px;'
+                )
             ),
             'submit' => array(
                 'type'  => 'submit',

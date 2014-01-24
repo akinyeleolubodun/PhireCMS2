@@ -25,7 +25,7 @@ class Project extends P
      * Register and load any other modules
      *
      * @param  \Pop\Loader\Autoloader $autoloader
-     * $param  string                 $docRoot
+     * @param  string                 $docRoot
      * @throws Exception
      * @return self
      */
@@ -33,17 +33,23 @@ class Project extends P
     {
         if (null === $docRoot) {
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            $basePath = BASE_PATH;
+        } else {
+            $basePath = \Phire\Table\Sites::getBasePath();
         }
+
         $events = array();
 
         // Load Phire any overriding Phire configuration
-        $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire', $docRoot);
+        if ($basePath == BASE_PATH) {
+            $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire', $docRoot);
+        }
 
         // Check if Phire is installed
         self::isInstalled();
 
         $sess = Session::getInstance();
-        $errors = self::checkDirs($docRoot . BASE_PATH . CONTENT_PATH, true, $docRoot);
+        $errors = self::checkDirs($docRoot . $basePath . CONTENT_PATH, true, $docRoot);
         if (count($errors) > 0) {
             $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
         } else {
@@ -87,7 +93,9 @@ class Project extends P
                         $ext = Table\Extensions::findBy(array('name' => $d));
                         if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
                             // Load assets
-                            $this->loadAssets($directory . $d . '/data', $d, $docRoot);
+                            if ($basePath == BASE_PATH) {
+                                $this->loadAssets($directory . $d . '/data', $d, $docRoot);
+                            }
 
                             // Get module config
                             if (file_exists($directory . $d . '/config/module.php')) {
@@ -518,7 +526,6 @@ class Project extends P
      */
     protected function loadAssets($d, $moduleName, $docRoot = null)
     {
-
         if (null === $docRoot) {
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
         }

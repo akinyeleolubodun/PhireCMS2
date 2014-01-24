@@ -411,6 +411,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `domain` varchar(255) NOT NULL,
   `document_root` varchar(255) NOT NULL,
+  `base_path` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `force_ssl` int(1) NOT NULL,
   `live` int(1) NOT NULL,

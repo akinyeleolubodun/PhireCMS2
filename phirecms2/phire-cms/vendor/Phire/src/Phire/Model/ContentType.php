@@ -150,9 +150,17 @@ class ContentType extends AbstractModel
                     if (!$type->uri) {
                         $content = Table\Content::findBy(array('type_id' => $type->id));
                         foreach ($content->rows as $c) {
-                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $c->uri) &&
-                                !is_dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $c->uri)) {
-                                \Phire\Model\Content::removeMedia($c->uri);
+                            if ((int)$c->site_id > 0) {
+                                $site = Table\Sites::findById((int)$c->site_id);
+                                $docRoot  = $site->document_root;
+                                $basePath = $site->base_path;
+                            } else {
+                                $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                                $basePath = BASE_PATH;
+                            }
+                            if (file_exists($docRoot . $basePath . CONTENT_PATH . '/media/' . $c->uri) &&
+                                !is_dir($docRoot . $basePath . CONTENT_PATH . '/media/' . $c->uri)) {
+                                \Phire\Model\Content::removeMedia($c->uri, $docRoot . $basePath);
                             }
                         }
                     }

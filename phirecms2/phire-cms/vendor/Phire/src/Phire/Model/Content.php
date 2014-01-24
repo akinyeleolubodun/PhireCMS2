@@ -315,10 +315,12 @@ class Content extends AbstractModel
             $c = (array)$content;
 
             if ((int)$c['site_id'] != 0) {
-                $site = Table\Sites::findById($c['site_id']);
-                $domain = $site->domain;
+                $site     = Table\Sites::findById($c['site_id']);
+                $domain   = $site->domain;
+                $basePath = $site->base_path;
             } else {
-                $domain = $_SERVER['HTTP_HOST'];
+                $domain   = $_SERVER['HTTP_HOST'];
+                $basePath = BASE_PATH;
             }
 
             // Track open authoring
@@ -334,18 +336,20 @@ class Content extends AbstractModel
             // Adjust URI link based on URI or file
             if (substr($c['uri'], 0, 1) == '/') {
                 $c['status'] = (isset($c['status'])) ? $status[$c['status']] : '';
-                $c['uri'] = '<a href="http://' . $domain . BASE_PATH . $c['uri'] . '" target="_blank">http://' . $domain . BASE_PATH . $c['uri'] . '</a>';
+                $c['uri'] = '<a href="http://' . $domain . $basePath . $c['uri'] . '" target="_blank">http://' . $domain . $basePath . $c['uri'] . '</a>';
             } else {
                 if ((int)$c['site_id'] != 0) {
                     $site = Table\Sites::findById((int)$c['site_id']);
-                    $docRoot = $site->document_root;
+                    $docRoot  = $site->document_root;
+                    $basePath = $site->base_path;
                 } else {
-                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                    $basePath = BASE_PATH;
                 }
-                $fileInfo = self::getFileIcon($c['uri'], $docRoot);
-                $c['status'] = '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="32" /></a>';
+                $fileInfo = self::getFileIcon($c['uri'], $docRoot . $basePath);
+                $c['status'] = '<a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank"><img src="http://' . $domain . $basePath . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="32" /></a>';
                 $c['size'] = $fileInfo['fileSize'];
-                $c['uri'] = '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
+                $c['uri'] = '<a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $c['uri'] . '" target="_blank">http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $c['uri'] . '</a>';
             }
             $c['created_date'] = $c['created'];
             // Add copy link
@@ -681,8 +685,14 @@ class Content extends AbstractModel
         while ($pId != 0) {
             $content = Table\Content::findById($pId);
             if (isset($content->id)) {
+                if ((int)$content->site_id > 0) {
+                    $site     = Table\Sites::findById((int)$content->site_id);
+                    $basePath = (isset($site->id)) ? $site->base_path : BASE_PATH;
+                } else {
+                    $basePath = BASE_PATH;
+                }
                 if ($content->status == self::PUBLISHED) {
-                    $breadcrumb = '<a href="' . BASE_PATH . $content->uri . '">' . $content->title . '</a> ' .
+                    $breadcrumb = '<a href="' . $basePath . $content->uri . '">' . $content->title . '</a> ' .
                         $this->config->separator . ' ' . $breadcrumb;
                 }
                 $pId = $content->parent_id;
@@ -734,11 +744,13 @@ class Content extends AbstractModel
         } else if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
             if ((int)$fields['site_id'] > 0) {
                 $site = Table\Sites::findById((int)$fields['site_id']);
-                $docRoot = $site->document_root;
+                $docRoot  = $site->document_root;
+                $basePath = $site->base_path;
             } else {
-                $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                $basePath = BASE_PATH;
             }
-            $dir = $docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+            $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
             $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
 
             File::upload(
@@ -747,7 +759,7 @@ class Content extends AbstractModel
             );
             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
             if (preg_match(self::$imageRegex, $fileName)) {
-                self::processMedia($fileName, $this->config, $docRoot);
+                self::processMedia($fileName, $this->config, $docRoot . $basePath);
             }
 
             $title = ($fields['content_title'] != '') ?
@@ -882,12 +894,14 @@ class Content extends AbstractModel
             } else if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
                 if ((int)$fields['site_id'] > 0) {
                     $site = Table\Sites::findById((int)$fields['site_id']);
-                    $docRoot = $site->document_root;
+                    $docRoot  = $site->document_root;
+                    $basePath = $site->base_path;
                 } else {
-                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                    $basePath = BASE_PATH;
                 }
-                $dir = $docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
-                self::removeMedia($content->uri, $docRoot);
+                $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                self::removeMedia($content->uri, $docRoot . $basePath);
                 $fileName = File::checkDupe($_FILES['uri']['name'], $dir);
                 File::upload(
                     $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
@@ -895,7 +909,7 @@ class Content extends AbstractModel
                 );
                 chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                 if (preg_match(self::$imageRegex, $fileName)) {
-                    self::processMedia($fileName, $this->config, $docRoot);
+                    self::processMedia($fileName, $this->config, $docRoot . $basePath);
                 }
                 $title = ($fields['content_title'] != '') ?
                     $fields['content_title'] :
@@ -1154,11 +1168,13 @@ class Content extends AbstractModel
             if ($_FILES) {
                 if ((int)$_POST['site_id'] > 0) {
                     $site = Table\Sites::findById((int)$_POST['site_id']);
-                    $docRoot = $site->document_root;
+                    $docRoot  = $site->document_root;
+                    $basePath = $site->base_path;
                 } else {
-                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                    $basePath = BASE_PATH;
                 }
-                $dir = $docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
                 if (($_FILES) && isset($_FILES['archive_file']) && ($_FILES['archive_file']['error'] == 1)) {
                     throw new \Pop\File\Exception("The archive file exceeds the PHP 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . ".");
                 } else if (!empty($_FILES['archive_file']) && ($_FILES['archive_file']['name'] != '')) {
@@ -1196,7 +1212,7 @@ class Content extends AbstractModel
                             copy($file, $dir . DIRECTORY_SEPARATOR . $fileName);
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                             if (preg_match(self::$imageRegex, $fileName)) {
-                                self::processMedia($fileName, $this->config, $docRoot);
+                                self::processMedia($fileName, $this->config, $docRoot . $basePath);
                             }
                             $content = new Table\Content(array(
                                 'site_id'    => $_POST['site_id'],
@@ -1232,7 +1248,7 @@ class Content extends AbstractModel
                         );
                         $upload->setPermissions(0777);
                         if (preg_match(self::$imageRegex, $fileName)) {
-                            self::processMedia($fileName, $this->config, $docRoot);
+                            self::processMedia($fileName, $this->config, $docRoot . $basePath);
                         }
 
                         $title = ($_POST['file_title_' . $id] != '') ?
@@ -1285,11 +1301,13 @@ class Content extends AbstractModel
                             if (isset($type->id) && (!$type->uri)) {
                                 if (($content->site_id != 0)) {
                                     $site = Table\Sites::findById((int)$content->site_id);
-                                    $docRoot = $site->document_root;
+                                    $docRoot  = $site->document_root;
+                                    $basePath = $site->base_path;
                                 } else {
-                                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                    $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                                    $basePath = BASE_PATH;
                                 }
-                                self::removeMedia($content->uri, $docRoot);
+                                self::removeMedia($content->uri, $docRoot . $basePath);
                             }
                             $content->delete();
                         } else {
@@ -1323,11 +1341,11 @@ class Content extends AbstractModel
         $ext = strtolower(substr($fileName, (strrpos($fileName, '.') + 1)));
 
         if (null === $docRoot) {
-            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            $docRoot = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH;
         }
 
         if (in_array($ext, $formats)) {
-            $mediaDir = $docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+            $mediaDir = $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
             foreach ($cfg as $size => $action) {
                 if (in_array($action['action'], Config::getMediaActions())) {
                     // If 'size' directory does not exist, create it
@@ -1382,15 +1400,15 @@ class Content extends AbstractModel
     public static function removeMedia($fileName, $docRoot = null)
     {
         if (null === $docRoot) {
-            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            $docRoot = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH;
         }
 
-        $dir = $docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR;
+        $dir = $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR;
         if (file_exists($dir . $fileName) && !is_dir($dir . $fileName)) {
             unlink($dir . $fileName);
         }
 
-        $dirs = new Dir($docRoot . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
+        $dirs = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
         foreach ($dirs->getFiles() as $size) {
             if (is_dir($dir . $size)) {
                 $newFileName = $fileName . '.jpg';
@@ -1413,10 +1431,10 @@ class Content extends AbstractModel
     public static function getFileIcon($fileName, $docRoot = null)
     {
         if (null === $docRoot) {
-            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            $docRoot = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH;
         }
 
-        $mediaDir = $docRoot . BASE_PATH . CONTENT_PATH . '/media/';
+        $mediaDir = $docRoot . CONTENT_PATH . '/media/';
         $iconDir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/img/';
         $ext = strtolower(substr($fileName, (strrpos($fileName, '.') + 1)));
         if (($ext == 'docx') || ($ext == 'pptx') || ($ext == 'xlsx')) {
@@ -1433,7 +1451,7 @@ class Content extends AbstractModel
             }
 
             // Get the icon or the image file, searching for the smallest image file
-            $dirs = new Dir($docRoot . BASE_PATH . CONTENT_PATH . '/media', true);
+            $dirs = new Dir($docRoot . CONTENT_PATH . '/media', true);
             $fileSizes = array();
             foreach ($dirs->getFiles() as $dir) {
                 if (is_dir($dir)) {

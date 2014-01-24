@@ -434,10 +434,11 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "site_domain" varchar NOT NULL,
-  "site_document_root" varchar NOT NULL,
-  "site_title" varchar NOT NULL,
-  "force_ssl" integer  NOT NULL,
+  "domain" varchar(255) NOT NULL,
+  "document_root" varchar(255) NOT NULL,
+  "base_path" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "force_ssl" integer NOT NULL,
   "live" integer NOT NULL,
   UNIQUE ("id")
 ) ;

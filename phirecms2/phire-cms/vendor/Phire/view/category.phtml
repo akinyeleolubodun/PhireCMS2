@@ -29,12 +29,12 @@ if (count($items) > 0):
                 $title .= $item->category_title;
             endif;
 ?>
-    <h3><a href="<?php echo BASE_PATH; ?>/category<?php echo $item->category_uri; ?>"><?php echo $title; ?></a></h3>
+    <h3><a href="<?php echo $base_path; ?>/category<?php echo $item->category_uri; ?>"><?php echo $title; ?></a></h3>
     <ul>
 <?php
         endif;
 ?>
-        <li><a href="<?php echo BASE_PATH . $item->uri; ?>"><?php echo $item->title; ?></a></li>
+        <li><a href="<?php echo $base_path . $item->uri; ?>"><?php echo $item->title; ?></a></li>
 <?php
     endforeach;
     echo '    </ul>' . PHP_EOL;

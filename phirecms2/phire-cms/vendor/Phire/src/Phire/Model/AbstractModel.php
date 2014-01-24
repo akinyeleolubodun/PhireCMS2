@@ -172,11 +172,18 @@ abstract class AbstractModel
     {
         $dataAry = (null === $data) ? $this->data : $data;
 
+        if ((int)$dataAry['site_id'] > 0) {
+            $site     = Table\Sites::findById((int)$dataAry['site_id']);
+            $basePath = (isset($site->id)) ? $site->base_path : BASE_PATH;
+        } else {
+            $basePath = BASE_PATH;
+        }
+
         $keys = array_keys($dataAry);
 
         foreach ($dataAry as $key => $value) {
             if (is_string($value)) {
-                $value = str_replace(array('[{base_path}]', '[{content_path}]'), array(BASE_PATH, CONTENT_PATH), $value);
+                $value = str_replace(array('[{base_path}]', '[{content_path}]'), array($basePath, CONTENT_PATH), $value);
                 foreach ($keys as $k) {
                     if ((strpos($value, '[{' . $k . '}]') !== false) && ($dataAry[$k])) {
                         $value = str_replace('[{' . $k . '}]', $dataAry[$k], $value);

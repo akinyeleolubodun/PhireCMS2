@@ -140,8 +140,19 @@ class FieldValue extends \Phire\Model\AbstractModel
             $encOptions = $fldCfg['Phire']->encryptionOptions->asArray();
         }
 
+        $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+        $basePath = BASE_PATH;
+
+        if (isset($fields['site_id'])) {
+            $site = Table\Sites::findById((int)$fields['site_id']);
+            if (isset($site->id)) {
+                $docRoot  = $site->document_root;
+                $basePath = $site->base_path;
+            }
+        }
+
         $config = static::factory()->config();
-        $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+        $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
 
         $valueAry = array();
         $postKeys = ($_POST) ? self::getPostKeys() : array();
@@ -197,7 +208,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                         );
                         chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                         if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                            \Phire\Model\Content::processMedia($fileName, $config);
+                            \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
                         }
                     }
 
@@ -277,7 +288,19 @@ class FieldValue extends \Phire\Model\AbstractModel
     public static function update(array $fields, $modelId)
     {
         $config = static::factory()->config();
-        $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+
+        $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+        $basePath = BASE_PATH;
+
+        if (isset($fields['site_id'])) {
+            $site = Table\Sites::findById((int)$fields['site_id']);
+            if (isset($site->id)) {
+                $docRoot  = $site->document_root;
+                $basePath = $site->base_path;
+            }
+        }
+
+        $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
 
         $valueAry = array();
         $postKeys = ($_POST) ? self::getPostKeys() : array();
@@ -381,7 +404,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $fValue = unserialize($fv->value);
                                 if (isset($fValue[$num])) {
                                     if ($_FILES) {
-                                        \Phire\Model\Content::removeMedia($fValue[$num]);
+                                        \Phire\Model\Content::removeMedia($fValue[$num], $docRoot . $basePath);
                                     }
                                 }
                             }
@@ -393,7 +416,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                             if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config);
+                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
                             }
                         } else {
                             $num = substr($key, (strrpos($key, '_') + 1)) - 1;
@@ -422,7 +445,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                             if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config);
+                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
                             }
                         }
 
@@ -433,7 +456,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             // If file field value exists, update
                             if (isset($field->field_id)) {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia(unserialize($field->value));
+                                    \Phire\Model\Content::removeMedia(unserialize($field->value), $docRoot . $basePath);
                                 }
 
                                 $field->value = serialize($fileName);
@@ -474,11 +497,11 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $fValue = unserialize($fv->value);
                             if (is_array($fValue) && isset($fValue[$num])) {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia($fValue[$num]);
+                                    \Phire\Model\Content::removeMedia($fValue[$num], $docRoot . $basePath);
                                 }
                             } else {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia($fValue);
+                                    \Phire\Model\Content::removeMedia($fValue, $docRoot . $basePath);
                                 }
                             }
                         }
@@ -499,7 +522,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                 $id = substr($key, (strrpos($key, '_') + 1));
                 if (isset($value[0])) {
                     if ($_FILES) {
-                        \Phire\Model\Content::removeMedia($value[0]);
+                        \Phire\Model\Content::removeMedia($value[0], $docRoot . $basePath);
                     }
                 }
                 $fv = Table\FieldValues::findById(array($id, $modelId));
@@ -558,7 +581,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
                             if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config);
+                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
                             }
                         }
                         if (!isset($valueAry[$id])) {
@@ -701,10 +724,28 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $file = unserialize($fld->value);
                             if (is_array($file)) {
                                 foreach ($file as $f) {
-                                    \Phire\Model\Content::removeMedia($f);
+                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $f)) {
+                                        \Phire\Model\Content::removeMedia($f);
+                                    } else {
+                                        $sites = Table\Sites::findAll();
+                                        foreach ($sites->rows as $site) {
+                                            if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $f)) {
+                                                \Phire\Model\Content::removeMedia($f, $site->document_root . $site->base_path);
+                                            }
+                                        }
+                                    }
                                 }
                             } else {
-                                \Phire\Model\Content::removeMedia($file);
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $file)) {
+                                    \Phire\Model\Content::removeMedia($file);
+                                } else {
+                                    $sites = Table\Sites::findAll();
+                                    foreach ($sites->rows as $site) {
+                                        if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $file)) {
+                                            \Phire\Model\Content::removeMedia($file, $site->document_root . $site->base_path);
+                                        }
+                                    }
+                                }
                             }
                         }
                         $fld->delete();

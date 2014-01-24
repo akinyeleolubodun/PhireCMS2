@@ -160,11 +160,13 @@ class Field extends \Phire\Model\AbstractModel
                                 $site = Table\Sites::findById((int)$fileContent->site_id);
                                 $domain = $site->domain;
                                 $docRoot = $site->document_root;
+                                $basePath = $site->base_path;
                             } else {
                                 $domain = $_SERVER['HTTP_HOST'];
                                 $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                $basePath = BASE_PATH;
                             }
-                            $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                            $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot . $basePath);
                             $fld['label'] .= ' <em>(Replace?)</em><br /><a href="http://' .
                                 $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                 $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
@@ -368,11 +370,13 @@ class Field extends \Phire\Model\AbstractModel
                                             $site = Table\Sites::findById((int)$fileContent->site_id);
                                             $domain = $site->domain;
                                             $docRoot = $site->document_root;
+                                            $basePath = $site->base_path;
                                         } else {
                                             $domain = $_SERVER['HTTP_HOST'];
                                             $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                            $basePath = BASE_PATH;
                                         }
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot . $basePath);
                                         $f['label'] = '<em>Replace?</em><br /><a href="http://' .
                                             $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
@@ -397,11 +401,13 @@ class Field extends \Phire\Model\AbstractModel
                                             $site = Table\Sites::findById((int)$fileContent->site_id);
                                             $domain = $site->domain;
                                             $docRoot = $site->document_root;
+                                            $basePath = $site->base_path;
                                         } else {
                                             $domain = $_SERVER['HTTP_HOST'];
                                             $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                                            $basePath = BASE_PATH;
                                         }
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot);
+                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $docRoot . $basePath);
                                         $f['label'] = '<em >Replace?</em><br /><a href="http://' .
                                             $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
@@ -668,6 +674,7 @@ class Field extends \Phire\Model\AbstractModel
      */
     public function getImages()
     {
+        $sess = \Pop\Web\Session::getInstance();
         $sizes = array_keys($this->config->media_actions);
 
         // Get images
@@ -694,37 +701,46 @@ class Field extends \Phire\Model\AbstractModel
 
         // Set the onlick action based on the editor
         if ($_GET['editor'] == 'ckeditor') {
-            $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
+            //$onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
+            $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href); window.close(); return false;";
         } else if ($_GET['editor'] == 'tinymce') {
-            $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
+            //$onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
+            $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href); top.tinymce.activeEditor.windowManager.close(); return false;";
         } else {
             $onclick = 'return false;';
         }
 
         // Format the select column
         foreach ($contentRows as $key => $value) {
-            if ((int)$value->content_site_id != 0) {
-                $site = Table\Sites::findById((int)$value->content_site_id);
-                $domain = $site->domain;
-                $docRoot = $site->document_root;
-            } else {
-                $domain = $_SERVER['HTTP_HOST'];
-                $docRoot = $_SERVER['DOCUMENT_ROOT'];
-            }
-            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot);
-            $value->file_icon = $fileInfo['fileIcon'];
-            $value->file_size = $fileInfo['fileSize'];
-
-            $select = '[ <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
-            foreach ($sizes as $size) {
-                if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
-                    $select .= ' | <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+            if (in_array($value->content_site_id, $sess->user->site_ids)) {
+                if ((int)$value->content_site_id != 0) {
+                    $site = Table\Sites::findById((int)$value->content_site_id);
+                    $domain = $site->domain;
+                    $docRoot = $site->document_root;
+                    $basePath = $site->base_path;
+                } else {
+                    $domain = $_SERVER['HTTP_HOST'];
+                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    $basePath = BASE_PATH;
                 }
-            }
-            $select .= ' ]';
-            $value->select = $select;
+                $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot . $basePath);
+                $value->file_icon = $fileInfo['fileIcon'];
+                $value->file_size = $fileInfo['fileSize'];
 
-            $contentRows[$key] = $value;
+                $select = '[ <a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+                foreach ($sizes as $size) {
+                    if (file_exists($docRoot . $basePath . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
+                        $select .= ' | <a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+                    }
+                }
+                $select .= ' ]';
+                $value->select = $select;
+                $value->domain = $domain;
+                $value->base_path = $basePath;
+                $contentRows[$key] = $value;
+            } else {
+                unset($contentRows[$key]);
+            }
         }
 
         $this->data['sizes'] = $sizes;
@@ -738,6 +754,7 @@ class Field extends \Phire\Model\AbstractModel
      */
     public function getFiles()
     {
+        $sess = \Pop\Web\Session::getInstance();
         $sizes = array_keys($this->config->media_actions);
 
         // Get files
@@ -759,37 +776,46 @@ class Field extends \Phire\Model\AbstractModel
 
         // Set the onlick action based on the editor
         if ($_GET['editor'] == 'ckeditor') {
-            $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
+            //$onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
+            $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href); window.close(); return false;";
         } else if ($_GET['editor'] == 'tinymce') {
-            $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
+            //$onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
+            $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href); top.tinymce.activeEditor.windowManager.close(); return false;";
         } else {
             $onclick = 'return false;';
         }
 
         // Format the select column
         foreach ($contentRows as $key => $value) {
-            if ((int)$value->content_site_id != 0) {
-                $site = Table\Sites::findById((int)$value->content_site_id);
-                $domain = $site->domain;
-                $docRoot = $site->document_root;
-            } else {
-                $domain = $_SERVER['HTTP_HOST'];
-                $docRoot = $_SERVER['DOCUMENT_ROOT'];
-            }
-            $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot);
-            $value->file_icon = $fileInfo['fileIcon'];
-            $value->file_size = $fileInfo['fileSize'];
-
-            $select = '[ <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
-            foreach ($sizes as $size) {
-                if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
-                    $select .= ' | <a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+            if (in_array($value->content_site_id, $sess->user->site_ids)) {
+                if ((int)$value->content_site_id != 0) {
+                    $site = Table\Sites::findById((int)$value->content_site_id);
+                    $domain = $site->domain;
+                    $docRoot = $site->document_root;
+                    $basePath = $site->base_path;
+                } else {
+                    $domain = $_SERVER['HTTP_HOST'];
+                    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                    $basePath = BASE_PATH;
                 }
-            }
-            $select .= ' ]';
-            $value->select = $select;
+                $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $docRoot . $basePath);
+                $value->file_icon = $fileInfo['fileIcon'];
+                $value->file_size = $fileInfo['fileSize'];
 
-            $contentRows[$key] = $value;
+                $select = '[ <a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+                foreach ($sizes as $size) {
+                    if (file_exists($docRoot . $basePath . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
+                        $select .= ' | <a href="http://' . $domain . $basePath . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
+                    }
+                }
+                $select .= ' ]';
+                $value->select = $select;
+                $value->domain = $domain;
+                $value->base_path = $basePath;
+                $contentRows[$key] = $value;
+            } else {
+                unset($contentRows[$key]);
+            }
         }
 
         // Get URIs
@@ -811,14 +837,22 @@ class Field extends \Phire\Model\AbstractModel
 
         // Format the select column
         foreach ($uriRows as $key => $value) {
-            if ((int)$value->content_site_id != 0) {
-                $site = Table\Sites::findById((int)$value->content_site_id);
-                $domain = $site->domain;
+            if (in_array($value->content_site_id, $sess->user->site_ids)) {
+                if ((int)$value->content_site_id != 0) {
+                    $site = Table\Sites::findById((int)$value->content_site_id);
+                    $domain = $site->domain;
+                    $basePath = $site->base_path;
+                } else {
+                    $domain = $_SERVER['HTTP_HOST'];
+                    $basePath = BASE_PATH;
+                }
+                $value->select = '[ <a href="http://' . $domain . $basePath . $value->content_uri . '" onclick="' . $onclick . '">URI</a> ]';
+                $value->domain = $domain;
+                $value->base_path = $basePath;
+                $uriRows[$key] = $value;
             } else {
-                $domain = $_SERVER['HTTP_HOST'];
+                unset($uriRows[$key]);
             }
-            $value->select = '[ <a href="http://' . $domain . BASE_PATH . $value->content_uri . '" onclick="' . $onclick . '">URI</a> ]';
-            $uriRows[$key] = $value;
         }
 
         $this->data['sizes'] = $sizes;
@@ -839,16 +873,24 @@ class Field extends \Phire\Model\AbstractModel
 
         // If content is a file
         if (($_FILES) && isset($_FILES['uri']) && ($_FILES['uri']['tmp_name'] != '')) {
-            $dir = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+            if ((int)$fields['site_id'] > 0) {
+                $site = Table\Sites::findById((int)$fields['site_id']);
+                $docRoot  = $site->document_root;
+                $basePath = $site->base_path;
+            } else {
+                $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+                $basePath = BASE_PATH;
+            }
+            $dir = $docRoot . $basePath . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
             $fileName = \Pop\File\File::checkDupe($_FILES['uri']['name'], $dir);
 
-            $upload = \Pop\File\File::upload(
+            \Pop\File\File::upload(
                 $_FILES['uri']['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                 $this->config->media_max_filesize, $this->config->media_allowed_types
             );
             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
             if (preg_match(\Phire\Model\Content::getImageRegex(), $fileName)) {
-                \Phire\Model\Content::processMedia($fileName, $this->config);
+                \Phire\Model\Content::processMedia($fileName, $this->config, $docRoot . $basePath);
             }
 
             $title = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.'))));
@@ -857,6 +899,7 @@ class Field extends \Phire\Model\AbstractModel
 
             $content = new \Phire\Table\Content(array(
                 'type_id'    => $fields['type_id'],
+                'site_id'    => $fields['site_id'],
                 'title'      => $title,
                 'uri'        => $uri,
                 'slug'       => $slug,

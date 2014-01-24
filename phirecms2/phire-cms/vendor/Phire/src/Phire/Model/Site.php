@@ -116,9 +116,21 @@ class Site extends \Phire\Model\AbstractModel
         $docRoot = ((substr($fields['document_root'], -1) == '/') || (substr($fields['document_root'], -1) == "\\")) ?
             substr($fields['document_root'], 0, -1) : $fields['document_root'];
 
+        if ($fields['base_path'] != '') {
+            $basePath = ((substr($fields['base_path'], 0, 1) != '/') || (substr($fields['base_path'], 0, 1) != "\\")) ?
+                '/' . $fields['base_path'] : $fields['base_path'];
+
+            if ((substr($basePath, -1) == '/') || (substr($basePath, -1) == "\\")) {
+                $basePath = substr($basePath, 0, -1);
+            }
+        } else {
+            $basePath = '';
+        }
+
         $site = new Table\Sites(array(
             'domain'        => $fields['domain'],
             'document_root' => $docRoot,
+            'base_path'     => $basePath,
             'title'         => $fields['title'],
             'force_ssl'     => (int)$fields['force_ssl'],
             'live'          => (int)$fields['live']
@@ -138,52 +150,52 @@ class Site extends \Phire\Model\AbstractModel
 
         FieldValue::save($fields, $site->id);
 
-        mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
-        mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions');
-        mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules');
-        mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes');
-        mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
+        mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
+        mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions');
+        mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules');
+        mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes');
+        mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
 
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html'
         );
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html'
         );
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html'
         );
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html'
         );
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html'
         );
         copy(
             $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html',
-            $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html'
+            $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html'
         );
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
-        chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
+        chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
 
         // Copy any themes over
         $themes = Table\Extensions::findAll(null, array('type' => 0));
         if (isset($themes->rows[0])) {
-            $themePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+            $themePath = $docRoot . $basePath . CONTENT_PATH . '/extensions/themes';
             foreach ($themes->rows as $theme) {
                 if (!file_exists($themePath . '/' . $theme->name)) {
                     copy(
@@ -215,11 +227,23 @@ class Site extends \Phire\Model\AbstractModel
 
         $docRoot = ((substr($fields['document_root'], -1) == '/') || (substr($fields['document_root'], -1) == "\\")) ?
             substr($fields['document_root'], 0, -1) : $fields['document_root'];
+
         $oldDocRoot = $site->document_root;
 
+        if ($fields['base_path'] != '') {
+            $basePath = ((substr($fields['base_path'], 0, 1) != '/') || (substr($fields['base_path'], 0, 1) != "\\")) ?
+                '/' . $fields['base_path'] : $fields['base_path'];
+
+            if ((substr($basePath, -1) == '/') || (substr($basePath, -1) == "\\")) {
+                $basePath = substr($basePath, 0, -1);
+            }
+        } else {
+            $basePath = '';
+        }
 
         $site->domain        = $fields['domain'];
         $site->document_root = $docRoot;
+        $site->base_path     = $basePath;
         $site->title         = $fields['title'];
         $site->force_ssl     = (int)$fields['force_ssl'];
         $site->live          = (int)$fields['live'];
@@ -230,52 +254,52 @@ class Site extends \Phire\Model\AbstractModel
         FieldValue::update($fields, $site->id);
 
         if ($oldDocRoot != $docRoot) {
-            mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
-            mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions');
-            mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules');
-            mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes');
-            mkdir($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
+            mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets');
+            mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions');
+            mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules');
+            mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes');
+            mkdir($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media');
 
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html'
             );
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html'
             );
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html'
             );
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html'
             );
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html'
             );
             copy(
                 $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html',
-                $docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html'
+                $docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html'
             );
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
-            chmod($docRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'index.html', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media', 0777);
+            chmod($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'index.html', 0777);
 
             // Copy any themes over
             $themes = Table\Extensions::findAll(null, array('type' => 0));
             if (isset($themes->rows[0])) {
-                $themePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+                $themePath = $docRoot . $basePath . CONTENT_PATH . '/extensions/themes';
                 foreach ($themes->rows as $theme) {
                     if (!file_exists($themePath . '/' . $theme->name)) {
                         copy(
@@ -306,16 +330,55 @@ class Site extends \Phire\Model\AbstractModel
 
         if ($siteFromId > 0) {
             $site = Table\Sites::findById($siteFromId);
-            $siteFromDocRoot = $site->document_root;
+            $siteFromDomain   = $site->domain;
+            $siteFromDocRoot  = $site->document_root;
+            $siteFromBasePath = (substr($site->base_path, 0, 1) == '/') ? substr($site->base_path, 1) : $site->base_path;
         } else {
-            $siteFromDocRoot = $_SERVER['DOCUMENT_ROOT'];
+            $siteFromDomain   = $_SERVER['HTTP_HOST'];
+            $siteFromDocRoot  = $_SERVER['DOCUMENT_ROOT'];
+            $siteFromBasePath = (substr(BASE_PATH, 0, 1) == '/') ? substr(BASE_PATH, 1) : BASE_PATH;
         }
 
         if ($siteToId > 0) {
             $site = Table\Sites::findById($siteToId);
-            $siteToDocRoot = $site->document_root;
+            $siteToDomain   = $site->domain;
+            $siteToDocRoot  = $site->document_root;
+            $siteToBasePath = (substr($site->base_path, 0, 1) == '/') ? substr($site->base_path, 1) : $site->base_path;
         } else {
-            $siteToDocRoot = $_SERVER['DOCUMENT_ROOT'];
+            $siteToDomain   = $_SERVER['HTTP_HOST'];
+            $siteToDocRoot  = $_SERVER['DOCUMENT_ROOT'];
+            $siteToBasePath = (substr(BASE_PATH, 0, 1) == '/') ? substr(BASE_PATH, 1) : BASE_PATH;
+        }
+
+        if ($siteFromBasePath != '') {
+            $search = array(
+                'href="http://' . $siteFromDomain . '/' . $siteFromBasePath,
+                'src="http://' . $siteFromDomain . '/' . $siteFromBasePath,
+                'href="/' . $siteFromBasePath,
+                'src="/' . $siteFromBasePath
+            );
+        } else {
+            $search = array(
+                'href="http://' . $siteFromDomain,
+                'src="http://' . $siteFromDomain,
+                'href="',
+                'src="'
+            );
+        }
+        if ($siteToBasePath != '') {
+            $replace = array(
+                'href="http://' . $siteToDomain . '/' . $siteToBasePath,
+                'src="http://' . $siteToDomain . '/' . $siteToBasePath,
+                'href="/' . $siteToBasePath,
+                'src="/' . $siteToBasePath
+            );
+        } else {
+            $replace = array(
+                'href="http://' . $siteToDomain,
+                'src="http://' . $siteToDomain,
+                'href="',
+                'src="'
+            );
         }
 
         $contentFrom  = Table\Content::findAll(null, array('site_id' => $siteFromId));
@@ -336,24 +399,24 @@ class Site extends \Phire\Model\AbstractModel
                 // If content object is a file
                 if (substr($c->uri, 0, 1) != '/') {
                     $sizes = Table\Config::getMediaSizes();
-                    $contentPath = $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                    $contentPath = $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
                     $newUri = File::checkDupe($c->uri, $contentPath);
 
-                    if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $c->uri)) {
+                    if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $c->uri)) {
                         copy(
-                            $siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $c->uri,
-                            $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri
+                            $siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $c->uri,
+                            $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri
                         );
-                        chmod($siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri, 0777);
+                        chmod($siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri, 0777);
                     }
 
                     foreach ($sizes as $size) {
-                        if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $c->uri)) {
+                        if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $c->uri)) {
                             copy(
-                                $siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $c->uri,
-                                $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri
+                                $siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $c->uri,
+                                $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri
                             );
-                            chmod($siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri, 0777);
+                            chmod($siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri, 0777);
                         }
                     }
 
@@ -367,19 +430,36 @@ class Site extends \Phire\Model\AbstractModel
                     foreach ($fv->rows as $f) {
                         $field = Table\Fields::findById($f->field_id);
                         if (isset($field->id) && ($field->type != 'file')) {
+                            // Change out the site base path
+                            if ((strpos($field->type, 'text') !== false) && ($siteFromBasePath != $siteToBasePath)) {
+                                $v = serialize(str_replace($search, $replace, unserialize($f->value)));
+                                if (null !== $f->history) {
+                                    $history = unserialize($f->history);
+                                    foreach ($history as $key => $value) {
+                                        $history[$key] = str_replace($search, $replace, $value);
+                                    }
+                                    $h = serialize($history);
+                                } else {
+                                    $h = $f->history;
+                                }
+                            } else {
+                                $v = $f->value;
+                                $h = $f->history;
+                            }
+
                             $newFv = Table\FieldValues::findBy(array('field_id' => $f->field_id, 'model_id' => $c->id), null, 1);
                             if (isset($newFv->field_id)) {
-                                $newFv->value     = $f->value;
+                                $newFv->value     = $v;
                                 $newFv->timestamp = $f->timestamp;
-                                $newFv->history   = $f->history;
+                                $newFv->history   = $h;
                                 $newFv->update();
                             } else {
                                 $newFv = new Table\FieldValues(array(
                                     'field_id'  => $f->field_id,
                                     'model_id'  => $c->id,
-                                    'value'     => $f->value,
+                                    'value'     => $v,
                                     'timestamp' => $f->timestamp,
-                                    'history'   => $f->history,
+                                    'history'   => $h
                                 ));
                                 $newFv->save();
                             }
@@ -388,10 +468,17 @@ class Site extends \Phire\Model\AbstractModel
                 }
             // Create new content object
             } else {
+                $oldParent   = Table\Content::findById($content->parent_id);
+                $newParentId = null;
+                if (isset($oldParent->id)) {
+                    $newParent   = Table\Content::findBy(array('site_id' => $siteToId, 'uri' => $oldParent->uri));
+                    $newParentId = (isset($newParent->id)) ? $newParent->id : null;
+                }
+
                 $newContent = new Table\Content(array(
                     'site_id'    => $siteToId,
                     'type_id'    => $content->type_id,
-                    'parent_id'  => $content->parent_id,
+                    'parent_id'  => $newParentId,
                     'template'   => $content->template,
                     'title'      => $content->title,
                     'uri'        => $content->uri,
@@ -414,24 +501,24 @@ class Site extends \Phire\Model\AbstractModel
                 // If content object is a file
                 if (substr($content->uri, 0, 1) != '/') {
                     $sizes = Table\Config::getMediaSizes();
-                    $contentPath = $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
+                    $contentPath = $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media';
                     $newUri = File::checkDupe($content->uri, $contentPath);
 
-                    if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $content->uri)) {
+                    if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $content->uri)) {
                         copy(
-                            $siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $content->uri,
-                            $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri
+                            $siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $content->uri,
+                            $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri
                         );
-                        chmod($siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri, 0777);
+                        chmod($siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $newUri, 0777);
                     }
 
                     foreach ($sizes as $size) {
-                        if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $content->uri)) {
+                        if (file_exists($siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $content->uri)) {
                             copy(
-                                $siteFromDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $content->uri,
-                                $siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri
+                                $siteFromDocRoot . DIRECTORY_SEPARATOR . $siteFromBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $content->uri,
+                                $siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri
                             );
-                            chmod($siteToDocRoot . DIRECTORY_SEPARATOR . BASE_PATH . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri, 0777);
+                            chmod($siteToDocRoot . DIRECTORY_SEPARATOR . $siteToBasePath . DIRECTORY_SEPARATOR . CONTENT_PATH . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $size . DIRECTORY_SEPARATOR . $newUri, 0777);
                         }
                     }
 
@@ -444,12 +531,29 @@ class Site extends \Phire\Model\AbstractModel
                     foreach ($fv->rows as $f) {
                         $field = Table\Fields::findById($f->field_id);
                         if (isset($field->id) && ($field->type != 'file')) {
+                            // Change out the site base path
+                            if ((strpos($field->type, 'text') !== false) && ($siteFromBasePath != $siteToBasePath)) {
+                                $v = serialize(str_replace($search, $replace, unserialize($f->value)));
+                                if (null !== $f->history) {
+                                    $history = unserialize($f->history);
+                                    foreach ($history as $key => $value) {
+                                        $history[$key] = str_replace($search, $replace, $value);
+                                    }
+                                    $h = serialize($history);
+                                } else {
+                                    $h = $f->history;
+                                }
+                            } else {
+                                $v = $f->value;
+                                $h = $f->history;
+                            }
+
                             $newFv = new Table\FieldValues(array(
                                 'field_id'  => $f->field_id,
                                 'model_id'  => $newContent->id,
-                                'value'     => $f->value,
+                                'value'     => $v,
                                 'timestamp' => $f->timestamp,
-                                'history'   => $f->history,
+                                'history'   => $h,
                             ));
                             $newFv->save();
                         }
@@ -491,7 +595,7 @@ class Site extends \Phire\Model\AbstractModel
                             $c = Table\Content::findById($content->id);
                             if (isset($c->id)) {
                                 if (substr($c->uri, 0, 1) != '/') {
-                                    \Phire\Model\Content::removeMedia($c->uri, $site->document_root);
+                                    \Phire\Model\Content::removeMedia($c->uri, $site->document_root . $site->base_path);
                                 }
                                 $c->delete();
                             }

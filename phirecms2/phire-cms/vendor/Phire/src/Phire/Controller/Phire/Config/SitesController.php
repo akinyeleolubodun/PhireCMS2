@@ -94,7 +94,6 @@ class SitesController extends AbstractController
             if ($form->isValid()) {
                 $site = new Model\Site();
                 $site->save($form);
-                /*
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $site->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -105,7 +104,6 @@ class SitesController extends AbstractController
                 } else {
                     Response::redirect($this->request->getBasePath());
                 }
-                */
             } else {
                 if (null !== $this->request->getQuery('update')) {
                     $this->sendJson($form->getErrors());
@@ -221,7 +219,7 @@ class SitesController extends AbstractController
             if ($form->isValid()) {
                 $site = new Model\Site();
                 $site->migrate($form);
-                //Response::redirect($this->request->getBasePath());
+                Response::redirect($this->request->getBasePath());
             } else {
                 $this->view->set('form', $form);
                 $this->send();

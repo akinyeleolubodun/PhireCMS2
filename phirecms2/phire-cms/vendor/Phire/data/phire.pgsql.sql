@@ -456,10 +456,11 @@ CREATE SEQUENCE site_id_seq START 13001;
 
 CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
   "id" integer NOT NULL DEFAULT nextval('site_id_seq'),
-  "site_domain" varchar(255) NOT NULL,
-  "site_document_root" varchar(255) NOT NULL,
-  "site_title" varchar(255) NOT NULL,
-  "force_ssl" integer  NOT NULL,
+  "domain" varchar(255) NOT NULL,
+  "document_root" varchar(255) NOT NULL,
+  "base_path" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "force_ssl" integer NOT NULL,
   "live" integer NOT NULL,
   PRIMARY KEY ("id")
 ) ;

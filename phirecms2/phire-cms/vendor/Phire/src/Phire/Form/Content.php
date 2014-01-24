@@ -213,11 +213,13 @@ class Content extends Form
                         $site = Table\Sites::findById((int)$content->site_id);
                         $domain = $site->domain;
                         $docRoot = $site->document_root;
+                        $basePath = $site->base_path;
                     } else {
                         $domain = $_SERVER['HTTP_HOST'];
                         $docRoot = $_SERVER['DOCUMENT_ROOT'];
+                        $basePath = BASE_PATH;
                     }
-                    $fileInfo = Model\Content::getFileIcon($content->uri, $docRoot);
+                    $fileInfo = Model\Content::getFileIcon($content->uri, $docRoot . $basePath);
                     $label = '<em>Replace?</em><br /><a href="http://' .
                         $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                         $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .

@@ -128,10 +128,12 @@ class Category extends AbstractModel
             // Get content object within the category
             $categoryValues['items'] = array();
             $content = Table\ContentToCategories::findBy(array('category_id' => $category->id));
+            $site   = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+            $siteId = (isset($site->id)) ? $site->id : '0';
             if (isset($content->rows[0])) {
                 foreach ($content->rows as $cont) {
                     $c = Table\Content::findById($cont->content_id);
-                    if (isset($c->id) && ((null === $c->status) || ($c->status == 2))) {
+                    if (isset($c->id) && ($c->site_id == $siteId) && ((null === $c->status) || ($c->status == 2))) {
                         $c = $c->getValues();
                         if (substr($c['uri'], 0, 1) != '/') {
                             $c['uri'] = CONTENT_PATH . '/media/' . $c['uri'];
@@ -331,11 +333,12 @@ class Category extends AbstractModel
     {
         $breadcrumb = $this->title;
         $pId = $this->parent_id;
+        $basePath = Table\Sites::getBasePath();
 
         while ($pId != 0) {
             $category = Table\Categories::findById($pId);
             if (isset($category->id)) {
-                $breadcrumb = '<a href="' . BASE_PATH . '/category' . $category->uri . '">' . $category->title . '</a> ' .
+                $breadcrumb = '<a href="' . $basePath . '/category' . $category->uri . '">' . $category->title . '</a> ' .
                     $this->config->separator . ' ' . $breadcrumb;
                 $pId = $category->parent_id;
             }
