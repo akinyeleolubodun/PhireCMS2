@@ -141,7 +141,8 @@ class IndexController extends AbstractController
                     if (isset($content->id) && ($content->allowed)) {
                         $template = $this->getTemplate($content->template, 'index');
                         $this->view->setTemplate($template);
-                        $this->view->set('breadcrumb_title', strip_tags($content->getBreadcrumb()));
+                        $this->view->set('breadcrumb', $content->getBreadcrumb())
+                                   ->set('breadcrumb_title', strip_tags($content->getBreadcrumb()));
                         $this->view->merge($content->getData());
                         $this->send();
                     } else if (isset($content->results[0])) {

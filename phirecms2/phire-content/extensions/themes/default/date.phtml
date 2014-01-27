@@ -8,7 +8,7 @@
 <?php foreach ($results as $result): ?>
             <div class="list-div">
                 <span class="date"><?php echo date($datetime_format, strtotime($result->published)); ?></span>
-                <a href="<?php echo $base_path . '/' . $date . $result->uri . '">' . $result->title; ?></a>
+                <a href="<?php echo $base_path . (($result->uri != '/') ? '/' . $date : '') . $result->uri . '">' . $result->title; ?></a>
                 <p><?php echo strip_tags(substr($result->content, 0, 200)) . '...'; ?></p>
             </div>
 <?php endforeach; ?>
