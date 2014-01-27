@@ -31,13 +31,16 @@ class Batch extends Form
             }
         }
 
+        $browser = new \Pop\Web\Browser();
+        $height = ($browser->isMsie()) ? 30 : 26;
+
         $fields1 = array(
             'file_name_1' => array(
                 'type'       => 'file',
                 'label'      => '<a href="#" onclick="phire.addBatchFields(); return false;">[+]</a> File / Title:',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: 26px;'
+                    'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: ' . $height . 'px;'
                 )
             ),
             'file_title_1' => array(

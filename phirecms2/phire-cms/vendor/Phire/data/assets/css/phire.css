@@ -449,7 +449,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 0 0 20px 15px;
     float: right;
     width: 245px;
-    min-height: 400px;
+    min-height: 420px;
     border-left: solid 1px #ccc;
 }
 
@@ -538,15 +538,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     margin: 0;
     padding: 0;
     overflow: auto;
-    width: 380px;
+    width: 340px;
     min-height: 750px;
     float: left;
 }
 
 #user-type-form-field-group-3, #user-type-form-field-group-4 {
     margin: 0 0 0 5px;
-    padding: 10px 0 0 30px;
+    padding: 10px 0 10px 20px;
     width: 220px;
+    min-height: 420px;
     float: left;
     overflow: auto;
     border-left: solid 1px #ccc;
