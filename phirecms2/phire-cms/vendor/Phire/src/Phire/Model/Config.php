@@ -272,7 +272,7 @@ class Config extends AbstractModel
             'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; (PHP Default: ' . $phpMax . ')',
             'media_actions'       => $mediaConfig,
             'media_image_adapter' => new Element\Select('media_image_adapter', $imageAdapters, $config['media_image_adapter'], '                    '),
-            'feed_type'           => new Element\Select('feed_type', array('10' => 'Atom','9' => 'RSS'), $config['feed_type'], '                    '),
+            'feed_type'           => new Element\Select('feed_type', array('9' => 'RSS', '10' => 'Atom'), $config['feed_type'], '                    '),
             'feed_limit'          => '                    ' . $feedLimit,
             'pagination_limit'    => '                    ' . $pageLimit,
             'pagination_range'    => '                    ' . $pageRange,

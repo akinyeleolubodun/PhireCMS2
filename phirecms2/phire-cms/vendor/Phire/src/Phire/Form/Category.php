@@ -166,7 +166,6 @@ class Category extends Form
         $fields3 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
                     'class' => 'save-btn'

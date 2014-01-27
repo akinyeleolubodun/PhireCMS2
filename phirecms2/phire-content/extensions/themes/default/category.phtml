@@ -1,44 +1,17 @@
 <?php include __DIR__ . '/header.phtml'; ?>
-    <h1>Category <?php echo $separator . ' ' . $title; ?></h1>
-<?php
-if (isset($main_nav)):
-    echo $main_nav;
-endif;
-?>
-<?php if (isset($breadcrumb)): ?>
-    <div><?php echo $breadcrumb; ?></div>
+    <div id="sub-header"></div>
+<!-- Content //-->
+    <div id="content">
+        <div id="content-area">
+            <h1>Category <?php echo $separator . ' ' . $title; ?></h1>
+<?php if (count($items) > 0): ?>
+<?php foreach ($items as $item): ?>
+            <div class="list-div"><a href="<?php echo $base_path . '/category' . $item->category_uri . '">' . $item->category_title . '</a> ' . $separator . ' <a href="' . $base_path . $item->uri . '">' . $item->title; ?></a></div>
+<?php endforeach; ?>
+<?php else: ?>
+            <p>No items found in this category.</p>
 <?php endif; ?>
-<?php if (isset($category_nav)): ?>
-    <h3>Categories</h3>
-<?php
-    echo $category_nav;
-endif;
-?>
-    <p>
-        This is the public category page for Phire CMS.
-    </p>
-<?php
-if (count($items) > 0):
-    $title = null;
-    foreach ($items as $item):
-        if (strpos($title, $item->category_title) === false):
-            if (null !== $title):
-                $title .= ' ' . $separator . ' ' . $item->category_title;
-                echo '    </ul>' . PHP_EOL;
-            else:
-                $title .= $item->category_title;
-            endif;
-?>
-    <h3><a href="<?php echo $base_path; ?>/category<?php echo $item->category_uri; ?>"><?php echo $title; ?></a></h3>
-    <ul>
-<?php
-        endif;
-?>
-        <li><a href="<?php echo $base_path . $item->uri; ?>"><?php echo $item->title; ?></a></li>
-<?php
-    endforeach;
-    echo '    </ul>' . PHP_EOL;
-else: ?>
-    <p>No items found in this category.</p>
-<?php endif; ?>
+        </div>
+<?php include __DIR__ . '/sidebar.phtml'; ?>
+    </div>
 <?php include __DIR__ . '/footer.phtml'; ?>

@@ -22,13 +22,12 @@ class FieldGroup extends Form
         $this->initFieldsValues = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => 'Name:',
+                'label'      => 'Name &amp; Order:',
                 'required'   => true,
-                'attributes' => array('size' => 40)
+                'attributes' => array('size' => 46)
             ),
             'order' => array(
                 'type'       => 'text',
-                'label'      => 'Order:',
                 'attributes' => array('size' => 3),
                 'value'      => 0
             ),

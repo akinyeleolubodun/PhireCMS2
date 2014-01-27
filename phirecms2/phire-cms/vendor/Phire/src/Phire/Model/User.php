@@ -34,6 +34,8 @@ class User extends AbstractModel
         if (($success) && isset($user->id)) {
             // Create and save new session database entry
             if ($type->track_sessions) {
+                Table\UserSessions::clearSessions($user->id);
+
                 $session = new Table\UserSessions(array(
                     'user_id' => $user->id,
                     'ip'      => $_SERVER['REMOTE_ADDR'],

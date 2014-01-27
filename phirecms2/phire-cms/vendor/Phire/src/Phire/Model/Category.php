@@ -334,12 +334,13 @@ class Category extends AbstractModel
         $breadcrumb = $this->title;
         $pId = $this->parent_id;
         $basePath = Table\Sites::getBasePath();
+        $sep = htmlentities($this->config->separator, ENT_QUOTES, 'UTF-8');
 
         while ($pId != 0) {
             $category = Table\Categories::findById($pId);
             if (isset($category->id)) {
                 $breadcrumb = '<a href="' . $basePath . '/category' . $category->uri . '">' . $category->title . '</a> ' .
-                    $this->config->separator . ' ' . $breadcrumb;
+                    $sep . ' ' . $breadcrumb;
                 $pId = $category->parent_id;
             }
         }

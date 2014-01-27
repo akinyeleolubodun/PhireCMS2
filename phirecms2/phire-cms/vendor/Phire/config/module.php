@@ -28,15 +28,17 @@ return array(
                     '/categories' => 'Phire\Controller\Phire\Structure\CategoriesController',
                     '/navigation' => 'Phire\Controller\Phire\Structure\NavigationController',
                     '/templates'  => 'Phire\Controller\Phire\Structure\TemplatesController',
-                    '/fields'     => 'Phire\Controller\Phire\Structure\FieldsController',
-                    '/groups'     => 'Phire\Controller\Phire\Structure\GroupsController',
+                    '/fields'     => array(
+                        '/'       => 'Phire\Controller\Phire\Structure\FieldsController',
+                        '/groups' => 'Phire\Controller\Phire\Structure\GroupsController',
+                    )
                 ),
                 '/extensions' => 'Phire\Controller\Phire\Extensions\IndexController',
                 '/users' => array(
                     '/'         => 'Phire\Controller\Phire\User\IndexController',
                     '/roles'    => 'Phire\Controller\Phire\User\RolesController',
-                    '/sessions' => 'Phire\Controller\Phire\User\SessionsController',
-                    '/types'    => 'Phire\Controller\Phire\User\TypesController'
+                    '/types'    => 'Phire\Controller\Phire\User\TypesController',
+                    '/sessions' => 'Phire\Controller\Phire\User\SessionsController'
                 ),
                 '/config' => array(
                     '/'      => 'Phire\Controller\Phire\Config\IndexController',
@@ -81,11 +83,21 @@ return array(
                 ),
                 'children' => array(
                     array(
-                        'name' => 'Categories',
-                        'href' => 'categories',
+                        'name' => 'Fields',
+                        'href' => 'fields',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Structure\CategoriesController',
+                            'resource'   => 'Phire\Controller\Phire\Structure\FieldsController',
                             'permission' => 'index'
+                        ),
+                        'children' => array(
+                            array(
+                                'name' => 'Field Groups',
+                                'href' => 'groups',
+                                'acl' => array(
+                                    'resource'   => 'Phire\Controller\Phire\Structure\GroupsController',
+                                    'permission' => 'index'
+                                )
+                            )
                         )
                     ),
                     array(
@@ -105,10 +117,10 @@ return array(
                         )
                     ),
                     array(
-                        'name' => 'Fields',
-                        'href' => 'fields',
+                        'name' => 'Categories',
+                        'href' => 'categories',
                         'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Structure\FieldsController',
+                            'resource'   => 'Phire\Controller\Phire\Structure\CategoriesController',
                             'permission' => 'index'
                         )
                     )
@@ -157,18 +169,18 @@ return array(
                         )
                     ),
                     array(
-                        'name' => 'User Types',
-                        'href' => 'types',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\User\TypesController',
-                            'permission' => 'index'
-                        )
-                    ),
-                    array(
                         'name' => 'User Roles',
                         'href' => 'roles',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\User\RolesController',
+                            'permission' => 'index'
+                        )
+                    ),
+                    array(
+                        'name' => 'User Types',
+                        'href' => 'types',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\User\TypesController',
                             'permission' => 'index'
                         )
                     ),

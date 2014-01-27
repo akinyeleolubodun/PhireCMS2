@@ -40,7 +40,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
         }
 
         if ($this->data['acl']->isAuth('Phire\Controller\Structure\GroupsController', 'edit')) {
-            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/groups/edit/[{id}]">[{name}]</a>';
+            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups/edit/[{id}]">[{name}]</a>';
         } else {
             $name = '[{name}]';
         }
@@ -48,16 +48,16 @@ class FieldGroup extends \Phire\Model\AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'field-group-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/structure/groups/remove',
+                'action'  => BASE_PATH . APP_URI . '/structure/fields/groups/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
-                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=id">#</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=name">Name</a>',
-                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=order">Order</a>',
+                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=id">#</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=name">Name</a>',
+                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=order">Order</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

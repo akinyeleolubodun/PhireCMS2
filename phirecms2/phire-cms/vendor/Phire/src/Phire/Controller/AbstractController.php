@@ -137,7 +137,7 @@ class AbstractController extends \Pop\Mvc\Controller
                    ->set('system_email', $config->system_email)
                    ->set('site_title', $config->site_title)
                    ->set('base_path', $config->base_path)
-                   ->set('separator', $config->separator)
+                   ->set('separator', htmlentities($config->separator, ENT_QUOTES, 'UTF-8'))
                    ->set('default_language', $config->default_language)
                    ->set('error_message', $config->error_message)
                    ->set('datetime_format', $config->datetime_format)

@@ -195,7 +195,6 @@ class Template extends Form
         $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
                     'class'   => 'save-btn'

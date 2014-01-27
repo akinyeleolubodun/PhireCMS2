@@ -1,32 +1,21 @@
 <?php include __DIR__ . '/header.phtml'; ?>
-    <h1><?php echo $title; ?></h1>
-<?php
-if (isset($main_nav)):
-    echo $main_nav;
-endif;
-?>
-<?php
-if (isset($category_nav)): ?>
-    <h3>Categories</h3>
-<?php
-    echo $category_nav;
-endif;
-?>
-<?php if (isset($error)): ?>
-    <h4 class="error"><?php echo $error; ?></h4>
+    <div id="sub-header"></div>
+<!-- Content //-->
+    <div id="content">
+        <div id="content-area">
+            <h1><?php echo $title; ?></h1>
+<?php if (count($results) > 0): ?>
+<?php foreach ($results as $result): ?>
+            <div class="list-div">
+                <span class="date"><?php echo date($datetime_format, strtotime($result->published)); ?></span>
+                <a href="<?php echo $base_path . '/' . $date . $result->uri . '">' . $result->title; ?></a>
+                <p><?php echo strip_tags(substr($result->content, 0, 200)) . '...'; ?></p>
+            </div>
+<?php endforeach; ?>
+<?php else: ?>
+            <p>No date results found.</p>
 <?php endif; ?>
-    <p>
-        This is the public date page for Phire CMS.
-    </p>
-<?php
-if (count($rows) > 0):
-    foreach ($rows as $row):
-?>
-    <p><a href="<?php echo BASE_PATH . '/' . $date . $row->uri; ?>"><?php echo $row->title; ?></a></p>
-<?php
-    endforeach;
-else:
-?>
-    <p>No date results found.</p>
-<?php endif; ?>
+        </div>
+<?php include __DIR__ . '/sidebar.phtml'; ?>
+    </div>
 <?php include __DIR__ . '/footer.phtml'; ?>

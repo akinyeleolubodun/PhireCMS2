@@ -225,7 +225,6 @@ class UserType extends Form
 
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'label' => '&nbsp;',
             'value' => 'SAVE',
             'attributes' => array(
                 'class'   => 'save-btn'

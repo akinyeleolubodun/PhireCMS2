@@ -142,8 +142,8 @@ var phire = {
     },
     customDatetime : function(val) {
         var j = jax.json.parse('./config/json/' + encodeURIComponent(val.replace(/\//g, '_')));
-        if (jax('#custom-datetime')[0] != undefined) {
-            var v = (j.format != '') ? '(' + j.format + ')' : '';
+        if ((jax('#custom-datetime')[0] != undefined) && (j != undefined)) {
+            var v = (j.format != undefined) ? '(' + j.format + ')' : '';
             jax('#custom-datetime').val(v);
         }
     },

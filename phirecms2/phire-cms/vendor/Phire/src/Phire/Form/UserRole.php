@@ -85,20 +85,11 @@ class UserRole extends Form
 
         // Create initial fields
         $fields1 = array(
-            'type_id' => array(
-                'type'       => 'select',
-                'required'   => true,
-                'label'      => 'User Type:',
-                'value'      => $typesAry,
-                'attributes' => array(
-                    'style'  => 'min-width: 200px;'
-                )
-            ),
             'name' => array(
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
-                'attributes' => array('size' => 73)
+                'attributes' => array('size' => 84)
             )
         );
 
@@ -222,7 +213,6 @@ class UserRole extends Form
         $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
                     'class'   => 'save-btn'
@@ -234,6 +224,15 @@ class UserRole extends Form
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#user-role-form', true);",
                     'class'   => 'update-btn'
+                )
+            ),
+            'type_id' => array(
+                'type'       => 'select',
+                'required'   => true,
+                'label'      => 'User Type:',
+                'value'      => $typesAry,
+                'attributes' => array(
+                    'style'  => 'min-width: 200px;'
                 )
             ),
             'id' => array(

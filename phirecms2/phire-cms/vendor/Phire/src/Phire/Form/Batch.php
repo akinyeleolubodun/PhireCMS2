@@ -37,14 +37,14 @@ class Batch extends Form
                 'label'      => '<a href="#" onclick="phire.addBatchFields(); return false;">[+]</a> File / Title:',
                 'attributes' => array(
                     'size' => 40,
-                    'style' => 'display: block; margin: 0 0 10px 0;'
+                    'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: 26px;'
                 )
             ),
             'file_title_1' => array(
                 'type'       => 'text',
                 'attributes' => array(
-                    'size' => 40,
-                    'style' => 'display: block; margin: 0 0 10px 0; padding: 6px 4px 6px 4px; margin: 0px 0px 10px 0;'
+                    'size' => 60,
+                    'style' => 'display: block; margin: 0 0 10px 0; padding: 5px 4px 6px 4px; margin: 0px 0px 10px 0; height: 17px;'
                 )
             )
         );
@@ -56,7 +56,10 @@ class Batch extends Form
                 'archive_file' => array(
                     'type'       => 'file',
                     'label'      => 'Archive of Multiple Files:<br /><span style="display: block; margin: 5px 0 0 0; font-size: 0.9em;"><strong>Supported Types:</strong> ' . implode(', ', array_keys($formats)) . '</span>',
-                    'attributes' => array('size' => 40)
+                    'attributes' => array(
+                        'size' => 40,
+                        'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: 26px;'
+                    )
                 )
             );
             $fields3 = array(
@@ -76,7 +79,8 @@ class Batch extends Form
                     'label' => '&nbsp;',
                     'value' => 'UPLOAD',
                     'attributes' => array(
-                        'class' => 'save-btn'
+                        'class' => 'save-btn',
+                    'style' => 'width: 200px;'
                     )
                 )
             );
@@ -98,7 +102,8 @@ class Batch extends Form
                 'label' => '&nbsp;',
                 'value' => 'UPLOAD',
                 'attributes' => array(
-                    'class' => 'save-btn'
+                    'class' => 'save-btn',
+                    'style' => 'width: 200px;'
                 )
             );
             $this->initFieldsValues = $fields1;

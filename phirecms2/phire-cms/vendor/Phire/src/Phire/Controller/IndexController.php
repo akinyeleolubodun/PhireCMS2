@@ -122,6 +122,10 @@ class IndexController extends AbstractController
                 if (strpos($template, '[{categor') !== false) {
                     $this->view->merge(Model\Template::parseCategories($template));
                 }
+                if (strpos($template, '[{recent') !== false) {
+                    $this->view->merge(Model\Template::parseRecent($template));
+                }
+                $this->view->set('breadcrumb_title', strip_tags($content->getBreadcrumb()));
                 $this->view->merge($content->getData());
                 $this->view->setTemplate($template);
                 $this->send();
@@ -137,9 +141,10 @@ class IndexController extends AbstractController
                     if (isset($content->id) && ($content->allowed)) {
                         $template = $this->getTemplate($content->template, 'index');
                         $this->view->setTemplate($template);
+                        $this->view->set('breadcrumb_title', strip_tags($content->getBreadcrumb()));
                         $this->view->merge($content->getData());
                         $this->send();
-                    } else if (isset($content->rows[0])) {
+                    } else if (isset($content->results[0])) {
                         $content->set('title', $date['match']);
                         $template = $this->getTemplate($content->template, 'date');
                         $this->view->setTemplate($template);
@@ -183,7 +188,8 @@ class IndexController extends AbstractController
         $category->getByUri(substr($this->request->getRequestUri(), 9));
 
         // Set up breadcrumb
-        $this->view->set('breadcrumb', $category->getBreadcrumb());
+        $this->view->set('breadcrumb', $category->getBreadcrumb())
+                   ->set('breadcrumb_title', strip_tags($category->getBreadcrumb()));
 
         // If site is live
         if ($this->isLive()) {
@@ -237,14 +243,34 @@ class IndexController extends AbstractController
                 $this->view->set('error', 'No search keywords were passed. Please try again.');
             }
 
+            $contentData = $content->getData();
+
             $tmpl = Table\Templates::findBy(array('name' => 'Search'));
-            $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'search') : $this->getTemplate('search.phtml', 'search');
+            if (isset($tmpl->id)) {
+                $template = $this->getTemplate($tmpl->id, 'search');
+
+                foreach ($contentData['results'] as $key => $result) {
+                    $contentData['results'][$key]['published'] = date($this->view->datetime_format, strtotime($result['published']));
+                    foreach ($result as $k => $v) {
+                        $matches = array();
+                        preg_match_all('/\[\{' . $k . '_\d+\}\]/', $template, $matches);
+                        if (isset($matches[0]) && isset($matches[0][0])) {
+                            $count = substr($matches[0][0], (strpos($matches[0][0], '_') + 1));
+                            $count = substr($count, 0, strpos($count, '}]'));
+                            $contentData['results'][$key][$k . '_' . $count] = substr(strip_tags($result[$k]), 0, $count);
+                        }
+                    }
+                }
+            } else {
+                $template = $this->getTemplate('search.phtml', 'search');
+            }
+
             if (strpos($template, '[{categor') !== false) {
                 $this->view->merge(Model\Template::parseCategories($template));
             }
 
             $this->view->setTemplate($template);
-            $this->view->merge($content->getData());
+            $this->view->merge($contentData);
             $this->send();
         } else {
             $this->error();
@@ -408,6 +434,7 @@ class IndexController extends AbstractController
         $this->view->set('title', $title)
                    ->set('msg', ((null !== $msg) ? $msg : $this->view->error_message) . PHP_EOL)
                    ->set('breadcrumb', $content->getBreadcrumb())
+                   ->set('breadcrumb_title', strip_tags($content->getBreadcrumb()))
                    ->set('phire', new Model\Phire());
 
         $tmpl = Table\Templates::findBy(array('name' => 'Error'));

@@ -38,7 +38,7 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('media_max_filesize', '25000000'),
 ('media_actions', 'a:4:{s:5:"large";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:720;s:7:"quality";i:60;}s:6:"medium";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:480;s:7:"quality";i:60;}s:5:"small";a:3:{s:6:"action";s:6:"resize";s:6:"params";i:240;s:7:"quality";i:60;}s:5:"thumb";a:3:{s:6:"action";s:9:"cropThumb";s:6:"params";i:60;s:7:"quality";i:60;}}'),
 ('media_image_adapter', 'Gd'),
-('feed_type', '10'),
+('feed_type', '9'),
 ('feed_limit', '20'),
 ('open_authoring', '1'),
 ('incontent_editing', '0'),

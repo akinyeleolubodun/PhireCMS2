@@ -137,12 +137,18 @@ class Field extends Form
 
                         $fields2['validator_value_cur_' . $i] = array(
                             'type'       => 'text',
-                            'attributes' => array('size' => 10),
+                            'attributes' => array(
+                                'size'  => 10,
+                                'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 17px;'
+                            ),
                             'value'      => $value['value']
                         );
                         $fields2['validator_message_cur_' . $i] = array(
                             'type'       => 'text',
-                            'attributes' => array('size' => 30),
+                            'attributes' => array(
+                                'size'  => 30,
+                                'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 17px;'
+                            ),
                             'value'      => $value['message']
                         );
                         $fields2['validator_remove_cur_' . $i] = array(
@@ -153,17 +159,6 @@ class Field extends Form
                     }
                 }
             }
-        }
-
-        $browser = new \Pop\Web\Browser();
-
-        $selectStyle = 'display: block; margin: 0 0 4px 0; padding-bottom: 5px;';
-        if ($browser->isMsie()) {
-            $selectStyle = 'display: block; margin: 0 0 6px 0; padding-top: 5px; padding-bottom: 5px;';
-        } else if ($browser->isChrome()) {
-            $selectStyle = 'display: block; margin: 0 0 5px 0; padding-top: 5px; padding-bottom: 5px;';
-        } else {
-            $selectStyle = 'display: block; margin: 0 0 4px 0; padding-top: 3px; padding-bottom: 4px;';
         }
 
         // Start creating initial fields
@@ -226,20 +221,22 @@ class Field extends Form
                 'type'       => 'select',
                 'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> Field Validators:<br /><span style="font-size: 0.9em;">(Type / Value / Message)</span>',
                 'value'      => $this->validators,
-                'attributes' => array('style' => $selectStyle)
+                'attributes' => array(
+                    'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 28px;'
+                )
             ),
             'validator_value_new_1' => array(
                 'type'       => 'text',
                 'attributes' => array(
                     'size' => 10,
-                    'style' => 'display: block; padding: 6px; margin: 0 0 4px 0;'
+                    'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 17px;'
                 )
             ),
             'validator_message_new_1' => array(
                 'type'       => 'text',
                 'attributes' => array(
                     'size' => 30,
-                    'style' => 'display: block; padding: 6px; margin: 0 0 4px 0;'
+                    'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 17px;'
                 )
             )
         );
@@ -305,7 +302,6 @@ class Field extends Form
 
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'label' => '&nbsp;',
             'value' => 'SAVE',
             'attributes' => array(
                 'class' => 'save-btn'
@@ -318,6 +314,12 @@ class Field extends Form
                 'onclick' => "return phire.updateForm('#field-form', true);",
                 'class' => 'update-btn'
             )
+        );
+        $fields4['order'] = array(
+            'type'       => 'text',
+            'label'      => 'Order:',
+            'value'      => 0,
+            'attributes' => array('size' => 3)
         );
         $fields4['group_id'] = array(
             'type'   => 'select',
@@ -354,12 +356,6 @@ class Field extends Form
                 '1' => 'Yes'
             ),
             'marked' => 0
-        );
-        $fields4['order'] = array(
-            'type'       => 'text',
-            'label'      => 'Order:',
-            'value'      => 0,
-            'attributes' => array('size' => 3)
         );
 
         $fields4['id'] = array(

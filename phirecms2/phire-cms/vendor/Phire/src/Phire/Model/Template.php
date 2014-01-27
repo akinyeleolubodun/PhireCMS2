@@ -32,6 +32,20 @@ class Template extends AbstractModel
             }
         }
 
+        // Parse any archive placeholders
+        $archives = array();
+        preg_match_all('/\[\{archive.*\}\]/', $tmp, $archives);
+        if (isset($archives[0]) && isset($archives[0][0])) {
+            $site  = \Phire\Table\Sites::getSite();
+            $phire = new \Phire\Model\Phire();
+            foreach ($archives[0] as $archive) {
+                $formattedArchive = null;
+                $year = str_replace('}]', '', substr($archive, (strpos($archive, '_') + 1)));
+                $arc = $phire->getContentByDate($year . '-12-31 23:59:59', $year . '-01-01 00:00:00', 0);
+                $tmp = str_replace($archive, '<a href="' . $site->base_path . '/' . $year .'">' . $year . ' (' . count($arc) . ')</a>', $tmp);
+            }
+        }
+
         // Parse any template placeholders
         $tmpls = array();
         preg_match_all('/\[\{template_.*\}\]/', $tmp, $tmpls);
@@ -162,6 +176,45 @@ class Template extends AbstractModel
         }
 
         return $catAry;
+    }
+
+    /**
+     * Parse recent content method
+     *
+     * @param  mixed   $template
+     * @return array
+     */
+    public static function parseRecent($template)
+    {
+        $recentAry = array();
+        $recent    = array();
+        $phire     = new \Phire\Model\Phire();
+        preg_match_all('/\[\{recent_.*\}\]/', $template, $recent);
+        if (isset($recent[0]) && isset($recent[0][0])) {
+            foreach ($recent[0] as $rec) {
+                $c = str_replace('}]', '', substr($rec, (strpos($rec, '_') + 1)));
+                if (is_numeric($c)) {
+                    $recentAry['recent_' . $c] = $phire->getContentByDate(null, null, $c);
+                }
+            }
+        }
+
+        $config = \Phire\Table\Config::getSystemConfig();
+
+        foreach ($recentAry['recent_' . $c] as $key => $recent) {
+            $recentAry['recent_' . $c][$key]['published'] = date($config->datetime_format, strtotime($recent->published));
+            foreach ($recent as $k => $v) {
+                $matches = array();
+                preg_match_all('/\[\{' . $k . '_\d+\}\]/', $template, $matches);
+                if (isset($matches[0]) && isset($matches[0][0])) {
+                    $count = substr($matches[0][0], (strpos($matches[0][0], '_') + 1));
+                    $count = substr($count, 0, strpos($count, '}]'));
+                    $recentAry['recent_' . $c][$key][$k . '_' . $count] = substr(strip_tags($recent[$k]), 0, $count);
+                }
+            }
+        }
+
+        return $recentAry;
     }
 
     /**

@@ -11,13 +11,7 @@
             <tr><th class="recent-header" style="background-color: #efefef;">Type</th><th class="recent-header" style="background-color: #efefef;">Title</th><th class="recent-header" style="background-color: #efefef;">URI</th><th class="recent-header" style="background-color: #efefef;">Created</th><th class="recent-header" style="background-color: #efefef;">Status</th></tr>
 <?php foreach ($recent as $content):
 if (in_array($content->site_id, $user->site_ids)):
-    if ((int)$content->site_id > 0):
-        $site = \Phire\Table\Sites::findById((int)$content->site_id);
-        $domain = $site->domain;
-    else:
-        $domain = $_SERVER['HTTP_HOST'];
-    endif;
-    $link = ($content->type_uri == 0) ? '<a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="http://' . $domain . BASE_PATH . $content->uri . '" target="_blank">http://' . $domain . BASE_PATH . $content->uri . '</a>';
+    $link = ($content->type_uri == 0) ? '<a href="http://' . $content->domain . $content->base_path . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="http://' . $content->domain . $content->base_path . $content->uri . '" target="_blank">http://' . $content->domain . $content->base_path . $content->uri . '</a>';
     if (null !== $content->status):
         switch ($content->status):
             case 0:

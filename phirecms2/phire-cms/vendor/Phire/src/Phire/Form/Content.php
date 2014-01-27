@@ -166,25 +166,7 @@ class Content extends Form
 
         // If type requires a URI
         if ($type->uri == 1) {
-            $fields1 = array(
-                'parent_id' => array(
-                    'type'       => 'select',
-                    'label'      => 'Parent:',
-                    'value'      => $parents,
-                    'attributes' => array(
-                        'onchange' => "phire.slug(null, 'uri');",
-                        'style'    => 'min-width: 280px;'
-                    )
-                ),
-                'template' => array(
-                    'type' => 'select',
-                    'label'      => 'Template:',
-                    'value'      => $this->getTemplates($cfg),
-                    'attributes' => array(
-                        'style'    => 'min-width: 280px;'
-                    )
-                )
-            );
+            $fields1 = array();
 
             $uri = array(
                 'type'       => 'text',
@@ -209,20 +191,11 @@ class Content extends Form
             if ($mid != 0) {
                 $content = Table\Content::findById($mid);
                 if (isset($content->id)) {
-                    if ((int)$content->site_id != 0) {
-                        $site = Table\Sites::findById((int)$content->site_id);
-                        $domain = $site->domain;
-                        $docRoot = $site->document_root;
-                        $basePath = $site->base_path;
-                    } else {
-                        $domain = $_SERVER['HTTP_HOST'];
-                        $docRoot = $_SERVER['DOCUMENT_ROOT'];
-                        $basePath = BASE_PATH;
-                    }
-                    $fileInfo = Model\Content::getFileIcon($content->uri, $docRoot . $basePath);
+                    $site = Table\Sites::getSite((int)$content->site_id);
+                    $fileInfo = Model\Content::getFileIcon($content->uri, $site->document_root . $site->base_path);
                     $label = '<em>Replace?</em><br /><a href="http://' .
-                        $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
-                        $domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
+                        $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                        $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
                         $content->uri . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                     $required = false;
                 }
@@ -266,6 +239,27 @@ class Content extends Form
                 'attributes' => array('style' => 'min-width: 200px;')
             )
         );
+
+        // If type requires a URI
+        if ($type->uri == 1) {
+            $fields4['parent_id'] = array(
+                'type'       => 'select',
+                'label'      => 'Parent:',
+                'value'      => $parents,
+                'attributes' => array(
+                    'onchange' => "phire.slug(null, 'uri');",
+                    'style'    => 'min-width: 200px;'
+                )
+            );
+            $fields4['template'] = array(
+                'type'       => 'select',
+                'label'      => 'Template:',
+                'value'      => $this->getTemplates($cfg),
+                'attributes' => array(
+                    'style'    => 'min-width: 200px;'
+                )
+            );
+        }
 
         // Add nav include and roles
         if (!$this->hasFile) {
@@ -421,7 +415,6 @@ class Content extends Form
         $fields6 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
                     'class'   => 'save-btn'
@@ -443,7 +436,7 @@ class Content extends Form
                 'value'      => 'PREVIEW',
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#content-form', true, true);",
-                    'class'   => 'process-btn'
+                    'class'   => 'preview-btn'
                 )
             );
         }
@@ -546,6 +539,7 @@ class Content extends Form
 
             foreach ($assets['templates'] as $key => $value) {
                 if ((stripos($value, 'search') === false) &&
+                    (stripos($value, 'sidebar') === false) &&
                     (stripos($value, 'category') === false) &&
                     (stripos($value, 'date') === false) &&
                     (stripos($value, 'error') === false) &&
@@ -559,34 +553,36 @@ class Content extends Form
                     }
                 }
             }
-        } else {
-            $tmpls = Table\Templates::findAll('id ASC');
-            $viewDir = new Dir($view, false, false, false);
+        }
 
-            foreach ($tmpls->rows as $tmpl) {
-                if (null === $tmpl->parent_id) {
-                    if ((stripos($tmpl->name, 'search') === false) &&
-                        (stripos($tmpl->name, 'category') === false) &&
-                        (stripos($tmpl->name, 'date') === false) &&
-                        (stripos($tmpl->name, 'error') === false) &&
-                        (stripos($tmpl->name, 'header') === false) &&
-                        (stripos($tmpl->name, 'footer') === false)) {
-                        $templates[$tmpl->id] = $tmpl->name;
-                    }
+        $tmpls = Table\Templates::findAll('id ASC');
+        $viewDir = new Dir($view, false, false, false);
+
+        foreach ($tmpls->rows as $tmpl) {
+            if (null === $tmpl->parent_id) {
+                if ((stripos($tmpl->name, 'search') === false) &&
+                    (stripos($tmpl->name, 'sidebar') === false) &&
+                    (stripos($tmpl->name, 'category') === false) &&
+                    (stripos($tmpl->name, 'date') === false) &&
+                    (stripos($tmpl->name, 'error') === false) &&
+                    (stripos($tmpl->name, 'header') === false) &&
+                    (stripos($tmpl->name, 'footer') === false)) {
+                    $templates[$tmpl->id] = $tmpl->name;
                 }
             }
+        }
 
-            foreach ($viewDir->getFiles() as $file) {
-                $ext = strtolower(substr($file, strrpos($file, '.')));
-                if (($ext == '.phtml') || ($ext == '.php') || ($ext == '.php3')) {
-                    if ((stripos($file, 'search') === false) &&
-                        (stripos($file, 'category') === false) &&
-                        (stripos($file, 'date') === false) &&
-                        (stripos($file, 'error') === false) &&
-                        (stripos($file, 'header') === false) &&
-                        (stripos($file, 'footer') === false)) {
-                        $templates[$file] = $file;
-                    }
+        foreach ($viewDir->getFiles() as $file) {
+            $ext = strtolower(substr($file, strrpos($file, '.')));
+            if (($ext == '.phtml') || ($ext == '.php') || ($ext == '.php3')) {
+                if ((stripos($file, 'search') === false) &&
+                    (stripos($file, 'sidebar') === false) &&
+                    (stripos($file, 'category') === false) &&
+                    (stripos($file, 'date') === false) &&
+                    (stripos($file, 'error') === false) &&
+                    (stripos($file, 'header') === false) &&
+                    (stripos($file, 'footer') === false)) {
+                    $templates[$file] = $file;
                 }
             }
         }

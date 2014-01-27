@@ -46,5 +46,27 @@ class UserSessions extends Record
         return $expired;
     }
 
+    /**
+     * Static method to clear sessions
+     *
+     * @param  int $id
+     * @return void
+     */
+    public static function clearSessions($id)
+    {
+        $sql = static::getSql();
+        $sql->delete()
+            ->where()->equalTo('user_id', ':user_id')
+            ->lessThanOrEqualTo('last', ':last');
+
+        static::execute(
+            $sql->render(true),
+            array(
+                'user_id' => $id,
+                'last' => date('Y-m-d H:i:s', time() - 86400)
+            )
+        );
+    }
+
 }
 

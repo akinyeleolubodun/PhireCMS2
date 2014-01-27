@@ -3,9 +3,6 @@
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\FieldsController', 'add')): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields/add">+ Add</a>
 <?php endif; ?>
-<?php if ($acl->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'index')): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/groups">Groups</a>
-<?php endif; ?>
 <?php if (isset($form)): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields">Back</a>
         <div id="result" style="display: none;"></div>

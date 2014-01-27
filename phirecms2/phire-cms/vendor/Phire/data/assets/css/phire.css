@@ -4,10 +4,12 @@
 
 /* Global Style Definitions */
 
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic");
+
 html  {
     margin: 0;
     padding: 0;
-    font-family: arial, helvetica, verdana, sans-serif;
+    font-family: "Open Sans", arial, helvetica, verdana, sans-serif;
     font-size: 0.75em;
     color: #606060;
     background-color: #fcf9f9;
@@ -107,7 +109,7 @@ input[type=text], input[type=password] {
     border-radius: 4px;
     border: solid 1px #d3d3d3;
     background-color: #d3d3d3;
-    font-family: arial, helvetica, verdana, sans-serif;
+    font-family: "Open Sans", arial, helvetica, verdana, sans-serif;
 }
 
 input[type=file] {
@@ -119,7 +121,7 @@ input[type=file] {
     border: solid 1px #d3d3d3;
     background-color: #d3d3d3;
     font-size: 12px;
-    font-family: arial, helvetica, verdana, sans-serif;
+    font-family: "Open Sans", arial, helvetica, verdana, sans-serif;
 }
 
 select {
@@ -311,7 +313,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #logged-in {
-    margin: 40px 25px 0 0;
+    margin: 35px 25px 0 0;
     padding: 0;
     line-height: 1.5em;
     float: right;
@@ -339,7 +341,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #phire-nav li > a {
     margin: 0;
-    padding: 11px 30px 9px 30px;
+    padding: 10px 28px 10px 28px;
     display: block;
     float: left;
     height: 16px;
@@ -382,7 +384,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #phire-nav li > ul > li > a {
     margin: 0;
-    padding: 8px 5px 0 15px;
+    padding: 7px 5px 1px 15px;
     color: #fff;
     display: block;
     width: 120px;
@@ -441,38 +443,60 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
 #content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
-#navigation-form-field-group-1, #field-form-field-group-1, #user-type-form-field-group-1 {
+#navigation-form-field-group-1, #field-form-field-group-1, #user-type-form-field-group-1,
+#site-form-field-group-1 {
     margin: 0 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;
-    width: 280px;
-    min-height: 450px;
+    width: 245px;
+    min-height: 400px;
     border-left: solid 1px #ccc;
 }
 
 #content-form-field-group-1 fieldset, #category-form-field-group-1 fieldset,
-#field-form-field-group-1 fieldset, #user-form-field-group-1 fieldset {
-    width: 250px;
+#field-form-field-group-1 fieldset, #user-form-field-group-1 fieldset,
+#site-form-field-group-1 fieldset {
+    width: 220px;
     margin: 0 0 10px 0;
     padding: 5px 0 5px 0;
+    font-size: 0.9em;
     border-top: solid 1px #ccc;
 }
 
-#content-form-field-group-1 > dt {
+#content-form-field-group-1 dt, #content-type-form-field-group-1 dt, #category-form-field-group-1 dt,
+#navigation-form-field-group-1 dt, #template-form-field-group-1 dt, #field-form-field-group-1 dt,
+#user-form-field-group-1 dt, #user-role-form-field-group-1 dt, #user-type-form-field-group-1 dt,
+#site-form-field-group-1 dt {
     margin: 0;
     padding: 10px 3px 3px 3px;
-    width: 274px;
+    width: 220px;
     clear: left;
     text-align: left;
     display: block;
     line-height: 1.0em;
 }
 
-#content-form-field-group-1 > dd {
+#content-form-field-group-1 dd, #content-type-form-field-group-1 dd, #category-form-field-group-1 dd,
+#navigation-form-field-group-1 dd, #template-form-field-group-1 dd, #field-form-field-group-1 dd,
+#user-form-field-group-1 dd, #user-role-form-field-group-1 dd, #user-type-form-field-group-1 dd,
+#site-form-field-group-1 dd {
     margin: 0 0 5px 0;
     padding: 0 3px 3px 3px;
     float: left;
     line-height: 1.0em;
+}
+
+#content-form-field-group-1 select, #template-form-field-group-1 select, #field-form-field-group-1 select,
+#user-form-field-group-1 select, #user-role-form-field-group-1 select, #user-type-form-field-group-1 select {
+    margin: 0;
+    padding: 2px 1px 2px 1px;
+    font-size: 0.9em;
+}
+
+#user-select-form, #field-group-form {
+    clear: both;
+    width: 100%;
+    margin: 75px 0 0 0;
 }
 
 #content-process {
@@ -669,7 +693,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 #updated {
     clear: left;
     margin: 0;
-    padding: 10px 0 0 2px;
+    padding: 0 20px 0 0;
+    width: 300px;
+    font-size: 0.9em;
+    float: right;
+    text-align: right;
 }
 
 #install-nav {
@@ -753,7 +781,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     bottom: 0;
     clear: both;
     margin: 0 auto;
-    padding: 12px 0 8px 0;
+    padding: 11px 0 9px 0;
     text-align: center;
     font-size: 0.9em;
     width: 100%;
@@ -933,7 +961,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 .save-btn {
     margin: 0;
     padding: 6px 0 8px 0;
-    width: 250px;
+    width: 225px;
     height: 34px;
     color: #fff;
     text-align: center;
@@ -953,7 +981,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 .update-btn {
     margin: 0;
     padding: 6px 0 8px 0;
-    width: 250px;
+    width: 225px;
     height: 34px;
     color: #fff;
     text-align: center;
@@ -972,8 +1000,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .remove-btn {
     margin: 3px 0 0 0;
-    padding: 4px 0 6px 0;
-    width: 120px;
+    padding: 5px 8px 5px 8px;
     height: 28px;
     color: #fff;
     text-align: center;
@@ -981,7 +1008,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11px;
     background-color: #a51212;
 }
 
@@ -990,10 +1017,10 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #c91414;
 }
 
-.process-btn {
+.preview-btn {
     margin: 0;
     padding: 6px 0 8px 0;
-    width: 250px;
+    width: 225px;
     height: 34px;
     color: #fff;
     text-align: center;
@@ -1005,7 +1032,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background-color: #665d5b;
 }
 
-.process-btn:hover {
+.preview-btn:hover {
     cursor: pointer;
     background-color: #918582;
 }
@@ -1247,6 +1274,11 @@ th.config-header > a:hover {
 .label-pad-3 {
     display: inline-block;
     width: 305px;
+}
+
+.label-pad-4 {
+    display: inline-block;
+    width: 293px;
 }
 
 .nav-div {

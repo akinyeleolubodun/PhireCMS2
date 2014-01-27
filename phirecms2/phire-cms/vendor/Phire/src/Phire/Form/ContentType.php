@@ -92,12 +92,21 @@ class ContentType extends Form
             ),
             'uri' => array(
                 'type'   => 'select',
-                'label'  => 'URI Type:',
+                'label'  => 'URI Type &amp; Order:',
                 'value'  => array(
                     '1' => 'URI',
                     '0' => 'File'
                 ),
-                'marked' => 1
+                'marked' => 1,
+                'attributes' => array('style' => 'width: 100px;')
+            ),
+            'order' =>  array(
+                'type'       => 'text',
+                'value'      => 0,
+                'attributes' => array(
+                    'size'  => 3,
+                    'style' => 'padding: 5px 4px 5px 4px;'
+                )
             )
         );
 
@@ -120,14 +129,6 @@ class ContentType extends Form
 
         $fields2 = array();
 
-        // Create additional fields
-        $fields2['order'] = array(
-            'type'       => 'text',
-            'label'      => 'Order:',
-            'attributes' => array('size' => 3),
-            'value'      => 0
-        );
-
         // If it's a redirect from an add content request
         if (isset($_GET['redirect'])) {
             $fields2['redirect'] = array(
@@ -140,7 +141,6 @@ class ContentType extends Form
         $fields3 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'label' => '&nbsp;',
                 'value' => 'SAVE',
                 'attributes' => array(
                     'class'   => 'save-btn'

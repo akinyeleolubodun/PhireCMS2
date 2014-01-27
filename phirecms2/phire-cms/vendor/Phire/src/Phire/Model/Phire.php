@@ -87,6 +87,59 @@ class Phire extends AbstractModel
     }
 
     /**
+     * Get content by date method
+     *
+     * @param  string  $from
+     * @param  string  $to
+     * @param  int     $limit
+     * @return array
+     */
+    public function getContentByDate($from = null, $to = null, $limit = 5)
+    {
+        $from = (null === $from) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($from));
+
+        if (null !== $to) {
+            $to = date('Y-m-d H:i:s', strtotime($to));
+        }
+
+        $sql = Table\Content::getSql();
+        $sql->select()
+            ->where()->isNotNull('status')
+                     ->lessThanOrEqualTo('published', ':published1');
+
+        $params = array('published1' => $from);
+
+        if (null !== $to) {
+            $sql->select()
+                ->where()->greaterThanOrEqualTo('published', ':published2');
+            $params['published2'] = $to;
+        }
+        if ((int)$limit > 0) {
+            $sql->select()->limit((int)$limit);
+        }
+
+        $sql->select()->orderBy('published', 'DESC');
+
+        $content = Table\Content::execute($sql->render(true), $params);
+        $results = $content->rows;
+
+        foreach ($results as $key => $result) {
+            if (\Phire\Model\Content::isAllowed($result)) {
+                $fv = \Phire\Model\FieldValue::getAll($result->id, true);
+                if (count($fv) > 0) {
+                    foreach ($fv as $k => $v) {
+                        $results[$key]->{$k} = $v;
+                    }
+                }
+            } else {
+                unset($results[$key]);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Get content by category method
      *
      * @param  mixed   $cat
@@ -107,21 +160,23 @@ class Phire extends AbstractModel
             $sql = Table\Content::getSql();
             $sql->select(array(
                 0          => DB_PREFIX . 'content.id',
-                1          => DB_PREFIX . 'content.type_id',
-                2          => DB_PREFIX . 'content.parent_id',
-                3          => DB_PREFIX . 'content.template',
-                4          => DB_PREFIX . 'content.title',
+                1          => DB_PREFIX . 'content.site_id',
+                2          => DB_PREFIX . 'content.type_id',
+                3          => DB_PREFIX . 'content.parent_id',
+                4          => DB_PREFIX . 'content.template',
+                5          => DB_PREFIX . 'content.title',
                 'uri'      => DB_PREFIX . 'content.uri',
                 6          => DB_PREFIX . 'content.slug',
-                9          => DB_PREFIX . 'content.feed',
-                10         => DB_PREFIX . 'content.force_ssl',
-                11         => DB_PREFIX . 'content.status',
-                12         => DB_PREFIX . 'content.created',
-                13         => DB_PREFIX . 'content.updated',
-                14         => DB_PREFIX . 'content.published',
-                15         => DB_PREFIX . 'content.expired',
-                16         => DB_PREFIX . 'content.created_by',
-                17         => DB_PREFIX . 'content.updated_by',
+                7          => DB_PREFIX . 'content.feed',
+                8          => DB_PREFIX . 'content.force_ssl',
+                9          => DB_PREFIX . 'content.status',
+                10         => DB_PREFIX . 'content.roles',
+                11         => DB_PREFIX . 'content.created',
+                12         => DB_PREFIX . 'content.updated',
+                13         => DB_PREFIX . 'content.published',
+                14         => DB_PREFIX . 'content.expired',
+                15         => DB_PREFIX . 'content.created_by',
+                16         => DB_PREFIX . 'content.updated_by',
                 'type_uri' => DB_PREFIX . 'content_types.uri'
             ));
 
@@ -182,16 +237,40 @@ class Phire extends AbstractModel
     }
 
     /**
-     * Lazy load a module model
+     * Check is a module is loaded
      *
      * @param  string $name
-     * @param  string $model
+     * @return boolean
+     */
+    public function isLoaded($name)
+    {
+        return isset($this->modules[strtolower($name)]);
+    }
+
+    /**
+     * Lazy load a module
+     *
+     * @param  string $name
+     * @param  string $module
      * @return self
      */
-    public function loadModule($name, $model)
+    public function loadModule($name, $module)
     {
-        $name = strtolower($name);
-        $this->modules[$name] = $model;
+        $this->modules[strtolower($name)] = $module;
+        return $this;
+    }
+
+    /**
+     * Unload a module
+     *
+     * @param  string $name
+     * @return self
+     */
+    public function unloadModule($name)
+    {
+        if (isset($this->modules[strtolower($name)])) {
+            unset($this->modules[strtolower($name)]);
+        }
         return $this;
     }
 

@@ -65,6 +65,21 @@ class Site extends F
             )
         );
         $fields2 = array(
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => 'SAVE',
+                'attributes' => array(
+                    'class' => 'save-btn'
+                )
+            ),
+            'update' => array(
+                'type'       => 'button',
+                'value'      => 'UPDATE',
+                'attributes' => array(
+                    'onclick' => "return phire.updateForm('#site-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
+                    'class'   => 'update-btn'
+                )
+            ),
             'force_ssl' => array(
                 'type'     => 'radio',
                 'label'    => 'Force SSL:',
@@ -83,24 +98,7 @@ class Site extends F
                 ),
                 'marked' => '1'
             ),
-            'submit' => array(
-                'type'  => 'submit',
-                'label' => '&nbsp;',
-                'value' => 'SAVE',
-                'attributes' => array(
-                    'class' => 'save-btn',
-                    'style' => 'width: 216px;'
-                )
-            ),
-            'update' => array(
-                'type'       => 'button',
-                'value'      => 'UPDATE',
-                'attributes' => array(
-                    'onclick' => "return phire.updateForm('#site-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
-                    'class'   => 'update-btn',
-                    'style'   => 'width: 216px;'
-                )
-            ),
+
             'id' => array(
                 'type'  => 'hidden',
                 'value' => 0
@@ -111,13 +109,13 @@ class Site extends F
             ),
         );
 
-        $allFields = array($fields1);
+        $allFields = array($fields2);
         if (count($fieldGroups) > 0) {
             foreach ($fieldGroups as $fg) {
                 $allFields[] = $fg;
             }
         }
-        $allFields[] = $fields2;
+        $allFields[] = $fields1;
 
         $this->initFieldsValues = $allFields;
 

@@ -212,7 +212,9 @@ class IndexController extends AbstractController
                 $type = Table\ContentTypes::findById($content->type_id);
                 $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
                            ->set('typeUri', $type->uri)
-                           ->set('typeId', $content->type_id);
+                           ->set('typeId', $content->type_id)
+                           ->set('updated', $content->updated);
+
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $content->type_id, $content->id, $this->project->module('Phire')->asArray()

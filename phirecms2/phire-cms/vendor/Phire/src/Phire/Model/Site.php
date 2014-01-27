@@ -328,27 +328,15 @@ class Site extends \Phire\Model\AbstractModel
         $siteFromId = ($form->site_from == 'Main') ? 0 : (int)$form->site_from;
         $siteToId   = ($form->site_to == 'Main') ? 0 : (int)$form->site_to;
 
-        if ($siteFromId > 0) {
-            $site = Table\Sites::findById($siteFromId);
-            $siteFromDomain   = $site->domain;
-            $siteFromDocRoot  = $site->document_root;
-            $siteFromBasePath = (substr($site->base_path, 0, 1) == '/') ? substr($site->base_path, 1) : $site->base_path;
-        } else {
-            $siteFromDomain   = $_SERVER['HTTP_HOST'];
-            $siteFromDocRoot  = $_SERVER['DOCUMENT_ROOT'];
-            $siteFromBasePath = (substr(BASE_PATH, 0, 1) == '/') ? substr(BASE_PATH, 1) : BASE_PATH;
-        }
+        $siteFrom         = Table\Sites::getSite($siteFromId);
+        $siteFromDomain   = $siteFrom->domain;
+        $siteFromDocRoot  = $siteFrom->document_root;
+        $siteFromBasePath = (substr($siteFrom->base_path, 0, 1) == '/') ? substr($siteFrom->base_path, 1) : $siteFrom->base_path;
 
-        if ($siteToId > 0) {
-            $site = Table\Sites::findById($siteToId);
-            $siteToDomain   = $site->domain;
-            $siteToDocRoot  = $site->document_root;
-            $siteToBasePath = (substr($site->base_path, 0, 1) == '/') ? substr($site->base_path, 1) : $site->base_path;
-        } else {
-            $siteToDomain   = $_SERVER['HTTP_HOST'];
-            $siteToDocRoot  = $_SERVER['DOCUMENT_ROOT'];
-            $siteToBasePath = (substr(BASE_PATH, 0, 1) == '/') ? substr(BASE_PATH, 1) : BASE_PATH;
-        }
+        $siteTo         = Table\Sites::getSite($siteToId);
+        $siteToDomain   = $siteTo->domain;
+        $siteToDocRoot  = $siteTo->document_root;
+        $siteToBasePath = (substr($siteTo->base_path, 0, 1) == '/') ? substr($siteTo->base_path, 1) : $siteTo->base_path;
 
         if ($siteFromBasePath != '') {
             $search = array(

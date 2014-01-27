@@ -40,7 +40,7 @@ class User extends Form
                     'label'    => 'Select User Type:',
                     'value'    => $typesAry,
                     'attributes' => array(
-                        'style' => 'padding: 6px 5px 7px 5px;'
+                        'style' => 'margin: 0 10px 0 0; padding: 6px 5px 7px 5px; height: 32px;'
                     )
                 ),
                 'submit' => array(
@@ -48,7 +48,7 @@ class User extends Form
                     'value' => 'SELECT',
                     'attributes' => array(
                         'class'   => 'save-btn',
-                        'style' => 'padding: 5px 6px 6px 6px; width: 100px;'
+                        'style' => 'margin: 0; padding: 5px 6px 6px 6px; width: 100px; height: 32px;'
                     )
                 )
             );
@@ -246,12 +246,16 @@ class User extends Form
         // Finish the initial fields
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'label' => '&nbsp;',
             'value' => (strpos($action, '/register') !== false) ? 'REGISTER' : 'SAVE',
             'attributes' => array(
                 'class' => ((strpos($action, '/install/user') !== false) || ($profile)) ? 'update-btn' : 'save-btn'
             )
         );
+
+        if ($profile) {
+            $fields4['submit']['label'] = '&nbsp;';
+            $fields4['submit']['attributes']['style'] = 'width: 250px;';
+        }
 
         if (!$profile) {
             $fields4['update'] = array(
