@@ -3,7 +3,7 @@
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo.</p>
 <?php if (isset($category_nav)): ?>
             <h4>Categories</h4>
-<?php echo $category_nav; ?>
+<?php echo (isset($category_nav) ? $category_nav : null); ?>
 <?php endif; ?>
             <h4>Archives</h4>
             <ul>

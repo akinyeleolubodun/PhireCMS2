@@ -5,7 +5,7 @@
 <head>
 
     <title>
-        <?php echo $site_title . ' ' . $separator . ' ' . (isset($breadcrumb_title) ? $breadcrumb_title : $title). PHP_EOL; ?>
+        <?php echo $site_title . ' ' . $separator . ' ' . (!empty($breadcrumb_title) ? $breadcrumb_title : $title). PHP_EOL; ?>
     </title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,9 +26,9 @@
             <div><input type="text" name="title" size="20" value="" /></div>
             <div><input type="submit" name="submit" value="SEARCH" /></div>
         </form>
-        <h1><a href="<?php echo $base_path; ?>">My Default Site</a></h1>
+        <h1><a href="<?php echo ($base_path != '') ? $base_path : '/'; ?>">My Default Site</a></h1>
     </div>
     <div id="nav-bar">
-<?php echo $main_nav; ?>
+<?php echo (isset($main_nav) ? $main_nav : null); ?>
     </div>
 

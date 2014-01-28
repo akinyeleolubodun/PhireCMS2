@@ -113,14 +113,14 @@ class Site extends \Phire\Model\AbstractModel
         $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
-        $docRoot = ((substr($fields['document_root'], -1) == '/') || (substr($fields['document_root'], -1) == "\\")) ?
+        $docRoot = ((substr($fields['document_root'], -1) == '/') && (substr($fields['document_root'], -1) == "\\")) ?
             substr($fields['document_root'], 0, -1) : $fields['document_root'];
 
         if ($fields['base_path'] != '') {
-            $basePath = ((substr($fields['base_path'], 0, 1) != '/') || (substr($fields['base_path'], 0, 1) != "\\")) ?
+            $basePath = ((substr($fields['base_path'], 0, 1) != '/') && (substr($fields['base_path'], 0, 1) != "\\")) ?
                 '/' . $fields['base_path'] : $fields['base_path'];
 
-            if ((substr($basePath, -1) == '/') || (substr($basePath, -1) == "\\")) {
+            if ((substr($basePath, -1) == '/') && (substr($basePath, -1) == "\\")) {
                 $basePath = substr($basePath, 0, -1);
             }
         } else {
@@ -225,16 +225,16 @@ class Site extends \Phire\Model\AbstractModel
 
         $site = Table\Sites::findById($fields['id']);
 
-        $docRoot = ((substr($fields['document_root'], -1) == '/') || (substr($fields['document_root'], -1) == "\\")) ?
+        $docRoot = ((substr($fields['document_root'], -1) == '/') && (substr($fields['document_root'], -1) == "\\")) ?
             substr($fields['document_root'], 0, -1) : $fields['document_root'];
 
         $oldDocRoot = $site->document_root;
 
         if ($fields['base_path'] != '') {
-            $basePath = ((substr($fields['base_path'], 0, 1) != '/') || (substr($fields['base_path'], 0, 1) != "\\")) ?
+            $basePath = ((substr($fields['base_path'], 0, 1) != '/') && (substr($fields['base_path'], 0, 1) != "\\")) ?
                 '/' . $fields['base_path'] : $fields['base_path'];
 
-            if ((substr($basePath, -1) == '/') || (substr($basePath, -1) == "\\")) {
+            if ((substr($basePath, -1) == '/') && (substr($basePath, -1) == "\\")) {
                 $basePath = substr($basePath, 0, -1);
             }
         } else {

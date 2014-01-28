@@ -21,8 +21,6 @@ class FieldValue extends \Phire\Model\AbstractModel
      */
     public static function getAll($modelId, $byName = false)
     {
-        $encOptions = array();
-
         // Check for an overriding config settings
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
             $fldCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
@@ -129,8 +127,6 @@ class FieldValue extends \Phire\Model\AbstractModel
      */
     public static function save(array $fields, $modelId)
     {
-        $encOptions = array();
-
         // Check for an overriding config settings
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
             $fldCfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php';
@@ -202,7 +198,7 @@ class FieldValue extends \Phire\Model\AbstractModel
 
                     if (($value['tmp_name'] != '')) {
                         $fileName = File::checkDupe($value['name'], $dir);
-                        $upload = File::upload(
+                        File::upload(
                             $value['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                             $config->media_max_filesize, $config->media_allowed_types
                         );
@@ -309,8 +305,7 @@ class FieldValue extends \Phire\Model\AbstractModel
         sort($keys);
         $groups = Table\FieldValues::getGroups($keys);
 
-        // Get salt and history count, if applicable
-        $encOptions = array();
+        // Get history count, if applicable
         $historyCount = null;
 
         // Check for an overriding config setting
@@ -354,15 +349,16 @@ class FieldValue extends \Phire\Model\AbstractModel
                                     $oldValue = unserialize($field->value);
                                     // If value is different that the last value
                                     if ($realValue != $oldValue) {
+                                        $ts = (null !== $field->timestamp) ? $field->timestamp : time() - 300;
                                         if (null !== $field->history) {
                                             $history = unserialize($field->history);
-                                            $history[$field->timestamp] = $oldValue;
+                                            $history[$ts] = $oldValue;
                                             if (count($history) > $historyCount) {
                                                 $history = array_slice($history, 1, $historyCount, true);
                                             }
                                             $field->history = serialize($history);
                                         } else {
-                                            $field->history = serialize(array($field->timestamp => $oldValue));
+                                            $field->history = serialize(array($ts => $oldValue));
                                         }
                                     }
                                 }
@@ -410,7 +406,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             }
 
                             $fileName = File::checkDupe($value['name'], $dir);
-                            $upload = File::upload(
+                            File::upload(
                                 $value['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                                 $config->media_max_filesize, $config->media_allowed_types
                             );
@@ -439,7 +435,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                         $fileName = '';
                         if (($value['tmp_name'] != '')) {
                             $fileName = File::checkDupe($value['name'], $dir);
-                            $upload = File::upload(
+                            File::upload(
                                 $value['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                                 $config->media_max_filesize, $config->media_allowed_types
                             );
@@ -575,7 +571,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                         $fileName = '';
                         if (($value['tmp_name'] != '')) {
                             $fileName = File::checkDupe($value['name'], $dir);
-                            $upload = File::upload(
+                            File::upload(
                                 $value['tmp_name'], $dir . DIRECTORY_SEPARATOR . $fileName,
                                 $config->media_max_filesize, $config->media_allowed_types
                             );

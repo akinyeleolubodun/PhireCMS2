@@ -144,6 +144,12 @@ class Site extends F
                      ->addValidator(new Validator\NotEqual($this->domain, 'That site domain already exists.'));
             }
 
+            $site = Table\Sites::findBy(array('document_root' => $this->document_root));
+            if ((isset($site->id) && ($this->id != $site->id))) {
+                $this->getElement('document_root')
+                    ->addValidator(new Validator\NotEqual($this->document_root, 'That site document root already exists.'));
+            }
+
             $docRoot = ((substr($this->document_root, -1) == '/') || (substr($this->document_root, -1) == "\\")) ?
                 substr($this->document_root, 0, -1) : $this->document_root;
 

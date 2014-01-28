@@ -102,8 +102,8 @@ class Content extends AbstractModel
                 $allowed = (isset($sess->user) && (strtolower($sess->user->type) == 'user'));
             }
 
-            $site = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
-            if ((int)$content->site_id != (int)$site->id)  {
+            $site = Table\Sites::getSite();
+            if ((int)$content->site_id !== (int)$site->id)  {
                 $allowed = false;
             }
         }

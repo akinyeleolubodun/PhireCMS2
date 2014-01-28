@@ -96,6 +96,7 @@ class Phire extends AbstractModel
      */
     public function getContentByDate($from = null, $to = null, $limit = 5)
     {
+        $site = Table\Sites::getSite();
         $from = (null === $from) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($from));
 
         if (null !== $to) {
@@ -104,16 +105,19 @@ class Phire extends AbstractModel
 
         $sql = Table\Content::getSql();
         $sql->select()
-            ->where()->isNotNull('status')
+            ->where()->equalTo('site_id', ':site_id')
+                     ->isNotNull('status')
                      ->lessThanOrEqualTo('published', ':published1');
 
-        $params = array('published1' => $from);
+        $params = array('site_id' => $site->id, 'published' => array($from));
 
         if (null !== $to) {
             $sql->select()
                 ->where()->greaterThanOrEqualTo('published', ':published2');
-            $params['published2'] = $to;
+            $params['published'][] = $to;
         }
+
+
         if ((int)$limit > 0) {
             $sql->select()->limit((int)$limit);
         }

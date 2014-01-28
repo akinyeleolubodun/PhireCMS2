@@ -38,6 +38,7 @@ class Content extends Record
     public static function findByDate($date)
     {
         $dateAry = explode('/', $date['match']);
+        $site = Sites::getSite();
 
         if (count($dateAry) == 3) {
             $start = $dateAry[0] . '-' . $dateAry[1] . '-' . $dateAry[2] . ' 00:00:00';
@@ -54,6 +55,7 @@ class Content extends Record
         $sql = static::getSql();
         $sql->select()
             ->where()
+            ->equalTo('site_id', ':site_id')
             ->greaterThanOrEqualTo('published', ':published1')
             ->lessThanOrEqualTo('published', ':published2');
 
@@ -61,10 +63,10 @@ class Content extends Record
         if (!empty($date['uri'])) {
             $sql->select()->where()->equalTo('uri', ':uri');
             $sql->select()->where()->equalTo('status', ':status');
-            $content = static::execute($sql->render(true), array('published' => array($start, $end), 'uri' => $date['uri'], 'status' => 2));
+            $content = static::execute($sql->render(true), array('site_id' => $site->id, 'published' => array($start, $end), 'uri' => $date['uri'], 'status' => 2));
         } else {
             $sql->select()->where()->equalTo('status', ':status');
-            $content = static::execute($sql->render(true), array('published' => array($start, $end), 'status' => 2));
+            $content = static::execute($sql->render(true), array('site_id' => $site->id, 'published' => array($start, $end), 'status' => 2));
         }
 
         return $content;

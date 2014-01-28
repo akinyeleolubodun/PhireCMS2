@@ -493,10 +493,13 @@ class IndexController extends AbstractController
     protected function getTemplate($template, $default = 'index')
     {
         $isFile = true;
+        $site = Table\Sites::getSite();
         $theme = Table\Extensions::findBy(array('type' => 0, 'active' => 1), null, 1);
+
         if (isset($theme->id)) {
-            $this->viewPath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name;
+            $this->viewPath = $site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/' . $theme->name;
         }
+
         $t = $this->viewPath . '/' . $default . '.phtml';
 
         if (null !== $template) {

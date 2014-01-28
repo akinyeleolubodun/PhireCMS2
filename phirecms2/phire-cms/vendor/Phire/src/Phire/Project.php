@@ -25,17 +25,19 @@ class Project extends P
      * Register and load any other modules
      *
      * @param  \Pop\Loader\Autoloader $autoloader
-     * @param  string                 $docRoot
+     * @param  boolean                $site
      * @throws Exception
      * @return self
      */
-    public function load($autoloader, $docRoot = null)
+    public function load($autoloader, $site = false)
     {
-        if (null === $docRoot) {
-            $docRoot = $_SERVER['DOCUMENT_ROOT'];
-            $basePath = BASE_PATH;
+        if ($site) {
+            $s = Table\Sites::getSite();
+            $docRoot  = $s->document_root;
+            $basePath = $s->base_path;
         } else {
-            $basePath = \Phire\Table\Sites::getBasePath();
+            $docRoot  = $_SERVER['DOCUMENT_ROOT'];
+            $basePath = BASE_PATH;
         }
 
         $events = array();
