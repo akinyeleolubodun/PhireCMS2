@@ -53,6 +53,7 @@ class Db
      */
     public function __construct($type, array $options, $prefix = 'Pop\Db\Adapter\\')
     {
+        $this->isPdo = (strtolower($type) == 'pdo');
         $class = $prefix . ucfirst(strtolower($type));
 
         if (!class_exists($class)) {
@@ -111,6 +112,7 @@ class Db
             $this->isPdo = true;
             $type = 'Pdo\\' . ucfirst($this->adapter->getDbtype());
         } else {
+            $this->isPdo = false;
             $type = ucfirst(str_replace('Pop\Db\Adapter\\', '', $class));
         }
 
