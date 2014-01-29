@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]content` (
   CONSTRAINT `fk_content_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]content_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_created_by` FOREIGN KEY (`created_by`) REFERENCES `[{prefix}]users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `[{prefix}]users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6004 ;
 
 --
 -- Dumping data for table `content`
@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]navigation` (
   `on_class` varchar(255),
   `off_class` varchar(255),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7002 ;
 
 --
 -- Dumping data for table `navigation`
@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]categories` (
   `total` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_category_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `[{prefix}]categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8002 ;
 
 --
 -- Dumping data for table `categories`
@@ -360,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   `active` int(1) NOT NULL,
   `assets` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10001 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10002 ;
 
 --
 -- Dumping data for table `extensions`
