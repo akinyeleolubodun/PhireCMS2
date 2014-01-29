@@ -260,6 +260,12 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 330px;
 }
 
+#login-form dl > dd, #content-form dl > dd, #content-type-form dl > dd, #field-form dl > dd,
+#field-group-form dl > dd, #navigation-form dl > dd, #template-form dl > dd, #category-form dl > dd,
+#user-role-form dl > dd, #user-type-form dl > dd {
+    border-radius: 10px;
+}
+
 #forgot-div {
     clear: both;
     margin: 0 auto;
@@ -397,8 +403,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #phire-nav li > ul > li > a:hover {
     text-align: left;
-    color: #bce6ff;
-    background-color: #1392db;
+    /* color: #bce6ff; */
+    /* background-color: #1392db; */
+    color: #dbd9d9;
+    background-color: #6b6968;
     text-decoration: underline;
 }
 
@@ -407,7 +415,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     position: absolute;
     margin: 0;
     padding: 0;
-    top: 0px;
+    top: 0;
     left: 140px;
     z-index: 100;
     background-color: #000;
@@ -436,21 +444,29 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     font-size: 0.9em;
 }
 
-#content-form, #content-type-form, #category-form, #template-form, #user-form, #user-type-form, #user-role-form, #batch-form, #field-form, #field-group-form {
-    margin: 20px 0 20px 0;
-    padding: 0;
+#content-form, #content-type-form, #category-form, #template-form, #user-form,
+#user-select-form, #user-type-form, #user-role-form, #batch-form, #field-form,
+#field-group-form, #navigation-form, #site-form {
+    clear: both;
+    display: block;
+    margin: 45px 0 10px 0;
+    padding: 10px 0 10px 0;
+    border-top: solid 1px #ccc;
 }
 
 #content-form-field-group-1, #template-form-field-group-1, #category-form-field-group-1,
 #content-type-form-field-group-1, #user-form-field-group-1, #user-role-form-field-group-1,
 #navigation-form-field-group-1, #field-form-field-group-1, #user-type-form-field-group-1,
 #site-form-field-group-1 {
-    margin: 0 0 40px 10px;
+    margin: 20px 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;
     width: 245px;
     min-height: 420px;
     border-left: solid 1px #ccc;
+    background-image: url(../img/inner-shadow.gif);
+    background-repeat: repeat-y;
+    background-position: -4px 0px;
 }
 
 #content-form-field-group-1 fieldset, #category-form-field-group-1 fieldset,
@@ -487,16 +503,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #content-form-field-group-1 select, #template-form-field-group-1 select, #field-form-field-group-1 select,
-#user-form-field-group-1 select, #user-role-form-field-group-1 select, #user-type-form-field-group-1 select {
+#category-form-field-group-1 select, #user-form-field-group-1 select, #user-role-form-field-group-1 select,
+#user-type-form-field-group-1 select {
     margin: 0;
     padding: 2px 1px 2px 1px;
     font-size: 0.9em;
-}
-
-#user-select-form, #field-group-form {
-    clear: both;
-    width: 100%;
-    margin: 75px 0 0 0;
 }
 
 #content-process {
@@ -529,13 +540,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #user-type-form {
-    margin: 0;
+    clear: both;
+    display: block;
+    margin: 45px 0 0 0;
     padding: 0;
+    border-top: solid 1px #ccc;
     overflow: auto;
 }
 
 #user-type-form-field-group-2 {
-    margin: 0;
+    margin: 20px 0 0 0;
     padding: 0;
     overflow: auto;
     width: 340px;
@@ -544,7 +558,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #user-type-form-field-group-3, #user-type-form-field-group-4 {
-    margin: 0 0 0 5px;
+    margin: 20px 0 0 5px;
     padding: 10px 0 10px 20px;
     width: 220px;
     min-height: 420px;
@@ -632,12 +646,13 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 }
 
 #result {
-    clear: left;
-    margin: 5px auto 5px auto;
+    clear: both;
+    margin: 5px 0 10px 0;
     padding: 1%;
-    width: 98%;
+    width: 97%;
     display: none;
     font-weight: bold;
+    border-radius: 5px;
 }
 
 #install-error {
@@ -693,7 +708,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
 
 #updated {
     clear: left;
-    margin: 0;
+    margin: 5px 0 0 0;
     padding: 0 20px 0 0;
     width: 300px;
     font-size: 0.9em;
@@ -1080,8 +1095,8 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .small-btn {
-    margin: 4px 5px 5px 0;
-    padding: 5px 8px 5px 8px;
+    margin: 0 2px 6px 2px;
+    padding: 4px 8px 4px 8px;
     display: block;
     float: left;
     color: #fff;
@@ -1090,7 +1105,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 0.825em;
     background-color: #1481bc;
 }
 
@@ -1132,8 +1147,10 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .export-btn {
     float: right;
-    margin: 4px 0 5px 0;
-    padding: 6px 8px 4px 8px;
+
+    margin: 0 2px 6px 2px;
+    padding: 4px 8px 4px 8px;
+
     display: block;
     color: #fff;
     text-align: center;
@@ -1141,7 +1158,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 0.825em;
     background-color: #5a8c1d;
 }
 
@@ -1311,4 +1328,10 @@ th.config-header > a:hover {
     background-image: url(../img/blue-arrow.gif);
     background-repeat: no-repeat;
     background-position: right center;
+}
+
+.jax-form-error {
+    margin: 0;
+    padding: 10px;
+    display: block;
 }

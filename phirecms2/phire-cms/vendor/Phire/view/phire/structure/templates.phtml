@@ -1,11 +1,11 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\TemplatesController', 'add')): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/templates/add">+ Add</a>
 <?php endif; ?>
 <?php if (isset($form)): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/templates">Back</a>
-        <div id="result" style="display: none;"></div>
 <?php echo $form;
 elseif (isset($table)): ?>
 <?php echo $table;

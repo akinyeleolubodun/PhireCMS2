@@ -43,24 +43,24 @@ class Site extends F
                 'type'       => 'text',
                 'label'      => 'Title:',
                 'required'   => true,
-                'attributes' => array('size' => 60)
+                'attributes' => array('size' => 80)
             ),
             'domain' => array(
                 'type'       => 'text',
                 'label'      => 'Domain:',
                 'required'   => true,
-                'attributes' => array('size' => 60)
+                'attributes' => array('size' => 80)
             ),
             'document_root' => array(
                 'type'       => 'text',
                 'label'      => 'Document Root:',
                 'required'   => true,
-                'attributes' => array('size' => 60)
+                'attributes' => array('size' => 80)
             ),
             'base_path' => array(
                 'type'       => 'text',
                 'label'      => 'Base Path:',
-                'attributes' => array('size' => 60),
+                'attributes' => array('size' => 80),
                 'value'      => BASE_PATH
             )
         );

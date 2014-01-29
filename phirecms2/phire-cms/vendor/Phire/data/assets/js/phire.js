@@ -22,6 +22,14 @@ var phire = {
     selIds            : [],
     basePath          : null,
     sysBasePath       : null,
+    errorDisplay      : {
+        "color"    : '#f00',
+        "bgColor"  : '#ffe5e5',
+        "orgColor" : '#fff',
+        "speed"    : 500,
+        "tween"    : 25,
+        "easing"   : jax.tween.easein.quad
+    },
     addResource       : function() {
         phire.resourceCount++;
 
@@ -685,11 +693,43 @@ jax(document).ready(function(){
         jax('#errors').css('opacity', 100);
     }
 
+    // For login form
+    if (jax('#login-form')[0] != undefined) {
+        var loginForm = jax('#login-form').form({
+            "username" : {
+                "required" : true
+            },
+            "password" : {
+                "required" : true
+            }
+        });
+
+        loginForm.setErrorDisplay(phire.errorDisplay);
+        loginForm.submit(function(){
+            return loginForm.validate();
+        });
+    }
+
     // For content form
     if (jax('#content-form')[0] != undefined) {
-        phire.contentForm = jax('#content-form');
+        if (jax('#uri').attrib('type') == 'text') {
+            phire.contentForm = jax('#content-form').form({
+                "content_title" : {
+                    "required" : true
+                }
+            });
+        } else if (jax('#current-file')[0] == undefined) {
+            phire.contentForm = jax('#content-form').form({
+                "uri" : {
+                    "required" : 'The file field is required.'
+                }
+            });
+        }
+
+        phire.contentForm.setErrorDisplay(phire.errorDisplay);
         phire.contentForm.submit(function(){
             phire.submitted = true;
+            return phire.contentForm.validate();
         });
 
         if (jax('#uri')[0] != undefined) {
@@ -730,9 +770,92 @@ jax(document).ready(function(){
         jax.beforeunload(phire.checkFormChange);
     }
 
+    // For content type form
+    if (jax('#content-type-form')[0] != undefined) {
+        var contentTypeForm = jax('#content-type-form').form({
+            "name" : {
+                "required" : true
+            }
+        });
+
+        contentTypeForm.setErrorDisplay(phire.errorDisplay);
+        contentTypeForm.submit(function(){
+            return contentTypeForm.validate();
+        });
+    }
+
+    // For field form
+    if (jax('#field-form')[0] != undefined) {
+        var fieldForm = jax('#field-form').form({
+            "name" : {
+                "required" : true
+            }
+        });
+
+        fieldForm.setErrorDisplay(phire.errorDisplay);
+        fieldForm.submit(function(){
+            return fieldForm.validate();
+        });
+    }
+
+    // For field group form
+    if (jax('#field-group-form')[0] != undefined) {
+        var fieldGroupForm = jax('#field-group-form').form({
+            "name" : {
+                "required" : true
+            }
+        });
+
+        fieldGroupForm.setErrorDisplay(phire.errorDisplay);
+        fieldGroupForm.submit(function(){
+            return fieldGroupForm.validate();
+        });
+    }
+
+    // For navigation form
+    if (jax('#navigation-form')[0] != undefined) {
+        var navigationForm = jax('#navigation-form').form({
+            "navigation" : {
+                "required" : true
+            }
+        });
+
+        navigationForm.setErrorDisplay(phire.errorDisplay);
+        navigationForm.submit(function(){
+            return navigationForm.validate();
+        });
+    }
+
+    // For template form
+    if (jax('#template-form')[0] != undefined) {
+        var templateForm = jax('#template-form').form({
+            "name" : {
+                "required" : true
+            },
+            "template" : {
+                "required" : true
+            }
+        });
+
+        templateForm.setErrorDisplay(phire.errorDisplay);
+        templateForm.submit(function(){
+            return templateForm.validate();
+        });
+    }
+
     // For category form
     if (jax('#category-form')[0] != undefined) {
-        phire.categoryForm = jax('#category-form');
+        phire.categoryForm = jax('#category-form').form({
+            "category_title" : {
+                "required" : 'The title field is required.'
+            }
+        });
+
+        phire.categoryForm.setErrorDisplay(phire.errorDisplay);
+        phire.categoryForm.submit(function(){
+            return phire.categoryForm.validate();
+        });
+
         if (jax('#slug')[0] != undefined) {
             var val = '';
             if (jax('#parent_id')[0] != undefined) {
@@ -754,6 +877,34 @@ jax(document).ready(function(){
             }
             jax(jax('#slug').parent()).append('span', {"id" : 'slug-span'}, ((val.substring(0, 2) == '//') ? val.substring(1) : val));
         }
+    }
+
+    // For user role form
+    if (jax('#user-role-form')[0] != undefined) {
+        var userRoleForm = jax('#user-role-form').form({
+            "name" : {
+                "required" : true
+            }
+        });
+
+        userRoleForm.setErrorDisplay(phire.errorDisplay);
+        userRoleForm.submit(function(){
+            return userRoleForm.validate();
+        });
+    }
+
+    // For user type form
+    if (jax('#user-type-form')[0] != undefined) {
+        var userTypeForm = jax('#user-type-form').form({
+            "type" : {
+                "required" : true
+            }
+        });
+
+        userTypeForm.setErrorDisplay(phire.errorDisplay);
+        userTypeForm.submit(function(){
+            return userTypeForm.validate();
+        });
     }
 
     if (jax('#model_1')[0] != undefined) {

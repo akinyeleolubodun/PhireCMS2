@@ -1,5 +1,6 @@
 <?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if (isset($table) && ($acl->isAuth('Phire\Controller\Phire\Config\SitesController', 'migrate'))): ?>
         <a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/config/sites/migrate">Migrate</a>
 <?php endif; ?>
@@ -8,7 +9,6 @@
 <?php endif; ?>
 <?php if (isset($form)): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/config/sites">Back</a>
-        <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php if (stripos($title, 'migrate')): ?>
         <h4 class="error" style="clear: both; margin: 10px 0 10px 0;"><br />Caution: This action can possibly overwrite content.</h4>

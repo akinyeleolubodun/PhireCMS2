@@ -194,7 +194,7 @@ class Content extends Form
                     $site = Table\Sites::getSite((int)$content->site_id);
                     $fileInfo = Model\Content::getFileIcon($content->uri, $site->document_root . $site->base_path);
                     $label = '<em>Replace?</em><br /><a href="http://' .
-                        $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
+                        $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img id="current-file" style="padding-top: 3px;" src="http://' .
                         $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
                         $content->uri . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                     $required = false;

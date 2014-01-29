@@ -1,5 +1,6 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if (isset($form)): ?>
 <?php if (isset($updated)): ?>
         <div id="updated"><?php echo $updated; ?></div>
@@ -11,7 +12,6 @@
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/batch<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Batch</a>
 <?php endif; ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>
-        <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

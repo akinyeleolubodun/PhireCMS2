@@ -143,20 +143,12 @@ class Template extends Form
 
         // Create initial fields
         $fields1 = array(
-            'parent_id' => array(
-                'type'       => 'select',
-                'label'      => 'Parent:',
-                'value'      => $parents,
-                'attributes' => array(
-                    'style'    => 'min-width: 280px;'
-                )
-            ),
             'name' => array(
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
                 'attributes' => array(
-                    'size'    => 97
+                    'size'    => 110
                 )
             )
         );
@@ -186,8 +178,7 @@ class Template extends Form
                 'required'   => true,
                 'attributes' => array(
                     'rows'    => 25,
-                    'cols'    => 110,
-                    'style'   => 'width: 100%;'
+                    'cols'    => 110
                 )
             )
         );
@@ -216,12 +207,20 @@ class Template extends Form
                 'type'  => 'hidden',
                 'value' => 0
             ),
+            'parent_id' => array(
+                'type'       => 'select',
+                'label'      => 'Parent:',
+                'value'      => $parents,
+                'attributes' => array(
+                    'style'    => 'width: 200px;'
+                )
+            ),
             'content_type' => array(
                 'type'  => 'select',
                 'label' => 'Content Type:',
                 'value' => self::$contentTypes,
                 'attributes' => array(
-                    'style'    => 'min-width: 200px;'
+                    'style'    => 'width: 200px;'
                 )
             ),
             'device' => array(
@@ -229,7 +228,7 @@ class Template extends Form
                 'label' => 'Device:',
                 'value' => self::$mobileTemplates,
                 'attributes' => array(
-                    'style'    => 'min-width: 200px;'
+                    'style'    => 'width: 200px;'
                 )
             )
         );

@@ -1,5 +1,6 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if (isset($updated)): ?>
         <div id="updated"><?php echo $updated; ?></div>
 <?php endif; ?>
@@ -11,7 +12,6 @@
 <?php endif; ?>
 <?php if (isset($form)): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/content/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>
-        <div id="result" style="display: none;"></div>
 <?php echo $form; ?>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

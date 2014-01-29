@@ -116,15 +116,6 @@ class Category extends Form
 
         // Create initial fields
         $fields1 = array(
-            'parent_id' => array(
-                'type'       => 'select',
-                'label'      => 'Parent:',
-                'value'      => $parents,
-                'attributes' => array(
-                    'style'    => 'min-width: 280px;',
-                    'onchange' => "phire.catSlug(null, 'slug');"
-                )
-            ),
             'category_title' => array(
                 'type'       => 'text',
                 'label'      => 'Title:',
@@ -186,6 +177,15 @@ class Category extends Form
             'update_value' => array(
                 'type'  => 'hidden',
                 'value' => 0
+            ),
+            'parent_id' => array(
+                'type'       => 'select',
+                'label'      => 'Parent:',
+                'value'      => $parents,
+                'attributes' => array(
+                    'style'    => 'width: 200px;',
+                    'onchange' => "phire.catSlug(null, 'slug');"
+                )
             ),
             'order' => array(
                 'type'       => 'text',

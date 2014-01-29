@@ -88,25 +88,7 @@ class ContentType extends Form
                 'type'       => 'text',
                 'label'      => 'Name:',
                 'required'   => true,
-                'attributes' => array('size' => 40)
-            ),
-            'uri' => array(
-                'type'   => 'select',
-                'label'  => 'URI Type &amp; Order:',
-                'value'  => array(
-                    '1' => 'URI',
-                    '0' => 'File'
-                ),
-                'marked' => 1,
-                'attributes' => array('style' => 'width: 100px;')
-            ),
-            'order' =>  array(
-                'type'       => 'text',
-                'value'      => 0,
-                'attributes' => array(
-                    'size'  => 3,
-                    'style' => 'padding: 5px 4px 5px 4px;'
-                )
+                'attributes' => array('size' => 80)
             )
         );
 
@@ -161,6 +143,25 @@ class ContentType extends Form
             'update_value' => array(
                 'type'  => 'hidden',
                 'value' => 0
+            ),
+            'uri' => array(
+                'type'   => 'select',
+                'label'  => 'URI Type:',
+                'value'  => array(
+                    '1' => 'URI',
+                    '0' => 'File'
+                ),
+                'marked' => 1,
+                'attributes' => array('style' => 'width: 100px;')
+            ),
+            'order' =>  array(
+                'type'       => 'text',
+                'label'      => 'Order:',
+                'value'      => 0,
+                'attributes' => array(
+                    'size'  => 3,
+                    'style' => 'padding: 5px 4px 5px 4px;'
+                )
             )
         );
 

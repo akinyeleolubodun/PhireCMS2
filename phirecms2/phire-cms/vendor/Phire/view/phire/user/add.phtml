@@ -1,5 +1,6 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ Add</a>
 <?php endif; ?>
@@ -8,7 +9,6 @@
 if (isset($form)):
     if (isset($error))
         echo '        <h4 class="error">' . $error . '</h4>' . PHP_EOL;
-    echo '        <div id="result" style="display: none;"></div>' . PHP_EOL;
     echo $form;
 endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>
