@@ -253,11 +253,15 @@ class Config extends AbstractModel
             $imageAdapters['Imagick'] = 'Imagick';
         }
 
-        $phpMax = strtoupper(ini_get('upload_max_filesize'));
-        if (strpos($phpMax, 'M') !== false) {
-            $phpMax = str_replace('M', ' MB', $phpMax);
-        } else if (strpos($phpMax, 'K') !== false) {
-            $phpMax = str_replace('K', ' KB', $phpMax);
+        $phpLimits = array(
+            'post_max_size'       => str_replace(array('M', 'K'), array(' MB', ' KB'), strtoupper(ini_get('post_max_size'))),
+            'upload_max_filesize' => str_replace(array('M', 'K'), array(' MB', ' KB'), strtoupper(ini_get('upload_max_filesize'))),
+            'max_file_uploads'    => str_replace(array('M', 'K'), array(' MB', ' KB'), strtoupper(ini_get('max_file_uploads')))
+        );
+
+        $phpLimitsString = '';
+        foreach ($phpLimits as $limit => $limitValue) {
+            $phpLimitsString .= '<span style="padding: 0 5px 0 5px;">' . ucwords(str_replace('_', ' ', $limit)) . ': ' . '<strong>' . $limitValue . '</strong></span>';
         }
 
         $formattedConfig['settings'] = array(
@@ -269,7 +273,7 @@ class Config extends AbstractModel
             'error_message'       => '                    ' . $error,
             'datetime_format'     => $datetime,
             'media_allowed_types' => $mediaTypes,
-            'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; (PHP Default: ' . $phpMax . ')',
+            'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; [<strong style="color: #f00; padding: 0 0 0 5px;">PHP Limits:</strong> ' . $phpLimitsString . ']',
             'media_actions'       => $mediaConfig,
             'media_image_adapter' => new Element\Select('media_image_adapter', $imageAdapters, $config['media_image_adapter'], '                    '),
             'feed_type'           => new Element\Select('feed_type', array('9' => 'RSS', '10' => 'Atom'), $config['feed_type'], '                    '),

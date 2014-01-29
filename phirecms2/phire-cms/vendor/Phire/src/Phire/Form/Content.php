@@ -186,7 +186,7 @@ class Content extends Form
         // Else, if type is a file
         } else {
             $this->hasFile = true;
-            $label = 'File:';
+            $label = 'File: <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> Max Size ]</span>';
             $required = true;
             if ($mid != 0) {
                 $content = Table\Content::findById($mid);

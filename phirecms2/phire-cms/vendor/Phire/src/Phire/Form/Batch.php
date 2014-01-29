@@ -37,7 +37,7 @@ class Batch extends Form
         $fields1 = array(
             'file_name_1' => array(
                 'type'       => 'file',
-                'label'      => '<a href="#" onclick="phire.addBatchFields(); return false;">[+]</a> File / Title:',
+                'label'      => '<a href="#" onclick="phire.addBatchFields(' . ini_get('max_file_uploads') . '); return false;">[+]</a> File / Title: <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . ini_get('max_file_uploads') . '</strong> Files Max | <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> Max Size Each | <strong>' . str_replace(array('M', 'K'), array(' MB', ' KB'), strtoupper(ini_get('post_max_size'))) . '</strong> Max Size Total ]</span>',
                 'attributes' => array(
                     'size' => 40,
                     'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: ' . $height . 'px;'

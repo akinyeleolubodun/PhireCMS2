@@ -279,20 +279,22 @@ var phire = {
             jax('#errors').wipeUp(hgt, {tween : 10, speed: 200});
         }
     },
-    addBatchFields : function() {
-        phire.batchCount++;
+    addBatchFields : function(max) {
+        if (phire.batchCount < max) {
+            phire.batchCount++;
 
-        // Add file name field
-        jax('#file_name_1').clone({
-            "name" : 'file_name_' + phire.batchCount,
-            "id"   : 'file_name_' + phire.batchCount
-        }).appendTo(jax('#file_name_1').parent());
+            // Add file name field
+            jax('#file_name_1').clone({
+                "name" : 'file_name_' + phire.batchCount,
+                "id"   : 'file_name_' + phire.batchCount
+            }).appendTo(jax('#file_name_1').parent());
 
-        // Add file title field
-        jax('#file_title_1').clone({
-            "name" : 'file_title_' + phire.batchCount,
-            "id"   : 'file_title_' + phire.batchCount
-        }).appendTo(jax('#file_title_1').parent());
+            // Add file title field
+            jax('#file_title_1').clone({
+                "name" : 'file_title_' + phire.batchCount,
+                "id"   : 'file_title_' + phire.batchCount
+            }).appendTo(jax('#file_title_1').parent());
+        }
     },
     showLoading : function() {
         document.getElementById('loading').style.display = 'block';

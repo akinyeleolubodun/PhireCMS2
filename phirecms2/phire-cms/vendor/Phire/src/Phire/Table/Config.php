@@ -157,5 +157,46 @@ class Config extends Record
         return array_keys($mediaActions);
     }
 
+    /**
+     * Static method to get max file size allowed
+     *
+     * @param  boolean $string
+     * @return string
+     */
+    public static function getMaxFileSize($string = true)
+    {
+        $max = null;
+
+        $postMax = strtoupper(ini_get('post_max_size'));
+        $fileMax = strtoupper(ini_get('upload_max_filesize'));
+        $phireMax = static::findById('media_max_filesize')->value;
+
+        if (strpos($postMax, 'M') !== false) {
+            $postMax = trim(str_replace('M', '', $postMax)) . '000000';
+        } else if (strpos($postMax, 'K') !== false) {
+            $postMax = trim(str_replace('K', '', $postMax)) . '000';
+        }
+
+        if (strpos($fileMax, 'M') !== false) {
+            $fileMax = trim(str_replace('M', '', $fileMax)) . '000000';
+        } else if (strpos($fileMax, 'K') !== false) {
+            $fileMax = trim(str_replace('K', '', $fileMax)) . '000';
+        }
+
+        $max = min((int)$postMax, (int)$fileMax, (int)$phireMax);
+
+        if ($string) {
+            if ($max > 1000000) {
+                $max = floor($max / 1000000) . ' MB';
+            } else if ($max > 1000) {
+                $max = floor($max / 1000) . ' KB';
+            } else {
+                $max .= ' B';
+            }
+        }
+
+        return $max;
+    }
+
 }
 
