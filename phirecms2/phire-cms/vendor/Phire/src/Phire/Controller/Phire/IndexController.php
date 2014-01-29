@@ -97,6 +97,11 @@ class IndexController extends AbstractController
             'title'    => 'Dashboard'
         ));
 
+        if (isset($this->sess->sessionError)) {
+            $this->view->set('sessionError', $this->sess->sessionError);
+            unset($this->sess->sessionError);
+        }
+
         $this->view->set('recent', $content->getRecent())
                    ->set('themes', $content->getThemes())
                    ->set('modules', $content->getModules())

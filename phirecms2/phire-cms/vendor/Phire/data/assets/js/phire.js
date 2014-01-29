@@ -271,12 +271,12 @@ var phire = {
         clearTimeout(phire.clear);
     },
     wipeErrors : function(a, hgt) {
-        if (jax('#errors').height() > 50) {
+        if (jax('#dir-errors').height() > 50) {
             jax(a).val('Show');
-            jax('#errors').wipeUp(17, {tween : 10, speed: 200});
+            jax('#dir-errors').wipeUp(17, {tween : 10, speed: 200});
         } else {
             jax(a).val('Hide');
-            jax('#errors').wipeUp(hgt, {tween : 10, speed: 200});
+            jax('#dir-errors').wipeUp(hgt, {tween : 10, speed: 200});
         }
     },
     addBatchFields : function(max) {

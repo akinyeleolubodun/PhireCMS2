@@ -132,6 +132,10 @@ class AbstractController extends \Pop\Mvc\Controller
             $this->view->assets = str_replace('jax.3.2.0.min.js', 'jax.3.2.0.min.js' . $jsVars, $this->view->assets);
         }
 
+        if (isset($sess->errors)) {
+            $this->view->set('errors', $sess->errors);
+        }
+
         // Set config object and system/site default data
         $this->view->set('system_title', $config->system_title)
                    ->set('system_email', $config->system_email)

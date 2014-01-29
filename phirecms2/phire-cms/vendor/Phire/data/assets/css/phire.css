@@ -653,7 +653,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     width: 97%;
     display: none;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 #install-error {
@@ -671,27 +671,6 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 0;
     width: 45%;
     line-height: 1.5em;
-}
-
-#errors {
-    margin: 0 auto 5px auto;
-    padding: 10px 1% 10px 1%;
-    width: 98%;
-    height: 17px;
-    overflow: hidden;
-    color: #8e0202;
-    background-color: #e8d0d0;
-}
-
-#errors p {
-    margin: 0 0 20px 0;
-    padding: 0;
-    line-height: 1.5em;
-}
-
-#errors a {
-    color: #e20d0d;
-    text-decoration: underline;
 }
 
 #content-search-form {
@@ -860,6 +839,28 @@ input[type=text]:focus, input[type=password]:focus, input[type=file]:focus, sele
     padding: 8px 5px 8px 5px;
     border-top: solid 1px #ccc;
     font-size: 0.9em;
+}
+
+.error-div {
+    margin: 0 auto 5px auto;
+    padding: 10px 1% 10px 1%;
+    width: 98%;
+    height: 17px;
+    overflow: hidden;
+    color: #8e0202;
+    background-color: #e8d0d0;
+    border-radius: 4px;
+}
+
+.error-div p {
+    margin: 0 0 20px 0;
+    padding: 0;
+    line-height: 1.5em;
+}
+
+.error-div a {
+    color: #e20d0d;
+    text-decoration: underline;
 }
 
 .data-table {

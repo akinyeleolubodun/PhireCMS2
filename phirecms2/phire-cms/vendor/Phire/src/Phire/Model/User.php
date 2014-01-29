@@ -45,6 +45,15 @@ class User extends AbstractModel
                 ));
                 $session->save();
                 $sessionId = $session->id;
+
+                $otherSession = Table\UserSessions::findBy(array('user_id' => $user->id));
+                if (isset($otherSession->rows[0])) {
+                    foreach ($otherSession->rows as $other) {
+                        if ($other->id != $sessionId) {
+                            $sess->sessionError = 'Another user is currently logged in as <strong>' . $username . '</strong> from ' . $other->ip . '.';
+                        }
+                    }
+                }
             } else {
                 $sessionId = null;
             }
