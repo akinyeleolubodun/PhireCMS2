@@ -26,7 +26,7 @@
             <div><input type="text" name="title" size="20" value="" /></div>
             <div><input type="submit" name="submit" value="SEARCH" /></div>
         </form>
-        <h1><a href="<?php echo ($base_path != '') ? $base_path : '/'; ?>">My Default Site</a></h1>
+        <h1><a href="<?php echo ($base_path != '') ? $base_path : '/'; ?>"><?php echo $site_title; ?></a></h1>
     </div>
     <div id="nav-bar">
 <?php echo (isset($main_nav) ? $main_nav : null); ?>

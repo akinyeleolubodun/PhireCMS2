@@ -47,6 +47,17 @@ class Migrate extends F
                     'style'  => 'min-width: 250px; margin-right: 15px;'
                 )
             ),
+            'migrate' => array(
+                'type'  => 'select',
+                'value' => array(
+                    '----' => 'All Content',
+                    'URI'  => 'URIs Only (pages, etc.)',
+                    'File' => 'Files Only (media, etc.)'
+                ),
+                'attributes' => array(
+                    'style'  => 'margin-right: 15px;'
+                )
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'value' => 'MIGRATE',
