@@ -198,5 +198,17 @@ class Config extends Record
         return $max;
     }
 
+    /**
+     * Static method to get i18n object
+     *
+     * @return \Pop\I18n\I18n
+     */
+    public static function getI18n()
+    {
+        $i18n = \Pop\I18n\I18n::factory(static::findById('default_language')->value);
+        $i18n->loadFile(__DIR__ . '/../../../data/i18n/' . $i18n->getLanguage() . '.xml');
+        return $i18n;
+    }
+
 }
 

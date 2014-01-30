@@ -12,6 +12,12 @@ class User extends Form
 {
 
     /**
+     * Language object
+     * @var \Pop\I18n\I18n
+     */
+    protected $i18n = null;
+
+    /**
      * Constructor method to instantiate the form object
      *
      * @param  string         $action
@@ -24,6 +30,8 @@ class User extends Form
      */
     public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $acl = null)
     {
+        $this->i18n = Table\Config::getI18n();
+
         // Create user type fields/form first
         if ($tid == 0) {
             $typesAry = array();
@@ -37,7 +45,7 @@ class User extends Form
                 'type_id' => array(
                     'type'     => 'select',
                     'required' => true,
-                    'label'    => 'Select User Type:',
+                    'label'    => $this->i18n->__('Select User Type:'),
                     'value'    => $typesAry,
                     'attributes' => array(
                         'style' => 'margin: 0 10px 0 0; padding: 6px 5px 7px 5px; height: 32px;'
@@ -45,7 +53,7 @@ class User extends Form
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => 'SELECT',
+                    'value' => $this->i18n->__('SELECT'),
                     'attributes' => array(
                         'class'   => 'save-btn',
                         'style' => 'margin: 0; padding: 5px 6px 6px 6px; width: 100px; height: 32px;'
@@ -105,24 +113,24 @@ class User extends Form
             $user = Table\Users::findBy(array('username' => $username));
             if (isset($user->id) && ($this->id != $user->id)) {
                 $this->getElement($usernameField)
-                     ->addValidator(new Validator\NotEqual($username, 'That user already exists.'));
+                     ->addValidator(new Validator\NotEqual($username, $this->i18n->__('That user already exists.')));
             }
 
             $email = Table\Users::findBy(array('email' => $this->email1));
             if (isset($email->id) && ($this->id != $email->id)) {
                 $this->getElement('email1')
-                     ->addValidator(new Validator\NotEqual($this->email1, 'That email already exists.'));
+                     ->addValidator(new Validator\NotEqual($this->email1, $this->i18n->__('That email already exists.')));
             }
 
             if (null !== $this->getElement('email2')) {
                 $this->getElement('email2')
-                     ->addValidator(new Validator\Equal($this->email1, 'The emails do not match.'));
+                     ->addValidator(new Validator\Equal($this->email1, $this->i18n->__('The emails do not match.')));
             }
 
             // If the password fields are set, check them for a match
             if (isset($this->password2)) {
                 $this->getElement('password2')
-                     ->addValidator(new Validator\Equal($this->password1, 'The passwords do not match.'));
+                     ->addValidator(new Validator\Equal($this->password1, $this->i18n->__('The passwords do not match.')));
             }
         }
 
@@ -134,16 +142,16 @@ class User extends Form
             foreach ($_FILES as $key => $value) {
                 if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
                     $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
+                         ->addValidator(new Validator\LessThanEqual(-1, $this->i18n->__("The 'upload_max_filesize' setting of %1 exceeded.", ini_get('upload_max_filesize'))));
                 } else if ($value['error'] != 4) {
                     if ($value['size'] > $config->media_max_filesize) {
                         $this->getElement($key)
-                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
+                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, $this->i18n->__('The file must be less than %1.', $config->media_max_filesize_formatted)));
                     }
                     if (preg_match($regex, $value['name']) == 0) {
                         $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
                         $this->getElement($key)
-                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
+                             ->addValidator(new Validator\NotEqual($value['name'], $this->i18n->__('The %1 file type is not allowed.', $type)));
                     }
                 }
             }
@@ -169,7 +177,7 @@ class User extends Form
         // Continue setting up initial user fields
         $fields1['email1'] = array(
             'type'       => 'text',
-            'label'      => 'Email:',
+            'label'      => $this->i18n->__('Email:'),
             'required'   => true,
             'attributes' => array('size' => 30),
             'validators' => new Validator\Email()
@@ -177,7 +185,7 @@ class User extends Form
         if ($type->email_verification) {
             $fields1['email2'] = array(
                 'type'       => 'text',
-                'label'      => 'Re-Type Email:',
+                'label'      => $this->i18n->__('Re-Type Email:'),
                 'required'   => true,
                 'attributes' => array('size' => 30),
                 'validators' => new Validator\Email()
@@ -189,7 +197,7 @@ class User extends Form
             $fields2 = array(
                 'username' => array(
                     'type'       => 'text',
-                    'label'      => 'Username:',
+                    'label'      => $this->i18n->__('Username:'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => array(
@@ -207,14 +215,14 @@ class User extends Form
             $fields3 = array(
                 'password1' => array(
                     'type'       => 'password',
-                    'label'      => 'Enter Password:',
+                    'label'      => $this->i18n->__('Enter Password:'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
                 ),
                 'password2' => array(
                     'type'       => 'password',
-                    'label'      => 'Re-Type Password:',
+                    'label'      => $this->i18n->__('Re-Type Password:'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
@@ -246,7 +254,7 @@ class User extends Form
         // Finish the initial fields
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'value' => (strpos($action, '/register') !== false) ? 'REGISTER' : 'SAVE',
+            'value' => (strpos($action, '/register') !== false) ? $this->i18n->__('REGISTER') : $this->i18n->__('SAVE'),
             'attributes' => array(
                 'class' => ((strpos($action, '/install/user') !== false) || ($profile)) ? 'update-btn' : 'save-btn'
             )
@@ -260,7 +268,7 @@ class User extends Form
         if (!$profile) {
             $fields4['update'] = array(
                 'type'       => 'button',
-                'value'      => 'Update',
+                'value'      => $this->i18n->__('Update'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#user-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class' => 'update-btn'
@@ -287,7 +295,7 @@ class User extends Form
         // If not profile
         if (!$profile) {
             // Get roles for user type
-            $rolesAry = array('0' => '(Blocked)');
+            $rolesAry = array('0' => '(' . $this->i18n->__('Blocked') . ')');
 
             if ($tid != 0) {
                 $roles = Table\UserRoles::findBy(array('type_id' => $tid), 'id ASC');
@@ -306,25 +314,25 @@ class User extends Form
             $fields4['role_id'] = array(
                 'type'     => 'select',
                 'required' => true,
-                'label'    => 'User Role:',
+                'label'    => $this->i18n->__('User Role:'),
                 'value'    => $rolesAry,
                 'marked'   => $type->default_role_id
             );
 
             $fields4['verified'] = array(
                 'type'   => 'select',
-                'label'  => 'Verified:',
+                'label'  => $this->i18n->__('Verified:'),
                 'value'  => array('1' => 'Yes', '0' => 'No'),
                 'marked' => '0'
             );
             $fields4['failed_attempts'] = array(
                 'type'       => 'text',
-                'label'      => 'Failed Attempts:',
+                'label'      => $this->i18n->__('Failed Attempts:'),
                 'attributes' => array('size' => 3)
             );
             $fields4['site_ids'] = array(
                 'type'  => 'checkbox',
-                'label' => 'Allowed Sites:',
+                'label' => $this->i18n->__('Allowed Sites:'),
                 'value' => $siteIds
             );
         }

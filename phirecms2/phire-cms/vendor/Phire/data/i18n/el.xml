@@ -20,8 +20,244 @@
 <language src="en" output="el" name="Greek" native="Ελληνικά">
     <locale region="GR" name="Greece" native="Ελλάδα">
         <text>
-            <source>This field is required.</source>
-            <output>Αυτό το πεδίο είναι υποχρεωτικό.</output>
+            <source>Language:</source>
+            <output>γλώσσα:</output>
+        </text>
+        <text>
+            <source>DB Adapter:</source>
+            <output>DB Adapter:</output>
+        </text>
+        <text>
+            <source>DB Name:</source>
+            <output>DB Όνομα:</output>
+        </text>
+        <text>
+            <source>DB Username:</source>
+            <output>DB Όνομα Χρήστη:</output>
+        </text>
+        <text>
+            <source>DB Password:</source>
+            <output>DB Κωδικός:</output>
+        </text>
+        <text>
+            <source>DB Host:</source>
+            <output>DB Host:</output>
+        </text>
+        <text>
+            <source>DB Table Prefix:</source>
+            <output>DB Πρόθεμα πίνακα:</output>
+        </text>
+        <text>
+            <source>Application URI:</source>
+            <output>Εφαρμογή URI:</output>
+        </text>
+        <text>
+            <source>How you will access the system</source>
+            <output>Πώς θα αποκτήσετε πρόσβαση στο σύστημα</output>
+        </text>
+        <text>
+            <source>Content Path:</source>
+            <output>Path Περιεχόμενο:</output>
+        </text>
+        <text>
+            <source>Where assets will be located</source>
+            <output>Όταν τα περιουσιακά στοιχεία θα πρέπει να βρίσκεται</output>
+        </text>
+        <text>
+            <source>Password Encryption:</source>
+            <output>Κρυπτογράφηση κωδικού πρόσβασης:</output>
+        </text>
+        <text>
+            <source>NEXT</source>
+            <output>ΕΠΟΜΕΝΗ</output>
+        </text>
+        <text>
+            <source>Installation</source>
+            <output>εγκατάσταση</output>
+        </text>
+        <text>
+            <source>The content directory does not exist.</source>
+            <output>Ο κατάλογος του περιεχομένου δεν υπάρχει.</output>
+        </text>
+        <text>
+            <source>The content directory (or subdirectories) are not writable.</source>
+            <output>Ο κατάλογος του περιεχομένου (ή τους υποκαταλόγους) δεν είναι εγγράψιμος.</output>
+        </text>
+        <text>
+            <source>The database name is required.</source>
+            <output>Το όνομα της βάσης δεδομένων είναι απαραίτητη.</output>
+        </text>
+        <text>
+            <source>The database username is required.</source>
+            <output>Το όνομα της βάσης δεδομένων είναι απαραίτητη.</output>
+        </text>
+        <text>
+            <source>The database password is required.</source>
+            <output>Το password της βάσης δεδομένων είναι απαραίτητη.</output>
+        </text>
+        <text>
+            <source>The database host is required.</source>
+            <output>Απαιτείται ο οικοδεσπότης της βάσης δεδομένων.</output>
+        </text>
+        <text>
+            <source>The %1 database version must be %2 or greater. (%3 detected.)</source>
+            <output>Η έκδοση %1 της βάσης δεδομένων πρέπει να είναι %2 ή μεγαλύτερο. (%3 ανιχνευθεί.)</output>
+        </text>
+        <text>
+            <source>Configuration</source>
+            <output>διαμόρφωση</output>
+        </text>
+        <text>
+            <source>The configuration file is not writable and the configuration has not been written to the file.</source>
+            <output>Το αρχείο δεν είναι εγγράψιμο και η διαμόρφωση δεν έχει εγγραφεί στο αρχείο.</output>
+        </text>
+        <text>
+            <source>You will have to copy the code below and paste it into the 'config.php' file to continue.</source>
+            <output>Θα πρέπει να αντιγράψετε τον παρακάτω κώδικα και προσθέστε το στο αρχείο «config.php 'για να συνεχίσετε.</output>
+        </text>
+        <text>
+            <source>CONTINUE</source>
+            <output>ΣΥΝΕΧΕΙΑ</output>
+        </text>
+        <text>
+            <source>User Setup</source>
+            <output>Ρυθμίσεις Χρήστη</output>
+        </text>
+        <text>
+            <source>Select User Type:</source>
+            <output>Επιλέξτε Κατηγορία Χρήστη:</output>
+        </text>
+        <text>
+            <source>Email:</source>
+            <output>email:</output>
+        </text>
+        <text>
+            <source>Re-Type Email:</source>
+            <output>Re-Type Email:</output>
+        </text>
+        <text>
+            <source>Username:</source>
+            <output>Όνομα Χρήστη:</output>
+        </text>
+        <text>
+            <source>Enter Password:</source>
+            <output>Εισάγετε τον κωδικό:</output>
+        </text>
+        <text>
+            <source>Re-Type Password:</source>
+            <output>Re-Type Κωδικός:</output>
+        </text>
+        <text>
+            <source>User Role:</source>
+            <output>Ρόλος χρήστη:</output>
+        </text>
+        <text>
+            <source>Verified:</source>
+            <output>Verified:</output>
+        </text>
+        <text>
+            <source>Failed Attempts:</source>
+            <output>Αποτυχημένες προσπάθειες:</output>
+        </text>
+        <text>
+            <source>Allowed Sites:</source>
+            <output>Κατοικίδια Sites:</output>
+        </text>
+        <text>
+            <source>SELECT</source>
+            <output>Επιλέξτε</output>
+        </text>
+        <text>
+            <source>Select</source>
+            <output>Επιλέξτε</output>
+        </text>
+        <text>
+            <source>REGISTER</source>
+            <output>ΕΓΓΡΑΦΗ</output>
+        </text>
+        <text>
+            <source>Register</source>
+            <output>μητρώο</output>
+        </text>
+        <text>
+            <source>SAVE</source>
+            <output>εκτός</output>
+        </text>
+        <text>
+            <source>Save</source>
+            <output>εκτός</output>
+        </text>
+        <text>
+            <source>UPDATE</source>
+            <output>ΕΝΗΜΕΡΩΣΗ</output>
+        </text>
+        <text>
+            <source>Update</source>
+            <output>Ενημέρωση</output>
+        </text>
+        <text>
+            <source>PREVIEW</source>
+            <output>Προεπισκόπηση</output>
+        </text>
+        <text>
+            <source>Preview</source>
+            <output>Προεπισκόπηση</output>
+        </text>
+        <text>
+            <source>Blocked</source>
+            <output>Αποκλεισμένοι</output>
+        </text>
+        <text>
+            <source>Thank you. The system has been successfully installed.</source>
+            <output>Σας ευχαριστώ. Το σύστημα έχει εγκατασταθεί με επιτυχία.</output>
+        </text>
+        <text>
+            <source>You can now log in here or view the home page here.</source>
+            <output>Μπορείτε τώρα να συνδεθείτε εδώ ή να δείτε την αρχική σελίδα εδώ.</output>
+        </text>
+        <text>
+            <source>That user already exists.</source>
+            <output>Αυτός ο χρήστης υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>That email already exists.</source>
+            <output>Αυτό το email υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>The emails do not match.</source>
+            <output>Τα emails δεν ταιριάζουν.</output>
+        </text>
+        <text>
+            <source>The passwords do not match.</source>
+            <output>Οι κωδικοί πρόσβασης δεν ταιριάζουν.</output>
+        </text>
+        <text>
+            <source>The 'upload_max_filesize' setting of %1 exceeded.</source>
+            <output>Η «upload_max_filesize« ρύθμιση %1 υπέρβαση.</output>
+        </text>
+        <text>
+            <source>The file must be less than %1.</source>
+            <output>Το αρχείο πρέπει να είναι μικρότερη από %1.</output>
+        </text>
+        <text>
+            <source>The %1 file type is not allowed.</source>
+            <output>Το %1 τύπος αρχείου δεν επιτρέπεται.</output>
+        </text>
+        <text>
+            <source>You can now log in %1here%2 or view the home page %3here%4.</source>
+            <output>Μπορείτε τώρα να συνδεθείτε %1εδώ %2 ή δείτε την %3εδώ %4 αρχική σελίδα. </output>
+        </text>
+        <text>
+            <source>Error</source>
+            <output>σφάλμα </output>
+        </text>
+        <text>
+            <source>Page Not Found</source>
+            <output>Η σελίδα δεν βρέθηκε</output>
+        </text>
+        <text>
+            <source>Sorry. That page was not found.</source>
+            <output>Λυπάμαι. Ότι η σελίδα δεν βρέθηκε.</output>
         </text>
     </locale>
 </language>

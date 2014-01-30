@@ -30,6 +30,12 @@ class Install extends Form
     );
 
     /**
+     * Language object
+     * @var \Pop\I18n\I18n
+     */
+    protected $i18n = null;
+
+    /**
      * Constructor method to instantiate the form object
      *
      * @param  string $action
@@ -38,6 +44,13 @@ class Install extends Form
      */
     public function __construct($action = null, $method = 'post')
     {
+        $lang = (isset($_GET['lang'])) ? $_GET['lang'] : 'en_US';
+        if (!defined('POP_LANG')) {
+            define('POP_LANG', $lang);
+        }
+        $this->i18n = I18n::factory();
+        $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/phire-cms/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
+
         $this->initFieldsValues = $this->getInitFields();
         parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'install-form');
@@ -58,25 +71,20 @@ class Install extends Form
         if ($_POST) {
             // Check the content directory
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_path)) {
-                $this->getElement('content_path')->addValidator(new Validator\NotEqual($this->content_path, 'The content directory does not exist.'));
+                $this->getElement('content_path')->addValidator(new Validator\NotEqual($this->content_path, $this->i18n->__('The content directory does not exist.')));
             } else {
                 $checkDirs = \Phire\Project::checkDirs($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $this->content_path, true);
                 if (count($checkDirs) > 0) {
-                    $this->getElement('content_path')->addValidator(new Validator\NotEqual($this->content_path, 'The content directory (or subdirectories) are not writable.'));
+                    $this->getElement('content_path')->addValidator(new Validator\NotEqual($this->content_path, $this->i18n->__('The content directory (or subdirectories) are not writable.')));
                 }
-            }
-
-            // Check the password encryption
-            if (($this->password_encryption == 3) && ($this->password_salt == '')) {
-                $this->getElement('password_salt')->addValidator(new Validator\NotEmpty(null, 'A password salt is required for the \'Crypt\' encryption.'));
             }
 
             // If not SQLite, check the DB parameters
             if (strpos($this->db_adapter, 'Sqlite') === false) {
-                $this->getElement('db_name')->addValidator(new Validator\NotEmpty(null, 'The database name is required.'));
-                $this->getElement('db_username')->addValidator(new Validator\NotEmpty(null, 'The database username is required.'));
-                $this->getElement('db_password')->addValidator(new Validator\NotEmpty(null, 'The database password is required.'));
-                $this->getElement('db_host')->addValidator(new Validator\NotEmpty(null, 'The database host is required.'));
+                $this->getElement('db_name')->addValidator(new Validator\NotEmpty(null, $this->i18n->__('The database name is required.')));
+                $this->getElement('db_username')->addValidator(new Validator\NotEmpty(null, $this->i18n->__('The database username is required.')));
+                $this->getElement('db_password')->addValidator(new Validator\NotEmpty(null, $this->i18n->__('The database password is required.')));
+                $this->getElement('db_host')->addValidator(new Validator\NotEmpty(null, $this->i18n->__('The database host is required.')));
             }
 
             // Check the database credentials
@@ -122,7 +130,7 @@ class Install extends Form
                         }
 
                         if ((null !== $dbVerKey) && (version_compare($version, self::$dbVersions[$dbVerKey]) < 0)) {
-                            $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, 'The ' . $dbVerKey . ' database version must be ' . self::$dbVersions[$dbVerKey] . ' or greater. (' . $version . ' detected.)'));
+                            $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, $this->i18n->__('The %1 database version must be %2 or greater. (%3 detected.)', array($dbVerKey, self::$dbVersions[$dbVerKey], $version))));
                         }
                     }
                 }
@@ -168,60 +176,65 @@ class Install extends Form
         $fields = array(
             'language' => array (
                 'type' => 'select',
-                'label' => 'Language:',
+                'label' => $this->i18n->__('Language:'),
                 'value' => $langs,
-                'marked' => 'en_US'
+                'marked' => POP_LANG,
+                'attributes' => array(
+                    'onchange' => "changeLanguage(this);",
+                    'style'    => 'width: 260px;'
+                )
             ),
             'db_adapter' => array (
                 'type' => 'select',
-                'label' => 'DB Adapter:',
+                'label' => $this->i18n->__('DB Adapter:'),
                 'required' => true,
-                'value' => $this->dbAdapters
+                'value' => $this->dbAdapters,
+                'attributes' => array('style' => 'width: 260px;')
             ),
             'db_name' => array (
                 'type' => 'text',
-                'label' => 'DB Name:',
+                'label' => $this->i18n->__('DB Name:'),
                 'attributes' => array('size' => 30)
             ),
             'db_username' => array (
                 'type' => 'text',
-                'label' => 'DB Username:',
+                'label' => $this->i18n->__('DB Username:'),
                 'attributes' => array('size' => 30)
             ),
             'db_password' => array (
                 'type' => 'text',
-                'label' => 'DB Password:',
+                'label' => $this->i18n->__('DB Password:'),
                 'attributes' => array('size' => 30)
             ),
             'db_host' => array (
                 'type' => 'text',
-                'label' => 'DB Host:',
+                'label' => $this->i18n->__('DB Host:'),
                 'attributes' => array('size' => 30),
                 'value' => 'localhost'
             ),
             'db_prefix' => array (
                 'type' => 'text',
                 'name' => 'db_prefix',
-                'label' => 'DB Table Prefix:',
+                'label' => $this->i18n->__('DB Table Prefix:'),
                 'attributes' => array('size' => 30),
                 'value' => 'ph_'
             ),
             'app_uri' => array (
                 'type' => 'text',
-                'label' => 'Application URI:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(How you will access the system)</em>',
+                'label' => $this->i18n->__('Application URI:') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('How you will access the system') . ')</em>',
                 'attributes' => array('size' => 30),
                 'value' => APP_URI
             ),
             'content_path' => array (
                 'type' => 'text',
-                'label' => 'Content Path:<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(Where assets will be located)</em>',
+                'label' => $this->i18n->__('Content Path:') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('Where assets will be located') . ')</em>',
                 'required' => true,
                 'attributes' => array('size' => 30),
                 'value' => CONTENT_PATH
             ),
             'password_encryption' => array (
                 'type' => 'select',
-                'label' => 'Password Encryption:',
+                'label' => $this->i18n->__('Password Encryption:'),
                 'value' => array(
                     '1' => 'MD5',
                     '2' => 'SHA1',
@@ -233,12 +246,13 @@ class Install extends Form
                     '8' => 'Crypt_SHA512',
                     '0' => 'None'
                 ),
-                'marked' => 4
+                'marked' => 4,
+                'attributes' => array('style' => 'width: 260px;')
             ),
             'submit' => array (
                 'type' => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'NEXT',
+                'value' => $this->i18n->__('NEXT'),
                 'attributes' => array(
                     'class' => 'install-btn'
                 )

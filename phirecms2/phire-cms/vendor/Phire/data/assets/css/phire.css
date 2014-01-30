@@ -203,7 +203,7 @@ input[type=submit]:focus, button:focus {
 #install-form {
     margin: 0 auto;
     padding: 0;
-    width: 600px;
+    width: 620px;
 }
 
 #install-form > dl {
@@ -217,7 +217,7 @@ input[type=submit]:focus, button:focus {
     float: left;
     margin: 0;
     padding: 10px 3px 4px 3px;
-    width: 170px;
+    width: 200px;
     text-align: right;
     line-height: 1.2em;
 }

@@ -20,8 +20,244 @@
 <language src="en" output="it" name="Italian" native="Italiano">
     <locale region="IT" name="Italy" native="Italia">
         <text>
-            <source>This field is required.</source>
-            <output>Questo campo è obbligatorio.</output>
+            <source>Language:</source>
+            <output>Lingua:</output>
+        </text>
+        <text>
+            <source>DB Adapter:</source>
+            <output>Adattatore DB:</output>
+        </text>
+        <text>
+            <source>DB Name:</source>
+            <output>DB Nome:</output>
+        </text>
+        <text>
+            <source>DB Username:</source>
+            <output>DB Username:</output>
+        </text>
+        <text>
+            <source>DB Password:</source>
+            <output>DB Password:</output>
+        </text>
+        <text>
+            <source>DB Host:</source>
+            <output>DB Host:</output>
+        </text>
+        <text>
+            <source>DB Table Prefix:</source>
+            <output>DB Prefisso delle Tabelle:</output>
+        </text>
+        <text>
+            <source>Application URI:</source>
+            <output>Applicazione URI:</output>
+        </text>
+        <text>
+            <source>How you will access the system</source>
+            <output>Come si accede al sistema</output>
+        </text>
+        <text>
+            <source>Content Path:</source>
+            <output>Percorso Contenuto:</output>
+        </text>
+        <text>
+            <source>Where assets will be located</source>
+            <output>Dove saranno collocati attività</output>
+        </text>
+        <text>
+            <source>Password Encryption:</source>
+            <output>Crittografia Password:</output>
+        </text>
+        <text>
+            <source>NEXT</source>
+            <output>AVANTI</output>
+        </text>
+        <text>
+            <source>Installation</source>
+            <output>Installazione</output>
+        </text>
+        <text>
+            <source>The content directory does not exist.</source>
+            <output>L'elenco contenuto non esiste.</output>
+        </text>
+        <text>
+            <source>The content directory (or subdirectories) are not writable.</source>
+            <output>L'elenco contenuto (o sottocartelle) non sono scrivibili.</output>
+        </text>
+        <text>
+            <source>The database name is required.</source>
+            <output>È richiesto il nome del database.</output>
+        </text>
+        <text>
+            <source>The database username is required.</source>
+            <output>È richiesto il nome utente del database.</output>
+        </text>
+        <text>
+            <source>The database password is required.</source>
+            <output>È richiesta la password del database.</output>
+        </text>
+        <text>
+            <source>The database host is required.</source>
+            <output>È necessaria l'host del database.</output>
+        </text>
+        <text>
+            <source>The %1 database version must be %2 or greater. (%3 detected.)</source>
+            <output>La versione %1 del database deve essere %2 o maggiore. (%3 rilevata.)</output>
+        </text>
+        <text>
+            <source>Configuration</source>
+            <output>Configurazione</output>
+        </text>
+        <text>
+            <source>The configuration file is not writable and the configuration has not been written to the file.</source>
+            <output>Il file di configurazione non è scrivibile e la configurazione non è stato scritto per il file.</output>
+        </text>
+        <text>
+            <source>You will have to copy the code below and paste it into the 'config.php' file to continue.</source>
+            <output>Dovrete copiare il codice qui sotto e incollarlo nel file 'config.php' per continuare.</output>
+        </text>
+        <text>
+            <source>CONTINUE</source>
+            <output>CONTINUA</output>
+        </text>
+        <text>
+            <source>User Setup</source>
+            <output>Configurazione utente</output>
+        </text>
+        <text>
+            <source>Select User Type:</source>
+            <output>Selezionare il tipo di utente:</output>
+        </text>
+        <text>
+            <source>Email:</source>
+            <output>Email:</output>
+        </text>
+        <text>
+            <source>Re-Type Email:</source>
+            <output>Re-Tipo E-mail:</output>
+        </text>
+        <text>
+            <source>Username:</source>
+            <output>Nome utente:</output>
+        </text>
+        <text>
+            <source>Enter Password:</source>
+            <output>Immettere la Password:</output>
+        </text>
+        <text>
+            <source>Re-Type Password:</source>
+            <output>Re-Tipo Password:</output>
+        </text>
+        <text>
+            <source>User Role:</source>
+            <output>Ruolo utente:</output>
+        </text>
+        <text>
+            <source>Verified:</source>
+            <output>Verificato:</output>
+        </text>
+        <text>
+            <source>Failed Attempts:</source>
+            <output>Tentativi falliti:</output>
+        </text>
+        <text>
+            <source>Allowed Sites:</source>
+            <output>Siti consentiti:</output>
+        </text>
+        <text>
+            <source>SELECT</source>
+            <output>SELEZIONA</output>
+        </text>
+        <text>
+            <source>Select</source>
+            <output>Seleziona</output>
+        </text>
+        <text>
+            <source>REGISTER</source>
+            <output>REGISTRO</output>
+        </text>
+        <text>
+            <source>Register</source>
+            <output>Registro</output>
+        </text>
+        <text>
+            <source>SAVE</source>
+            <output>SALVARE</output>
+        </text>
+        <text>
+            <source>Save</source>
+            <output>Salvare</output>
+        </text>
+        <text>
+            <source>UPDATE</source>
+            <output>AGGIORNARE</output>
+        </text>
+        <text>
+            <source>Update</source>
+            <output>Aggiornare</output>
+        </text>
+        <text>
+            <source>PREVIEW</source>
+            <output>ANTEPRIMA</output>
+        </text>
+        <text>
+            <source>Preview</source>
+            <output>Anteprima</output>
+        </text>
+        <text>
+            <source>Blocked</source>
+            <output>Loccato</output>
+        </text>
+        <text>
+            <source>Thank you. The system has been successfully installed.</source>
+            <output>Grazie. Il sistema è stato installato correttamente.</output>
+        </text>
+        <text>
+            <source>You can now log in here or view the home page here.</source>
+            <output>È ora possibile effettuare il login da qui o visualizzare la home page qui.</output>
+        </text>
+        <text>
+            <source>That user already exists.</source>
+            <output>Questo utente esiste già.</output>
+        </text>
+        <text>
+            <source>That email already exists.</source>
+            <output>Quella email esiste già.</output>
+        </text>
+        <text>
+            <source>The emails do not match.</source>
+            <output>Le e-mail non corrispondono.</output>
+        </text>
+        <text>
+            <source>The passwords do not match.</source>
+            <output>Le password non corrispondono.</output>
+        </text>
+        <text>
+            <source>The 'upload_max_filesize' setting of %1 exceeded.</source>
+            <output>L'impostazione di 'upload_max_filesize' di %1 superato.</output>
+        </text>
+        <text>
+            <source>The file must be less than %1.</source>
+            <output>Il file deve essere inferiore al %1.</output>
+        </text>
+        <text>
+            <source>The %1 file type is not allowed.</source>
+            <output>Il tipo di file %1 non è permesso.</output>
+        </text>
+        <text>
+            <source>You can now log in %1here%2 or view the home page %3here%4.</source>
+            <output>È ora possibile accedere %1qui%2 o visualizzare la home page %3qui%4.</output>
+        </text>
+        <text>
+            <source>Error</source>
+            <output>Errore</output>
+        </text>
+        <text>
+            <source>Page Not Found</source>
+            <output>Pagina non trovata</output>
+        </text>
+        <text>
+            <source>Sorry. That page was not found.</source>
+            <output>Scusi. Quella pagina non è stata trovata.</output>
         </text>
     </locale>
 </language>

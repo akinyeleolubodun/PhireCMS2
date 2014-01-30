@@ -20,8 +20,244 @@
 <language src="en" output="ja" name="Japanese" native="日本">
     <locale region="JA" name="Japan" native="日本">
         <text>
-            <source>This field is required.</source>
-            <output>このフィールドは必須です。</output>
+            <source>Language:</source>
+            <output>言語：</output>
+        </text>
+        <text>
+            <source>DB Adapter:</source>
+            <output>DBアダプタ：</output>
+        </text>
+        <text>
+            <source>DB Name:</source>
+            <output>DB名：</output>
+        </text>
+        <text>
+            <source>DB Username:</source>
+            <output>DBのユーザー名：</output>
+        </text>
+        <text>
+            <source>DB Password:</source>
+            <output>DBパスワード：</output>
+        </text>
+        <text>
+            <source>DB Host:</source>
+            <output>DBホスト：</output>
+        </text>
+        <text>
+            <source>DB Table Prefix:</source>
+            <output>DBのテーブル接頭辞：</output>
+        </text>
+        <text>
+            <source>Application URI:</source>
+            <output>アプリケーションのURI：</output>
+        </text>
+        <text>
+            <source>How you will access the system</source>
+            <output>あなたがシステムにアクセスする方法</output>
+        </text>
+        <text>
+            <source>Content Path:</source>
+            <output>コンテンツパス：</output>
+        </text>
+        <text>
+            <source>Where assets will be located</source>
+            <output>資産が配置される場所</output>
+        </text>
+        <text>
+            <source>Password Encryption:</source>
+            <output>パスワードの暗号化：</output>
+        </text>
+        <text>
+            <source>NEXT</source>
+            <output>次</output>
+        </text>
+        <text>
+            <source>Installation</source>
+            <output>インストール</output>
+        </text>
+        <text>
+            <source>The content directory does not exist.</source>
+            <output>コンテンツディレクトリが存在しません。</output>
+        </text>
+        <text>
+            <source>The content directory (or subdirectories) are not writable.</source>
+            <output>コンテンツディレクトリ（またはサブディレクトリ）が書き込み可能ではありません。</output>
+        </text>
+        <text>
+            <source>The database name is required.</source>
+            <output>データベース名が必要です。</output>
+        </text>
+        <text>
+            <source>The database username is required.</source>
+            <output>データベースのユーザー名が必要です。</output>
+        </text>
+        <text>
+            <source>The database password is required.</source>
+            <output>データベースのパスワードが必要です。</output>
+        </text>
+        <text>
+            <source>The database host is required.</source>
+            <output>データベースのホストが必要です。</output>
+        </text>
+        <text>
+            <source>The %1 database version must be %2 or greater. (%3 detected.)</source>
+            <output>%1データベースのバージョンが%2以上でなければなりません。 （検出された%3。）</output>
+        </text>
+        <text>
+            <source>Configuration</source>
+            <output>設定</output>
+        </text>
+        <text>
+            <source>The configuration file is not writable and the configuration has not been written to the file.</source>
+            <output>設定ファイルは書き込み可能ではありませんし、構成ファイルに書き込まれていない。</output>
+        </text>
+        <text>
+            <source>You will have to copy the code below and paste it into the 'config.php' file to continue.</source>
+            <output>あなたは以下のコードをコピーして、継続する'のconfig.php」ファイルに貼り付けする必要があります。</output>
+        </text>
+        <text>
+            <source>CONTINUE</source>
+            <output>CONTINUE</output>
+        </text>
+        <text>
+            <source>User Setup</source>
+            <output>ユーザー設定</output>
+        </text>
+        <text>
+            <source>Select User Type:</source>
+            <output>[ユーザーの選択の種類：</output>
+        </text>
+        <text>
+            <source>Email:</source>
+            <output>Eメール：</output>
+        </text>
+        <text>
+            <source>Re-Type Email:</source>
+            <output>再入力Eメール：</output>
+        </text>
+        <text>
+            <source>Username:</source>
+            <output>ユーザー名：</output>
+        </text>
+        <text>
+            <source>Enter Password:</source>
+            <output>パスワードを入力します。</output>
+        </text>
+        <text>
+            <source>Re-Type Password:</source>
+            <output>再入力パスワード：</output>
+        </text>
+        <text>
+            <source>User Role:</source>
+            <output>ユーザーの役割：</output>
+        </text>
+        <text>
+            <source>Verified:</source>
+            <output>検証：</output>
+        </text>
+        <text>
+            <source>Failed Attempts:</source>
+            <output>試行失敗：</output>
+        </text>
+        <text>
+            <source>Allowed Sites:</source>
+            <output>許可サイト：</output>
+        </text>
+        <text>
+            <source>SELECT</source>
+            <output>選択する</output>
+        </text>
+        <text>
+            <source>Select</source>
+            <output>選択する</output>
+        </text>
+        <text>
+            <source>REGISTER</source>
+            <output>レジスタ</output>
+        </text>
+        <text>
+            <source>Register</source>
+            <output>登録</output>
+        </text>
+        <text>
+            <source>SAVE</source>
+            <output>保存</output>
+        </text>
+        <text>
+            <source>Save</source>
+            <output>保存</output>
+        </text>
+        <text>
+            <source>UPDATE</source>
+            <output>アップデート</output>
+        </text>
+        <text>
+            <source>Update</source>
+            <output>アップデート</output>
+        </text>
+        <text>
+            <source>PREVIEW</source>
+            <output>プレビュー</output>
+        </text>
+        <text>
+            <source>Preview</source>
+            <output>プレビュー</output>
+        </text>
+        <text>
+            <source>Blocked</source>
+            <output>ブロックされた</output>
+        </text>
+        <text>
+            <source>Thank you. The system has been successfully installed.</source>
+            <output>ありがとう。システムが正常にインストールされています。</output>
+        </text>
+        <text>
+            <source>You can now log in here or view the home page here.</source>
+            <output>あなたが今ここにログインするか、ここにホームページを表示することができます。</output>
+        </text>
+        <text>
+            <source>That user already exists.</source>
+            <output>そのユーザーはすでに存在します。</output>
+        </text>
+        <text>
+            <source>That email already exists.</source>
+            <output>そのメールは既に存在しています。</output>
+        </text>
+        <text>
+            <source>The emails do not match.</source>
+            <output>電子メールは一致しません。</output>
+        </text>
+        <text>
+            <source>The passwords do not match.</source>
+            <output>パスワードが一致しません。</output>
+        </text>
+        <text>
+            <source>The 'upload_max_filesize' setting of %1 exceeded.</source>
+            <output>%1の「upload_max_filesizeで'の設定を超えています。</output>
+        </text>
+        <text>
+            <source>The file must be less than %1.</source>
+            <output>ファイルには、%1未満でなければなりません。</output>
+        </text>
+        <text>
+            <source>The %1 file type is not allowed.</source>
+            <output>%1ファイルタイプが許可されていません。</output>
+        </text>
+        <text>
+            <source>You can now log in %1here%2 or view the home page %3here%4.</source>
+            <output>これで%1ここに%2ログインまたはホームページの%3ここに%4を表示することができます。</output>
+        </text>
+        <text>
+            <source>Error</source>
+            <output>エラー</output>
+        </text>
+        <text>
+            <source>Page Not Found</source>
+            <output>ページが見つかりません</output>
+        </text>
+        <text>
+            <source>Sorry. That page was not found.</source>
+            <output>申し訳ありません。そのページが見つかりませんでした。</output>
         </text>
     </locale>
 </language>

@@ -20,8 +20,244 @@
 <language src="en" output="ar" name="Arabic" native="العربية">
     <locale region="EG" name="Egypt" native="مصر">
         <text>
-            <source>This field is required.</source>
-            <output>هذا الحقل مطلوب.</output>
+            <source>Language:</source>
+            <output>اللغة:</output>
+        </text>
+        <text>
+            <source>DB Adapter:</source>
+            <output>محول DB:</output>
+        </text>
+        <text>
+            <source>DB Name:</source>
+            <output>اسم DB:</output>
+        </text>
+        <text>
+            <source>DB Username:</source>
+            <output>DB اسم المستخدم:</output>
+        </text>
+        <text>
+            <source>DB Password:</source>
+            <output>DB كلمة السر:</output>
+        </text>
+        <text>
+            <source>DB Host:</source>
+            <output>DB المضيف:</output>
+        </text>
+        <text>
+            <source>DB Table Prefix:</source>
+            <output>DB بادئة الجدول:</output>
+        </text>
+        <text>
+            <source>Application URI:</source>
+            <output>URI التطبيق:</output>
+        </text>
+        <text>
+            <source>How you will access the system</source>
+            <output>كيف سيتم الوصول إلى النظام</output>
+        </text>
+        <text>
+            <source>Content Path:</source>
+            <output>المحتويات مسار:</output>
+        </text>
+        <text>
+            <source>Where assets will be located</source>
+            <output>حيث سيقع الأصول</output>
+        </text>
+        <text>
+            <source>Password Encryption:</source>
+            <output>كلمة التشفير:</output>
+        </text>
+        <text>
+            <source>NEXT</source>
+            <output>التالي</output>
+        </text>
+        <text>
+            <source>Installation</source>
+            <output>تركيب</output>
+        </text>
+        <text>
+            <source>The content directory does not exist.</source>
+            <output>عدم وجود دليل محتوى.</output>
+        </text>
+        <text>
+            <source>The content directory (or subdirectories) are not writable.</source>
+            <output>دليل محتوى (أو الدلائل) ليست للكتابة.</output>
+        </text>
+        <text>
+            <source>The database name is required.</source>
+            <output>مطلوب اسم قاعدة البيانات.</output>
+        </text>
+        <text>
+            <source>The database username is required.</source>
+            <output>مطلوب اسم المستخدم قاعدة البيانات.</output>
+        </text>
+        <text>
+            <source>The database password is required.</source>
+            <output>مطلوب كلمة مرور قاعدة البيانات.</output>
+        </text>
+        <text>
+            <source>The database host is required.</source>
+            <output>مطلوب المضيف قاعدة البيانات.</output>
+        </text>
+        <text>
+            <source>The %1 database version must be %2 or greater. (%3 detected.)</source>
+            <output>جب أن يكون إصدار قاعدة بيانات %1 أو %2 أو أكبر. (%3 الكشف عنها.)</output>
+        </text>
+        <text>
+            <source>Configuration</source>
+            <output>ترتيب</output>
+        </text>
+        <text>
+            <source>The configuration file is not writable and the configuration has not been written to the file.</source>
+            <output>ملف التكوين غير قابل للكتابة ولم يكتب التكوين إلى ملف.</output>
+        </text>
+        <text>
+            <source>You will have to copy the code below and paste it into the 'config.php' file to continue.</source>
+            <output>سيكون لديك لنسخ رمز أدناه ولصقه في 'ملف config.php' ملف للمتابعة.</output>
+        </text>
+        <text>
+            <source>CONTINUE</source>
+            <output>إستمر</output>
+        </text>
+        <text>
+            <source>User Setup</source>
+            <output>إعداد مستخدم</output>
+        </text>
+        <text>
+            <source>Select User Type:</source>
+            <output>حدد نوع المستخدم:</output>
+        </text>
+        <text>
+            <source>Email:</source>
+            <output>البريد الإلكتروني:</output>
+        </text>
+        <text>
+            <source>Re-Type Email:</source>
+            <output>إعادة نوع البريد الإلكتروني:</output>
+        </text>
+        <text>
+            <source>Username:</source>
+            <output>اسم المستخدم:</output>
+        </text>
+        <text>
+            <source>Enter Password:</source>
+            <output>أدخل كلمة المرور:</output>
+        </text>
+        <text>
+            <source>Re-Type Password:</source>
+            <output>إعادة نوع كلمة المرور:</output>
+        </text>
+        <text>
+            <source>User Role:</source>
+            <output>دور المستخدم:</output>
+        </text>
+        <text>
+            <source>Verified:</source>
+            <output>التحقق:</output>
+        </text>
+        <text>
+            <source>Failed Attempts:</source>
+            <output>محاولات فاشلة:</output>
+        </text>
+        <text>
+            <source>Allowed Sites:</source>
+            <output>مواقع يسمح:</output>
+        </text>
+        <text>
+            <source>SELECT</source>
+            <output>اختر </output>
+        </text>
+        <text>
+            <source>Select</source>
+            <output>اختر</output>
+        </text>
+        <text>
+            <source>REGISTER</source>
+            <output>اشترك</output>
+        </text>
+        <text>
+            <source>Register</source>
+            <output>تسجيل</output>
+        </text>
+        <text>
+            <source>SAVE</source>
+            <output>حفظ </output>
+        </text>
+        <text>
+            <source>Save</source>
+            <output>حفظ</output>
+        </text>
+        <text>
+            <source>UPDATE</source>
+            <output>التحديث </output>
+        </text>
+        <text>
+            <source>Update</source>
+            <output>التحديث</output>
+        </text>
+        <text>
+            <source>PREVIEW</source>
+            <output>معاينة</output>
+        </text>
+        <text>
+            <source>Preview</source>
+            <output>معاينة</output>
+        </text>
+        <text>
+            <source>Blocked</source>
+            <output>مسدود</output>
+        </text>
+        <text>
+            <source>Thank you. The system has been successfully installed.</source>
+            <output>شكرا لك. وقد تم تركيب النظام بنجاح.</output>
+        </text>
+        <text>
+            <source>You can now log in here or view the home page here.</source>
+            <output>يمكنك الآن تسجيل الدخول هنا أو عرض الصفحة الرئيسية هنا.</output>
+        </text>
+        <text>
+            <source>That user already exists.</source>
+            <output>هذا المستخدم موجود بالفعل.</output>
+        </text>
+        <text>
+            <source>That email already exists.</source>
+            <output>أن البريد الإلكتروني موجود بالفعل.</output>
+        </text>
+        <text>
+            <source>The emails do not match.</source>
+            <output>رسائل البريد الإلكتروني غير متطابقة.</output>
+        </text>
+        <text>
+            <source>The passwords do not match.</source>
+            <output>كلمات المرور غير متطابقة.</output>
+        </text>
+        <text>
+            <source>The 'upload_max_filesize' setting of %1 exceeded.</source>
+            <output>تجاوز الإعداد "المرفوعة" %1.</output>
+        </text>
+        <text>
+            <source>The file must be less than %1.</source>
+            <output>يجب أن يكون الملف أقل من %1.</output>
+        </text>
+        <text>
+            <source>The %1 file type is not allowed.</source>
+            <output>لا يسمح نوع %1 ملف.</output>
+        </text>
+        <text>
+            <source>You can now log in %1here%2 or view the home page %3here%4.</source>
+            <output>يمكنك تسجيل الدخول الآن في %1هنا%2 أو عرض %3هنا%4 الصفحة الرئيسية. </output>
+        </text>
+        <text>
+            <source>Error</source>
+            <output>خطأ </output>
+        </text>
+        <text>
+            <source>Page Not Found</source>
+            <output>لم يتم العثور على الصفحة</output>
+        </text>
+        <text>
+            <source>Sorry. That page was not found.</source>
+            <output>آسف. لم يتم العثور على تلك الصفحة.</output>
         </text>
     </locale>
 </language>

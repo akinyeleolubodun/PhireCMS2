@@ -6,6 +6,7 @@ namespace Phire\Controller\Phire\Install;
 
 use Pop\Http\Response;
 use Pop\Http\Request;
+use Pop\I18n\I18n;
 use Pop\Mvc\Controller as C;
 use Pop\Mvc\View;
 use Pop\Project\Project;
@@ -22,6 +23,12 @@ class IndexController extends C
      * @var \Pop\Web\Session
      */
     protected $sess = null;
+
+    /**
+     * Language object
+     * @var \Pop\I18n\I18n
+     */
+    protected $i18n = null;
 
     /**
      * Constructor method to instantiate the default controller object
@@ -50,6 +57,14 @@ class IndexController extends C
             }
         }
 
+        $lang = (isset($_GET['lang'])) ? $_GET['lang'] : 'en_US';
+        if (!defined('POP_LANG')) {
+            define('POP_LANG', $lang);
+        }
+
+        $this->i18n = I18n::factory();
+        $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/phire-cms/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
+
         parent::__construct($request, $response, $project, $viewPath);
         $this->sess = Session::getInstance();
     }
@@ -65,10 +80,10 @@ class IndexController extends C
             Response::redirect(BASE_PATH . APP_URI);
         } else {
             $install = new Model\Install(array(
-                'title' => 'Installation'
+                'title' => $this->i18n->__('Installation')
             ));
 
-            $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
+            $form = new Form\Install($this->request->getBasePath() . $this->request->getRequestUri() . '?lang=' . $this->i18n->getLanguage() . '_' . $this->i18n->getLocale(), 'post');
 
             if (!\Pop\Image\Gd::isInstalled() && !\Pop\Image\Imagick::isInstalled()) {
                 $install->set('error', 'Neither the GD or Imagick extensions are installed. Phire CMS 2.0 requires one of them to be installed for graphic manipulation to fully function properly. You can continue with the install, but you will not be able to upload or manipulate image graphics until one of the image extensions is installed.');
@@ -86,7 +101,7 @@ class IndexController extends C
                     $url = ($install->configWritable) ?
                         BASE_PATH . $form->app_uri . '/install/user' :
                         BASE_PATH . APP_URI . '/install/config';
-                    Response::redirect($url);
+                    Response::redirect($url . '?lang=' . POP_LANG);
                 } else {
                     $install->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/index.phtml', $install->getData());
@@ -116,11 +131,12 @@ class IndexController extends C
         // Else, display config to be copied and pasted
         } else {
             $install = new Model\Install(array(
-                'title'  => 'Configuration',
+                'title'  => $this->i18n->__('Configuration'),
                 'config' => unserialize($this->sess->config),
                 'uri'    => BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/user'
             ));
             $this->view = View::factory($this->viewPath . '/config.phtml', $install->getData());
+            $this->view->set('i18n', $this->i18n);
             $this->send();
         }
     }
@@ -138,16 +154,16 @@ class IndexController extends C
         // Else, if the initial install screen or config isn't complete
         } else if ((DB_INTERFACE == '') && (DB_NAME == '')) {
             if (isset($this->sess->config)) {
-                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/config');
+                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install/config?lang=' . $_GET['lang']);
             } else {
-                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install');
+                Response::redirect(BASE_PATH . (isset($this->sess->app_uri) ? $this->sess->app_uri : APP_URI) . '/install?lang=' . $_GET['lang']);
             }
         // Else, install the first system user
         } else {
             $user = new Model\User(array(
-                'title' => 'User Setup'
+                'title' => $this->i18n->__('User Setup')
             ));
-            $form = new Form\User($this->request->getBasePath() . $this->request->getRequestUri(), 'post', 2001, true);
+            $form = new Form\User($this->request->getBasePath() . $this->request->getRequestUri() . '?lang=' . $this->i18n->getLanguage() . '_' . $this->i18n->getLocale(), 'post', 2001, true);
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
@@ -164,7 +180,7 @@ class IndexController extends C
                         $newUser->update();
                     }
 
-                    $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">Thank you. The system has been successfully installed.<br />You can now log in <a href="' . BASE_PATH . APP_URI . '/login">here</a> or view the home page <a href="' . BASE_PATH . '/" target="_blank">here</a>.</p>' . PHP_EOL);
+                    $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">' . $this->i18n->__('Thank you. The system has been successfully installed.') . '<br />' . $this->i18n->__('You can now log in %1here%2 or view the home page %3here%4.', array('<a href="' . BASE_PATH . APP_URI . '/login">', '</a>', '<a href="' . BASE_PATH . '/" target="_blank">', '</a>')) . '</p>' . PHP_EOL);
                     Model\Install::send($form);
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
@@ -179,32 +195,21 @@ class IndexController extends C
                     }
 
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
+                    $this->view->set('i18n', $this->i18n);
                     $this->send();
                 } else {
                     $user->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
+                    $this->view->set('i18n', $this->i18n);
                     $this->send();
                 }
             } else {
                 $user->set('form', $form);
                 $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
+                $this->view->set('i18n', $this->i18n);
                 $this->send();
             }
         }
-    }
-
-    /**
-     * CSS method
-     *
-     * @return void
-     */
-    public function css()
-    {
-        $css = file_get_contents(__DIR__ . '/../../../../../data/assets/css/phire.css');
-        $response = new Response();
-        $response->setHeader('Content-Type', 'text/css')
-                 ->setBody($css);
-        $response->send();
     }
 
     /**
@@ -215,10 +220,11 @@ class IndexController extends C
     public function error()
     {
         $install = new Model\Install(array(
-            'title' => '404 Error &gt; Page Not Found'
+            'title' => $this->i18n->__('404 Error') . ' &gt; ' . $this->i18n->__('Page Not Found')
         ));
 
         $this->view = View::factory($this->viewPath . '/error.phtml', $install->getData());
+        $this->view->set('i18n', $this->i18n);
         $this->send(404);
     }
 
