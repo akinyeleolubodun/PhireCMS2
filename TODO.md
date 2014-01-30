@@ -8,3 +8,4 @@ Phire CMS 2.0.0 TO-DO
 - Demo Site
 - Code Review & Testing
 - Security/Performance Testing
+- Docs
