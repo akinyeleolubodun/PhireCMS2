@@ -1419,5 +1419,141 @@
             <source>Thank You</source>
             <output>谢谢您</output>
         </text>
+        <text>
+            <source>Default</source>
+            <output>默认</output>
+        </text>
+        <text>
+            <source>URI Type</source>
+            <output>URI类型</output>
+        </text>
+        <text>
+            <source>SUBMIT</source>
+            <output>提交</output>
+        </text>
+        <text>
+            <source>Submit</source>
+            <output>提交</output>
+        </text>
+        <text>
+            <source>UNSUBSCRIBE</source>
+            <output>退订</output>
+        </text>
+        <text>
+            <source>Unsubscribe</source>
+            <output>退订</output>
+        </text>
+        <text>
+            <source>No search keywords were passed. Please try again.</source>
+            <output>没有搜索关键词均获通过。请再试一次。</output>
+        </text>
+        <text>
+            <source>System Error</source>
+            <output>系统错误</output>
+        </text>
+        <text>
+            <source>404 Error</source>
+            <output>404错误</output>
+        </text>
+        <text>
+            <source>Your session has expired.</source>
+            <output>您的会话已过期。</output>
+        </text>
+        <text>
+            <source>Profile</source>
+            <output>轮廓</output>
+        </text>
+        <text>
+            <source>Thank you. You have been unsubscribed from this website.</source>
+            <output>谢谢。您已取消从这个网站。</output>
+        </text>
+        <text>
+            <source>Thank you. A password reminder has been sent.</source>
+            <output>谢谢。密码提醒已发送。</output>
+        </text>
+        <text>
+            <source>Verify</source>
+            <output>确认</output>
+        </text>
+        <text>
+            <source>Thank you. Your email has been verified.</source>
+            <output>谢谢。您的电子邮件已验证。</output>
+        </text>
+        <text>
+            <source>Sorry. That email could not be verified.</source>
+            <output>抱歉。该邮件无法验证。</output>
+        </text>
+        <text>
+            <source>Select Type</source>
+            <output>选择类型</output>
+        </text>
+        <text>
+            <source>Installation Error</source>
+            <output>安装错误</output>
+        </text>
+        <text>
+            <source>Images</source>
+            <output>图片</output>
+        </text>
+        <text>
+            <source>URIs &amp; Files</source>
+            <output>的URI和文件</output>
+        </text>
+        <text>
+            <source>Logins</source>
+            <output>登录</output>
+        </text>
+        <text>
+            <source>All Sites</source>
+            <output>所有网站</output>
+        </text>
+        <text>
+            <source>Updated</source>
+            <output>更新</output>
+        </text>
+        <text>
+            <source>by</source>
+            <output>通过</output>
+        </text>
+        <text>
+            <source>Change Editor:</source>
+            <output>改变编辑器：</output>
+        </text>
+        <text>
+            <source>Clear</source>
+            <output>明确</output>
+        </text>
+        <text>
+            <source>Saved</source>
+            <output>保存</output>
+        </text>
+        <text>
+            <source>Please correct the errors below.</source>
+            <output>请更正下列错误。</output>
+        </text>
+        <text>
+            <source>Hide</source>
+            <output>隐藏</output>
+        </text>
+        <text>
+            <source>You are about to leave this page and have unsaved changes. Are you sure?</source>
+            <output>您将要离开这个页面，并有未保存的更改。你确定吗？</output>
+        </text>
+        <text>
+            <source>Your session is about to end.</source>
+            <output>您的会话即将结束。</output>
+        </text>
+        <text>
+            <source>Continue</source>
+            <output>继续</output>
+        </text>
+        <text>
+            <source>The title field is required.</source>
+            <output>title字段是必需的。</output>
+        </text>
+        <text>
+            <source>Edit This Page</source>
+            <output>编辑本页</output>
+        </text>
     </locale>
 </language>

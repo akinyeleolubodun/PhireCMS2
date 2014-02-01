@@ -1419,5 +1419,141 @@
             <source>Thank You</source>
             <output>Vielen Dank, dass Sie</output>
         </text>
+        <text>
+            <source>Default</source>
+            <output>Default</output>
+        </text>
+        <text>
+            <source>URI Type</source>
+            <output>URI-Typ</output>
+        </text>
+        <text>
+            <source>SUBMIT</source>
+            <output>SENDEN</output>
+        </text>
+        <text>
+            <source>Submit</source>
+            <output>Einreichen</output>
+        </text>
+        <text>
+            <source>UNSUBSCRIBE</source>
+            <output>ABMELDEN</output>
+        </text>
+        <text>
+            <source>Unsubscribe</source>
+            <output>Abmelden</output>
+        </text>
+        <text>
+            <source>No search keywords were passed. Please try again.</source>
+            <output>Keine Such Stichworte wurden übergeben. Bitte versuchen Sie es erneut.</output>
+        </text>
+        <text>
+            <source>System Error</source>
+            <output>System Error</output>
+        </text>
+        <text>
+            <source>404 Error</source>
+            <output>404 Error</output>
+        </text>
+        <text>
+            <source>Your session has expired.</source>
+            <output>Ihre Sitzung ist abgelaufen.</output>
+        </text>
+        <text>
+            <source>Profile</source>
+            <output>Profil</output>
+        </text>
+        <text>
+            <source>Thank you. You have been unsubscribed from this website.</source>
+            <output>Danke. Sie haben von dieser Website abgemeldet worden.</output>
+        </text>
+        <text>
+            <source>Thank you. A password reminder has been sent.</source>
+            <output>Danke. Ein Passwort Mahnung.</output>
+        </text>
+        <text>
+            <source>Verify</source>
+            <output>Überprüfen</output>
+        </text>
+        <text>
+            <source>Thank you. Your email has been verified.</source>
+            <output>Danke. Ihre E-Mail überprüft wurde.</output>
+        </text>
+        <text>
+            <source>Sorry. That email could not be verified.</source>
+            <output>Entschuldigung. Das E-Mail konnte nicht verifiziert werden.</output>
+        </text>
+        <text>
+            <source>Select Type</source>
+            <output>Wählen Sie Typ</output>
+        </text>
+        <text>
+            <source>Installation Error</source>
+            <output>Installationsfehler</output>
+        </text>
+        <text>
+            <source>Images</source>
+            <output>Bilder</output>
+        </text>
+        <text>
+            <source>URIs &amp; Files</source>
+            <output>URIs dateien</output>
+        </text>
+        <text>
+            <source>Logins</source>
+            <output>Logins</output>
+        </text>
+        <text>
+            <source>All Sites</source>
+            <output>Alle Seiten</output>
+        </text>
+        <text>
+            <source>Updated</source>
+            <output>Aktualisiert</output>
+        </text>
+        <text>
+            <source>by</source>
+            <output>Von</output>
+        </text>
+        <text>
+            <source>Change Editor:</source>
+            <output>Ändern Editor:</output>
+        </text>
+        <text>
+            <source>Clear</source>
+            <output>Klar</output>
+        </text>
+        <text>
+            <source>Saved</source>
+            <output>gespeichert</output>
+        </text>
+        <text>
+            <source>Please correct the errors below.</source>
+            <output>Bitte korrigieren Sie die unten aufgeführten Fehler.</output>
+        </text>
+        <text>
+            <source>Hide</source>
+            <output>Verbergen</output>
+        </text>
+        <text>
+            <source>You are about to leave this page and have unsaved changes. Are you sure?</source>
+            <output>Sie sind im Begriff, diese Seite zu verlassen und nicht gespeicherte Änderungen. Sind Sie sicher?</output>
+        </text>
+        <text>
+            <source>Your session is about to end.</source>
+            <output>Ihre Sitzung ist zu Ende.</output>
+        </text>
+        <text>
+            <source>Continue</source>
+            <output>Fortsetzen</output>
+        </text>
+        <text>
+            <source>The title field is required.</source>
+            <output>Der Titel ist erforderlich.</output>
+        </text>
+        <text>
+            <source>Edit This Page</source>
+            <output>Diese Seite bearbeiten</output>
+        </text>
     </locale>
 </language>

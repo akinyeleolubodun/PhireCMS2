@@ -1419,5 +1419,141 @@
             <source>Thank You</source>
             <output>Ευχαριστούμε</output>
         </text>
+        <text>
+            <source>Default</source>
+            <output>αθέτηση</output>
+        </text>
+        <text>
+            <source>URI Type</source>
+            <output>URI Τύπος</output>
+        </text>
+        <text>
+            <source>SUBMIT</source>
+            <output>ΑΠΟΣΤΟΛΗ</output>
+        </text>
+        <text>
+            <source>Submit</source>
+            <output>Υποβολή</output>
+        </text>
+        <text>
+            <source>UNSUBSCRIBE</source>
+            <output>Διαγραφή</output>
+        </text>
+        <text>
+            <source>Unsubscribe</source>
+            <output>Διαγραφή</output>
+        </text>
+        <text>
+            <source>No search keywords were passed. Please try again.</source>
+            <output>Δεν λέξεις-κλειδιά αναζήτησης πέρασαν. Παρακαλώ δοκιμάστε ξανά.</output>
+        </text>
+        <text>
+            <source>System Error</source>
+            <output>Σφάλμα συστήματος</output>
+        </text>
+        <text>
+            <source>404 Error</source>
+            <output>Σφάλμα 404</output>
+        </text>
+        <text>
+            <source>Your session has expired.</source>
+            <output>Η συνεδρία σας έχει λήξει.</output>
+        </text>
+        <text>
+            <source>Profile</source>
+            <output>προφίλ</output>
+        </text>
+        <text>
+            <source>Thank you. You have been unsubscribed from this website.</source>
+            <output>Σας ευχαριστώ. Έχετε καταργήσει την εγγραφή σας από αυτήν την ιστοσελίδα.</output>
+        </text>
+        <text>
+            <source>Thank you. A password reminder has been sent.</source>
+            <output>Σας ευχαριστώ. Μια υπενθύμιση του κωδικού πρόσβασης έχει αποσταλεί.</output>
+        </text>
+        <text>
+            <source>Verify</source>
+            <output>Επαλήθευση</output>
+        </text>
+        <text>
+            <source>Thank you. Your email has been verified.</source>
+            <output>Σας ευχαριστώ. Το email σας έχει επαληθευτεί.</output>
+        </text>
+        <text>
+            <source>Sorry. That email could not be verified.</source>
+            <output>Λυπάμαι. Ότι το ηλεκτρονικό ταχυδρομείο δεν θα μπορούσε να επαληθευτεί.</output>
+        </text>
+        <text>
+            <source>Select Type</source>
+            <output>Επιλέξτε τύπο</output>
+        </text>
+        <text>
+            <source>Installation Error</source>
+            <output>Σφάλμα εγκατάστασης</output>
+        </text>
+        <text>
+            <source>Images</source>
+            <output>εικόνες</output>
+        </text>
+        <text>
+            <source>URIs &amp; Files</source>
+            <output>URIs & Αρχεία</output>
+        </text>
+        <text>
+            <source>Logins</source>
+            <output>Συνδέσεις</output>
+        </text>
+        <text>
+            <source>All Sites</source>
+            <output>Όλες οι τοποθεσίες</output>
+        </text>
+        <text>
+            <source>Updated</source>
+            <output>Ενημέρωση</output>
+        </text>
+        <text>
+            <source>by</source>
+            <output>με</output>
+        </text>
+        <text>
+            <source>Change Editor:</source>
+            <output>Αλλαγή Επιμέλεια:</output>
+        </text>
+        <text>
+            <source>Clear</source>
+            <output>σαφής</output>
+        </text>
+        <text>
+            <source>Saved</source>
+            <output>Αποθηκευμένα</output>
+        </text>
+        <text>
+            <source>Please correct the errors below.</source>
+            <output>Παρακαλώ διορθώστε τα παρακάτω σφάλματα.</output>
+        </text>
+        <text>
+            <source>Hide</source>
+            <output>κρύβω</output>
+        </text>
+        <text>
+            <source>You are about to leave this page and have unsaved changes. Are you sure?</source>
+            <output>Είστε έτοιμοι να αφήσετε αυτή τη σελίδα και να έχει μη αποθηκευμένες αλλαγές. Είσαι σίγουρος;</output>
+        </text>
+        <text>
+            <source>Your session is about to end.</source>
+            <output>Η συνεδρία σας πρόκειται να τελειώσει.</output>
+        </text>
+        <text>
+            <source>Continue</source>
+            <output>Συνέχεια</output>
+        </text>
+        <text>
+            <source>The title field is required.</source>
+            <output>Το πεδίο του τίτλου απαιτείται.</output>
+        </text>
+        <text>
+            <source>Edit This Page</source>
+            <output>Επεξεργασία αυτής της σελίδας</output>
+        </text>
     </locale>
 </language>

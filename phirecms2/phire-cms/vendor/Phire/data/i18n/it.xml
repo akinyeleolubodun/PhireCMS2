@@ -1419,5 +1419,141 @@
             <source>Thank You</source>
             <output>Grazie</output>
         </text>
+        <text>
+            <source>Default</source>
+            <output>Difetto</output>
+        </text>
+        <text>
+            <source>URI Type</source>
+            <output>Tipo URI</output>
+        </text>
+        <text>
+            <source>SUBMIT</source>
+            <output>INVIA</output>
+        </text>
+        <text>
+            <source>Submit</source>
+            <output>Presentare</output>
+        </text>
+        <text>
+            <source>UNSUBSCRIBE</source>
+            <output>CANCELLATI</output>
+        </text>
+        <text>
+            <source>Unsubscribe</source>
+            <output>Cancellati</output>
+        </text>
+        <text>
+            <source>No search keywords were passed. Please try again.</source>
+            <output>Sono state approvate Nessuna parola chiave di ricerca. Riprova.</output>
+        </text>
+        <text>
+            <source>System Error</source>
+            <output>Errore di sistema</output>
+        </text>
+        <text>
+            <source>404 Error</source>
+            <output>Errore 404</output>
+        </text>
+        <text>
+            <source>Your session has expired.</source>
+            <output>La sessione è scaduta.</output>
+        </text>
+        <text>
+            <source>Profile</source>
+            <output>Profilo</output>
+        </text>
+        <text>
+            <source>Thank you. You have been unsubscribed from this website.</source>
+            <output>Grazie. Sei stato annullato l'iscrizione da questo sito.</output>
+        </text>
+        <text>
+            <source>Thank you. A password reminder has been sent.</source>
+            <output>Grazie. Una nuova password è stata inviata.</output>
+        </text>
+        <text>
+            <source>Verify</source>
+            <output>Verificare</output>
+        </text>
+        <text>
+            <source>Thank you. Your email has been verified.</source>
+            <output>Grazie. La tua email è stato verificato.</output>
+        </text>
+        <text>
+            <source>Sorry. That email could not be verified.</source>
+            <output>Scusi. Che la posta elettronica non può essere verificata.</output>
+        </text>
+        <text>
+            <source>Select Type</source>
+            <output>Seleziona tipo</output>
+        </text>
+        <text>
+            <source>Installation Error</source>
+            <output>Errore di installazione</output>
+        </text>
+        <text>
+            <source>Images</source>
+            <output>Immagini</output>
+        </text>
+        <text>
+            <source>URIs &amp; Files</source>
+            <output>URI & Files</output>
+        </text>
+        <text>
+            <source>Logins</source>
+            <output>Accessi</output>
+        </text>
+        <text>
+            <source>All Sites</source>
+            <output>Tutti i siti</output>
+        </text>
+        <text>
+            <source>Updated</source>
+            <output>Aggiornato</output>
+        </text>
+        <text>
+            <source>by</source>
+            <output>Da</output>
+        </text>
+        <text>
+            <source>Change Editor:</source>
+            <output>Cambia Editor:</output>
+        </text>
+        <text>
+            <source>Clear</source>
+            <output>Chiaro</output>
+        </text>
+        <text>
+            <source>Saved</source>
+            <output>Salvato</output>
+        </text>
+        <text>
+            <source>Please correct the errors below.</source>
+            <output>Si prega di correggere gli errori di seguito.</output>
+        </text>
+        <text>
+            <source>Hide</source>
+            <output>Nascondere</output>
+        </text>
+        <text>
+            <source>You are about to leave this page and have unsaved changes. Are you sure?</source>
+            <output>Si stanno per lasciare questa pagina e avere modifiche non salvate. Sei sicuro?</output>
+        </text>
+        <text>
+            <source>Your session is about to end.</source>
+            <output>La sessione sta per finire.</output>
+        </text>
+        <text>
+            <source>Continue</source>
+            <output>Continuare</output>
+        </text>
+        <text>
+            <source>The title field is required.</source>
+            <output>Il campo è obbligatorio titolo.</output>
+        </text>
+        <text>
+            <source>Edit This Page</source>
+            <output>Modifica questa pagina</output>
+        </text>
     </locale>
 </language>

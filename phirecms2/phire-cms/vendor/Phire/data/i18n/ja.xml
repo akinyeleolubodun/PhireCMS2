@@ -1419,5 +1419,141 @@
             <source>Thank You</source>
             <output>ありがとうございました</output>
         </text>
+        <text>
+            <source>Default</source>
+            <output>デフォルト</output>
+        </text>
+        <text>
+            <source>URI Type</source>
+            <output>URIタイプ</output>
+        </text>
+        <text>
+            <source>SUBMIT</source>
+            <output>提出する</output>
+        </text>
+        <text>
+            <source>Submit</source>
+            <output>提出する</output>
+        </text>
+        <text>
+            <source>UNSUBSCRIBE</source>
+            <output>登録解除</output>
+        </text>
+        <text>
+            <source>Unsubscribe</source>
+            <output>登録解除</output>
+        </text>
+        <text>
+            <source>No search keywords were passed. Please try again.</source>
+            <output>いいえ、検索キーワードが渡されませんでした。もう一度やり直してください。</output>
+        </text>
+        <text>
+            <source>System Error</source>
+            <output>システムエラー</output>
+        </text>
+        <text>
+            <source>404 Error</source>
+            <output>404エラー</output>
+        </text>
+        <text>
+            <source>Your session has expired.</source>
+            <output>セッションの有効期限が切れています。</output>
+        </text>
+        <text>
+            <source>Profile</source>
+            <output>プロフィール</output>
+        </text>
+        <text>
+            <source>Thank you. You have been unsubscribed from this website.</source>
+            <output>ありがとう。このウェブサイトの登録を解除しました。</output>
+        </text>
+        <text>
+            <source>Thank you. A password reminder has been sent.</source>
+            <output>ありがとう。パスワードリマインダが送信されています。</output>
+        </text>
+        <text>
+            <source>Verify</source>
+            <output>確認する</output>
+        </text>
+        <text>
+            <source>Thank you. Your email has been verified.</source>
+            <output>ありがとう。あなたのメールアドレスは確認されています。</output>
+        </text>
+        <text>
+            <source>Sorry. That email could not be verified.</source>
+            <output>申し訳ありません。そのメールを確認できませんでした。</output>
+        </text>
+        <text>
+            <source>Select Type</source>
+            <output>タイプを選択</output>
+        </text>
+        <text>
+            <source>Installation Error</source>
+            <output>取付誤差</output>
+        </text>
+        <text>
+            <source>Images</source>
+            <output>イメージズ</output>
+        </text>
+        <text>
+            <source>URIs &amp; Files</source>
+            <output>URIのとファイル</output>
+        </text>
+        <text>
+            <source>Logins</source>
+            <output>ログインを</output>
+        </text>
+        <text>
+            <source>All Sites</source>
+            <output>全てのサイト</output>
+        </text>
+        <text>
+            <source>Updated</source>
+            <output>更新した</output>
+        </text>
+        <text>
+            <source>by</source>
+            <output>バイ</output>
+        </text>
+        <text>
+            <source>Change Editor:</source>
+            <output>エディタを変更します。</output>
+        </text>
+        <text>
+            <source>Clear</source>
+            <output>明確な</output>
+        </text>
+        <text>
+            <source>Saved</source>
+            <output>保存</output>
+        </text>
+        <text>
+            <source>Please correct the errors below.</source>
+            <output>次のエラーを修正してください。</output>
+        </text>
+        <text>
+            <source>Hide</source>
+            <output>隠す</output>
+        </text>
+        <text>
+            <source>You are about to leave this page and have unsaved changes. Are you sure?</source>
+            <output>このページを出ようとしており、保存されていない変更があります。本当に？</output>
+        </text>
+        <text>
+            <source>Your session is about to end.</source>
+            <output>あなたのセッションは終了しようとしている。</output>
+        </text>
+        <text>
+            <source>Continue</source>
+            <output>続ける</output>
+        </text>
+        <text>
+            <source>The title field is required.</source>
+            <output>タイトルフィールドは必須です。</output>
+        </text>
+        <text>
+            <source>Edit This Page</source>
+            <output>このページを編集</output>
+        </text>
     </locale>
 </language>
