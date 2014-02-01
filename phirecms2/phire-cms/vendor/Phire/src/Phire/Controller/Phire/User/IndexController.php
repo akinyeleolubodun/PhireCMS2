@@ -55,9 +55,10 @@ class IndexController extends AbstractController
         $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Users'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Users'));
 
         $user = new Model\User(array('acl' => $this->project->getService('acl')));
 
@@ -91,7 +92,7 @@ class IndexController extends AbstractController
 
         // Select user type
         if (null === $this->request->getPath(1)) {
-            $this->view->set('title', 'Users ' . $this->view->separator . ' Select Type');
+            $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Select Type'));
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                 '0', false, 0, $this->project->getService('acl')
@@ -124,7 +125,7 @@ class IndexController extends AbstractController
 
             // If user type is valid
             if (isset($type->id)) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $this->view->separator . ' Add')
+                $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)) . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'))
                            ->set('typeId', $type->id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -196,7 +197,7 @@ class IndexController extends AbstractController
 
             // If user is found and valid
             if (null !== $user->id) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username)
+                $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username)
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -273,7 +274,7 @@ class IndexController extends AbstractController
 
             // If user is found and valid
             if (null !== $user->id) {
-                $this->view->set('title', 'Users ' . $this->view->separator . ' Type ' . $this->view->separator . ' ' . $user->username)
+                $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Type') .' ' . $this->view->separator . ' ' . $user->username)
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -333,7 +334,7 @@ class IndexController extends AbstractController
 
                 $user = new Model\User();
                 $user->getLoginsById($this->request->getPath(1));
-                $this->view->set('title', 'Users ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' Logins ' . $this->view->separator . ' ' . $user->username)
+                $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Logins') . ' ' . $this->view->separator . ' ' . $user->username)
                            ->set('typeId', $user->type_id)
                            ->set('table', $user->table);
                 $this->send();
@@ -402,7 +403,7 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

@@ -46,7 +46,7 @@
 
 #phire-nav li > a {
     margin: 0;
-    padding: 6px 30px 3px 30px;
+    padding: 5px 30px 4px 30px;
     display: block;
     float: left;
     height: 17px;
@@ -93,10 +93,10 @@
 
 #phire-nav li > ul > li > a {
     margin: 0;
-    padding: 6px 5px 3px 15px;
+    padding: 5px 5px 4px 15px;
     color: #fff;
     display: block;
-    width: 120px;
+    width: 140px;
     min-height: 15px;
     font-family: "Open Sans", arial, helvetica, verdana, sans-serif;
     font-size: 10px;
@@ -108,10 +108,10 @@
 
 #phire-nav li > ul > li > a:hover {
     text-align: left;
-    color: #bce6ff;
+    color: #dbd9d9;
     font-family: "Open Sans", arial, helvetica, verdana, sans-serif;
     font-weight: normal;
-    background-color: #1392db;
+    background-color: #6b6968;
     text-decoration: underline;
 }
 
@@ -121,7 +121,7 @@
     margin: 0;
     padding: 0;
     top: 0;
-    left: 140px;
+    left: 160px;
     z-index: 100000;
     background-color: #000;
 }

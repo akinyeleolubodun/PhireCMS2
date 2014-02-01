@@ -163,14 +163,14 @@ class UserRole extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_roles" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -192,8 +192,8 @@ class UserRole extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=id">#</a>',
-                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=type">Type</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=name">Role</a>',
+                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=type">' . $this->i18n->__('Type') . '</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=name">' . $this->i18n->__('Role') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

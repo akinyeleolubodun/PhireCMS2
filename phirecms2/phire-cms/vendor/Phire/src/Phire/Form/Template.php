@@ -4,12 +4,11 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
 use Phire\Table;
 
-class Template extends Form
+class Template extends AbstractForm
 {
 
     /**
@@ -58,8 +57,8 @@ class Template extends Form
      */
     public function __construct($action = null, $method = 'post', $tid = 0)
     {
-        $this->initFieldsValues = $this->getInitFields($tid);
         parent::__construct($action, $method, null, '        ');
+        $this->initFieldsValues = $this->getInitFields($tid);
         $this->setAttributes('id', 'template-form');
     }
 
@@ -80,45 +79,24 @@ class Template extends Form
             $tmpl = Table\Templates::findBy(array('name' => $this->name));
             if (isset($tmpl->id) && ($this->id != $tmpl->id)) {
                 $this->getElement('name')
-                     ->addValidator(new Validator\NotEqual($this->name, 'That template name already exists. The name must be unique.'));
+                     ->addValidator(new Validator\NotEqual($this->name, $this->i18n->__('That template name already exists. The name must be unique.')));
             }
 
             if ($this->parent_id != '0') {
                 $tmpl = Table\Templates::findBy(array('device' => $this->device, 'parent_id' => $this->parent_id));
                 if (isset($tmpl->id) && ($this->id != $tmpl->id)) {
                     $this->getElement('device')
-                         ->addValidator(new Validator\NotEqual($this->device, 'That device is already to that template set.'));
+                         ->addValidator(new Validator\NotEqual($this->device, $this->i18n->__('That device is already added to that template.')));
                 }
                 $tmpl = Table\Templates::findBy(array('device' => $this->device, 'id' => $this->parent_id));
                 if (isset($tmpl->id) && ($this->id != $tmpl->id)) {
                     $this->getElement('device')
-                         ->addValidator(new Validator\NotEqual($this->device, 'That device is already to that template set.'));
+                         ->addValidator(new Validator\NotEqual($this->device, $this->i18n->__('That device is already added to that template.')));
                 }
             }
         }
 
-        // Check for global file setting configurations
-        if ($_FILES) {
-            $config = \Phire\Table\Config::getSystemConfig();
-            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
-
-            foreach ($_FILES as $key => $value) {
-                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
-                    $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
-                } else if ($value['error'] != 4) {
-                    if ($value['size'] > $config->media_max_filesize) {
-                        $this->getElement($key)
-                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
-                    }
-                    if (preg_match($regex, $value['name']) == 0) {
-                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
-                        $this->getElement($key)
-                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
-                    }
-                }
-            }
-        }
+        $this->checkFiles();
 
         return $this;
     }
@@ -145,7 +123,7 @@ class Template extends Form
         $fields1 = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => 'Name:',
+                'label'      => $this->i18n->__('Name') . ':',
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 110
@@ -174,7 +152,7 @@ class Template extends Form
         $fields3 = array(
             'template' => array(
                 'type'       => 'textarea',
-                'label'      => 'Template:',
+                'label'      => $this->i18n->__('Template') . ':',
                 'required'   => true,
                 'attributes' => array(
                     'rows'    => 25,
@@ -186,14 +164,14 @@ class Template extends Form
         $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'value' => 'SAVE',
+                'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class'   => 'save-btn'
                 )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'UPDATE',
+                'value'      => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#template-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
@@ -209,7 +187,7 @@ class Template extends Form
             ),
             'parent_id' => array(
                 'type'       => 'select',
-                'label'      => 'Parent:',
+                'label'      => $this->i18n->__('Parent') . ':',
                 'value'      => $parents,
                 'attributes' => array(
                     'style'    => 'width: 200px;'
@@ -217,7 +195,7 @@ class Template extends Form
             ),
             'content_type' => array(
                 'type'  => 'select',
-                'label' => 'Content Type:',
+                'label' => $this->i18n->__('Content Type') . ':',
                 'value' => self::$contentTypes,
                 'attributes' => array(
                     'style'    => 'width: 200px;'
@@ -225,7 +203,7 @@ class Template extends Form
             ),
             'device' => array(
                 'type'  => 'select',
-                'label' => 'Device:',
+                'label' => $this->i18n->__('Device') . ':',
                 'value' => self::$mobileTemplates,
                 'attributes' => array(
                     'style'    => 'width: 200px;'

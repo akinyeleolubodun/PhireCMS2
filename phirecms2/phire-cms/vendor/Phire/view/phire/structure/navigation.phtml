@@ -2,14 +2,14 @@
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'add')): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation/add">+ Add</a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation/add">+ <?php $i18n->_e('Add'); ?></a>
 <?php endif; ?>
 <?php if (isset($form)): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation">Back</a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation"><?php $i18n->_e('Back'); ?></a>
 <?php echo $form;
 elseif (isset($navigation) && isset($navigation[0])): ?>
             <table class="data-table" cellpadding="0" cellspacing="0" border="0">
-                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th>&nbsp;</th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation">Navigation</a></th><th class="last-th">&nbsp;</th></tr>
+                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th>&nbsp;</th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation"><?php $i18n->_e('Navigation'); ?></a></th><th class="last-th">&nbsp;</th></tr>
 <?php foreach ($navigation as $nav):
     $navDiv = null;
     $expand = ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))) ? '<a href="#" onclick="$(\'#nav-div-' . $nav['nav']->id . '\').toggle(); return false;">[+]</a>&nbsp;' : '&nbsp;';
@@ -19,7 +19,7 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
         '<a href="' . BASE_PATH . APP_URI .'/structure/navigation/edit/' . $nav['nav']->id . '">' . $nav['nav']->navigation . '</a>' : $nav['nav']->navigation;
 
     if ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))):
-        $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div"><strong>Parent / Order</strong><br />';
+        $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div"><strong>' . $i18n->__('Parent') . ' / ' . $i18n->__('Order') . '</strong><br />';
         $navDiv .= '<form action="' . BASE_PATH .'/phire/structure/navigation/process/' . $nav['nav']->id . '" method="post">';
         foreach ($nav['children'] as $c):
             $parents = ($c['isCategory']) ? $nav['catParents'] : $nav['contParents'];
@@ -36,19 +36,14 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
             $select->setAttributes('style', 'padding: 1px; margin: 2px 2px 2px 0; width: 180px;');
             $navDiv .= '<div style="margin: 6px 0 6px 0;">' . $select . '<input type="text" style="margin: 0 5px 0 0; padding: 2px; font-size: 1.0em; text-align: center;" name="' . $prefix . 'navigation_order_' . $c['navigation_id'] . '_' . $c['content_id'] . '" size="2" value="' . $c['order'] . '" /> ' . $c['title'] . '</div>';
         endforeach;
-        $navDiv .= '<input style="float: left;" class="small-save-btn" type="submit" name="submit" value="SAVE" /> <input style="float: left; margin: 3px 5px 0 15px;" type="checkbox" name="rm_nav" value="' . $nav['nav']->id . '" /> <span style="float: left; margin: 4px 0 0 0;">Remove?</span></form></div>';
+        $navDiv .= '<input style="float: left;" class="small-save-btn" type="submit" name="submit" value="' . $i18n->__('SAVE') . '" /> <input style="float: left; margin: 3px 5px 0 15px;" type="checkbox" name="rm_nav" value="' . $nav['nav']->id . '" /> <span style="float: left; margin: 4px 0 0 0;">' . $i18n->__('Remove') . '?</span></form></div>';
     endif;
 ?>
                 <tr><td class="first-td vert-top"><?php echo $nav['nav']->id; ?></td><td class="vert-top" style="width: 2%;"><?php echo $expand; ?></td><td class="vert-top"><?php echo $edit . $navDiv; ?></td><td class="last-td vert-top">&nbsp;</td></tr>
 <?php endforeach; ?>
-<?php if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'process')): ?>
                 <tr class="table-bottom-row"><td colspan="4" class="table-bottom-row"><div class="page-links"></div></td></tr>
             </table>
 <?php else: ?>
-                <tr class="table-bottom-row"><td colspan="4" class="table-bottom-row"><div class="page-links"></div></td></tr>
-            </table>
-<?php endif; ?>
-<?php else: ?>
-        <p style="clear: left; padding: 15px 0 0 0;">There is currently no navigation.</p>
+        <p style="clear: left; padding: 15px 0 0 0;"><?php $i18n->_e('There is currently no navigation.'); ?></p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

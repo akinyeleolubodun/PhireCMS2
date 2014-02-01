@@ -4,12 +4,11 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Validator;
 use Phire\Model;
 use Phire\Table;
 
-class Field extends Form
+class Field extends AbstractForm
 {
 
     /**
@@ -58,8 +57,8 @@ class Field extends Form
      */
     public function __construct($action = null, $method = 'post', $id = 0, $config = null)
     {
-        $this->initFieldsValues = $this->getInitFields($id, $config);
         parent::__construct($action, $method, null, '        ');
+        $this->initFieldsValues = $this->getInitFields($id, $config);
         $this->setAttributes('id', 'field-form');
     }
 
@@ -78,11 +77,11 @@ class Field extends Form
         if ($_POST) {
             if ((strpos($this->type, 'history') !== false) && ($this->group_id != '0')) {
                 $this->getElement('group_id')
-                     ->addValidator(new Validator\NotEqual($this->group_id, 'A field with history tracking cannot be assigned to a dynamic field group.'));
+                     ->addValidator(new Validator\NotEqual($this->group_id, $this->i18n->__('A field with history tracking cannot be assigned to a field group.')));
             }
             if (($this->editor != 'source') && ($this->group_id != '0')) {
                 $this->getElement('group_id')
-                     ->addValidator(new Validator\NotEqual($this->group_id, 'An editor cannot be used on a field assigned to a dynamic field group.'));
+                     ->addValidator(new Validator\NotEqual($this->group_id, $this->i18n->__('An editor cannot be used on a field assigned to a field group.')));
             }
         }
     }
@@ -153,7 +152,7 @@ class Field extends Form
                         );
                         $fields2['validator_remove_cur_' . $i] = array(
                             'type'       => 'checkbox',
-                            'value'      => array('Yes' => 'Remove?')
+                            'value'      => array('Yes' => $this->i18n->__('Remove') . '?')
                         );
                         $i++;
                     }
@@ -165,7 +164,7 @@ class Field extends Form
         $fields1 = array(
             'type' => array(
                 'type'       => 'select',
-                'label'      => 'Field Type:',
+                'label'      => $this->i18n->__('Field Type') . ':',
                 'required'   => true,
                 'value'      => array(
                     'text'             => 'text',
@@ -193,33 +192,33 @@ class Field extends Form
             ),
             'name' => array(
                 'type'       => 'text',
-                'label'      => 'Field Name:',
+                'label'      => $this->i18n->__('Field Name') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 64)
             ),
             'label' => array(
                 'type'       => 'text',
-                'label'      => 'Field Label:',
+                'label'      => $this->i18n->__('Field Label') . ':',
                 'attributes' => array('size' => 64)
             ),
             'values' => array(
                 'type'       => 'text',
-                'label'      => 'Field Values: <span style="font-size: 0.9em; font-weight: normal;">(Pipe delimited)</span>',
+                'label'      => $this->i18n->__('Field Values') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . '</span>',
                 'attributes' => array('size' => 64)
             ),
             'default_values' => array(
                 'type'       => 'text',
-                'label'      => 'Default Field Values: <span style="font-size: 0.9em; font-weight: normal;">(Pipe delimited)</span>',
+                'label'      => $this->i18n->__('Default Field Values') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . ')</span>',
                 'attributes' => array('size' => 64)
             ),
             'attributes' => array(
                 'type'       => 'text',
-                'label'      => 'Field Attributes:',
+                'label'      => $this->i18n->__('Field Attributes') . ':',
                 'attributes' => array('size' => 64)
             ),
             'validator_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> Field Validators:<br /><span style="font-size: 0.9em;">(Type / Value / Message)</span>',
+                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> ' . $this->i18n->__('Field Validators') . ':<br /><span style="font-size: 0.9em;">(' . $this->i18n->__('Type / Value / Message') . '</span>',
                 'value'      => $this->validators,
                 'attributes' => array(
                     'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 28px;'
@@ -248,7 +247,7 @@ class Field extends Form
 
         $fields3['model_new_1'] = array(
             'type'       => 'select',
-            'label'      => '<a href="#" onclick="phire.addModel(); return false;">[+]</a> Model &amp; Type:',
+            'label'      => '<a href="#" onclick="phire.addModel(); return false;">[+]</a> ' . $this->i18n->__('Model &amp; Type') . ':',
             'value'      => $models,
             'attributes' => array(
                 'style'    => 'display: block; margin: 0 0 4px 0;',
@@ -302,14 +301,14 @@ class Field extends Form
 
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'value' => 'SAVE',
+            'value' => $this->i18n->__('SAVE'),
             'attributes' => array(
                 'class' => 'save-btn'
             )
         );
         $fields4['update'] = array(
             'type'       => 'button',
-            'value'      => 'UPDATE',
+            'value'      => $this->i18n->__('UPDATE'),
             'attributes' => array(
                 'onclick' => "return phire.updateForm('#field-form', true);",
                 'class' => 'update-btn'
@@ -317,13 +316,13 @@ class Field extends Form
         );
         $fields4['order'] = array(
             'type'       => 'text',
-            'label'      => 'Order:',
+            'label'      => $this->i18n->__('Order') . ':',
             'value'      => 0,
             'attributes' => array('size' => 3)
         );
         $fields4['group_id'] = array(
             'type'   => 'select',
-            'label'  => 'Field Group:',
+            'label'  => $this->i18n->__('Field Group') . ':',
             'value'  => $groups,
             'attributes' => array(
                 'style' => 'display: block; min-width: 150px;'
@@ -331,7 +330,7 @@ class Field extends Form
         );
         $fields4['encryption'] = array(
             'type'       => 'select',
-            'label'  => 'Encryption:',
+            'label'  => $this->i18n->__('Encryption') . ':',
             'value' => array(
                 '0' => 'None',
                 '1' => 'MD5',
@@ -350,10 +349,10 @@ class Field extends Form
         );
         $fields4['required'] = array(
             'type'   => 'select',
-            'label'  => 'Required:',
+            'label'  => $this->i18n->__('Required') . ':',
             'value'  => array(
-                '0' => 'No',
-                '1' => 'Yes'
+                '0' => $this->i18n->__('No'),
+                '1' => $this->i18n->__('Yes')
             ),
             'marked' => 0
         );

@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../header.phtml'; ?>
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">Back</a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>"><?php $i18n->_e('Back'); ?></a>
 <?php
 if (isset($form)):
     if (isset($error))

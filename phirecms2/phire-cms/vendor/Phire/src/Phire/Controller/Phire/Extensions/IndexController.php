@@ -64,6 +64,9 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav'),
             'title'    => 'Extensions'
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Extensions'));
+
         $this->send();
     }
 
@@ -84,13 +87,13 @@ class IndexController extends AbstractController
         $ext->getThemes();
 
         if (null === $this->request->getPath(1)) {
-            $this->view->set('title', 'Extensions ' . $this->view->separator . ' Themes');
+            $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Themes'));
             $this->view->merge($ext->getData());
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installThemes();
             if (null !== $ext->error) {
-                $this->view->set('title', 'Extensions ' . $this->view->separator . ' Themes ' . $this->view->separator . ' Installation Error');
+                $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Themes') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Installation Error'));
                 $this->view->merge($ext->getData());
                 $this->send();
             } else {
@@ -121,13 +124,13 @@ class IndexController extends AbstractController
         $ext->getModules($this->project);
 
         if (null === $this->request->getPath(1)) {
-            $this->view->set('title', 'Extensions ' . $this->view->separator . ' Modules');
+            $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Modules'));
             $this->view->merge($ext->getData());
             $this->send();
         } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
             $ext->installModules();
             if (null !== $ext->error) {
-                $this->view->set('title', 'Extensions ' . $this->view->separator . ' Modules ' . $this->view->separator . ' Installation Error');
+                $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Modules') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Installation Error'));
                 $this->view->merge($ext->getData());
                 $this->send();
             } else {
@@ -154,7 +157,7 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send();
     }

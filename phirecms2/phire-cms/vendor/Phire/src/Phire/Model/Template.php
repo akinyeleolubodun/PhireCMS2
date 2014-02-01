@@ -249,14 +249,14 @@ class Template extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_templates" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -272,8 +272,8 @@ class Template extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=id">#</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=name">Name</a>',
-                    'copy'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">Copy</span>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=name">' . $this->i18n->__('Name') . '</a>',
+                    'copy'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Copy') . '</span>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

@@ -305,13 +305,15 @@ class Project extends P
     public static function editor($controller)
     {
         $model = $controller->getView()->getData();
+        $i18n = Table\Config::getI18n();
+
         if ((get_class($controller) == 'Phire\Controller\IndexController') &&
             ($model['incontent_editing'])) {
             if (isset($model['phireNav'])) {
                 $body = $controller->getResponse()->getBody();
                 $phireNav = $model['phireNav'];
                 $phireNav->addBranch(array(
-                    'name' => 'Edit This Page',
+                    'name' => $i18n->__('Edit This Page'),
                     'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->get('id') . '?live=1',
                     'acl'  => array(
                         'resource'   => 'Phire\Controller\Phire\Content\IndexController',

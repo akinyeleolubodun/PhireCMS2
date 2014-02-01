@@ -60,7 +60,7 @@ class FieldsController extends AbstractController
 
         $field = new Model\Field(array('acl' => $this->project->getService('acl')));
         $field->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields')
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields'))
                    ->set('table', $field->table);
         $this->send();
     }
@@ -78,7 +78,7 @@ class FieldsController extends AbstractController
             'phireNav' => $this->project->getService('phireNav'),
         ));
 
-        $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
 
         $form = new Form\Field(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -139,7 +139,7 @@ class FieldsController extends AbstractController
 
             // If field is found and valid
             if (isset($field->id)) {
-                $this->view->set('title', 'Structure ' . $this->view->separator . ' Fields ' . $this->view->separator . ' ' . $field->name);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $field->name);
                 $form = new Form\Field(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $field->id, $this->project->module('Phire')
@@ -266,9 +266,14 @@ class FieldsController extends AbstractController
     {
         if ((null !== $this->request->getPath(1) && (null !== $this->request->getQuery('editor')))) {
             $this->prepareView($this->viewPath . '/browser.phtml', array(
-                'title'  => ($this->request->getPath(1) == 'image') ? 'Images' : 'URIs &amp; Files',
                 'editor' => $this->request->getQuery('editor')
             ));
+
+            if ($this->request->getPath(1) == 'image') {
+                $this->view->set('title', $this->view->i18n->__('Images'));
+            } else {
+                $this->view->set('title', $this->view->i18n->__('URIs &amp; Files'));
+            }
 
             $field = new Model\Field();
 
@@ -316,7 +321,7 @@ class FieldsController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

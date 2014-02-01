@@ -50,7 +50,7 @@ class User extends AbstractModel
                 if (isset($otherSession->rows[0])) {
                     foreach ($otherSession->rows as $other) {
                         if ($other->id != $sessionId) {
-                            $sess->sessionError = 'Another user is currently logged in as <strong>' . $username . '</strong> from ' . $other->ip . '.';
+                            $sess->sessionError = $this->i18n->__('Another user is currently logged in as %1 from %2.', array('<strong>' . $username . '</strong>', $other->ip));
                         }
                     }
                 }
@@ -189,14 +189,14 @@ class User extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_users" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -245,10 +245,10 @@ class User extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'          => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=id">#</a>',
-                    'name'        => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=name">Role</a>',
-                    'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username">Username</a>',
-                    'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email">Email</a>',
-                    'login_count' => 'Logins',
+                    'name'        => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=name">' . $this->i18n->__('Role') . '</a>',
+                    'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username">' . $this->i18n->__('Username') . '</a>',
+                    'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email">' . $this->i18n->__('Email') . '</a>',
+                    'login_count' => $this->i18n->__('Logins'),
                     'process'     => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -372,13 +372,13 @@ class User extends AbstractModel
                 'process' => '&nbsp;',
                 'submit'  => array(
                     'class' => 'remove-btn',
-                    'value' => 'Clear'
+                    'value' => $this->i18n->__('Clear')
                 )
             ),
             'table' => array(
                 'headers' => array(
                     'id'          => '#',
-                    'ip_address'  => 'IP Address',
+                    'ip_address'  => $this->i18n->__('IP Address'),
                     'process'     => '&nbsp;'
                 ),
                 'class'       => 'data-table',
@@ -606,8 +606,22 @@ class User extends AbstractModel
                 $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/unsubscribe.txt');
             }
 
+            $mailTmpl = str_replace(
+                array(
+                    'Dear',
+                    'You have been successfully unsubscribed from',
+                    'Thank You'
+                ),
+                array(
+                    $this->i18n->__('Dear'),
+                    $this->i18n->__('You have been successfully unsubscribed from'),
+                    $this->i18n->__('Thank You')
+                ),
+                $mailTmpl
+            );
+
             // Send email verification
-            $mail = new Mail($domain . ' - Unsubscribed', $rcpt);
+            $mail = new Mail($domain . ' - ' . $this->i18n('Unsubscribed'), $rcpt);
             $mail->from('noreply@' . $domain);
             $mail->setText($mailTmpl);
             $mail->send();
@@ -663,8 +677,24 @@ class User extends AbstractModel
             $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/approval.txt');
         }
 
+        $mailTmpl = str_replace(
+            array(
+                'Dear',
+                'You have been approved and granted access to',
+                'You can now login to the website at:',
+                'Thank You'
+            ),
+            array(
+                $this->i18n->__('Dear'),
+                $this->i18n->__('You have been approved and granted access to'),
+                $this->i18n->__('You can now login to the website at:'),
+                $this->i18n->__('Thank You')
+            ),
+            $mailTmpl
+        );
+
         // Send email verification
-        $mail = new Mail($domain . ' - Access Granted', $rcpt);
+        $mail = new Mail($domain . ' - ' . $this->i18n->__('Access Granted'), $rcpt);
         $mail->from('noreply@' . $domain);
         $mail->setText($mailTmpl);
         $mail->send();
@@ -698,8 +728,24 @@ class User extends AbstractModel
             $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/verify.txt');
         }
 
+        $mailTmpl = str_replace(
+            array(
+                'Dear',
+                'Thank you for taking the time to register with',
+                'Once you are approved, you will be able to login to the website at:',
+                'Thank You'
+            ),
+            array(
+                $this->i18n->__('Dear'),
+                $this->i18n->__('Thank you for taking the time to register with'),
+                $this->i18n->__('Once you are approved, you will be able to login to the website at:'),
+                $this->i18n->__('Thank You')
+            ),
+            $mailTmpl
+        );
+
         // Send email verification
-        $mail = new Mail($domain . ' - Email Verification', $rcpt);
+        $mail = new Mail($domain . ' - ' . $this->i18n->__('Email Verification'), $rcpt);
         $mail->from('noreply@' . $domain);
         $mail->setText($mailTmpl);
         $mail->send();
@@ -724,11 +770,11 @@ class User extends AbstractModel
             if ($type->password_encryption == Auth\Auth::ENCRYPT_NONE) {
                 $newPassword = $this->password;
                 $newEncPassword = $newPassword;
-                $msg = 'Your username and password is:';
+                $msg = $this->i18n->__('Your username and password is:');
             } else {
                 $newPassword = (string)String::random(8, String::ALPHANUM);
                 $newEncPassword = self::encryptPassword($newPassword, $type->password_encryption, $encOptions);
-                $msg = 'Your password has been reset for security reasons. Your username and new password is:';
+                $msg = $this->i18n->__('Your password has been reset for security reasons. Your username and new password is:');
             }
 
             // Save new password
@@ -756,8 +802,24 @@ class User extends AbstractModel
                 $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/forgot.txt');
             }
 
+            $mailTmpl = str_replace(
+                array(
+                    'Dear',
+                    'Here is your password for',
+                    'You can login at:',
+                    'Thank You'
+                ),
+                array(
+                    $this->i18n->__('Dear'),
+                    $this->i18n->__('Here is your password for'),
+                    $this->i18n->__('You can login at:'),
+                    $this->i18n->__('Thank You')
+                ),
+                $mailTmpl
+            );
+
             // Send reminder
-            $mail = new Mail($domain . ' - Password Reset', $rcpt);
+            $mail = new Mail($domain . ' - ' . $this->i18n->__('Password Reset'), $rcpt);
             $mail->from('noreply@' . $domain);
             $mail->setText($mailTmpl);
             $mail->send();
@@ -884,14 +946,14 @@ class User extends AbstractModel
             $noreply = 'noreply@' . $domain;
 
             $options = array(
-                'subject' => 'Phire CMS ' . ucfirst(strtolower($type->type)) . ' Login Notification (' . $domain . ')',
+                'subject' => 'Phire CMS ' . ucfirst(strtolower($type->type)) . ' ' . $this->i18n->__('Login Notification') . ' (' . $domain . ')',
                 'headers' => array(
                     'From'       => $noreply . ' <' . $noreply . '>',
                     'Reply-To'   => $noreply . ' <' . $noreply . '>'
                 )
             );
 
-            $msg = "Someone has logged in as a " . strtolower($type->type) . " from " . $_SERVER['REMOTE_ADDR'] . " using '" . $user->username . "'.";
+            $msg = $this->i18n->__('Someone has logged in as a %1 from %2 using %3.', array(strtolower($type->type), $_SERVER['REMOTE_ADDR'], $user->username));
 
             $logger = new Log\Logger(new Log\Writer\Mail($emails));
             $logger->notice($msg, $options);

@@ -27,14 +27,14 @@ class ContentType extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -56,7 +56,7 @@ class ContentType extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=id">#</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=name">Name</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=name">' . $this->i18n->__('Name') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

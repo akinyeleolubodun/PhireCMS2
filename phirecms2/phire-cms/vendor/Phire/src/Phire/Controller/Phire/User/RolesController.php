@@ -55,9 +55,10 @@ class RolesController extends AbstractController
         $this->prepareView($this->viewPath . '/roles.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'User Roles'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('User Roles'));
 
         $role = new Model\UserRole(array('acl' => $this->project->getService('acl')));
         $role->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -78,7 +79,7 @@ class RolesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'User Roles ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('User Roles') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
 
         $form = new Form\UserRole(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -145,7 +146,7 @@ class RolesController extends AbstractController
 
             // If role is found and valid
             if (isset($role->name)) {
-                $this->view->set('title', 'User Roles ' . $this->view->separator . ' ' . $role->name);
+                $this->view->set('title', $this->view->i18n->__('User Roles') . ' ' . $this->view->separator . ' ' . $role->name);
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $role->id, $this->project->module('Phire')
@@ -260,7 +261,7 @@ class RolesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

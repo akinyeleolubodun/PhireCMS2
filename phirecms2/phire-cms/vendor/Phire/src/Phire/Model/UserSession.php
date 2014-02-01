@@ -51,14 +51,14 @@ class UserSession extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_sessions" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -80,12 +80,12 @@ class UserSession extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'         => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=id">#</a>',
-                    'type'       => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=type">Type</a>',
-                    'username'   => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=type">Username</a>',
-                    'ip'         => 'IP',
-                    'ua'         => 'User Agent',
-                    'started'    => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">Started</a>',
-                    'last_date'  => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=last">Last Action</a>',
+                    'type'       => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=type">' . $this->i18n->__('Type') . '</a>',
+                    'username'   => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=type">' . $this->i18n->__('Username') . '</a>',
+                    'ip'         => $this->i18n->__('IP'),
+                    'ua'         => $this->i18n->__('User Agent'),
+                    'started'    => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">' . $this->i18n->__('Started') . '</a>',
+                    'last_date'  => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=last">' . $this->i18n->__('Last Action') . '</a>',
                     'process'    => $removeCheckAll
                 ),
                 'class'       => 'data-table',

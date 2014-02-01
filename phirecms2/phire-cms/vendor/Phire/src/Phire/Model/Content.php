@@ -247,7 +247,7 @@ class Content extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="process_content" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Process',
+                'value' => $this->i18n->__('Process'),
                 'style' => 'float: right;'
             );
         } else {
@@ -255,7 +255,7 @@ class Content extends AbstractModel
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Process',
+                'value' => $this->i18n->__('Process'),
                 'style' => 'display: none;'
             );
         }
@@ -264,25 +264,25 @@ class Content extends AbstractModel
         if ($contentType->uri) {
             $headers = array(
                 'id'           => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=id">#</a>',
-                'site_id'      => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=site_id">Site</a>',
-                'title'        => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=title">Title</a>',
-                'created_date' => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=created">Created</a>',
-                'status'       => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=status">Status</a>',
-                'uri'          => 'URI',
-                'username'     => 'Author',
-                'copy'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">Copy</span>',
+                'site_id'      => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=site_id">' . $this->i18n->__('Site') . '</a>',
+                'title'        => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=title">' . $this->i18n->__('Title') . '</a>',
+                'created_date' => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=created">' . $this->i18n->__('Created') . '</a>',
+                'status'       => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=status">' . $this->i18n->__('Status') . '</a>',
+                'uri'          => $this->i18n->__('URI'),
+                'username'     => $this->i18n->__('Author'),
+                'copy'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Copy') . '</span>',
                 'process'      => $removeCheckAll
             );
         } else {
             $headers = array(
                 'id'           => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=id">#</a>',
-                'site_id'      => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=site_id">Site</a>',
-                'title'        => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=title">Title</a>',
-                'created_date' => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=created">Created</a>',
-                'username'     => 'Author',
-                'status'       => 'File',
-                'size'         => 'Size',
-                'uri'          => 'URI',
+                'site_id'      => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=site_id">' . $this->i18n->__('Site') . '</a>',
+                'title'        => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=title">' . $this->i18n->__('Title') . '</a>',
+                'created_date' => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=created">' . $this->i18n->__('Created') . '</a>',
+                'username'     => $this->i18n->__('Author'),
+                'status'       => $this->i18n->__('File'),
+                'size'         => $this->i18n->__('Size'),
+                'uri'          => $this->i18n->__('URI'),
                 'process'      => $removeCheckAll
             );
         }
@@ -313,7 +313,7 @@ class Content extends AbstractModel
         $this->data['type']    = $contentType->name;
         $this->data['typeUri'] = $contentType->uri;
 
-        $status = array('<strong class="error">Unpublished</strong>', '<strong class="orange">Draft</strong>', '<strong class="green">Published</strong>');
+        $status = array('<strong class="error">' . $this->i18n->__('Unpublished') . '</strong>', '<strong class="orange">' . $this->i18n->__('Draft') . '</strong>', '<strong class="green">' . $this->i18n->__('Published') . '</strong>');
         $contentAry = array();
         $ids = array();
 
@@ -348,7 +348,7 @@ class Content extends AbstractModel
             // Add copy link
             if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy')) &&
                 ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy_' . $typeId))) {
-                $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">Copy</a>';
+                $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">' . $this->i18n->__('Copy') . '</a>';
             }
 
             if (in_array($c['site_id'], $sess->user->site_ids)) {
@@ -371,12 +371,12 @@ class Content extends AbstractModel
                     }
                 }
             }
-            $select = '<select name="content_process" id="content-process"><option value="-1">Remove</option><option value="2">Publish</option><option value="1">Draft</option><option value="0">Unpublish</option></select>';
-            $this->data['table'] = str_replace('value="Process" style="float: right;" />', 'value="Process" style="float: right;" />' . $select, $table);
+            $select = '<select name="content_process" id="content-process"><option value="-1">' . $this->i18n->__('Remove') . '</option><option value="2">' . $this->i18n->__('Publish') . '</option><option value="1">' . $this->i18n->__('Draft') . '</option><option value="0">' . $this->i18n->__('Unpublish') . '</option></select>';
+            $this->data['table'] = str_replace('value="' . $this->i18n->__('Process') . '" style="float: right;" />', 'value="' . $this->i18n->__('Process') . '" style="float: right;" />' . $select, $table);
         }
 
         $sites = Table\Sites::findAll();
-        $sitesAry = array('--' => '(All Sites)');
+        $sitesAry = array('--' => '(' . $this->i18n->__('All Sites') . ')');
 
         if (in_array(0, $this->user->site_ids)) {
             $sitesAry[0] = $_SERVER['HTTP_HOST'];
@@ -633,15 +633,15 @@ class Content extends AbstractModel
 
 
             if (($contentValues['updated'] != '0000-00-00 00:00:00') && (null !== $contentValues['updated'])) {
-                $contentValues['updated'] = '<strong>Updated:</strong> ' . date($this->config->datetime_format, strtotime($contentValues['updated']));
+                $contentValues['updated'] = '<strong>' . $this->i18n->__('Updated') . ':</strong> ' . date($this->config->datetime_format, strtotime($contentValues['updated']));
                 if (null !== $contentValues['updated_by']) {
                     $u = Table\Users::findById($contentValues['updated_by']);
                     if (isset($u->username)) {
-                        $contentValues['updated'] .= ' by <strong>' . $u->username . '</strong>';
+                        $contentValues['updated'] .= ' ' . $this->i18n->__('by') . ' <strong>' . $u->username . '</strong>';
                     }
                 }
             } else {
-                $contentValues['updated'] = '<strong>Updated:</strong> Never';
+                $contentValues['updated'] = '<strong>' . $this->i18n->__('Updated') . ':</strong> ' . $this->i18n->__('Never');
             }
 
             $contentValues['typeUri'] = $type->uri;

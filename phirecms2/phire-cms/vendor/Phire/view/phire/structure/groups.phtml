@@ -2,14 +2,14 @@
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'add')): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields/groups/add">+ Add</a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields/groups/add">+ <?php $i18n->_e('Add'); ?></a>
 <?php endif; ?>
 <?php if (isset($form)): ?>
-        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields/groups">Back</a>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/structure/fields/groups"><?php $i18n->_e('Back'); ?></a>
 <?php echo $form;
 elseif (isset($table)): ?>
 <?php echo $table;
 else: ?>
-        <p style="clear: left; padding: 15px 0 0 0;">There are currently no field groups.</p>
+        <p style="clear: left; padding: 15px 0 0 0;"><?php $i18n->_e('There are currently no field groups.'); ?></p>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

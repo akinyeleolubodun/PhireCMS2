@@ -4,11 +4,10 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form as F;
 use Pop\Validator;
 use Phire\Table;
 
-class Site extends F
+class Site extends AbstractForm
 {
 
     /**
@@ -21,6 +20,8 @@ class Site extends F
      */
     public function __construct($action = null, $method = 'post', $sid = 0)
     {
+        parent::__construct($action, $method, null, '        ');
+
         $fieldGroups = array();
         $dynamicFields = false;
 
@@ -41,25 +42,25 @@ class Site extends F
         $fields1 = array(
             'title' => array(
                 'type'       => 'text',
-                'label'      => 'Title:',
+                'label'      => $this->i18n->__('Title') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'domain' => array(
                 'type'       => 'text',
-                'label'      => 'Domain:',
+                'label'      => $this->i18n->__('Domain') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'document_root' => array(
                 'type'       => 'text',
-                'label'      => 'Document Root:',
+                'label'      => $this->i18n->__('Document Root') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'base_path' => array(
                 'type'       => 'text',
-                'label'      => 'Base Path:',
+                'label'      => $this->i18n->__('Base Path') . ':',
                 'attributes' => array('size' => 80),
                 'value'      => BASE_PATH
             )
@@ -67,14 +68,14 @@ class Site extends F
         $fields2 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'value' => 'SAVE',
+                'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class' => 'save-btn'
                 )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'UPDATE',
+                'value'      => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#site-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
@@ -82,19 +83,19 @@ class Site extends F
             ),
             'force_ssl' => array(
                 'type'     => 'radio',
-                'label'    => 'Force SSL:',
+                'label'    => $this->i18n->__('Force SSL') . ':',
                 'value' => array(
-                    '0' => 'No',
-                    '1' => 'Yes'
+                    '0' => $this->i18n->__('No'),
+                    '1' => $this->i18n->__('Yes')
                 ),
                 'marked' => '0'
             ),
             'live' => array(
                 'type'     => 'radio',
-                'label'    => 'Live:',
+                'label'    => $this->i18n->__('Live') . ':',
                 'value'    => array(
-                    '0' => 'No',
-                    '1' => 'Yes'
+                    '0' => $this->i18n->__('No'),
+                    '1' => $this->i18n->__('Yes')
                 ),
                 'marked' => '1'
             ),
@@ -115,11 +116,9 @@ class Site extends F
                 $allFields[] = $fg;
             }
         }
+
         $allFields[] = $fields1;
-
         $this->initFieldsValues = $allFields;
-
-        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'site-form');
     }
 
@@ -141,13 +140,13 @@ class Site extends F
             $site = Table\Sites::findBy(array('domain' => $this->domain));
             if ((isset($site->id) && ($this->id != $site->id)) || ($this->domain == $_SERVER['HTTP_HOST'])) {
                 $this->getElement('domain')
-                     ->addValidator(new Validator\NotEqual($this->domain, 'That site domain already exists.'));
+                     ->addValidator(new Validator\NotEqual($this->domain, $this->i18n->__('That site domain already exists.')));
             }
 
             $site = Table\Sites::findBy(array('document_root' => $this->document_root));
             if ((isset($site->id) && ($this->id != $site->id))) {
                 $this->getElement('document_root')
-                    ->addValidator(new Validator\NotEqual($this->document_root, 'That site document root already exists.'));
+                    ->addValidator(new Validator\NotEqual($this->document_root, $this->i18n->__('That site document root already exists.')));
             }
 
             $docRoot = ((substr($this->document_root, -1) == '/') || (substr($this->document_root, -1) == "\\")) ?
@@ -166,21 +165,23 @@ class Site extends F
 
             if (!file_exists($docRoot)) {
                 $this->getElement('document_root')
-                     ->addValidator(new Validator\NotEqual($this->document_root, 'That site document root does not exists.'));
+                     ->addValidator(new Validator\NotEqual($this->document_root, $this->i18n->__('That site document root does not exists.')));
             } else if (!file_exists($docRoot . $basePath)) {
                 $this->getElement('base_path')
-                     ->addValidator(new Validator\NotEqual($this->base_path, 'The base path does not exist under that document root.'));
+                     ->addValidator(new Validator\NotEqual($this->base_path, $this->i18n->__('The base path does not exist under that document root.')));
             } else if (!file_exists($docRoot . $basePath . DIRECTORY_SEPARATOR . 'index.php')) {
                 $this->getElement('base_path')
-                     ->addValidator(new Validator\NotEqual($this->base_path, 'The index controller does not exist under that document root and base path.'));
+                     ->addValidator(new Validator\NotEqual($this->base_path, $this->i18n->__('The index controller does not exist under that document root and base path.')));
             } else if (!file_exists($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
                 $this->getElement('base_path')
-                     ->addValidator(new Validator\NotEqual($this->base_path, 'The content path does not exist under that document root and base path.'));
+                     ->addValidator(new Validator\NotEqual($this->base_path, $this->i18n->__('The content path does not exist under that document root and base path.')));
             } else if (!is_writable($docRoot . $basePath . DIRECTORY_SEPARATOR . CONTENT_PATH)) {
                 $this->getElement('base_path')
-                    ->addValidator(new Validator\NotEqual($this->base_path, 'The content path is not writable under that document root and base path.'));
+                     ->addValidator(new Validator\NotEqual($this->base_path, $this->i18n->__('The content path is not writable under that document root and base path.')));
             }
         }
+
+        $this->checkFiles();
 
         return $this;
     }

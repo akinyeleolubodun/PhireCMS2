@@ -105,11 +105,13 @@ class IndexController extends C
                 } else {
                     $install->set('form', $form);
                     $this->view = View::factory($this->viewPath . '/index.phtml', $install->getData());
+                    $this->view->set('i18n', $this->i18n);
                     $this->send();
                 }
             } else {
                 $install->set('form', $form);
                 $this->view = View::factory($this->viewPath . '/index.phtml', $install->getData());
+                $this->view->set('i18n', $this->i18n);
                 $this->send();
             }
         }

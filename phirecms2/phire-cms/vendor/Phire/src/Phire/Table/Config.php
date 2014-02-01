@@ -205,7 +205,11 @@ class Config extends Record
      */
     public static function getI18n()
     {
-        $i18n = \Pop\I18n\I18n::factory(static::findById('default_language')->value);
+        $lang = static::findById('default_language')->value;
+        if (!defined('POP_LANG')) {
+            define('POP_LANG', $lang);
+        }
+        $i18n = \Pop\I18n\I18n::factory($lang);
         $i18n->loadFile(__DIR__ . '/../../../data/i18n/' . $i18n->getLanguage() . '.xml');
         return $i18n;
     }

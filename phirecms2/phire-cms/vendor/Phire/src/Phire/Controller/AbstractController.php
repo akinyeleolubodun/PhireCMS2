@@ -31,6 +31,7 @@ class AbstractController extends \Pop\Mvc\Controller
     {
         $sess = \Pop\Web\Session::getInstance();
         $config = \Phire\Table\Config::getSystemConfig();
+        $i18n = \Phire\Table\Config::getI18n();
         $this->live = (bool)$config->live;
         $jsVars = null;
 
@@ -121,6 +122,25 @@ class AbstractController extends \Pop\Mvc\Controller
                             ), 1);
                         }
                     }
+
+                    // Set the language
+                    $tree = $this->view->phireNav->getTree();
+                    foreach ($tree as $key => $value) {
+                        if (isset($value['name'])) {
+                            $tree[$key]['name'] = $i18n->__($value['name']);
+                            if (count($value['children']) > 0) {
+                                foreach ($value['children'] as $k => $v) {
+                                    if (($v['name'] == 'Fields') && isset($tree[$key]['children'][$k]['children'][0]['name'])) {
+                                        $tree[$key]['children'][$k]['children'][0]['name'] = $i18n->__($tree[$key]['children'][$k]['children'][0]['name']);
+                                    }
+                                    $tree[$key]['children'][$k]['name'] = $i18n->__($v['name']);
+
+                                }
+                            }
+                        }
+                    }
+
+                    $this->view->phireNav->setTree($tree);
                 }
 
                 $this->view->phireNav->rebuild();
@@ -137,7 +157,8 @@ class AbstractController extends \Pop\Mvc\Controller
         }
 
         // Set config object and system/site default data
-        $this->view->set('system_title', $config->system_title)
+        $this->view->set('i18n', $i18n)
+                   ->set('system_title', $config->system_title)
                    ->set('system_email', $config->system_email)
                    ->set('site_title', $config->site_title)
                    ->set('base_path', $config->base_path)

@@ -4,10 +4,9 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Validator;
 
-class FieldGroup extends Form
+class FieldGroup extends AbstractForm
 {
 
     /**
@@ -19,10 +18,12 @@ class FieldGroup extends Form
      */
     public function __construct($action = null, $method = 'post')
     {
+        parent::__construct($action, $method, null, '        ');
+
         $this->initFieldsValues = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => 'Name &amp; Order:',
+                'label'      => $this->i18n->__('Name &amp; Order') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 46)
             ),
@@ -33,10 +34,10 @@ class FieldGroup extends Form
             ),
             'dynamic' => array(
                 'type'  => 'radio',
-                'label' => 'Dynamic?',
+                'label' => $this->i18n->__('Dynamic') . '?',
                 'value' => array(
-                    '0' => 'No',
-                    '1' => 'Yes'
+                    '0' => $this->i18n->__('No'),
+                    '1' => $this->i18n->__('Yes')
                 ),
                 'marked' => '0'
             ),
@@ -51,7 +52,7 @@ class FieldGroup extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'SAVE',
+                'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class' => 'save-btn',
                     'style' => 'width: 167px;'
@@ -59,7 +60,7 @@ class FieldGroup extends Form
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'UPDATE',
+                'value'      => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#field-group-form', false);",
                     'class' => 'update-btn',
@@ -68,7 +69,6 @@ class FieldGroup extends Form
             )
         );
 
-        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'field-group-form');
     }
 

@@ -59,7 +59,7 @@ class NavigationController extends AbstractController
         ));
         $navigation = new Model\Navigation(array('acl' => $this->project->getService('acl')));
         $this->view->set('navigation', $navigation->getAll($this->request->getQuery('sort'), $this->request->getQuery('page')))
-                   ->set('title', 'Structure ' . $this->view->separator . ' Navigation');
+                   ->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Navigation'));
         $this->send();
     }
 
@@ -76,7 +76,7 @@ class NavigationController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Navigation') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
 
         $form = new Form\Navigation(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
@@ -138,7 +138,7 @@ class NavigationController extends AbstractController
 
             // If field is found and valid
             if (isset($navigation->id)) {
-                $this->view->set('title', 'Structure ' . $this->view->separator . ' Navigation ' . $this->view->separator . ' ' . $navigation->navigation);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Navigation') . ' ' . $this->view->separator . ' ' . $navigation->navigation);
                 $form = new Form\Navigation(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $navigation->id
                 );
@@ -218,7 +218,7 @@ class NavigationController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

@@ -27,6 +27,7 @@ class Field extends \Phire\Model\AbstractModel
         $groups = array();
         $dynamic = false;
         $hasFile = false;
+        $i18n = Table\Config::getI18n();
 
         // Get fields
         $fields = array();
@@ -161,7 +162,7 @@ class Field extends \Phire\Model\AbstractModel
                             $site = Table\Sites::getSite($siteId);
 
                             $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                            $fld['label'] .= ' <em>(Replace?)</em><br /><a href="http://' .
+                            $fld['label'] .= ' <em>(' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
                                 $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                 $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                 $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
@@ -171,7 +172,7 @@ class Field extends \Phire\Model\AbstractModel
                             $rmFile = array(
                                 'rm_file_' . $field->id => array(
                                     'type'=> 'checkbox',
-                                    'value' => array($fileName => 'Remove?')
+                                    'value' => array($fileName => $i18n->__('Remove') . '?')
                                 )
                             );
                         }
@@ -281,7 +282,7 @@ class Field extends \Phire\Model\AbstractModel
                         }
                         $fieldsAry['history_' . $mid . '_' . $field->id] = array(
                             'type'       => 'select',
-                            'label'      => 'Select Revision:',
+                            'label'      => $i18n->__('Select Revision:'),
                             'value'      => $history,
                             'marked'     => 0,
                             'attributes' => array(
@@ -303,7 +304,7 @@ class Field extends \Phire\Model\AbstractModel
                         }
                         $fieldsAry['editor_' . $field->id] = array(
                             'type'       => 'select',
-                            'label'      => 'Change Editor:',
+                            'label'      => $i18n->__('Change Editor:'),
                             'value'      => $editors,
                             'marked'     => $field->editor,
                             'attributes' => array(
@@ -365,12 +366,12 @@ class Field extends \Phire\Model\AbstractModel
                                         $site = Table\Sites::getSite($siteId);
 
                                         $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<em>Replace?</em><br /><a href="http://' .
+                                        $f['label'] = '<em>' . $i18n->__('Replace?') .'</em><br /><a href="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
-                                        $f['label'] = 'Replace?';
+                                        $f['label'] = $i18n->__('Replace?');
                                     }
                                     $fld['required'] = false;
                                 }
@@ -390,12 +391,12 @@ class Field extends \Phire\Model\AbstractModel
                                         $site = Table\Sites::getSite($siteId);
 
                                         $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<em >Replace?</em><br /><a href="http://' .
+                                        $f['label'] = '<em >' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
-                                        $f['label'] = 'Replace?';
+                                        $f['label'] = $i18n->__('Replace?');
                                     }
                                     $fld['required'] = false;
                                 }
@@ -409,13 +410,13 @@ class Field extends \Phire\Model\AbstractModel
                         $fieldId = implode('_', $groups[$gKey]) . '_' . ($i + 1);
                         $realCurFields['rm_fields_' . $fieldId] = array(
                             'type'  => 'checkbox',
-                            'value' => array($fieldId => 'Remove?')
+                            'value' => array($fieldId => $i18n->__('Remove') . '?')
                         );
                     } else {
                         $fieldId = implode('_', $groups[$gKey]);
                         $groupRmAry[$key] = array(
                             'type'  => 'checkbox',
-                            'value' => array($fieldId => 'Remove?')
+                            'value' => array($fieldId => $i18n->__('Remove') . '?')
                         );
                     }
                 }
@@ -577,14 +578,14 @@ class Field extends \Phire\Model\AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_fields" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -606,9 +607,9 @@ class Field extends \Phire\Model\AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=id">#</a>',
-                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=type">Type</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=name">Name</a>',
-                    'order'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=order">Order</a>',
+                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=type">' . $this->i18n->__('Type') . '</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=name">' . $this->i18n->__('Name') . '</a>',
+                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=order">' . $this->i18n->__('Order') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -625,7 +626,7 @@ class Field extends \Phire\Model\AbstractModel
 
         $fieldsAry = array();
         foreach ($fields->rows as $field) {
-            $field->required = ($field->required) ? 'Yes' : 'No';
+            $field->required = ($field->required) ? $this->i18n->__('Yes') : $this->i18n->__('No');
             $fieldsAry[] = $field;
         }
 
@@ -683,10 +684,8 @@ class Field extends \Phire\Model\AbstractModel
 
         // Set the onlick action based on the editor
         if ($_GET['editor'] == 'ckeditor') {
-            //$onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
             $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href); window.close(); return false;";
         } else if ($_GET['editor'] == 'tinymce') {
-            //$onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
             $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href); top.tinymce.activeEditor.windowManager.close(); return false;";
         } else {
             $onclick = 'return false;';
@@ -701,7 +700,7 @@ class Field extends \Phire\Model\AbstractModel
                 $value->file_icon = $fileInfo['fileIcon'];
                 $value->file_size = $fileInfo['fileSize'];
 
-                $select = '[ <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+                $select = '[ <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">' . $this->i18n->__('Original') . ' </a>';
                 foreach ($sizes as $size) {
                     if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
                         $select .= ' | <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
@@ -750,10 +749,8 @@ class Field extends \Phire\Model\AbstractModel
 
         // Set the onlick action based on the editor
         if ($_GET['editor'] == 'ckeditor') {
-            //$onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href.replace(/^.*\\/\\/[^\\/]+/, '')); window.close(); return false;";
             $onclick = "window.opener.CKEDITOR.tools.callFunction(funcNum, this.href); window.close(); return false;";
         } else if ($_GET['editor'] == 'tinymce') {
-            //$onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href.replace(/^.*\\/\\/[^\\/]+/, '')); top.tinymce.activeEditor.windowManager.close(); return false;";
             $onclick = "top.tinymce.activeEditor.windowManager.getParams().oninsert(this.href); top.tinymce.activeEditor.windowManager.close(); return false;";
         } else {
             $onclick = 'return false;';
@@ -768,7 +765,7 @@ class Field extends \Phire\Model\AbstractModel
                 $value->file_icon = $fileInfo['fileIcon'];
                 $value->file_size = $fileInfo['fileSize'];
 
-                $select = '[ <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">Original</a>';
+                $select = '[ <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $value->content_uri . '" onclick="' . $onclick . '">' . $this->i18n->__('Original') . '</a>';
                 foreach ($sizes as $size) {
                     if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri)){
                         $select .= ' | <a href="http://' . $site->domain . $site->base_path . CONTENT_PATH . '/media/' . $size . '/' . $value->content_uri . '" onclick="' . $onclick . '">' . ucfirst($size) . '</a>';
@@ -806,7 +803,7 @@ class Field extends \Phire\Model\AbstractModel
             if (in_array($value->content_site_id, $sess->user->site_ids)) {
                 $site = Table\Sites::getSite((int)$value->content_site_id);
 
-                $value->select    = '[ <a href="http://' . $site->domain . $site->base_path . $value->content_uri . '" onclick="' . $onclick . '">URI</a> ]';
+                $value->select    = '[ <a href="http://' . $site->domain . $site->base_path . $value->content_uri . '" onclick="' . $onclick . '">' . $this->i18n->__('URI') . '</a> ]';
                 $value->domain    = $site->domain;
                 $value->base_path = $site->base_path;
                 $uriRows[$key]    = $value;
@@ -922,7 +919,6 @@ class Field extends \Phire\Model\AbstractModel
                 );
             }
         }
-
 
         $field->models = serialize($models);
         $field->update();

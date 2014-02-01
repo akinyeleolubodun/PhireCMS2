@@ -55,9 +55,10 @@ class IndexController extends AbstractController
         $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Content'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Content'));
 
         $content = new Model\Content(array('acl' => $this->project->getService('acl')));
 
@@ -96,7 +97,7 @@ class IndexController extends AbstractController
 
             // Select content type
             if (null === $this->request->getPath(1)) {
-                $this->view->set('title', 'Content ' . $this->view->separator . ' Select Type');
+                $this->view->set('title', $this->view->i18n->__('Content') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Select Type'));
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     0, 0, $this->project->module('Phire')->asArray(),
@@ -128,7 +129,7 @@ class IndexController extends AbstractController
                 if (isset($type->id)) {
                     $this->view->set('typeId', $type->id)
                                ->set('typeUri', $type->uri)
-                               ->set('title', 'Content ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' Add');
+                               ->set('title', $this->view->i18n->__('Content') . ' ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
 
                     $form = new Form\Content(
                         $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
@@ -210,7 +211,7 @@ class IndexController extends AbstractController
                 Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
             } else if (isset($content->id)) {
                 $type = Table\ContentTypes::findById($content->type_id);
-                $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
+                $this->view->set('title', $this->view->i18n->__('Content') . ' ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
                            ->set('typeUri', $type->uri)
                            ->set('typeId', $content->type_id)
                            ->set('updated', $content->updated);
@@ -319,7 +320,7 @@ class IndexController extends AbstractController
                     'typeUri'  => $type->uri
                 ));
 
-                $this->view->set('title', 'Content ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' Batch');
+                $this->view->set('title', $this->view->i18n->__('Content') . ' ' . $this->view->separator . ' ' . $type->name . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Batch'));
 
                 $form = new Form\Batch($this->request->getBasePath() . $this->request->getRequestUri(), 'post', $this->request->getPath(1));
 
@@ -407,7 +408,7 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
+        $title = (null !== $msg) ? $this->view->i18n->__('System Error') : $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found');
         $this->view->set('title', $title);
         $this->view->set('msg', ((null !== $msg) ? $msg : $this->view->error_message));
         $this->send($code);

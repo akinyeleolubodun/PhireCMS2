@@ -4,11 +4,10 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Validator;
 use Phire\Table;
 
-class Login extends Form
+class Login extends AbstractForm
 {
 
     /**
@@ -20,10 +19,12 @@ class Login extends Form
      */
     public function __construct($action = null, $method = 'post')
     {
+        parent::__construct($action, $method, null, '        ');
+
         $this->initFieldsValues = array(
             'username' => array(
                 'type'       => 'text',
-                'label'      => 'Username:',
+                'label'      => $this->i18n->__('Username:'),
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
@@ -32,7 +33,7 @@ class Login extends Form
             ),
             'password' => array(
                 'type'       => 'password',
-                'label'      => 'Password:',
+                'label'      => $this->i18n->__('Password') . ':',
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
@@ -42,7 +43,7 @@ class Login extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'LOGIN',
+                'value' => $this->i18n->__('LOGIN'),
                 'attributes' => array(
                     'class' => 'update-btn',
                     'style' => 'display: block; width: 300px; margin: 0 auto;'
@@ -50,7 +51,7 @@ class Login extends Form
             )
         );
 
-        parent::__construct($action, $method, null, '        ');
+
         $this->setAttributes('id', 'login-form');
     }
 
@@ -94,7 +95,7 @@ class Login extends Form
                     $siteId = (isset($site->id)) ? $site->id : '0';
                     if (!in_array($siteId, $siteIds)) {
                         $this->getElement('username')
-                             ->addValidator(new Validator\NotEqual($this->username, 'That user is not allowed on this site.'));
+                             ->addValidator(new Validator\NotEqual($this->username, $this->i18n->__('That user is not allowed on this site.')));
                     }
                 }
             }

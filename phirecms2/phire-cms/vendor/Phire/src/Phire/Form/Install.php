@@ -48,6 +48,7 @@ class Install extends Form
         if (!defined('POP_LANG')) {
             define('POP_LANG', $lang);
         }
+
         $this->i18n = I18n::factory();
         $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/phire-cms/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
 
@@ -130,7 +131,7 @@ class Install extends Form
                         }
 
                         if ((null !== $dbVerKey) && (version_compare($version, self::$dbVersions[$dbVerKey]) < 0)) {
-                            $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, $this->i18n->__('The %1 database version must be %2 or greater. (%3 detected.)', array($dbVerKey, self::$dbVersions[$dbVerKey], $version))));
+                            $this->getElement('db_adapter')->addValidator(new Validator\NotEqual($this->db_adapter, wordwrap($this->i18n->__('The %1 database version must be %2 or greater. (%3 detected.)', array($dbVerKey, self::$dbVersions[$dbVerKey], $version)), 45, '<br />')));
                         }
                     }
                 }

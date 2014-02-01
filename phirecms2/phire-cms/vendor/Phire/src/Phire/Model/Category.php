@@ -43,14 +43,14 @@ class Category extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_categories" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -66,7 +66,7 @@ class Category extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'       => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=id">#</a>',
-                    'title'    => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=title">Title</a>',
+                    'title'    => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=title">' . $this->i18n->__('Title') . '</a>',
                     'process'  => $removeCheckAll
                 ),
                 'class'       => 'data-table',

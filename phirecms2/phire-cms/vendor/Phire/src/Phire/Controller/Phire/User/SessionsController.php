@@ -55,9 +55,10 @@ class SessionsController extends AbstractController
         $this->prepareView($this->viewPath . '/sessions.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'User Sessions'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('User Sessions'));
 
         $session = new Model\UserSession(array('acl' => $this->project->getService('acl')));
         $session->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -93,7 +94,7 @@ class SessionsController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

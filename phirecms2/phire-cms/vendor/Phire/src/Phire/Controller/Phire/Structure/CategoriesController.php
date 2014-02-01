@@ -60,7 +60,7 @@ class CategoriesController extends AbstractController
         $category = new Model\Category(array('acl' => $this->project->getService('acl')));
         $category->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
         $this->view->set('table', $category->table)
-                   ->set('title', 'Structure ' . $this->view->separator . ' Categories');
+                   ->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Categories'));
         $this->send();
     }
 
@@ -77,7 +77,7 @@ class CategoriesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Categories') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
         $form = new Form\Category(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post', 0
         );
@@ -138,7 +138,7 @@ class CategoriesController extends AbstractController
 
             // If field is found and valid
             if (isset($category->id)) {
-                $this->view->set('title', 'Structure ' . $this->view->separator . ' Categories ' . $this->view->separator . ' ' . $category->category_title);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Categories') . ' ' . $this->view->separator . ' ' . $category->category_title);
                 $form = new Form\Category(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $category->id
@@ -251,7 +251,8 @@ class CategoriesController extends AbstractController
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
         ));
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

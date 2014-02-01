@@ -55,9 +55,10 @@ class TypesController extends AbstractController
         $this->prepareView($this->viewPath . '/types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Content Types'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Content Types'));
 
         $type = new Model\ContentType(array('acl' => $this->project->getService('acl')));
         $type->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
@@ -78,7 +79,7 @@ class TypesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', 'Content Types ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('Content Types') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
         $form = new Form\ContentType(
             $this->request->getBasePath() . $this->request->getRequestUri() . (isset($_GET['redirect']) ? '?redirect=1' : null),
             'post', 0
@@ -141,7 +142,7 @@ class TypesController extends AbstractController
 
             // If field is found and valid
             if (isset($type->id)) {
-                $this->view->set('title', 'Content Types ' . $this->view->separator . ' ' . $type->name);
+                $this->view->set('title', $this->view->i18n->__('Content Types') . ' ' . $this->view->separator . ' ' . $type->name);
                 $form = new Form\ContentType(
                     $this->request->getBasePath() . $this->request->getRequestUri(),
                     'post', $type->id
@@ -222,7 +223,7 @@ class TypesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

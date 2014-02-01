@@ -259,5 +259,1165 @@
             <source>Sorry. That page was not found.</source>
             <output>Λυπάμαι. Ότι η σελίδα δεν βρέθηκε.</output>
         </text>
+        <text>
+            <source>All Rights Reserved.</source>
+            <output>Όλα τα δικαιώματα διατηρούνται</output>
+        </text>
+        <text>
+            <source>Username</source>
+            <output>Όνομα Χρήστη</output>
+        </text>
+        <text>
+            <source>Password</source>
+            <output>Κωδικός</output>
+        </text>
+        <text>
+            <source>Forgot</source>
+            <output>Ξεχάσατε</output>
+        </text>
+        <text>
+            <source>LOGIN</source>
+            <output>ΕΙΣΟΔΟΣ</output>
+        </text>
+        <text>
+            <source>Login</source>
+            <output>σύνδεση</output>
+        </text>
+        <text>
+            <source>System Overview</source>
+            <output>Επισκόπηση συστήματος</output>
+        </text>
+        <text>
+            <source>System Version</source>
+            <output>Έκδοση συστήματος</output>
+        </text>
+        <text>
+            <source>System Domain</source>
+            <output>σύστημα Ονομάτων Τομέα</output>
+        </text>
+        <text>
+            <source>System Document Root</source>
+            <output>Ρίζα του εγγράφου σύστημα</output>
+        </text>
+        <text>
+            <source>System Base Path</source>
+            <output>Βάση του συστήματος Path</output>
+        </text>
+        <text>
+            <source>System Application Path</source>
+            <output>Path Εφαρμογή Συστήματος</output>
+        </text>
+        <text>
+            <source>System Content Path</source>
+            <output>Περιεχομένου Σύστημα Path</output>
+        </text>
+        <text>
+            <source>Server Operating System</source>
+            <output>Λειτουργικό σύστημα διακομιστή</output>
+        </text>
+        <text>
+            <source>Server Software</source>
+            <output>Λογισμικό διακομιστή</output>
+        </text>
+        <text>
+            <source>Database Version</source>
+            <output>Database Έκδοση</output>
+        </text>
+        <text>
+            <source>PHP Version</source>
+            <output>Έκδοση PHP</output>
+        </text>
+        <text>
+            <source>Installed On</source>
+            <output>εγκατεστημένο σε</output>
+        </text>
+        <text>
+            <source>Updated On</source>
+            <output>Ενημερώθηκε την</output>
+        </text>
+        <text>
+            <source>Never</source>
+            <output>ποτέ</output>
+        </text>
+        <text>
+            <source>Default Settings</source>
+            <output>προεπιλεγμένες ρυθμίσεις</output>
+        </text>
+        <text>
+            <source>System Title</source>
+            <output>Τίτλος του συστήματος</output>
+        </text>
+        <text>
+            <source>System Email</source>
+            <output>σύστημα Email</output>
+        </text>
+        <text>
+            <source>Site Title</source>
+            <output>Τίτλος Ιστοσελίδας</output>
+        </text>
+        <text>
+            <source>Separator</source>
+            <output>διαχωριστής</output>
+        </text>
+        <text>
+            <source>Default Language</source>
+            <output>default Language</output>
+        </text>
+        <text>
+            <source>Error Message</source>
+            <output>Μήνυμα λάθους</output>
+        </text>
+        <text>
+            <source>Date &amp; Time Format</source>
+            <output>Date &amp; Time Format</output>
+        </text>
+        <text>
+            <source>Date &amp; Time Settings</source>
+            <output>Ημερομηνία &amp; Ώρα Ρυθμίσεις</output>
+        </text>
+        <text>
+            <source>Media Settings</source>
+            <output>Ρυθμίσεις Media</output>
+        </text>
+        <text>
+            <source>Media Allowed Types</source>
+            <output>Κατοικίδια Media Τύποι</output>
+        </text>
+        <text>
+            <source>Media Max Filesize</source>
+            <output>Media Max αρχείου</output>
+        </text>
+        <text>
+            <source>Media Actions</source>
+            <output>δράσεις Media</output>
+        </text>
+        <text>
+            <source>Media Image Adapter</source>
+            <output>Media Adapter εικόνας</output>
+        </text>
+        <text>
+            <source>Check All</source>
+            <output>Ελέγξτε όλα</output>
+        </text>
+        <text>
+            <source>Uncheck All</source>
+            <output>Καταργήστε την επιλογή All</output>
+        </text>
+        <text>
+            <source>Inverse</source>
+            <output>αντίστροφος</output>
+        </text>
+        <text>
+            <source>Uncheck all to allow any file type.</source>
+            <output>Αποεπιλέξτε όλα να επιτραπεί σε κάθε τύπο αρχείου.</output>
+        </text>
+        <text>
+            <source>Limits</source>
+            <output>όρια</output>
+        </text>
+        <text>
+            <source>Post Max Size</source>
+            <output>Δημοσίευση Μέγιστο Μέγεθος</output>
+        </text>
+        <text>
+            <source>Upload Max Filesize</source>
+            <output>Ανεβάστε Max αρχείου</output>
+        </text>
+        <text>
+            <source>Max File Uploads</source>
+            <output>Uploads Max Αρχείο</output>
+        </text>
+        <text>
+            <source>Size</source>
+            <output>μέγεθος</output>
+        </text>
+        <text>
+            <source>Action</source>
+            <output>δράση</output>
+        </text>
+        <text>
+            <source>Parameters</source>
+            <output>παράμετροι</output>
+        </text>
+        <text>
+            <source>Quality</source>
+            <output>ποιότητα</output>
+        </text>
+        <text>
+            <source>Feed &amp; Page Settings</source>
+            <output>Ρυθμίσεις Feed &amp; σελίδα</output>
+        </text>
+        <text>
+            <source>Feed Type</source>
+            <output>Feed Τύπος</output>
+        </text>
+        <text>
+            <source>Feed Limit</source>
+            <output>Όριο Feed</output>
+        </text>
+        <text>
+            <source>Pagination Limit</source>
+            <output>Όριο σελιδοποίηση</output>
+        </text>
+        <text>
+            <source>Pagination Range</source>
+            <output>σελιδοποίηση Σειρά</output>
+        </text>
+        <text>
+            <source>Open Authoring</source>
+            <output>Open Συγγραφής</output>
+        </text>
+        <text>
+            <source>In-Content Editing</source>
+            <output>Σε Επιμέλεια Περιεχομένου</output>
+        </text>
+        <text>
+            <source>Live</source>
+            <output>ζω</output>
+        </text>
+        <text>
+            <source>Dashboard</source>
+            <output>ταμπλό</output>
+        </text>
+        <text>
+            <source>Recent Content</source>
+            <output>Πρόσφατες Περιεχόμενο</output>
+        </text>
+        <text>
+            <source>Active</source>
+            <output>ενεργός</output>
+        </text>
+        <text>
+            <source>Not Active</source>
+            <output>Μη ενεργή</output>
+        </text>
+        <text>
+            <source>There are currently no themes installed.</source>
+            <output>Δεν υπάρχουν εγκατεστημένα θέματα.</output>
+        </text>
+        <text>
+            <source>There are currently no modules installed.</source>
+            <output>Δεν υπάρχουν εγκατεστημένες μονάδες.</output>
+        </text>
+        <text>
+            <source>Type</source>
+            <output>τύπος</output>
+        </text>
+        <text>
+            <source>Title</source>
+            <output>τίτλος</output>
+        </text>
+        <text>
+            <source>URI</source>
+            <output>URI</output>
+        </text>
+        <text>
+            <source>Created</source>
+            <output>Δημιουργήθηκε</output>
+        </text>
+        <text>
+            <source>Status</source>
+            <output>κατάσταση</output>
+        </text>
+        <text>
+            <source>Home</source>
+            <output>σπίτι</output>
+        </text>
+        <text>
+            <source>Logged in as</source>
+            <output>Συνδεδεμένος ως</output>
+        </text>
+        <text>
+            <source>Logout</source>
+            <output>Αποσύνδεση</output>
+        </text>
+        <text>
+            <source>Last Login</source>
+            <output>Είσοδος</output>
+        </text>
+        <text>
+            <source>Content</source>
+            <output>περιεχόμενο</output>
+        </text>
+        <text>
+            <source>Content Types</source>
+            <output>Τύποι περιεχομένου</output>
+        </text>
+        <text>
+            <source>Structure</source>
+            <output>δομή</output>
+        </text>
+        <text>
+            <source>Fields</source>
+            <output>πεδία</output>
+        </text>
+        <text>
+            <source>Field Groups</source>
+            <output>Ομάδες πεδίο</output>
+        </text>
+        <text>
+            <source>Navigation</source>
+            <output>πλοήγηση</output>
+        </text>
+        <text>
+            <source>Templates</source>
+            <output>πρότυπα</output>
+        </text>
+        <text>
+            <source>Categories</source>
+            <output>Κατηγορίες</output>
+        </text>
+        <text>
+            <source>Extensions</source>
+            <output>επεκτάσεις</output>
+        </text>
+        <text>
+            <source>Themes</source>
+            <output>θέματα</output>
+        </text>
+        <text>
+            <source>Modules</source>
+            <output>ενότητες</output>
+        </text>
+        <text>
+            <source>Users</source>
+            <output>χρήστες</output>
+        </text>
+        <text>
+            <source>User Roles</source>
+            <output>Ρόλοι Χρηστών</output>
+        </text>
+        <text>
+            <source>User Types</source>
+            <output>Τύποι χρήστη</output>
+        </text>
+        <text>
+            <source>User Sessions</source>
+            <output>συνεδρίες χρήστη</output>
+        </text>
+        <text>
+            <source>Configuration</source>
+            <output>διαμόρφωση</output>
+        </text>
+        <text>
+            <source>Sites</source>
+            <output>sites</output>
+        </text>
+        <text>
+            <source>Site</source>
+            <output>θέση</output>
+        </text>
+        <text>
+            <source>Author</source>
+            <output>συγγραφέας</output>
+        </text>
+        <text>
+            <source>Copy</source>
+            <output>αντίγραφο</output>
+        </text>
+        <text>
+            <source>Process</source>
+            <output>διαδικασία</output>
+        </text>
+        <text>
+            <source>Remove</source>
+            <output>Κατάργηση</output>
+        </text>
+        <text>
+            <source>Publish</source>
+            <output>Δημοσιεύστε</output>
+        </text>
+        <text>
+            <source>Published</source>
+            <output>Δημοσίευση</output>
+        </text>
+        <text>
+            <source>Draft</source>
+            <output>προσχέδιο</output>
+        </text>
+        <text>
+            <source>Unpublish</source>
+            <output>αποδημοσίευση</output>
+        </text>
+        <text>
+            <source>Unpublished</source>
+            <output>Ανέκδοτες</output>
+        </text>
+        <text>
+            <source>Start Date</source>
+            <output>Ημερομηνία έναρξης</output>
+        </text>
+        <text>
+            <source>End Date</source>
+            <output>Ημερομηνία Λήξης</output>
+        </text>
+        <text>
+            <source>Add</source>
+            <output>Προσθήκη</output>
+        </text>
+        <text>
+            <source>Batch</source>
+            <output>παρτίδα</output>
+        </text>
+        <text>
+            <source>Search</source>
+            <output>έρευνα</output>
+        </text>
+        <text>
+            <source>Back</source>
+            <output>πίσω</output>
+        </text>
+        <text>
+            <source>Export</source>
+            <output>εξαγωγή</output>
+        </text>
+        <text>
+            <source>Migrate</source>
+            <output>Μετεγκατάσταση</output>
+        </text>
+        <text>
+            <source>MIGRATE</source>
+            <output>μεταναστεύουν</output>
+        </text>
+        <text>
+            <source>Parent</source>
+            <output>μητρική εταιρεία</output>
+        </text>
+        <text>
+            <source>Template</source>
+            <output>περίγραμμα</output>
+        </text>
+        <text>
+            <source>Order</source>
+            <output>παραγγελία</output>
+        </text>
+        <text>
+            <source>Category</source>
+            <output>κατηγορία</output>
+        </text>
+        <text>
+            <source>Include in Feed</source>
+            <output>Συμπεριλάβετε στο Feed</output>
+        </text>
+        <text>
+            <source>Force SSL</source>
+            <output>Force SSL</output>
+        </text>
+        <text>
+            <source>Roles</source>
+            <output>Ρόλοι</output>
+        </text>
+        <text>
+            <source>There is currently no content under the %1 content type.</source>
+            <output>Δεν υπάρχει προς το παρόν περιεχόμενο κάτω από το %1 του τύπου περιεχομένου.</output>
+        </text>
+        <text>
+            <source>You can add new content %1here%2 or add a new content type %3here%4.</source>
+            <output>Μπορείτε να προσθέσετε νέο περιεχόμενο %1εδώ%2 ή να προσθέσετε ένα νέο τύπο περιεχομένου %3εδώ%4.</output>
+        </text>
+        <text>
+            <source>File</source>
+            <output>αρχείο</output>
+        </text>
+        <text>
+            <source>Max Size</source>
+            <output>Μέγιστο Μέγεθος</output>
+        </text>
+        <text>
+            <source>Archive of Multiple Files</source>
+            <output>Αρχείο πολλών αρχείων</output>
+        </text>
+        <text>
+            <source>Files Max</source>
+            <output>αρχεία Max</output>
+        </text>
+        <text>
+            <source>Max Size Each</source>
+            <output>Μέγιστο μέγεθος κάθε</output>
+        </text>
+        <text>
+            <source>Max Size Total</source>
+            <output>Μέγιστο Μέγεθος Σύνολο</output>
+        </text>
+        <text>
+            <source>Supported Types</source>
+            <output>Υποστηριζόμενοι Τύποι</output>
+        </text>
+        <text>
+            <source>Name</source>
+            <output>όνομα</output>
+        </text>
+        <text>
+            <source>Label</source>
+            <output>επιγραφή</output>
+        </text>
+        <text>
+            <source>Required</source>
+            <output>Απαραίτητα</output>
+        </text>
+        <text>
+            <source>Field Type</source>
+            <output>Τύπος πεδίου</output>
+        </text>
+        <text>
+            <source>Field Name</source>
+            <output>Όνομα πεδίου</output>
+        </text>
+        <text>
+            <source>Field Label</source>
+            <output>Ετικέτα τομέα</output>
+        </text>
+        <text>
+            <source>Field Values</source>
+            <output>πεδίο τιμών</output>
+        </text>
+        <text>
+            <source>Pipe delimited</source>
+            <output>Pipe οριοθετείται</output>
+        </text>
+        <text>
+            <source>Default Field Values</source>
+            <output>Προεπιλογή Πεδίο τιμών</output>
+        </text>
+        <text>
+            <source>Field Attributes</source>
+            <output>Χαρακτηριστικά τομέα</output>
+        </text>
+        <text>
+            <source>Field Validators</source>
+            <output>Validators τομέα</output>
+        </text>
+        <text>
+            <source>Type / Value / Message</source>
+            <output>Τύπος / Αξία / Μήνυμα</output>
+        </text>
+        <text>
+            <source>Model &amp; Type</source>
+            <output>Μοντέλο &amp; Τύπος</output>
+        </text>
+        <text>
+            <source>Field Group</source>
+            <output>Ομάδα πεδίο</output>
+        </text>
+        <text>
+            <source>Encryption</source>
+            <output>κρυπτογράφηση</output>
+        </text>
+        <text>
+            <source>Name &amp; Order</source>
+            <output>Όνομα &amp; Order</output>
+        </text>
+        <text>
+            <source>Dynamic</source>
+            <output>δυναμικός</output>
+        </text>
+        <text>
+            <source>Yes</source>
+            <output>ναί</output>
+        </text>
+        <text>
+            <source>No</source>
+            <output>όχι</output>
+        </text>
+        <text>
+            <source>Top Node</source>
+            <output>Top κόμβου</output>
+        </text>
+        <text>
+            <source>ID</source>
+            <output>ταυτότητα</output>
+        </text>
+        <text>
+            <source>Class</source>
+            <output>κατηγορία</output>
+        </text>
+        <text>
+            <source>Attributes</source>
+            <output>γνωρίσματα</output>
+        </text>
+        <text>
+            <source>Parent Node</source>
+            <output>μητρική κόμβου</output>
+        </text>
+        <text>
+            <source>Child Node</source>
+            <output>Κόμβος παιδί</output>
+        </text>
+        <text>
+            <source>"On" Class</source>
+            <output>"On" Class</output>
+        </text>
+        <text>
+            <source>"Off" Class</source>
+            <output>"Off " Class</output>
+        </text>
+        <text>
+            <source>Indentation Spaces</source>
+            <output>Χώροι Εσοχές</output>
+        </text>
+        <text>
+            <source>Slug</source>
+            <output>γυμνοσάλιαγκας</output>
+        </text>
+        <text>
+            <source>Show Total</source>
+            <output>Εμφάνιση Σύνολο</output>
+        </text>
+        <text>
+            <source>Screenshot</source>
+            <output>Screenshot</output>
+        </text>
+        <text>
+            <source>Description</source>
+            <output>περιγραφή</output>
+        </text>
+        <text>
+            <source>Version</source>
+            <output>εκδοχή</output>
+        </text>
+        <text>
+            <source>Resource</source>
+            <output>πόρος</output>
+        </text>
+        <text>
+            <source>Action</source>
+            <output>δράση</output>
+        </text>
+        <text>
+            <source>Type</source>
+            <output>τύπος</output>
+        </text>
+        <text>
+            <source>Permission</source>
+            <output>άδεια</output>
+        </text>
+        <text>
+            <source>User Type</source>
+            <output>Τύπος χρήστη</output>
+        </text>
+        <text>
+            <source>allow</source>
+            <output>επιτρέπουν</output>
+        </text>
+        <text>
+            <source>deny</source>
+            <output>αρνούμαι</output>
+        </text>
+        <text>
+            <source>Default Role</source>
+            <output>προεπιλογή ρόλος</output>
+        </text>
+        <text>
+            <source>Password Encryption</source>
+            <output>Κρυπτογράφηση κωδικού πρόσβασης</output>
+        </text>
+        <text>
+            <source>Allow Global Access</source>
+            <output>Επιτρέψτε Παγκόσμια Access</output>
+        </text>
+        <text>
+            <source>Allowed Attempts</source>
+            <output>προσπάθειες κατοικίδια</output>
+        </text>
+        <text>
+            <source>Session Expiration</source>
+            <output>συνεδρία λήξης</output>
+        </text>
+        <text>
+            <source>Minutes</source>
+            <output>πρακτικά</output>
+        </text>
+        <text>
+            <source>IPs Allowed</source>
+            <output>IPs κατοικίδια</output>
+        </text>
+        <text>
+            <source>IPs Blocked</source>
+            <output>IPs Αποκλεισμένοι</output>
+        </text>
+        <text>
+            <source>Log Emails</source>
+            <output>Σύνδεση Emails</output>
+        </text>
+        <text>
+            <source>Log Exclude</source>
+            <output>Σύνδεση Εξαίρεση</output>
+        </text>
+        <text>
+            <source>Controller</source>
+            <output>ελεγκτής</output>
+        </text>
+        <text>
+            <source>Sub Controllers</source>
+            <output>υπο Ελεγκτές</output>
+        </text>
+        <text>
+            <source>Allow Login</source>
+            <output>Επιτρέψτε Σύνδεση</output>
+        </text>
+        <text>
+            <source>Allow Registration</source>
+            <output>Επιτρέψτε Εγγραφή</output>
+        </text>
+        <text>
+            <source>Allow Multiple Sessions</source>
+            <output>Επιτρέψτε Πολλαπλές συνεδρίες</output>
+        </text>
+        <text>
+            <source>Session Timeout Warning</source>
+            <output>Session Timeout Προειδοποίηση</output>
+        </text>
+        <text>
+            <source>Allow Mobile Access</source>
+            <output>Επιτρέψτε Mobile Access</output>
+        </text>
+        <text>
+            <source>Allow Email as Username</source>
+            <output>Επιτρέψτε Email ως Όνομα Χρήστη</output>
+        </text>
+        <text>
+            <source>User Email Verification</source>
+            <output>Χρήστης Επαλήθευση Email</output>
+        </text>
+        <text>
+            <source>Track Sessions</source>
+            <output>συνεδρίες Track</output>
+        </text>
+        <text>
+            <source>System Email Verification</source>
+            <output>Σύστημα επαλήθευσης Email</output>
+        </text>
+        <text>
+            <source>Require Approval</source>
+            <output>Απαίτηση έγκρισης</output>
+        </text>
+        <text>
+            <source>Require Login for Unsubscribe</source>
+            <output>Απαίτηση Login για Διαγραφή</output>
+        </text>
+        <text>
+            <source>Timestamp</source>
+            <output>Χρονοθέτηση</output>
+        </text>
+        <text>
+            <source>User Agent</source>
+            <output>Πράκτορας χρήστη</output>
+        </text>
+        <text>
+            <source>IP Address</source>
+            <output>Η διεύθυνση IP</output>
+        </text>
+        <text>
+            <source>Last Action</source>
+            <output>Τελευταία Ενέργεια</output>
+        </text>
+        <text>
+            <source>Started</source>
+            <output>ξεκίνησε</output>
+        </text>
+        <text>
+            <source>Domain</source>
+            <output>τομέα</output>
+        </text>
+        <text>
+            <source>Document Root</source>
+            <output>Root έγγραφο</output>
+        </text>
+        <text>
+            <source>Base Path</source>
+            <output>βάση Path</output>
+        </text>
+        <text>
+            <source>You have been sent an email for verification purposes.</source>
+            <output>Έχετε στείλει ένα μήνυμα ηλεκτρονικού ταχυδρομείου για σκοπούς επαλήθευσης.</output>
+        </text>
+        <text>
+            <source>Your new account requires the approval of the site administrator.</source>
+            <output>Του νέου σας λογαριασμού απαιτεί την έγκριση του διαχειριστή του ιστοτόπου.</output>
+        </text>
+        <text>
+            <source>Once access is granted, you will be able to %1log in here%2. If you have trouble gaining access to the site, please contact the %3site administrator%4.</source>
+            <output>Μόλις χορηγηθεί η πρόσβαση , θα είστε σε θέση να %1login εδώ%2. Αν έχετε πρόβλημα να αποκτήσουν πρόσβαση στην ιστοσελίδα, παρακαλούμε επικοινωνήστε με το %3διαχειριστή του site%4.</output>
+        </text>
+        <text>
+            <source>You can %1log in here%2.</source>
+            <output>Μπορείτε %1login εδώ%2.</output>
+        </text>
+        <text>
+            <source>Dismiss</source>
+            <output>Ματαίωση</output>
+        </text>
+        <text>
+            <source>Show</source>
+            <output>σόου</output>
+        </text>
+        <text>
+            <source>which folders are not writable</source>
+            <output>ποιοι φάκελοι δεν είναι εγγράψιμοι</output>
+        </text>
+        <text>
+            <source>Some of the content folders are not writable. This may cause the system to not function properly.</source>
+            <output>Ορισμένοι από τους φακέλους περιεχομένου δεν είναι εγγράψιμος. Αυτό μπορεί να προκαλέσει το σύστημα να μην λειτουργήσει σωστά.</output>
+        </text>
+        <text>
+            <source>We're sorry. That page was not found.</source>
+            <output>Λυπούμαστε. Ότι η σελίδα δεν βρέθηκε.</output>
+        </text>
+        <text>
+            <source>There are currently no users under the %1 user type.</source>
+            <output>Δεν υπάρχουν χρήστες στο πλαίσιο του %1 τύπο χρήστη.</output>
+        </text>
+        <text>
+            <source>You can add %1a new user here%2 or add %3a new user type here%4.</source>
+            <output>Μπορείτε να προσθέσετε %1α νέος χρήστης εδώ%2 % ή να προσθέσετε %3α νέο τύπο χρήστη εδώ%4.</output>
+        </text>
+        <text>
+            <source>There are currently no users.</source>
+            <output>Δεν υπάρχουν χρήστες.</output>
+        </text>
+        <text>
+            <source>There are currently no logins for this user.</source>
+            <output>Δεν υπάρχουν συνδέσεις για αυτόν τον χρήστη.</output>
+        </text>
+        <text>
+            <source>There are currently no roles.</source>
+            <output>Δεν υπάρχουν ρόλοι.</output>
+        </text>
+        <text>
+            <source>There are currently no sessions.</source>
+            <output>Δεν υπάρχουν συνεδρίες.</output>
+        </text>
+        <text>
+            <source>There are currently no types.</source>
+            <output>Δεν υπάρχουν είδη.</output>
+        </text>
+        <text>
+            <source>Select</source>
+            <output>Επιλέξτε</output>
+        </text>
+        <text>
+            <source>Thumbnail</source>
+            <output>thumbnail</output>
+        </text>
+        <text>
+            <source>There are currently no assets. Use the upload form above to add some.</source>
+            <output>Δεν υπάρχουν περιουσιακά στοιχεία. Χρησιμοποιήστε τη φόρμα αποστολής παραπάνω για να προσθέσετε κάποια.</output>
+        </text>
+        <text>
+            <source>There are currently no categories.</source>
+            <output>Δεν υπάρχουν κατηγορίες.</output>
+        </text>
+        <text>
+            <source>There are currently no fields.</source>
+            <output>Δεν υπάρχουν πεδία.</output>
+        </text>
+        <text>
+            <source>There are currently no field groups.</source>
+            <output>Δεν υπάρχουν ομάδες τομέα.</output>
+        </text>
+        <text>
+            <source>There is currently no navigation.</source>
+            <output>Σήμερα δεν υπάρχει πλοήγησης.</output>
+        </text>
+        <text>
+            <source>There are currently no templates.</source>
+            <output>Δεν υπάρχουν πρότυπα.</output>
+        </text>
+        <text>
+            <source>Install</source>
+            <output>Εγκατάσταση</output>
+        </text>
+        <text>
+            <source>New modules have been detected. Click the button below to install them.</source>
+            <output>Νέες ενότητες έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παρακάτω για να τα εγκαταστήσετε.</output>
+        </text>
+        <text>
+            <source>There are currently no modules.</source>
+            <output>Δεν υπάρχουν ενότητες.</output>
+        </text>
+        <text>
+            <source>New themes have been detected. Click the button below to install them.</source>
+            <output>Νέες θέματα έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παρακάτω για να τα εγκαταστήσετε.</output>
+        </text>
+        <text>
+            <source>There are currently no themes.</source>
+            <output>Δεν υπάρχουν θέματα.</output>
+        </text>
+        <text>
+            <source>There are currently no content types.</source>
+            <output>Δεν υπάρχουν είδη περιεχομένου.</output>
+        </text>
+        <text>
+            <source>Caution: This action can possibly overwrite content.</source>
+            <output>Προσοχή: Αυτή η ενέργεια μπορεί ενδεχομένως να αντικαταστήσετε το περιεχόμενο.</output>
+        </text>
+        <text>
+            <source>There are currently no additional sites.</source>
+            <output>Δεν υπάρχουν πρόσθετες τοποθεσίες.</output>
+        </text>
+        <text>
+            <source>Multiple sessions are not allowed. Someone is already logged on from %1.</source>
+            <output>Πολλαπλές συνεδρίες δεν επιτρέπονται. Κάποιος έχει ήδη συνδεθεί από %1.</output>
+        </text>
+        <text>
+            <source>Mobile access is not allowed.</source>
+            <output>Πρόσβαση μέσω κινητού τηλεφώνου δεν επιτρέπεται.</output>
+        </text>
+        <text>
+            <source>The user is not verified.</source>
+            <output>Ο χρήστης δεν έχει επαληθευτεί.</output>
+        </text>
+        <text>
+            <source>The user is not allowed in this area.</source>
+            <output>Ο χρήστης δεν επιτρέπεται σε αυτόν τον τομέα.</output>
+        </text>
+        <text>
+            <source>The directory %1 is not writable.</source>
+            <output>Ο φάκελος %1 δεν είναι εγγράψιμος.</output>
+        </text>
+        <text>
+            <source>The themes folder is not writable.</source>
+            <output>Ο φάκελος θέματα δεν είναι εγγράψιμος.</output>
+        </text>
+        <text>
+            <source>The modules folder is not writable.</source>
+            <output>Ο φάκελος modules δεν είναι εγγράψιμος.</output>
+        </text>
+        <text>
+            <source>Replace?</source>
+            <output>Αντικαταστήστε ;</output>
+        </text>
+        <text>
+            <source>Select Revision:</source>
+            <output>Επιλέξτε Αναθεώρηση:</output>
+        </text>
+        <text>
+            <source>Original</source>
+            <output>πρωτότυπο</output>
+        </text>
+        <text>
+            <source>Phire CMS Installation</source>
+            <output>Phire CMS Εγκατάσταση</output>
+        </text>
+        <text>
+            <source>That module has not been loaded.</source>
+            <output>Η μονάδα αυτή δεν έχει φορτωθεί.</output>
+        </text>
+        <text>
+            <source>All</source>
+            <output>όλα</output>
+        </text>
+        <text>
+            <source>None</source>
+            <output>κανένας</output>
+        </text>
+        <text>
+            <source>Another user is currently logged in as %1 from %2.</source>
+            <output>Ένας άλλος χρήστης συνδεθεί ως %1 από %2.</output>
+        </text>
+        <text>
+            <source>Unsubscribed</source>
+            <output>Αδιάθετων</output>
+        </text>
+        <text>
+            <source>Access Granted</source>
+            <output>πρόσβαση που παρέχεται</output>
+        </text>
+        <text>
+            <source>Email Verification</source>
+            <output>Επαλήθευση email</output>
+        </text>
+        <text>
+            <source>Your username and password is:</source>
+            <output>Το όνομα χρήστη και τον κωδικό πρόσβασής σας είναι:</output>
+        </text>
+        <text>
+            <source>Your password has been reset for security reasons. Your username and new password is:</source>
+            <output>Ο κωδικός πρόσβασής σας έχει επαναφορά για λόγους ασφαλείας. Το όνομα χρήστη σας και ο κωδικός πρόσβασης είναι:</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>Password Reset</output>
+        </text>
+        <text>
+            <source>Login Notification</source>
+            <output>Είσοδος Γνωστοποίηση</output>
+        </text>
+        <text>
+            <source>Someone has logged in as a %1 from %2 using %3.</source>
+            <output>Κάποιος έχει συνδεθεί ως %1 από %2 χρησιμοποιώντας %3.</output>
+        </text>
+        <text>
+            <source>UPLOAD</source>
+            <output>UPLOAD</output>
+        </text>
+        <text>
+            <source>Upload</source>
+            <output>Μεταφόρτωση</output>
+        </text>
+        <text>
+            <source>That URI already exists under that parent category.</source>
+            <output>Αυτό URI υπάρχει ήδη στο πλαίσιο αυτής της μητρικής της κατηγορίας.</output>
+        </text>
+        <text>
+            <source>Select Content Type</source>
+            <output>Επιλογή τύπου περιεχομένου</output>
+        </text>
+        <text>
+            <source>The root URI already exists.</source>
+            <output>Το URI ρίζα υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>That URI already exists under that parent content.</source>
+            <output>Αυτό URI υπάρχει ήδη στο πλαίσιο αυτής της μητρικής περιεχόμενο.</output>
+        </text>
+        <text>
+            <source>Generate URI</source>
+            <output>Δημιουργία URI</output>
+        </text>
+        <text>
+            <source>That content type name already exists. The name must be unique.</source>
+            <output>Αυτό το όνομα του τύπου περιεχομένου υπάρχει ήδη. Το όνομα πρέπει να είναι μοναδικό.</output>
+        </text>
+        <text>
+            <source>A field with history tracking cannot be assigned to a field group.</source>
+            <output>Ένα πεδίο με την ιστορία εντοπισμού δεν μπορεί να ανατεθεί σε μια ομάδα τομέα.</output>
+        </text>
+        <text>
+            <source>An editor cannot be used on a field assigned to a field group.</source>
+            <output>Ένας συντάκτης δεν μπορεί να χρησιμοποιηθεί σε ένα πεδίο εκχωρηθεί σε μια ομάδα πεδίου.</output>
+        </text>
+        <text>
+            <source>Source</source>
+            <output>πηγή</output>
+        </text>
+        <text>
+            <source>That email does not exist.</source>
+            <output>Αυτό το email δεν υπάρχει.</output>
+        </text>
+        <text>
+            <source>That user is not allowed on this site.</source>
+            <output>Αυτός ο χρήστης δεν επιτρέπεται σε αυτό το site.</output>
+        </text>
+        <text>
+            <source>To</source>
+            <output>να</output>
+        </text>
+        <text>
+            <source>From</source>
+            <output>από</output>
+        </text>
+        <text>
+            <source>All Content</source>
+            <output>Όλο το περιεχόμενο</output>
+        </text>
+        <text>
+            <source>URIs Only (pages, etc.)</source>
+            <output>Μόνο URIs ( σελίδες, κ.λπ. )</output>
+        </text>
+        <text>
+            <source>Files Only (media, etc.)</source>
+            <output>Μόνο αρχεία ( μέσα μαζικής ενημέρωσης , κλπ. )</output>
+        </text>
+        <text>
+            <source>The sites cannot be the same.</source>
+            <output>Οι περιοχές δεν μπορεί να είναι η ίδια.</output>
+        </text>
+        <text>
+            <source>That navigation name already exists.</source>
+            <output>Αυτό το όνομα πλοήγησης υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>That site domain already exists.</source>
+            <output>Αυτό τομέα ιστοσελίδα υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>That site document root already exists.</source>
+            <output>Αυτό ρίζα του εγγράφου ιστοσελίδα υπάρχει ήδη.</output>
+        </text>
+        <text>
+            <source>That site document root does not exists.</source>
+            <output>Αυτό ρίζα του εγγράφου site δεν υπάρχει.</output>
+        </text>
+        <text>
+            <source>The base path does not exist under that document root.</source>
+            <output>Η διαδρομή βάσης δεν υπάρχει στο εν λόγω ρίζα του εγγράφου.</output>
+        </text>
+        <text>
+            <source>The index controller does not exist under that document root and base path.</source>
+            <output>Ο ελεγκτής δείκτης δεν υπάρχει στο εν λόγω ρίζα του εγγράφου και της βάσης διαδρομή.</output>
+        </text>
+        <text>
+            <source>The content path does not exist under that document root and base path.</source>
+            <output>Η διαδρομή περιεχόμενο δεν υπάρχει στο εν λόγω ρίζα του εγγράφου και της βάσης διαδρομή.</output>
+        </text>
+        <text>
+            <source>The content path is not writable under that document root and base path.</source>
+            <output>Η διαδρομή περιεχόμενο δεν είναι εγγράψιμος από την εν λόγω ρίζα του εγγράφου και της βάσης διαδρομή.</output>
+        </text>
+        <text>
+            <source>That template name already exists. The name must be unique.</source>
+            <output>Αυτό το όνομα προτύπου υπάρχει ήδη. Το όνομα πρέπει να είναι μοναδικό.</output>
+        </text>
+        <text>
+            <source>That device is already added to that template.</source>
+            <output>Αυτή η συσκευή έχει ήδη προστεθεί σε αυτό το πρότυπο.</output>
+        </text>
+        <text>
+            <source>The type name for this user type cannot change and must be 'user'.</source>
+            <output>Το όνομα του τύπου για αυτό το είδος του χρήστη δεν μπορεί να αλλάξει και πρέπει να είναι «χρήστης».</output>
+        </text>
+        <text>
+            <source>Dear</source>
+            <output>αγαπητός</output>
+        </text>
+        <text>
+            <source>You have been approved and granted access to</source>
+            <output>Θα έχουν εγκριθεί και χορηγηθεί πρόσβαση σε</output>
+        </text>
+        <text>
+            <source>You can now login to the website at:</source>
+            <output>Μπορείτε τώρα να συνδεθείτε στο δικτυακό τόπο:</output>
+        </text>
+        <text>
+            <source>Here is your password for</source>
+            <output>Εδώ είναι ο κωδικός πρόσβασής σας</output>
+        </text>
+        <text>
+            <source>You can login at:</source>
+            <output>Μπορείτε να συνδεθείτε στο:</output>
+        </text>
+        <text>
+            <source>Thank you for installing Phire CMS for</source>
+            <output>Σας ευχαριστούμε για την εγκατάσταση Phire CMS για</output>
+        </text>
+        <text>
+            <source>The website will be viewable here:</source>
+            <output>Ο δικτυακός τόπος θα είναι ορατή εδώ:</output>
+        </text>
+        <text>
+            <source>To manage the website, you can login to Phire here:</source>
+            <output>Για να διαχειριστείτε την ιστοσελίδα , μπορείτε να συνδεθείτε στο Phire εδώ:</output>
+        </text>
+        <text>
+            <source>You have been successfully unsubscribed from</source>
+            <output>Έχετε καταργήσει την εγγραφή σας με επιτυχία από</output>
+        </text>
+        <text>
+            <source>Thank you for taking the time to register with</source>
+            <output>Σας ευχαριστούμε για το χρόνο που αφιερώσατε για να εγγραφείτε</output>
+        </text>
+        <text>
+            <source>In order to verify your email address, please click on the following link:</source>
+            <output>Για να επαληθεύσετε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας , κάντε κλικ στον παρακάτω σύνδεσμο:</output>
+        </text>
+        <text>
+            <source>Once you are approved, you will be able to login to the website at:</source>
+            <output>Μόλις εγκριθεί , θα είστε σε θέση να συνδεθείτε στο δικτυακό τόπο:</output>
+        </text>
+        <text>
+            <source>Thank You</source>
+            <output>Ευχαριστούμε</output>
+        </text>
     </locale>
 </language>

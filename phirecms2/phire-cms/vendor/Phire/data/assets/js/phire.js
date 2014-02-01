@@ -20,8 +20,12 @@ var phire = {
     curErrors         : 0,
     curValue          : null,
     selIds            : [],
+    appUri            : null,
+    appPath           : null,
     basePath          : null,
+    contentPath       : null,
     sysBasePath       : null,
+    i18n              : null,
     errorDisplay      : {
         "color"    : '#f00',
         "bgColor"  : '#ffe5e5',
@@ -511,15 +515,6 @@ var phire = {
             } else if (typeof tinymce !== 'undefined') {
                 content = tinymce.activeEditor.getContent();
                 tinymce.get('field_' + id).hide();
-                //tinymce.editors['field_' + id] = undefined;
-                //var par = jax('#field_' + id).parent();
-                //var children = par.childNodes;
-                //for (var i = 0; i < children.length; i++) {
-                //    if (children[i].nodeName == 'DIV') {
-                //        par.removeChild(children[i]);
-                //    }
-                //}
-                //tinymce.remove('#field_' + id);
             }
             jax('#field_' + id).val(content);
             jax('#field_' + id).show();
@@ -622,6 +617,17 @@ jax(document).ready(function(){
     }
 
     phire.basePath = phire.sysBasePath.substring(0, phire.sysBasePath.lastIndexOf('/'));
+
+    var path = jax.ajax(phire.sysBasePath + '/json');
+
+    phire.appUri      = path.app_uri;
+    phire.appPath     = path.app_path;
+    phire.contentPath = path.content_path;
+    phire.basePath    = path.base_path;
+    phire.sysBasePath = path.base_path + path.app_uri;
+
+    phire.i18n = jax.i18n();
+    phire.i18n.loadFile(phire.basePath + phire.appPath + '/vendor/Phire/data/i18n/' + phire.i18n.getLanguage() + '.xml');
 
     if (typeof _exp != 'undefined') {
         phire.timeout = setInterval(function() {

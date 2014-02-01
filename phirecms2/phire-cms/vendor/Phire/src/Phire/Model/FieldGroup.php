@@ -27,14 +27,14 @@ class FieldGroup extends \Phire\Model\AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_groups" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -56,8 +56,8 @@ class FieldGroup extends \Phire\Model\AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=id">#</a>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=name">Name</a>',
-                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=order">Order</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=name">' . $this->i18n->__('Name') . '</a>',
+                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=order">' . $this->i18n->__('Order') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

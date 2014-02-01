@@ -60,7 +60,7 @@ class SitesController extends AbstractController
 
         $site = new Model\Site(array('acl' => $this->project->getService('acl')));
         $site->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites')
+        $this->view->set('title', 'Configuration ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites'))
                    ->set('table', $site->table);
         $this->send();
     }
@@ -78,7 +78,7 @@ class SitesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav'),
         ));
 
-        $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites ' . $this->view->separator . ' Add');
+        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
 
         $form = new Form\Site(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
@@ -139,7 +139,7 @@ class SitesController extends AbstractController
 
             // If field is found and valid
             if (isset($site->id)) {
-                $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites ' . $this->view->separator . ' ' . $site->domain);
+                $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $site->domain);
                 $form = new Form\Site(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $site->id
                 );
@@ -203,7 +203,7 @@ class SitesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav'),
         ));
 
-        $this->view->set('title', 'Configuration ' . $this->view->separator . ' Sites ' . $this->view->separator . ' Migrate');
+        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Migrate'));
 
         $form = new Form\Migrate(
             $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
@@ -259,7 +259,7 @@ class SitesController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found')
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
                    ->set('msg', $this->view->error_message);
         $this->send(404);
     }

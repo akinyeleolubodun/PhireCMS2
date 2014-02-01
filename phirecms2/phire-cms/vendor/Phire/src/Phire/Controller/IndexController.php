@@ -241,7 +241,7 @@ class IndexController extends AbstractController
             $this->view->set('phire', new Model\Phire());
 
             if (count($content->keys) == 0) {
-                $this->view->set('error', 'No search keywords were passed. Please try again.');
+                $this->view->set('error', $this->view->i18n->__('No search keywords were passed. Please try again.'));
             }
 
             $contentData = $content->getData();
@@ -335,7 +335,8 @@ class IndexController extends AbstractController
         $config = $this->project->module('Phire')->captcha;
         $sess = Session::getInstance();
         $expire = (null !== $config->expire) ? (int)$config->expire : 300;
-        $captchaImage = '<br /><img id="captcha-image" src="' . BASE_PATH . '/captcha" /><br /><a class="reload-link" href="#" onclick="document.getElementById(\'captcha-image\').src = \'' . BASE_PATH . '/captcha?reload=1\';return false;">Reload</a>';
+        $i18n = Table\Config::getI18n();
+        $captchaImage = '<br /><img id="captcha-image" src="' . BASE_PATH . '/captcha" /><br /><a class="reload-link" href="#" onclick="document.getElementById(\'captcha-image\').src = \'' . BASE_PATH . '/captcha?reload=1\';return false;">' . $i18n->__('Reload') . '</a>';
 
         // If token does not exist, create one
         if ((null !== $this->request->getQuery('reload')) || !isset($sess->pop_captcha)) {
@@ -429,7 +430,7 @@ class IndexController extends AbstractController
 
         $content = new Model\Content(array('acl' => $this->project->getService('acl')));
 
-        $title = (null !== $msg) ? 'System Error' : '404 Error ' . $this->view->separator . ' Page Not Found';
+        $title = (null !== $msg) ? $this->view->i18n->__('System Error') : $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found');
         $code = (null !== $msg) ? 200 : 404;
 
         $this->view->set('title', $title)

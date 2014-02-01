@@ -4,13 +4,12 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
 use Phire\Table\UserRoles;
 use Phire\Table\UserTypes;
 
-class UserRole extends Form
+class UserRole extends AbstractForm
 {
 
     /**
@@ -24,8 +23,8 @@ class UserRole extends Form
      */
     public function __construct($action = null, $method = 'post', $rid = 0, $config = null)
     {
-        $this->initFieldsValues = $this->getInitFields($rid, $config);
         parent::__construct($action, $method, null, '        ');
+        $this->initFieldsValues = $this->getInitFields($rid, $config);
         $this->setAttributes('id', 'user-role-form');
     }
 
@@ -40,30 +39,7 @@ class UserRole extends Form
     public function setFieldValues(array $values = null, $filters = null, $params = null)
     {
         parent::setFieldValues($values, $filters, $params);
-
-        // Check for global file setting configurations
-        if ($_FILES) {
-            $config = \Phire\Table\Config::getSystemConfig();
-            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
-
-            foreach ($_FILES as $key => $value) {
-                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
-                    $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
-                } else if ($value['error'] != 4) {
-                    if ($value['size'] > $config->media_max_filesize) {
-                        $this->getElement($key)
-                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
-                    }
-                    if (preg_match($regex, $value['name']) == 0) {
-                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
-                        $this->getElement($key)
-                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
-                    }
-                }
-            }
-        }
-
+        $this->checkFiles();
         return $this;
     }
 
@@ -87,7 +63,7 @@ class UserRole extends Form
         $fields1 = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => 'Name:',
+                'label'      => $this->i18n->__('Name') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 84)
             )
@@ -110,13 +86,13 @@ class UserRole extends Form
 
         // Get available resources with their corresponding permissions
         $resources = \Phire\Model\UserRole::getResources($config);
-        $classes = array('0' => '(All)');
+        $classes = array('0' => '(' . $this->i18n->__('All') . ')');
         $classTypes = array();
         $classActions = array();
         foreach ($resources as $key => $resource) {
             $classes[$key] = $resource['name'];
-            $classTypes[$key] = array('0' => '(All)');
-            $classActions[$key] = array('0' => '(All)');
+            $classTypes[$key] = array('0' => '(' . $this->i18n->__('All') . ')');
+            $classActions[$key] = array('0' => '(' . $this->i18n->__('All') . ')');
             foreach ($resource['types'] as $id => $type) {
                 if ((int)$id != 0) {
                     $classTypes[$key][$id] = $type;
@@ -174,7 +150,7 @@ class UserRole extends Form
                 );
                 $fields2['rm_resource_' . $i] = array(
                     'type'       => 'checkbox',
-                    'value'      => array($rid . '_' . $permission['resource'] . '_' . $permission['permission'] => 'Remove?')
+                    'value'      => array($rid . '_' . $permission['resource'] . '_' . $permission['permission'] => $this->i18n->__('Remove') . '?')
                 );
                 $i++;
             }
@@ -184,7 +160,7 @@ class UserRole extends Form
         $fields3 = array(
             'resource_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<span class="label-pad-2"><a href="#" onclick="phire.addResource(); return false;">[+]</a> Resource:</span><span class="label-pad-2">Action:</span><span class="label-pad-2">Type:</span><span class="label-pad-2">Permission:</span>',
+                'label'      => '<span class="label-pad-2"><a href="#" onclick="phire.addResource(); return false;">[+]</a> ' . $this->i18n->__('Resource') . ':</span><span class="label-pad-2">' . $this->i18n->__('Action') . ':</span><span class="label-pad-2">' . $this->i18n->__('Type') . ':</span><span class="label-pad-2">' . $this->i18n->__('Permission') . ':</span>',
                 'attributes' => array(
                     'onchange' => 'phire.changePermissions(this);',
                     'style' => 'display: block; margin: 3px 0 3px 0;'
@@ -194,12 +170,12 @@ class UserRole extends Form
             'permission_new_1' => array(
                 'type'       => 'select',
                 'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
-                'value'      => array('0' => '(All)')
+                'value'      => array('0' => '(' . $this->i18n->__('All') . ')')
             ),
             'type_new_1' => array(
                 'type'       => 'select',
                 'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
-                'value'      => array('0' => '(All)')
+                'value'      => array('0' => '(' . $this->i18n->__('All') . ')')
             ),
             'allow_new_1' => array(
                 'type'       => 'select',
@@ -213,14 +189,14 @@ class UserRole extends Form
         $fields4 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'value' => 'SAVE',
+                'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class'   => 'save-btn'
                 )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'UPDATE',
+                'value'      => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#user-role-form', true);",
                     'class'   => 'update-btn'
@@ -229,7 +205,7 @@ class UserRole extends Form
             'type_id' => array(
                 'type'       => 'select',
                 'required'   => true,
-                'label'      => 'User Type:',
+                'label'      => $this->i18n->__('User Type') . ':',
                 'value'      => $typesAry,
                 'attributes' => array(
                     'style'  => 'min-width: 200px;'

@@ -33,14 +33,14 @@ class UserType extends AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_types" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -62,7 +62,7 @@ class UserType extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=id">#</a>',
-                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=type">Type</a>',
+                    'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=type">' . $this->i18n->__('Type') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',

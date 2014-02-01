@@ -4,11 +4,10 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Validator;
 use Phire\Table;
 
-class UserType extends Form
+class UserType extends AbstractForm
 {
 
     /**
@@ -21,8 +20,8 @@ class UserType extends Form
      */
     public function __construct($action = null, $method = 'post', $tid = 0)
     {
-        $this->initFieldsValues = $this->getInitFields($tid);
         parent::__construct($action, $method, null, '        ');
+        $this->initFieldsValues = $this->getInitFields($tid);
         $this->setAttributes('id', 'user-type-form');
     }
 
@@ -41,32 +40,11 @@ class UserType extends Form
         if ($_POST) {
             if ($this->id == 2001) {
                 $this->getElement('type')
-                     ->addValidator(new Validator\Equal('user', "The type name for this user type cannot change and must be 'user'."));
+                     ->addValidator(new Validator\Equal('user', $this->i18n->__("The type name for this user type cannot change and must be 'user'.")));
             }
         }
 
-        // Check for global file setting configurations
-        if ($_FILES) {
-            $config = \Phire\Table\Config::getSystemConfig();
-            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
-
-            foreach ($_FILES as $key => $value) {
-                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
-                    $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
-                } else if ($value['error'] != 4) {
-                    if ($value['size'] > $config->media_max_filesize) {
-                        $this->getElement($key)
-                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
-                    }
-                    if (preg_match($regex, $value['name']) == 0) {
-                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
-                        $this->getElement($key)
-                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
-                    }
-                }
-            }
-        }
+        $this->checkFiles();
 
         return $this;
     }
@@ -79,11 +57,11 @@ class UserType extends Form
      */
     protected function getInitFields($tid = 0)
     {
-        $yesNo = array('1' => 'Yes', '0' => 'No');
+        $yesNo = array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No'));
 
         // Get roles for the user type
         $roles = Table\UserRoles::findAll('id ASC', array('type_id' => $tid));
-        $rolesAry = array('0' => '(Blocked)');
+        $rolesAry = array('0' => '(' . $this->i18n->__('Blocked') . ')');
         foreach ($roles->rows as $role) {
             $rolesAry[$role->id] = $role->name;
         }
@@ -92,75 +70,75 @@ class UserType extends Form
         $fields1 = array(
             'type' => array(
                 'type'       => 'text',
-                'label'      => 'Type:',
+                'label'      => $this->i18n->__('Type') . ':',
                 'required'   => true,
                 'attributes' => array('size' => 40)
             ),
             'ip_allowed' => array(
                 'type'       => 'text',
-                'label'      => 'IPs Allowed:',
+                'label'      => $this->i18n->__('IPs Allowed') . ':',
                 'attributes' => array('size' => 40)
             ),
             'ip_blocked' => array(
                 'type'       => 'text',
-                'label'      => 'IPs Blocked:',
+                'label'      => $this->i18n->__('IPs Blocked') . ':',
                 'attributes' => array('size' => 40)
             ),
             'log_emails' => array(
                 'type'       => 'text',
-                'label'      => 'Log Emails:',
+                'label'      => $this->i18n->__('Log Emails') . ':',
                 'attributes' => array('size' => 40)
             ),
             'log_exclude' => array(
                 'type'       => 'text',
-                'label'      => 'Log Exclude:',
+                'label'      => $this->i18n->__('Log Exclude') . ':',
                 'attributes' => array('size' => 40)
             ),
             'controller' => array(
                 'type'       => 'text',
-                'label'      => 'Controller:',
+                'label'      => $this->i18n->__('Controller') . ':',
                 'attributes' => array('size' => 40)
             ),
             'sub_controllers' => array(
                 'type'       => 'text',
-                'label'      => 'Sub Controllers:',
+                'label'      => $this->i18n->__('Sub Controllers') . ':',
                 'attributes' => array('size' => 40)
             )
         );
         $fields2a = array(
             'log_in' => array(
                 'type'   => 'radio',
-                'label'  => 'Allow Login:',
+                'label'  => $this->i18n->__('Allow Login') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'registration' => array(
                 'type'   => 'radio',
-                'label'  => 'Allow Registration:',
+                'label'  => $this->i18n->__('Allow Registration') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'multiple_sessions' => array(
                 'type'   => 'radio',
-                'label'  => 'Allow Multiple Sessions:',
+                'label'  => $this->i18n->__('Allow Multiple Sessions') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'timeout_warning' => array(
                 'type'   => 'radio',
-                'label'  => 'Session Timeout Warning:',
+                'label'  => $this->i18n->__('Session Timeout Warning') . ':',
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'mobile_access' => array(
                 'type'   => 'radio',
-                'label'  => 'Allow Mobile Access:',
+                'label'  => $this->i18n->__('Allow Mobile Access') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'email_as_username' => array(
                 'type'   => 'radio',
-                'label'  => 'Allow Email as Username:',
+                'label'  => $this->i18n->__('Allow Email as Username') . ':',
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
@@ -168,37 +146,37 @@ class UserType extends Form
         $fields2b = array(
             'email_verification' => array(
                 'type'   => 'radio',
-                'label'  => 'User Email Verification:',
+                'label'  => $this->i18n->__('User Email Verification') . ':',
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'force_ssl' => array(
                 'type'   => 'radio',
-                'label'  => 'Force SSL:',
+                'label'  => $this->i18n->__('Force SSL') . ':',
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'track_sessions' => array(
                 'type'   => 'radio',
-                'label'  => 'Track Sessions:',
+                'label'  => $this->i18n->__('Track Sessions') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'verification' => array(
                 'type'   => 'radio',
-                'label'  => 'System Email Verification:',
+                'label'  => $this->i18n->__('System Email Verification') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'approval' => array(
                 'type'   => 'radio',
-                'label'  => 'Require Approval:',
+                'label'  => $this->i18n->__('Require Approval') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'unsubscribe_login' => array(
                 'type'   => 'radio',
-                'label'  => 'Require Login for Unsubscribe:',
+                'label'  => $this->i18n->__('Require Login for Unsubscribe') . ':',
                 'value'  => $yesNo,
                 'marked' => '1'
             )
@@ -225,14 +203,14 @@ class UserType extends Form
 
         $fields4['submit'] = array(
             'type'  => 'submit',
-            'value' => 'SAVE',
+            'value' => $this->i18n->__('SAVE'),
             'attributes' => array(
                 'class'   => 'save-btn'
             )
         );
         $fields4['update'] = array(
             'type'       => 'button',
-            'value'      => 'UPDATE',
+            'value'      => $this->i18n->__('UPDATE'),
             'attributes' => array(
                 'onclick' => "return phire.updateForm('#user-type-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                 'class'   => 'update-btn'
@@ -248,7 +226,7 @@ class UserType extends Form
         );
         $fields4['default_role_id'] = array(
             'type'   => 'select',
-            'label'  => 'Default Role:',
+            'label'  => $this->i18n->__('Default Role') . ':',
             'value'  => $rolesAry,
             'attributes' => array(
                 'style' => 'min-width: 200px;'
@@ -256,7 +234,7 @@ class UserType extends Form
         );
         $fields4['password_encryption'] = array(
             'type'  => 'select',
-            'label' => 'Password Encryption:',
+            'label' => $this->i18n->__('Password Encryption') . ':',
             'value' => array(
                 '1' => 'MD5',
                 '2' => 'SHA1',
@@ -275,19 +253,19 @@ class UserType extends Form
         );
         $fields4['global_access'] = array(
             'type'   => 'select',
-            'label'  => 'Allow Global Access:',
+            'label'  => $this->i18n->__('Allow Global Access') . ':',
             'value'  => $yesNo,
             'marked' => '0'
         );
         $fields4['allowed_attempts'] = array(
             'type'       => 'text',
-            'label'      => 'Allowed Attempts:',
+            'label'      => $this->i18n->__('Allowed Attempts') . ':',
             'attributes' => array('size' => 3),
             'value'      => '0'
         );
         $fields4['session_expiration'] = array(
             'type'       => 'text',
-            'label'      => 'Session Expiration: <span style="font-size: 0.9em; font-weight: normal;">(Minutes)</span>',
+            'label'      => $this->i18n->__('Session Expiration') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Minutes') . ')</span>',
             'attributes' => array('size' => 3),
             'value'      => '0'
         );

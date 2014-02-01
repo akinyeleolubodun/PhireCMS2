@@ -5,13 +5,12 @@
 namespace Phire\Form;
 
 use Pop\File\Dir;
-use Pop\Form\Form;
 use Pop\Form\Element;
 use Pop\Validator;
 use Phire\Model;
 use Phire\Table;
 
-class Content extends Form
+class Content extends AbstractForm
 {
 
     /**
@@ -27,6 +26,8 @@ class Content extends Form
      */
     public function __construct($action = null, $method = 'post', $tid = 0, $mid = 0, $cfg = array(), $acl = null)
     {
+        parent::__construct($action, $method, null, '        ');
+
         // Generate fields for content type select first
         if ($tid == 0) {
             $typesAry = array();
@@ -41,12 +42,12 @@ class Content extends Form
                 'type_id' => array(
                     'type'     => 'select',
                     'required' => true,
-                    'label'    => 'Select Content Type:',
+                    'label'    => $this->i18n->__('Select Content Type') . ':',
                     'value'    => $typesAry
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => 'SELECT',
+                    'value' => $this->i18n->__('SELECT'),
                     'attributes' => array(
                         'class' => 'save-btn',
                         'style' => 'padding: 5px 6px 6px 6px; width: 100px;'
@@ -60,7 +61,6 @@ class Content extends Form
             $id = 'content-form';
         }
 
-        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', $id);
     }
 
@@ -85,37 +85,16 @@ class Content extends Form
                     ($this->id != $uri->id) && ($this->site_id == $uri->site_id)) {
                     if ($this->uri == '') {
                         $this->getElement('uri')
-                             ->addValidator(new Validator\NotEmpty($this->uri, 'The root URI already exists.'));
+                             ->addValidator(new Validator\NotEmpty($this->uri, $this->i18n->__('The root URI already exists.')));
                     } else {
                         $this->getElement('uri')
-                             ->addValidator(new Validator\NotEqual($this->uri, 'That URI already exists under that parent content.'));
+                             ->addValidator(new Validator\NotEqual($this->uri, $this->i18n->__('That URI already exists under that parent content.')));
                     }
                 }
             }
         }
 
-        // Check for global file setting configurations
-        if ($_FILES) {
-            $config = \Phire\Table\Config::getSystemConfig();
-            $regex = '/^.*\.(' . implode('|', array_keys($config->media_allowed_types))  . ')$/i';
-
-            foreach ($_FILES as $key => $value) {
-                if (($_FILES) && isset($_FILES[$key]) && ($_FILES[$key]['error'] == 1)) {
-                    $this->getElement($key)
-                         ->addValidator(new Validator\LessThanEqual(-1, "The 'upload_max_filesize' setting of " . ini_get('upload_max_filesize') . " exceeded."));
-                } else if ($value['error'] != 4) {
-                    if ($value['size'] > $config->media_max_filesize) {
-                        $this->getElement($key)
-                             ->addValidator(new Validator\LessThanEqual($config->media_max_filesize, 'The file must be less than ' . $config->media_max_filesize_formatted . '.'));
-                    }
-                    if (preg_match($regex, $value['name']) == 0) {
-                        $type = strtoupper(substr($value['name'], (strrpos($value['name'], '.') + 1)));
-                        $this->getElement($key)
-                             ->addValidator(new Validator\NotEqual($value['name'], 'The ' . $type . ' file type is not allowed.'));
-                    }
-                }
-            }
-        }
+        $this->checkFiles();
 
         return $this;
     }
@@ -170,7 +149,7 @@ class Content extends Form
 
             $uri = array(
                 'type'       => 'text',
-                'label'      => 'URI:' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="phire.slug(\'content_title\', \'uri\'); return false;">[ Generate URI ]</a>': null),
+                'label'      => $this->i18n->__('URI') . ':' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="phire.slug(\'content_title\', \'uri\'); return false;">[ ' . $this->i18n->__('Generate URI') . ' ]</a>': null),
                 'attributes' => array(
                     'size'    => 80,
                     'onkeyup' => "phire.slug(null, 'uri');"
@@ -186,14 +165,14 @@ class Content extends Form
         // Else, if type is a file
         } else {
             $this->hasFile = true;
-            $label = 'File: <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> Max Size ]</span>';
+            $label = $this->i18n->__('File') . ': <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> ' . $this->i18n->__('Max Size') . ' ]</span>';
             $required = true;
             if ($mid != 0) {
                 $content = Table\Content::findById($mid);
                 if (isset($content->id)) {
                     $site = Table\Sites::getSite((int)$content->site_id);
                     $fileInfo = Model\Content::getFileIcon($content->uri, $site->document_root . $site->base_path);
-                    $label = '<em>Replace?</em><br /><a href="http://' .
+                    $label = '<em>' . $this->i18n->__('Replace?') . '</em><br /><a href="http://' .
                         $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img id="current-file" style="padding-top: 3px;" src="http://' .
                         $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .
                         $content->uri . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
@@ -213,7 +192,7 @@ class Content extends Form
 
         $fields1['content_title'] = array(
             'type'       => 'text',
-            'label'      => 'Title:',
+            'label'      => $this->i18n->__('Title') . ':',
             'required'   => (!$this->hasFile),
             'attributes' => $titleAttributes
         );
@@ -233,7 +212,7 @@ class Content extends Form
         $fields4 = array(
             'site_id' => array(
                 'type'       => 'select',
-                'label'      => 'Site:',
+                'label'      => $this->i18n->__('Site') . ':',
                 'value'      => $siteIds,
                 'marked'     => 0,
                 'attributes' => array('style' => 'min-width: 200px;')
@@ -244,7 +223,7 @@ class Content extends Form
         if ($type->uri == 1) {
             $fields4['parent_id'] = array(
                 'type'       => 'select',
-                'label'      => 'Parent:',
+                'label'      => $this->i18n->__('Parent') . ':',
                 'value'      => $parents,
                 'attributes' => array(
                     'onchange' => "phire.slug(null, 'uri');",
@@ -253,7 +232,7 @@ class Content extends Form
             );
             $fields4['template'] = array(
                 'type'       => 'select',
-                'label'      => 'Template:',
+                'label'      => $this->i18n->__('Template') . ':',
                 'value'      => $this->getTemplates($cfg),
                 'attributes' => array(
                     'style'    => 'min-width: 200px;'
@@ -265,11 +244,11 @@ class Content extends Form
         if (!$this->hasFile) {
             $fields4['status'] = array(
                 'type'   => 'select',
-                'label'  => 'Status:',
+                'label'  => $this->i18n->__('Status') . ':',
                 'value'  => array(
-                    0 => 'Unpublished',
-                    1 => 'Draft',
-                    2 => 'Published'
+                    0 => $this->i18n->__('Unpublished'),
+                    1 => $this->i18n->__('Draft'),
+                    2 => $this->i18n->__('Published')
                 ),
                 'marked'     => 0,
                 'attributes' => array('style' => 'min-width: 200px;')
@@ -293,7 +272,7 @@ class Content extends Form
             }
             $fields5['navigation_id'] = array(
                 'type'   => 'checkbox',
-                'label'  => 'Navigation / Order:',
+                'label'  => $this->i18n->__('Navigation') . ' / ' . $this->i18n->__('Order') . ':',
                 'value'  => $navsAry,
                 'marked' => $navsMarked
             );
@@ -301,20 +280,20 @@ class Content extends Form
             if (count($categoryAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
-                    'label'    => 'Categories:',
+                    'label'    => $this->i18n->__('Categories') . ':',
                     'value'    => $categoryAry
                 );
             }
             $fields5['feed'] = array(
                 'type'   => 'radio',
-                'label'  => 'Include in Feed:',
-                'value'  => array(1 => 'Yes', 0 => 'No'),
+                'label'  => $this->i18n->__('Include in Feed') . ':',
+                'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 1
             );
             $fields5['force_ssl'] = array(
                 'type'   => 'radio',
-                'label'  => 'Force SSL:',
-                'value'  => array(1 => 'Yes', 0 => 'No'),
+                'label'  => $this->i18n->__('Force SSL') . ':',
+                'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 0
             );
             $rolesAry = array();
@@ -324,7 +303,7 @@ class Content extends Form
             }
             $fields5['roles'] = array(
                 'type'   => 'checkbox',
-                'label'  => 'Roles:',
+                'label'  => $this->i18n->__('Roles') . ':',
                 'value'  => $rolesAry
             );
         } else {
@@ -332,14 +311,14 @@ class Content extends Form
             if (count($categoryAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
-                    'label'    => 'Categories:',
+                    'label'    => $this->i18n->__('Categories') . ':',
                     'value'    => $categoryAry
                 );
             }
             $fields5['feed'] = array(
                 'type'   => 'radio',
-                'label'  => 'Include in Feed:',
-                'value'  => array(1 => 'Yes', 0 => 'No'),
+                'label'  => $this->i18n->__('Include in Feed') . ':',
+                'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 1
             );
         }
@@ -365,7 +344,7 @@ class Content extends Form
         if ($type->uri) {
             $fields4['published_month'] = array(
                 'type'       => 'select',
-                'label'      => 'Publish / Start Date:',
+                'label'      => $this->i18n->__('Publish') . ' / ' . $this->i18n->__('Start Date') . ':',
                 'value'      => Element\Select::MONTHS_SHORT,
                 'marked'     => date('m')
             );
@@ -415,14 +394,14 @@ class Content extends Form
         $fields6 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'value' => 'SAVE',
+                'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class'   => 'save-btn'
                 )
             ),
             'update' => array(
                 'type'       => 'button',
-                'value'      => 'UPDATE',
+                'value'      => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#content-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
                     'class'   => 'update-btn'
@@ -433,7 +412,7 @@ class Content extends Form
         if ($type->uri == 1) {
             $fields6['preview'] = array(
                 'type'       => 'button',
-                'value'      => 'PREVIEW',
+                'value'      => $this->i18n->__('PREVIEW'),
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#content-form', true, true);",
                     'class'   => 'preview-btn'
@@ -496,7 +475,7 @@ class Content extends Form
             $view = realpath(__DIR__ . '/../../../view');
         }
 
-        $templates = array('0' => '(Default)');
+        $templates = array('0' => '(' . $this->i18n->__('Default') . ')');
 
         $theme = Table\Extensions::findBy(array('type' => 0, 'active' => 1), null, 1);
         if (isset($theme->id)) {

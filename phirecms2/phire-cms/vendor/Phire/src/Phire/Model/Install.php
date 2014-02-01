@@ -189,6 +189,8 @@ class Install
      */
     public static function send(\Phire\Form\User $form)
     {
+        $i18n = Table\Config::getI18n();
+
         // Get the domain
         $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
@@ -211,8 +213,26 @@ class Install
             $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/install.txt');
         }
 
+        $mailTmpl = str_replace(
+            array(
+                'Dear',
+                'Thank you for installing Phire CMS for',
+                'The website will be viewable here:',
+                'To manage the website, you can login to Phire here:',
+                'Thank You'
+            ),
+            array(
+                $i18n->__('Dear'),
+                $i18n->__('Thank you for installing Phire CMS for'),
+                $i18n->__('The website will be viewable here:'),
+                $i18n->__('To manage the website, you can login to Phire here:'),
+                $i18n->__('Thank You')
+            ),
+            $mailTmpl
+        );
+
         // Send email verification
-        $mail = new Mail($domain . ' - Phire CMS Installation', $rcpt);
+        $mail = new Mail($domain . ' - ' . $i18n->__('Phire CMS Installation'), $rcpt);
         $mail->from('noreply@' . $domain);
         $mail->setText($mailTmpl);
         $mail->send();

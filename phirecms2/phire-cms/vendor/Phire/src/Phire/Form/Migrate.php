@@ -4,11 +4,10 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form as F;
 use Pop\Validator;
 use Phire\Table;
 
-class Migrate extends F
+class Migrate extends AbstractForm
 {
 
     /**
@@ -20,6 +19,8 @@ class Migrate extends F
      */
     public function __construct($action = null, $method = 'post')
     {
+        parent::__construct($action, $method, null, '        ');
+
         $sitesAry = array(
             '----' => '----',
             'Main' => $_SERVER['HTTP_HOST']
@@ -32,7 +33,7 @@ class Migrate extends F
         $this->initFieldsValues = array(
             'site_from' => array(
                 'type'       => 'select',
-                'label'      => '<span class="label-pad-3">From:</span><span class="label-pad-3">To:</span>',
+                'label'      => '<span class="label-pad-3">' . $this->i18n->__('From') . ':</span><span class="label-pad-3">' . $this->i18n->__('To') . ':</span>',
                 'value'      => $sitesAry,
                 'validators' => new Validator\NotEqual('----'),
                 'attributes' => array(
@@ -50,9 +51,9 @@ class Migrate extends F
             'migrate' => array(
                 'type'  => 'select',
                 'value' => array(
-                    '----' => 'All Content',
-                    'URI'  => 'URIs Only (pages, etc.)',
-                    'File' => 'Files Only (media, etc.)'
+                    '----' => $this->i18n->__('All Content'),
+                    'URI'  => $this->i18n->__('URIs Only (pages, etc.)'),
+                    'File' => $this->i18n->__('Files Only (media, etc.)')
                 ),
                 'attributes' => array(
                     'style'  => 'margin-right: 15px;'
@@ -60,7 +61,7 @@ class Migrate extends F
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'value' => 'MIGRATE',
+                'value' => $this->i18n->__('MIGRATE'),
                 'attributes' => array(
                     'class' => 'save-btn',
                     'style' => 'width: 150px; height: 30px;'
@@ -68,7 +69,6 @@ class Migrate extends F
             )
         );
 
-        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'site-migration-form');
     }
 
@@ -88,7 +88,7 @@ class Migrate extends F
         if ($_POST) {
             if ($this->site_from == $this->site_to) {
                 $this->getElement('site_to')
-                     ->addValidator(new Validator\NotEqual($this->site_from, 'That sites cannot be the same.'));
+                     ->addValidator(new Validator\NotEqual($this->site_from, $this->i18n->__('The sites cannot be the same.')));
             }
         }
 

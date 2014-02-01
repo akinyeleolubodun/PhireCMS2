@@ -25,6 +25,12 @@ abstract class AbstractModel
     protected $config = array();
 
     /**
+     * I18n object
+     * @var \Pop\I18n\I18n
+     */
+    protected $i18n = null;
+
+    /**
      * Instantiate the model object.
      *
      * @param  array $data
@@ -38,6 +44,7 @@ abstract class AbstractModel
 
         $this->config = \Phire\Table\Config::getSystemConfig();
         $sess = \Pop\Web\Session::getInstance();
+        $this->i18n = Table\Config::getI18n();
 
         if (isset($sess->user)) {
             $this->data['user'] = $sess->user;

@@ -28,14 +28,14 @@ class Site extends \Phire\Model\AbstractModel
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_sites" />';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove'
+                'value' => $this->i18n->__('Remove')
             );
         } else {
             $removeCheckbox = '&nbsp;';
             $removeCheckAll = '&nbsp;';
             $submit = array(
                 'class' => 'remove-btn',
-                'value' => 'Remove',
+                'value' => $this->i18n->__('Remove'),
                 'style' => 'display: none;'
             );
         }
@@ -56,12 +56,12 @@ class Site extends \Phire\Model\AbstractModel
             ),
             'table' => array(
                 'headers' => array(
-                    'id'                 => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=id">#</a>',
-                    'domain'        => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=domain">Domain</a>',
-                    'document_root' => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=document_root">Document Root</a>',
-                    'title'         => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=title">Title</a>',
-                    'live'               => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=live">Live</a>',
-                    'process'            => $removeCheckAll
+                    'id'            => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=id">#</a>',
+                    'domain'        => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=domain">' . $this->i18n->__('Domain') . '</a>',
+                    'document_root' => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=document_root">' . $this->i18n->__('Document Root') . '</a>',
+                    'title'         => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=title">' . $this->i18n->__('Title') . '</a>',
+                    'live'          => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=live">' . $this->i18n->__('Live') . '</a>',
+                    'process'       => $removeCheckAll
                 ),
                 'class'       => 'data-table',
                 'cellpadding' => 0,
@@ -77,7 +77,7 @@ class Site extends \Phire\Model\AbstractModel
 
         $siteAry = array();
         foreach ($sites->rows as $site) {
-            $site->live = ($site->live == 1) ? 'Yes' : 'No';
+            $site->live = ($site->live == 1) ? $this->i18n->__('Yes') : $this->i18n->__('No');
             $siteAry[] = $site;
         }
 

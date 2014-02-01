@@ -4,11 +4,10 @@
  */
 namespace Phire\Form;
 
-use Pop\Form\Form;
 use Pop\Validator;
 use Phire\Table;
 
-class Unsubscribe extends Form
+class Unsubscribe extends AbstractForm
 {
 
     /**
@@ -20,10 +19,12 @@ class Unsubscribe extends Form
      */
     public function __construct($action = null, $method = 'post')
     {
+        parent::__construct($action, $method, null, '        ');
+
         $this->initFieldsValues = array(
             'email' => array(
                 'type'       => 'text',
-                'label'      => 'Email:',
+                'label'      => $this->i18n->__('Email:'),
                 'required'   => true,
                 'attributes' => array('size' => 40),
                 'validators' => new Validator\Email()
@@ -31,14 +32,13 @@ class Unsubscribe extends Form
             'submit' => array(
                 'type'  => 'submit',
                 'label' => '&nbsp;',
-                'value' => 'UNSUBSCRIBE',
+                'value' => $this->i18n->__('UNSUBSCRIBE'),
                 'attributes' => array(
                     'class'   => 'save-btn'
                 )
             )
         );
 
-        parent::__construct($action, $method, null, '        ');
         $this->setAttributes('id', 'unsubscribe-form');
     }
 
@@ -59,7 +59,7 @@ class Unsubscribe extends Form
                 $user = Table\Users::findBy(array('email' => $this->email));
                 if (!isset($user->id)) {
                     $this->getElement('email')
-                         ->addValidator(new Validator\NotEqual($this->email, 'That email does not exist.'));
+                         ->addValidator(new Validator\NotEqual($this->email, $this->i18n->__('That email does not exist.')));
                 }
             }
         }

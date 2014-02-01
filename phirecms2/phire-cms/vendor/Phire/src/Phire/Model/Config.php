@@ -145,7 +145,7 @@ class Config extends AbstractModel
             'php_version'             => $config['php_version'],
             'installed_on'            => date($this->config->datetime_format, strtotime($config['installed_on'])),
             'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
-                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(Never)'
+                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(' . $this->i18n->__('Never') . ')'
         );
 
         return $overview;
@@ -186,7 +186,7 @@ class Config extends AbstractModel
             'php_version'             => $config['php_version'],
             'installed_on'            => date($this->config->datetime_format, strtotime($config['installed_on'])),
             'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
-                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(Never)'
+                date($this->config->datetime_format, strtotime($config['updated_on'])) : '(' . $this->i18n->__('Never') . ')'
         );
 
         // Set system title form element
@@ -261,7 +261,7 @@ class Config extends AbstractModel
 
         $phpLimitsString = '';
         foreach ($phpLimits as $limit => $limitValue) {
-            $phpLimitsString .= '<span style="padding: 0 5px 0 5px;">' . ucwords(str_replace('_', ' ', $limit)) . ': ' . '<strong>' . $limitValue . '</strong></span>';
+            $phpLimitsString .= '<span style="padding: 0 5px 0 5px;">' . $this->i18n->__(ucwords(str_replace('_', ' ', $limit))) . ': ' . '<strong>' . $limitValue . '</strong></span>';
         }
 
         $formattedConfig['settings'] = array(
@@ -273,17 +273,17 @@ class Config extends AbstractModel
             'error_message'       => '                    ' . $error,
             'datetime_format'     => $datetime,
             'media_allowed_types' => $mediaTypes,
-            'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; [<strong style="color: #f00; padding: 0 0 0 5px;">PHP Limits:</strong> ' . $phpLimitsString . ']',
+            'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; [<strong style="color: #f00; padding: 0 0 0 5px;">PHP ' . $this->i18n->__('Limits') . ':</strong> ' . $phpLimitsString . ']',
             'media_actions'       => $mediaConfig,
             'media_image_adapter' => new Element\Select('media_image_adapter', $imageAdapters, $config['media_image_adapter'], '                    '),
             'feed_type'           => new Element\Select('feed_type', array('9' => 'RSS', '10' => 'Atom'), $config['feed_type'], '                    '),
             'feed_limit'          => '                    ' . $feedLimit,
             'pagination_limit'    => '                    ' . $pageLimit,
             'pagination_range'    => '                    ' . $pageRange,
-            'open_authoring'      => new Element\Radio('open_authoring', array('1' => 'Yes', '0' => 'No'), $config['open_authoring'], '                    '),
-            'incontent_editing'   => new Element\Radio('incontent_editing', array('1' => 'Yes', '0' => 'No'), $config['incontent_editing'], '                    '),
-            'force_ssl'           => new Element\Radio('force_ssl', array('1' => 'Yes', '0' => 'No'), $config['force_ssl'], '                    '),
-            'live'                => new Element\Radio('live', array('1' => 'Yes', '0' => 'No'), $config['live'], '                    ')
+            'open_authoring'      => new Element\Radio('open_authoring', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['open_authoring'], '                    '),
+            'incontent_editing'   => new Element\Radio('incontent_editing', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['incontent_editing'], '                    '),
+            'force_ssl'           => new Element\Radio('force_ssl', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['force_ssl'], '                    '),
+            'live'                => new Element\Radio('live', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['live'], '                    ')
         );
 
         $this->data['config'] = new \ArrayObject($formattedConfig, \ArrayObject::ARRAY_AS_PROPS);
@@ -436,11 +436,11 @@ class Config extends AbstractModel
      */
     protected function getMediaConfig($actions)
     {
-        $mediaSizes  = '                    <div id="media-sizes">' . PHP_EOL . '                        <strong>Size:</strong><br />' . PHP_EOL;
-        $mediaActions = '                    <div id="media-actions">' . PHP_EOL . '                        <strong>Action:</strong><br />' . PHP_EOL;
-        $mediaParams  = '                    <div id="media-params">' . PHP_EOL . '                        <strong>Parameters:</strong><br />' . PHP_EOL;
-        $mediaQuality = '                    <div id="media-quality">' . PHP_EOL . '                        <strong>Quality:</strong><br />' . PHP_EOL;
-        $mediaRemove = '                    <div id="media-remove">' . PHP_EOL . '                        <strong>Remove:</strong><br />' . PHP_EOL;
+        $mediaSizes  = '                    <div id="media-sizes">' . PHP_EOL . '                        <strong>' . $this->i18n->__('Size') . ':</strong><br />' . PHP_EOL;
+        $mediaActions = '                    <div id="media-actions">' . PHP_EOL . '                        <strong>' . $this->i18n->__('Action') . ':</strong><br />' . PHP_EOL;
+        $mediaParams  = '                    <div id="media-params">' . PHP_EOL . '                        <strong>' . $this->i18n->__('Parameters') . ':</strong><br />' . PHP_EOL;
+        $mediaQuality = '                    <div id="media-quality">' . PHP_EOL . '                        <strong>' . $this->i18n->__('Quality') . ':</strong><br />' . PHP_EOL;
+        $mediaRemove = '                    <div id="media-remove">' . PHP_EOL . '                        <strong>' . $this->i18n->__('Remove') . ':</strong><br />' . PHP_EOL;
 
         $i = 1;
         $actionOptions = array_merge(array('0' => '----'), self::$mediaActions);
@@ -493,7 +493,7 @@ class Config extends AbstractModel
         }
 
         $mediaTypes .= '                    </div>' . PHP_EOL;
-        $mediaTypes .= '                    <div style="clear: left;"><a href="#" onclick="$(\'#config-form\').checkAll(\'media_allowed_types\'); return false;">Check All</a> | <a href="#" onclick="$(\'#config-form\').uncheckAll(\'media_allowed_types\'); return false;">Uncheck All</a> | <a href="#" onclick="$(\'#config-form\').checkInverse(\'media_allowed_types\'); return false;">Inverse</a> <em>(Uncheck all to allow any file type.)</em></div>' . PHP_EOL;
+        $mediaTypes .= '                    <div style="clear: left;"><a href="#" onclick="$(\'#config-form\').checkAll(\'media_allowed_types\'); return false;">' . $this->i18n->__('Check All') . '</a> | <a href="#" onclick="$(\'#config-form\').uncheckAll(\'media_allowed_types\'); return false;">' . $this->i18n->__('Uncheck All') . '</a> | <a href="#" onclick="$(\'#config-form\').checkInverse(\'media_allowed_types\'); return false;">' . $this->i18n->__('Inverse') . '</a> <em>(' . $this->i18n->__('Uncheck all to allow any file type.') . '</em></div>' . PHP_EOL;
 
         return $mediaTypes;
     }

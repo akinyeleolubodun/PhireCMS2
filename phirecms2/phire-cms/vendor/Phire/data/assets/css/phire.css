@@ -398,7 +398,7 @@ input[type=submit]:focus, button:focus {
     padding: 7px 5px 1px 15px;
     color: #fff;
     display: block;
-    width: 120px;
+    width: 140px;
     min-height: 22px;
     font-size: 0.9em;
     text-align: left;
@@ -419,7 +419,7 @@ input[type=submit]:focus, button:focus {
     margin: 0;
     padding: 0;
     top: 0;
-    left: 140px;
+    left: 160px;
     z-index: 100;
     background-color: #000;
 }
@@ -1071,8 +1071,9 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 .search-btn {
     float: right;
     margin: 0 0 0 5px;
-    padding: 3px 0 4px 0;
-    width: 70px;
+    padding: 3px 5px 4px 5px;
+    display: inline-block;
+    min-width: 65px;
     height: 22px;
     color: #fff;
     text-align: center;

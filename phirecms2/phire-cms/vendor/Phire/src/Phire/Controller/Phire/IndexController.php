@@ -93,9 +93,10 @@ class IndexController extends AbstractController
         $this->prepareView($this->viewPath . '/index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-            'title'    => 'Dashboard'
+            'phireNav' => $this->project->getService('phireNav')
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Dashboard'));
 
         if (isset($this->sess->sessionError)) {
             $this->view->set('sessionError', $this->sess->sessionError);
@@ -134,21 +135,22 @@ class IndexController extends AbstractController
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
-                'phire'    => new Model\Phire(),
-                'title'    => 'Login'
+                'phire'    => new Model\Phire()
             ));
+
+            $this->view->set('title', $this->view->i18n->__('Login'));
 
             // Set up 'forgot,' 'register' and 'unsubscribe' links
             $uri = (strtolower($this->type->type) == 'user') ? APP_URI : '/' . strtolower($this->type->type);
-            $forgot = '<a href="' . BASE_PATH . $uri . '/forgot">Forgot</a>';
-            $forgot .= (($this->type->registration) ? ' | <a href="' . BASE_PATH . $uri . '/register">Register</a>' : null);
-            $forgot .= (!($this->type->unsubscribe_login) ? ' | <a href="' . BASE_PATH . $uri . '/unsubscribe">Unsubscribe</a>' : null);
+            $forgot = '<a href="' . BASE_PATH . $uri . '/forgot">' . $this->view->i18n->__('Forgot') . '</a>';
+            $forgot .= (($this->type->registration) ? ' | <a href="' . BASE_PATH . $uri . '/register">' . $this->view->i18n->__('Register') . '</a>' : null);
+            $forgot .= (!($this->type->unsubscribe_login) ? ' | <a href="' . BASE_PATH . $uri . '/unsubscribe">' . $this->view->i18n->__('Unsubscribe') . '</a>' : null);
             $this->view->set('forgot', $forgot);
 
             if (isset($this->sess->expired)) {
-                $this->view->set('error', 'Your session has expired.');
+                $this->view->set('error', $this->view->i18n->__('Your session has expired.'));
             } else if (isset($this->sess->authError)) {
-                $this->view->set('error', 'The user is not allowed in this area.');
+                $this->view->set('error', $this->view->i18n->__('The user is not allowed in this area.'));
             }
 
             $form = new Form\Login($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
@@ -211,9 +213,10 @@ class IndexController extends AbstractController
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
-                'phire'    => new Model\Phire(),
-                'title'    => 'Register'
+                'phire'    => new Model\Phire()
             ));
+
+            $this->view->set('title', $this->view->i18n->__('Register'));
 
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
@@ -270,9 +273,10 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
-            'phire'    => new Model\Phire(),
-            'title'    => 'Profile'
+            'phire'    => new Model\Phire()
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Profile'));
 
         $user = new Model\User();
         $user->getById($this->sess->user->id);
@@ -330,9 +334,10 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
-            'phire'    => new Model\Phire(),
-            'title'    => 'Unsubscribe'
+            'phire'    => new Model\Phire()
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Unsubscribe'));
 
         $form = new Form\Unsubscribe($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
@@ -355,10 +360,10 @@ class IndexController extends AbstractController
                     Response::redirect($redirect);
                 } else {
                     $this->prepareView($this->viewPath . '/unsubscribe.phtml', array(
-                        'assets'   => $this->project->getAssets(),
-                        'title'    => 'Unsubscribe'
+                        'assets'   => $this->project->getAssets()
                     ));
-                    $this->view->set('form', '    <p>Thank you. You have been unsubscribed from this website.</p>');
+                    $this->view->set('title', $this->view->i18n->__('Unsubscribe'));
+                    $this->view->set('form', '    <p>' . $this->view->i18n->__('Thank you. You have been unsubscribed from this website.') . '</p>');
                     $this->send();
                 }
             // Else, re-render the form with errors
@@ -388,9 +393,10 @@ class IndexController extends AbstractController
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
-            'phire'    => new Model\Phire(),
-            'title'    => 'Forgot'
+            'phire'    => new Model\Phire()
         ));
+
+        $this->view->set('title', $this->view->i18n->__('Forgot'));
 
         $form = new Form\Forgot($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
 
@@ -410,7 +416,7 @@ class IndexController extends AbstractController
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
-                    $this->view->set('form', '    <p>Thank you. A password reminder has been sent.</p>');
+                    $this->view->set('form', '    <p>' . $this->view->i18n->__('Thank you. A password reminder has been sent.') . '</p>');
                     $this->send();
                 }
             // Else, re-render the form with errors
@@ -446,6 +452,8 @@ class IndexController extends AbstractController
                 'title'    => 'Verify'
             ));
 
+            $this->view->set('title', $this->view->i18n->__('Verify'));
+
             $user = new Model\User();
             $user->getById($this->request->getPath(1));
 
@@ -460,7 +468,7 @@ class IndexController extends AbstractController
             if (null !== $redirect) {
                 Response::redirect($redirect);
             } else {
-                $this->view->set('message', $message);
+                $this->view->set('message', $this->view->i18n->__($message));
                 $this->send();
             }
         // Else, redirect
@@ -500,6 +508,25 @@ class IndexController extends AbstractController
     }
 
     /**
+     * Method to get the system constants
+     *
+     * @return void
+     */
+    public function json()
+    {
+        // Build the response and send it
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/json')
+                 ->setBody(json_encode(array(
+                     'app_uri'      => APP_URI,
+                     'app_path'     => APP_PATH,
+                     'base_path'    => BASE_PATH,
+                     'content_path' => CONTENT_PATH
+                 )));
+        $response->send();
+    }
+
+    /**
      * Error method
      *
      * @return void
@@ -513,7 +540,8 @@ class IndexController extends AbstractController
             'phire'    => new Model\Phire(),
         ));
 
-        $this->view->set('title', '404 Error ' . $this->view->separator . ' Page Not Found');
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
+                   ->set('msg', $this->view->error_message);;
         $this->send(404);
     }
 
