@@ -514,16 +514,20 @@ class IndexController extends AbstractController
      */
     public function json()
     {
-        // Build the response and send it
-        $response = new Response();
-        $response->setHeader('Content-Type', 'application/json')
-                 ->setBody(json_encode(array(
-                     'app_uri'      => APP_URI,
-                     'app_path'     => APP_PATH,
-                     'base_path'    => BASE_PATH,
-                     'content_path' => CONTENT_PATH
-                 )));
-        $response->send();
+        if (null !== $this->request->getPath(1)) {
+            if ($_COOKIE['phire'] == $this->request->getPath(1)) {
+                // Build the response and send it
+                $response = new Response();
+                $response->setHeader('Content-Type', 'application/json')
+                         ->setBody(json_encode(array(
+                             'app_uri'      => APP_URI,
+                             'app_path'     => APP_PATH,
+                             'base_path'    => BASE_PATH,
+                             'content_path' => CONTENT_PATH
+                         )));
+                $response->send();
+            }
+        }
     }
 
     /**

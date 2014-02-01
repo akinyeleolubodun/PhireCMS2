@@ -85,8 +85,8 @@ var phire = {
             jax(opts[i]).remove();
         }
 
-        jax('#type_' + cur + '_' + id).append('option', {"value" : 0}, '(All)');
-        jax('#permission_' + cur + '_' + id).append('option', {"value" : 0}, '(All)');
+        jax('#type_' + cur + '_' + id).append('option', {"value" : 0}, '(' + phire.i18n.t('All') + ')');
+        jax('#permission_' + cur + '_' + id).append('option', {"value" : 0}, '(' + phire.i18n.t('All') + ')');
 
         if (marked != 0) {
             var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
@@ -171,7 +171,7 @@ var phire = {
                         "color"            : '#315900',
                         "opacity"          : 0
                     });
-                    jax('#result').val('Saved!');
+                    jax('#result').val(phire.i18n.t('Saved') + '!');
                     for (var i = 1; i <= phire.curErrors; i++) {
                         if (jax('#error-' + i)[0] != undefined) {
                             jax('#error-' + i).remove();
@@ -210,7 +210,7 @@ var phire = {
                     "color"            : '#8e0202',
                     "opacity"          : 0
                 });
-                jax('#result').val('Please correct the errors below.');
+                jax('#result').val(phire.i18n.t('Please correct the errors below.'));
                 for (var i = 1; i <= phire.curErrors; i++) {
                     if (jax('#error-' + i)[0] != undefined) {
                         jax('#error-' + i).remove();
@@ -276,10 +276,10 @@ var phire = {
     },
     wipeErrors : function(a, hgt) {
         if (jax('#dir-errors').height() > 50) {
-            jax(a).val('Show');
+            jax(a).val(phire.i18n.t('Show'));
             jax('#dir-errors').wipeUp(17, {tween : 10, speed: 200});
         } else {
-            jax(a).val('Hide');
+            jax(a).val(phire.i18n.t('Hide'));
             jax('#dir-errors').wipeUp(hgt, {tween : 10, speed: 200});
         }
     },
@@ -330,7 +330,7 @@ var phire = {
                 }
             }
             if (change) {
-                return 'You are about to leave this page and have unsaved changes. Are you sure?';
+                return phire.i18n.t('You are about to leave this page and have unsaved changes. Are you sure?');
             } else {
                 return;
             }
@@ -618,7 +618,13 @@ jax(document).ready(function(){
 
     phire.basePath = phire.sysBasePath.substring(0, phire.sysBasePath.lastIndexOf('/'));
 
-    var path = jax.ajax(phire.sysBasePath + '/json');
+    if (jax.cookie.load('phire') == undefined) {
+        jax.cookie.save('phire', jax.random(100000, 999999));
+    }
+
+    var path = (window.location.href.indexOf('/login') != -1) ?
+        jax.ajax(phire.sysBasePath + '/../json/' + jax.cookie.load('phire')) :
+        jax.ajax(phire.sysBasePath + '/json/' + jax.cookie.load('phire'));
 
     phire.appUri      = path.app_uri;
     phire.appPath     = path.app_path;
@@ -634,7 +640,7 @@ jax(document).ready(function(){
             if (jax('#logout-warning-back')[0] == undefined) {
                 var url = decodeURIComponent(_base);
                 jax('body').append('div', {id : 'logout-warning-back'});
-                jax('body').append('div', {id : 'logout-warning'}, '<h3 style="margin: 30px 0 10px 0; font-size: bold;">Your session is about to end.</h3><h4 id="countdown">30</h4><a href="#" id="continue">Continue</a> <a href="' + url + '/logout" id="logout">Logout</a>');
+                jax('body').append('div', {id : 'logout-warning'}, '<h3 style="margin: 15px 0 10px 0; font-size: bold;">' + phire.i18n.t('Your session is about to end.') + '</h3><h4 id="countdown">30</h4><a href="#" id="continue">' + phire.i18n.t('Continue') + '</a> <a href="' + url + '/logout" id="logout">' + phire.i18n.t('Logout') + '</a>');
                 jax('#logout-warning-back').css({
                     "opacity" : 80,
                     "width"   : jax().width() + 'px',
@@ -690,7 +696,7 @@ jax(document).ready(function(){
                     "color"            : '#315900',
                     "opacity"          : 0
                 });
-                jax('#result').val('Saved!');
+                jax('#result').val(phire.i18n.t('Saved') + '!');
                 jax('#result').fade(100, {tween : 10, speed: 200});
                 phire.clear = setTimeout(phire.clearStatus, 3000);
             }
@@ -729,7 +735,7 @@ jax(document).ready(function(){
         } else if (jax('#current-file')[0] == undefined) {
             phire.contentForm = jax('#content-form').form({
                 "uri" : {
-                    "required" : 'The file field is required.'
+                    "required" : phire.i18n.t('The file field is required.')
                 }
             });
         }

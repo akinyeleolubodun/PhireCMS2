@@ -209,7 +209,6 @@ class Project extends P
         }
 
         // If the path is the install path
-        //if (($_SERVER['REQUEST_URI'] == BASE_PATH . APP_URI . '/install') || (strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install/') !== false)) {
         if (substr($_SERVER['REQUEST_URI'], 0, strlen(BASE_PATH . APP_URI . '/install')) == BASE_PATH . APP_URI . '/install') {
             parent::run();
         // Else, load any user routes and initialize the ACL object
@@ -281,6 +280,7 @@ class Project extends P
                 ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
                 ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
                 ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
+                (substr($_SERVER['REQUEST_URI'], 0, strlen(BASE_PATH . $uri . '/json')) != (BASE_PATH . $uri . '/json')) &&
                 (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
                 (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
                 \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');

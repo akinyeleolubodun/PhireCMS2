@@ -140,6 +140,8 @@ class Acl extends A
 
         // Destroy the session object.
         unset($this->sess->user);
+        unset($_COOKIE['phire']);
+        setcookie('phire', null, -1, '/');
 
         if ($redirect) {
             $uri = ($this->basePath == '') ? '/' : $this->basePath;

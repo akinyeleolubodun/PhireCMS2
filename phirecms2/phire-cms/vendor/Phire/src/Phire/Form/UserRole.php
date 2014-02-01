@@ -142,8 +142,8 @@ class UserRole extends AbstractForm
                 $fields2['allow_cur_' . $i] = array(
                     'type'       => 'select',
                     'value'      => array(
-                        '1' => 'allow',
-                        '0' => 'deny'
+                        '1' => $this->i18n->__('allow'),
+                        '0' => $this->i18n->__('deny')
                     ),
                     'marked'     => $permission['allow'],
                     'attributes' => array('style' => 'display: block; min-width: 150px;')
@@ -181,8 +181,8 @@ class UserRole extends AbstractForm
                 'type'       => 'select',
                 'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array(
-                    '1' => 'allow',
-                    '0' => 'deny'
+                    '1' => $this->i18n->__('allow'),
+                    '0' => $this->i18n->__('deny')
                 )
             ),
         );
