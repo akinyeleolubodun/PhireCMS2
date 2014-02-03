@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>このページを編集</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>ビュー</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>日付</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>リロード</output>
+        </text>
     </locale>
 </language>

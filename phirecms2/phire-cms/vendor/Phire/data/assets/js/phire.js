@@ -616,15 +616,23 @@ jax(document).ready(function(){
         phire.sysBasePath = phire.sysBasePath.substring(0, (phire.sysBasePath.length - 1));
     }
 
-    phire.basePath = phire.sysBasePath.substring(0, phire.sysBasePath.lastIndexOf('/'));
+    phire.basePath = jax.root.substring(0, jax.root.lastIndexOf('/'));
+    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
 
-    if (jax.cookie.load('phire') == undefined) {
+    phire.sysBasePath = phire.sysBasePath.replace(phire.basePath + '/', '');
+    if (phire.sysBasePath.indexOf('/') != -1) {
+        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/'));
+    }
+
+    phire.sysBasePath = phire.basePath + '/' + phire.sysBasePath;
+
+    if (jax.cookie.load('phire') == '') {
         jax.cookie.save('phire', jax.random(100000, 999999));
     }
 
-    var path = (window.location.href.indexOf('/login') != -1) ?
-        jax.ajax(phire.sysBasePath + '/../json/' + jax.cookie.load('phire')) :
-        jax.ajax(phire.sysBasePath + '/json/' + jax.cookie.load('phire'));
+    var path = jax.ajax(phire.sysBasePath + '/json/' + jax.cookie.load('phire'));
 
     phire.appUri      = path.app_uri;
     phire.appPath     = path.app_path;
@@ -634,6 +642,12 @@ jax(document).ready(function(){
 
     phire.i18n = jax.i18n();
     phire.i18n.loadFile(phire.basePath + phire.appPath + '/vendor/Phire/data/i18n/' + phire.i18n.getLanguage() + '.xml');
+
+    if (path.modules.length > 0) {
+        for (var i = 0; i < path.modules.length; i++) {
+            phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/i18n/' + phire.i18n.getLanguage() + '.xml');
+        }
+    }
 
     if (typeof _exp != 'undefined') {
         phire.timeout = setInterval(function() {

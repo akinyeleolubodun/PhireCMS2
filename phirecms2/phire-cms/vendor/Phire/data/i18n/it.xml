@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>Modifica questa pagina</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>Visualizzare</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>Data</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>Ricaricare</output>
+        </text>
     </locale>
 </language>

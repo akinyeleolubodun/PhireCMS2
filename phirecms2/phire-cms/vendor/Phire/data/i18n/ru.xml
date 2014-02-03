@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>Править страницу</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>вид</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>дата</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>перезагружать</output>
+        </text>
     </locale>
 </language>

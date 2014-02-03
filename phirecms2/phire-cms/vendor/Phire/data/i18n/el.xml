@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>Επεξεργασία αυτής της σελίδας</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>θέα</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>ημερομηνία</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>Ανανέωση</output>
+        </text>
     </locale>
 </language>

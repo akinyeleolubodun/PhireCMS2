@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>编辑本页</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>视图</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>日期</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>刷新</output>
+        </text>
     </locale>
 </language>

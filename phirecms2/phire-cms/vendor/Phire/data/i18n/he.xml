@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>עריכת דף זה</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>נוף</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>תאריך</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>לטעון מחדש</output>
+        </text>
     </locale>
 </language>

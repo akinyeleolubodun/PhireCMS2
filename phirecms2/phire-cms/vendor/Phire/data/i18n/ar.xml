@@ -1555,5 +1555,17 @@
             <source>Edit This Page</source>
             <output>تعديل هذه الصفحة</output>
         </text>
+        <text>
+            <source>View</source>
+            <output>رأي</output>
+        </text>
+        <text>
+            <source>Date</source>
+            <output>تاريخ</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>تحديث الصفحة</output>
+        </text>
     </locale>
 </language>
