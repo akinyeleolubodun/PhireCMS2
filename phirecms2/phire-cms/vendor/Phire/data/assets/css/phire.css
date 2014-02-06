@@ -1031,8 +1031,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 
 .remove-btn {
     margin: 3px 0 0 0;
-    padding: 5px 8px 5px 8px;
-    height: 28px;
+    padding: 6px 8px 6px 8px;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -1081,7 +1080,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     border: none;
     text-transform: uppercase;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 10px;
     background-color: #5a8c1d;
 }
 
