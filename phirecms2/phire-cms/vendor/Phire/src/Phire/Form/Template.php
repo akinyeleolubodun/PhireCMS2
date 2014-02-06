@@ -126,7 +126,7 @@ class Template extends AbstractForm
                 'label'      => $this->i18n->__('Name') . ':',
                 'required'   => true,
                 'attributes' => array(
-                    'size'    => 110
+                    'size'    => 95
                 )
             )
         );
