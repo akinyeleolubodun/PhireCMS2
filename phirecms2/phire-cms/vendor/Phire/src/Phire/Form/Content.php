@@ -215,7 +215,7 @@ class Content extends AbstractForm
                 'label'      => $this->i18n->__('Site') . ':',
                 'value'      => $siteIds,
                 'marked'     => 0,
-                'attributes' => array('style' => 'min-width: 200px;')
+                'attributes' => array('style' => 'width: 200px;')
             )
         );
 
@@ -227,7 +227,7 @@ class Content extends AbstractForm
                 'value'      => $parents,
                 'attributes' => array(
                     'onchange' => "phire.slug(null, 'uri');",
-                    'style'    => 'min-width: 200px;'
+                    'style'    => 'width: 200px;'
                 )
             );
             $fields4['template'] = array(
@@ -235,7 +235,7 @@ class Content extends AbstractForm
                 'label'      => $this->i18n->__('Template') . ':',
                 'value'      => $this->getTemplates($cfg),
                 'attributes' => array(
-                    'style'    => 'min-width: 200px;'
+                    'style'    => 'width: 200px;'
                 )
             );
         }
@@ -251,7 +251,7 @@ class Content extends AbstractForm
                     2 => $this->i18n->__('Published')
                 ),
                 'marked'     => 0,
-                'attributes' => array('style' => 'min-width: 200px;')
+                'attributes' => array('style' => 'width: 200px;')
             );
 
             $navOrder = array();
