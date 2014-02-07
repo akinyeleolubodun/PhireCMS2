@@ -6,43 +6,45 @@ Basic
 
     ./phire help                - Display help
     ./phire config              - View current configuration
-
-Extensions
-----------
-
-    ./phire install             - Install module or theme
-    ./phire list                - List modules and themes installed
-    ./phire activate            - Activate a module or theme
-    ./phire deactivate          - De-activate a module or theme
-    ./phire remove              - Remove module or theme
+    ./phire version             - View current version
 
 Users
 -----
 
-    ./phire user-types          - Show user types
-    ./phire user-roles          - Show user roles
-    ./phire user-add            - Add a user
-    ./phire user-password       - Set a user password
-    ./phire user-role           - Set a user role
-    ./phire user-remove         - Remove a user
-    ./phire user-info           - List user info
-    ./phire user-kill           - Kill user session
-    ./phire user-sessions       - List user sessions
+    ./phire user types          - Show user types
+    ./phire user roles          - Show user roles
+    ./phire user add            - Add a user
+    ./phire user password       - Set a user password
+    ./phire user role           - Set a user role
+    ./phire user remove         - Remove a user
+    ./phire user info           - List user info
+    ./phire user kill           - Kill user session
+    ./phire user sessions       - List user sessions
+
+Extensions
+----------
+
+    ./phire ext install         - Install a module or theme
+    ./phire ext update          - Update a module or theme
+    ./phire ext list            - List modules and themes installed
+    ./phire ext activate        - Activate a module or theme
+    ./phire ext deactivate      - De-activate a module or theme
+    ./phire ext remove          - Remove module or theme
 
 SQL
 ---
 
-    ./phire sql-cli             - Open SQL CLI
-    ./phire sql-optimize        - Optimize the DB
-    ./phire sql-dump            - Export the DB into a SQL file
+    ./phire sql cli             - Open SQL CLI
+    ./phire sql optimize        - Optimize the DB
+    ./phire sql dump            - Export the DB into a SQL file
 
 System
 ------
 
+    ./phire install             - Install the system
+    ./phire update              - Update the system
+    ./phire upgrade             - Upgrade the system from a 1.* installation
     ./phire archive             - Archive the system
-    ./phire update              - Update a module or theme
-    ./phire update-core         - Update the core
-    ./phire update-all          - Update all
     ./phire deploy              - Deploy the system to a production local or remote location
-    ./phire deploy-content      - Deploy only the content
-    ./phire deploy-assets       - Deploy only the assets
+    ./phire deploy content      - Deploy only the content
+    ./phire deploy assets       - Deploy only the assets

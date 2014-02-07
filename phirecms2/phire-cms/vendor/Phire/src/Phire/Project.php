@@ -596,8 +596,8 @@ class Project extends P
      */
     public static function isInstalled($suppress = false)
     {
-        if ((strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false) &&
-            ((DB_INTERFACE == '') || (DB_NAME == ''))) {
+        if (((isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], BASE_PATH . APP_URI . '/install') === false)) &&
+            ((DB_INTERFACE == '') || (DB_NAME == '')))) {
             if (!$suppress) {
                 $error = '<strong>Error:</strong> Phire CMS 2.0 is not properly configured. Please check the config file or <a href="' . BASE_PATH . APP_URI . '/install">install</a> the application.';
                 ob_start();
@@ -607,6 +607,8 @@ class Project extends P
             } else {
                 return false;
             }
+        } else if (!isset($_SERVER['REQUEST_URI']) && ((DB_INTERFACE == '') || (DB_NAME == ''))) {
+            return false;
         }
 
         return true;

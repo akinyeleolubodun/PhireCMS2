@@ -10,5 +10,7 @@ require_once __DIR__  . '/../../bootstrap.php';
 
 // Write header
 echo PHP_EOL;
-echo 'Phire CMS 2.0 CLI' . PHP_EOL;
-echo '=================' . PHP_EOL . PHP_EOL;
+echo 'Phire CMS 2 CLI' . PHP_EOL;
+echo '===============' . PHP_EOL . PHP_EOL;
+
+$cli = new \Phire\Cli($argv);

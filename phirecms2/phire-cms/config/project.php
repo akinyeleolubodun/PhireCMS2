@@ -10,7 +10,7 @@ $config = array(
 
 if ((DB_INTERFACE != '') && (DB_NAME != '')) {
     $config['databases'] = array(
-        DB_NAME => \Pop\Db\Db::factory(DB_INTERFACE, array (
+        DB_NAME => \Pop\Db\Db::factory(DB_INTERFACE, array(
             'type'     => DB_TYPE,
             'database' => DB_NAME,
             'host'     => DB_HOST,

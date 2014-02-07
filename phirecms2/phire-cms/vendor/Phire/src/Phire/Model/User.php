@@ -834,7 +834,7 @@ class User extends AbstractModel
      * @param array  $options
      * @return string
      */
-    public static function encryptPassword($password, $encryption, $options)
+    public static function encryptPassword($password, $encryption, $options = array())
     {
         $encPassword = $password;
         $salt = (!empty($options['salt'])) ? $options['salt'] : null;

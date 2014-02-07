@@ -67,15 +67,26 @@ class Install
     /**
      * Install config method
      *
-     * @param \Pop\Form\Form $form
+     * @param mixed  $form
+     * @param string $docRoot
      * @return void
      */
-    public function config($form)
+    public function config($form, $docRoot = null)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
+        // Get config file contents
+        $cfgFile = new File($docRoot . '/config.php');
+        $config = $cfgFile->read();
+
+        if ($form instanceof \Pop\Form\Form) {
+            $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH;
+        }
 
         // Get config file contents
-        $cfgFile = new File($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
+        $cfgFile = new File($docRoot . '/config.php');
         $config = $cfgFile->read();
 
         // Get DB interface and type
@@ -89,9 +100,9 @@ class Install
 
         // If DB is SQLite
         if (strpos($form->db_adapter, 'Sqlite') !== false) {
-            touch($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $form->content_path . '/.htphire.sqlite');
+            touch($docRoot . $form->content_path . '/.htphire.sqlite');
             $relativeDbName = "__DIR__ . '" . $form->content_path . '/.htphire.sqlite';
-            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . $form->content_path . '/.htphire.sqlite');
+            $dbName = realpath($docRoot . $form->content_path . '/.htphire.sqlite');
             $dbUser = null;
             $dbPassword = null;
             $dbHost = null;
@@ -119,12 +130,14 @@ class Install
         $config = str_replace("define('DB_HOST', '');", "define('DB_HOST', '" . $dbHost . "');", $config);
         $config = str_replace("define('DB_PREFIX', '');", "define('DB_PREFIX', '" . $dbPrefix . "');", $config);
 
-        // Store the config values in session in case config file is not writable.
-        $sess = Session::getInstance();
-        $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
-        $sess->app_uri = $form->app_uri;
+        $this->data['configWritable'] = is_writable($docRoot . '/config.php');
 
-        $this->data['configWritable'] = is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/config.php');
+        if ($form instanceof \Pop\Form\Form) {
+            // Store the config values in session in case config file is not writable.
+            $sess = Session::getInstance();
+            $sess->config = serialize(htmlentities($config, ENT_QUOTES, 'UTF-8'));
+            $sess->app_uri = $form->app_uri;
+        }
 
         if ($this->data['configWritable']) {
             $cfgFile->write($config)->save();
@@ -162,13 +175,20 @@ class Install
         ));
 
         // Get server info
-        $server = new Server();
-        $os = $server->getOs() . ' (' . $server->getDistro() . ')';
-        $srv = $server->getServer() . ' ' . $server->getServerVersion();
+        if (isset($_SERVER) && isset($_SERVER['SERVER_SOFTWARE'])) {
+            $server = new Server();
+            $os = $server->getOs() . ' (' . $server->getDistro() . ')';
+            $srv = $server->getServer() . ' ' . $server->getServerVersion();
+            $doc = $_SERVER['DOCUMENT_ROOT'];
+        } else {
+            $os  = '';
+            $srv = '';
+            $doc = '';
+        }
 
         // Set the system configuration
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . \Phire\Project::VERSION . "' WHERE setting = 'system_version'");
-        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($_SERVER['DOCUMENT_ROOT']) . "' WHERE setting = 'system_document_root'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($doc) . "' WHERE setting = 'system_document_root'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($os) . "' WHERE setting = 'server_operating_system'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($srv) . "' WHERE setting = 'server_software'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->version() . "' WHERE setting = 'database_version'");
