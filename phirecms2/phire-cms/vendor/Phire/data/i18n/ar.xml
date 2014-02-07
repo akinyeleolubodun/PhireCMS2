@@ -20,52 +20,52 @@
 <language src="en" output="ar" name="Arabic" native="العربية">
     <locale region="EG" name="Egypt" native="مصر">
         <text>
-            <source>Language:</source>
-            <output>اللغة:</output>
+            <source>Language</source>
+            <output>اللغة</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>محول DB:</output>
+            <source>DB Adapter</source>
+            <output>محول DB</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>اسم DB:</output>
+            <source>DB Name</source>
+            <output>اسم DB</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DB اسم المستخدم:</output>
+            <source>DB Username</source>
+            <output>DB اسم المستخدم</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>DB كلمة السر:</output>
+            <source>DB Password</source>
+            <output>DB كلمة السر</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>DB المضيف:</output>
+            <source>DB Host</source>
+            <output>DB المضيف</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DB بادئة الجدول:</output>
+            <source>DB Table Prefix</source>
+            <output>DB بادئة الجدول</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>URI التطبيق:</output>
+            <source>Application URI</source>
+            <output>URI التطبيق</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>كيف سيتم الوصول إلى النظام</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>المحتويات مسار:</output>
+            <source>Content Path</source>
+            <output>المحتويات مسار</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>حيث سيقع الأصول</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>كلمة التشفير:</output>
+            <source>Password Encryption</source>
+            <output>كلمة التشفير</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>إعداد مستخدم</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>حدد نوع المستخدم:</output>
+            <source>Select User Type</source>
+            <output>حدد نوع المستخدم</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>البريد الإلكتروني:</output>
+            <source>Email</source>
+            <output>البريد الإلكترون</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>إعادة نوع البريد الإلكتروني:</output>
+            <source>Re-Type Email</source>
+            <output>إعادة نوع البريد الإلكتروني</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>اسم المستخدم:</output>
+            <source>Username</source>
+            <output>اسم المستخدم</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>أدخل كلمة المرور:</output>
+            <source>Enter Password</source>
+            <output>أدخل كلمة المرور</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>إعادة نوع كلمة المرور:</output>
+            <source>Re-Type Password</source>
+            <output>إعادة نوع كلمة المرور</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>دور المستخدم:</output>
+            <source>User Role</source>
+            <output>دور المستخدم</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>التحقق:</output>
+            <source>Verified</source>
+            <output>التحقق</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>محاولات فاشلة:</output>
+            <source>Failed Attempts</source>
+            <output>محاولات فاشلة</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>مواقع يسمح:</output>
+            <source>Allowed Sites</source>
+            <output>مواقع يسمح</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,8 +1188,8 @@
             <output>استبدال ؟</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>حدد مراجعة:</output>
+            <source>Select Revision</source>
+            <output>حدد مراجعة</output>
         </text>
         <text>
             <source>Original</source>
@@ -1516,8 +1516,8 @@
             <output>من قبل</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>تغيير المحرر:</output>
+            <source>Change Editor</source>
+            <output>تغيير المحرر</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>تحديث الصفحة</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>انتهاء</output>
         </text>
     </locale>
 </language>

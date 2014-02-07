@@ -20,52 +20,52 @@
 <language src="en" output="ja" name="Japanese" native="日本">
     <locale region="JA" name="Japan" native="日本">
         <text>
-            <source>Language:</source>
-            <output>言語：</output>
+            <source>Language</source>
+            <output>言語</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>DBアダプタ：</output>
+            <source>DB Adapter</source>
+            <output>DBアダプタ</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB名：</output>
+            <source>DB Name</source>
+            <output>DB名</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DBのユーザー名：</output>
+            <source>DB Username</source>
+            <output>DBのユーザー名</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>DBパスワード：</output>
+            <source>DB Password</source>
+            <output>DBパスワード</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>DBホスト：</output>
+            <source>DB Host</source>
+            <output>DBホスト</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DBのテーブル接頭辞：</output>
+            <source>DB Table Prefix</source>
+            <output>DBのテーブル接頭辞</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>アプリケーションのURI：</output>
+            <source>Application URI</source>
+            <output>アプリケーションのURI</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>あなたがシステムにアクセスする方法</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>コンテンツパス：</output>
+            <source>Content Path</source>
+            <output>コンテンツパス</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>資産が配置される場所</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>パスワードの暗号化：</output>
+            <source>Password Encryption</source>
+            <output>パスワードの暗号化</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>ユーザー設定</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>[ユーザーの選択の種類：</output>
+            <source>Select User Type</source>
+            <output>[ユーザーの選択の種類</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>Eメール：</output>
+            <source>Email</source>
+            <output>Eメール</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>再入力Eメール：</output>
+            <source>Re-Type Email</source>
+            <output>再入力Eメール</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>ユーザー名：</output>
+            <source>Username</source>
+            <output>ユーザー名</output>
         </text>
         <text>
-            <source>Enter Password:</source>
+            <source>Enter Password</source>
             <output>パスワードを入力します。</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>再入力パスワード：</output>
+            <source>Re-Type Password</source>
+            <output>再入力パスワード</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>ユーザーの役割：</output>
+            <source>User Role</source>
+            <output>ユーザーの役割</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>検証：</output>
+            <source>Verified</source>
+            <output>検証</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>試行失敗：</output>
+            <source>Failed Attempts</source>
+            <output>試行失敗</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>許可サイト：</output>
+            <source>Allowed Sites</source>
+            <output>許可サイト</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,7 +1188,7 @@
             <output>置き換えますか？</output>
         </text>
         <text>
-            <source>Select Revision:</source>
+            <source>Select Revision</source>
             <output>リビジョンを選択します。</output>
         </text>
         <text>
@@ -1516,7 +1516,7 @@
             <output>バイ</output>
         </text>
         <text>
-            <source>Change Editor:</source>
+            <source>Change Editor</source>
             <output>エディタを変更します。</output>
         </text>
         <text>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>リロード</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>期限切れ</output>
         </text>
     </locale>
 </language>

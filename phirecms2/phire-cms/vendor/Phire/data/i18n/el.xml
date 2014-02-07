@@ -20,52 +20,52 @@
 <language src="en" output="el" name="Greek" native="Ελληνικά">
     <locale region="GR" name="Greece" native="Ελλάδα">
         <text>
-            <source>Language:</source>
-            <output>γλώσσα:</output>
+            <source>Language</source>
+            <output>γλώσσα</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>DB Adapter:</output>
+            <source>DB Adapter</source>
+            <output>DB Adapter</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB Όνομα:</output>
+            <source>DB Name</source>
+            <output>DB Όνομα</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DB Όνομα Χρήστη:</output>
+            <source>DB Username</source>
+            <output>DB Όνομα Χρήστη</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>DB Κωδικός:</output>
+            <source>DB Password</source>
+            <output>DB Κωδικός</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>DB Host:</output>
+            <source>DB Host</source>
+            <output>DB Host</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DB Πρόθεμα πίνακα:</output>
+            <source>DB Table Prefix</source>
+            <output>DB Πρόθεμα πίνακα</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>Εφαρμογή URI:</output>
+            <source>Application URI</source>
+            <output>Εφαρμογή URI</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>Πώς θα αποκτήσετε πρόσβαση στο σύστημα</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>Path Περιεχόμενο:</output>
+            <source>Content Path</source>
+            <output>Path Περιεχόμενο</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>Όταν τα περιουσιακά στοιχεία θα πρέπει να βρίσκεται</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>Κρυπτογράφηση κωδικού πρόσβασης:</output>
+            <source>Password Encryption</source>
+            <output>Κρυπτογράφηση κωδικού πρόσβασης</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>Ρυθμίσεις Χρήστη</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>Επιλέξτε Κατηγορία Χρήστη:</output>
+            <source>Select User Type</source>
+            <output>Επιλέξτε Κατηγορία Χρήστη</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>email:</output>
+            <source>Email</source>
+            <output>Email</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>Re-Type Email:</output>
+            <source>Re-Type Email</source>
+            <output>πληκτρολογήστε ξανά Email</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>Όνομα Χρήστη:</output>
+            <source>Username</source>
+            <output>Όνομα Χρήστη</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>Εισάγετε τον κωδικό:</output>
+            <source>Enter Password</source>
+            <output>Εισάγετε τον κωδικό</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>Re-Type Κωδικός:</output>
+            <source>Re-Type Password</source>
+            <output>Re-Type Κωδικός</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>Ρόλος χρήστη:</output>
+            <source>User Role</source>
+            <output>Ρόλος χρήστη</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>Verified:</output>
+            <source>Verified</source>
+            <output>Verified</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>Αποτυχημένες προσπάθειες:</output>
+            <source>Failed Attempts</source>
+            <output>Αποτυχημένες προσπάθειες</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>Κατοικίδια Sites:</output>
+            <source>Allowed Sites</source>
+            <output>Κατοικίδια Sites</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,8 +1188,8 @@
             <output>Αντικαταστήστε ;</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>Επιλέξτε Αναθεώρηση:</output>
+            <source>Select Revision</source>
+            <output>Επιλέξτε Αναθεώρηση</output>
         </text>
         <text>
             <source>Original</source>
@@ -1516,8 +1516,8 @@
             <output>με</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>Αλλαγή Επιμέλεια:</output>
+            <source>Change Editor</source>
+            <output>Αλλαγή Επιμέλεια</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>Ανανέωση</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>λήξη</output>
         </text>
     </locale>
 </language>

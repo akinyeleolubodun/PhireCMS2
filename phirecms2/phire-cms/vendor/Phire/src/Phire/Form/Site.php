@@ -42,25 +42,25 @@ class Site extends AbstractForm
         $fields1 = array(
             'title' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Title') . ':',
+                'label'      => $this->i18n->__('Title'),
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'domain' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Domain') . ':',
+                'label'      => $this->i18n->__('Domain'),
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'document_root' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Document Root') . ':',
+                'label'      => $this->i18n->__('Document Root'),
                 'required'   => true,
                 'attributes' => array('size' => 80)
             ),
             'base_path' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Base Path') . ':',
+                'label'      => $this->i18n->__('Base Path'),
                 'attributes' => array('size' => 80),
                 'value'      => BASE_PATH
             )
@@ -83,7 +83,7 @@ class Site extends AbstractForm
             ),
             'force_ssl' => array(
                 'type'     => 'radio',
-                'label'    => $this->i18n->__('Force SSL') . ':',
+                'label'    => $this->i18n->__('Force SSL'),
                 'value' => array(
                     '0' => $this->i18n->__('No'),
                     '1' => $this->i18n->__('Yes')
@@ -92,7 +92,7 @@ class Site extends AbstractForm
             ),
             'live' => array(
                 'type'     => 'radio',
-                'label'    => $this->i18n->__('Live') . ':',
+                'label'    => $this->i18n->__('Live'),
                 'value'    => array(
                     '0' => $this->i18n->__('No'),
                     '1' => $this->i18n->__('Yes')

@@ -33,11 +33,11 @@ class Migrate extends AbstractForm
         $this->initFieldsValues = array(
             'site_from' => array(
                 'type'       => 'select',
-                'label'      => '<span class="label-pad-3">' . $this->i18n->__('From') . ':</span><span class="label-pad-3">' . $this->i18n->__('To') . ':</span>',
+                'label'      => '<span class="label-pad-3">' . $this->i18n->__('From') . '</span><span class="label-pad-3">' . $this->i18n->__('To') . '</span>',
                 'value'      => $sitesAry,
                 'validators' => new Validator\NotEqual('----'),
                 'attributes' => array(
-                    'style'  => 'min-width: 250px; margin-right: 30px;'
+                    'style'  => 'width: 250px; margin-right: 30px;'
                 )
             ),
             'site_to' => array(
@@ -45,7 +45,7 @@ class Migrate extends AbstractForm
                 'value' => $sitesAry,
                 'validators' => new Validator\NotEqual('----'),
                 'attributes' => array(
-                    'style'  => 'min-width: 250px; margin-right: 15px;'
+                    'style'  => 'width: 250px; margin-right: 15px;'
                 )
             ),
             'migrate' => array(

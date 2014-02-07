@@ -65,7 +65,7 @@ class Navigation extends AbstractForm
         $fields1 = array(
             'navigation' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Navigation') . ':',
+                'label'      => $this->i18n->__('Navigation'),
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 80
@@ -98,7 +98,7 @@ class Navigation extends AbstractForm
             ),
             'parent_node' => array(
                 'type'       => 'text',
-                'label'      => '<span class="label-pad-1">' . $this->i18n->__('Parent Node') . '</span><span class="label-pad-1">' . $this->i18n->__('ID') . '</span><span class="label-pad-1">' . $this->i18n->__('Class') . '</span><span>' . $this->i18n->__('Attributes') . ':</span>',
+                'label'      => '<span class="label-pad-1">' . $this->i18n->__('Parent Node') . '</span><span class="label-pad-1">' . $this->i18n->__('ID') . '</span><span class="label-pad-1">' . $this->i18n->__('Class') . '</span><span>' . $this->i18n->__('Attributes') . '</span>',
                 'attributes' => array(
                     'size'    => 10
                 )
@@ -123,7 +123,7 @@ class Navigation extends AbstractForm
             ),
             'child_node' => array(
                 'type'       => 'text',
-                'label'      => '<span class="label-pad-1">' . $this->i18n->__('Child Node') . '</span><span class="label-pad-1">' . $this->i18n->__('ID') . '</span><span class="label-pad-1">' . $this->i18n->__('Class') . '</span><span>' . $this->i18n->__('Attributes') . ':</span>',
+                'label'      => '<span class="label-pad-1">' . $this->i18n->__('Child Node') . '</span><span class="label-pad-1">' . $this->i18n->__('ID') . '</span><span class="label-pad-1">' . $this->i18n->__('Class') . '</span><span>' . $this->i18n->__('Attributes') . '</span>',
                 'attributes' => array(
                     'size'    => 10
                 )
@@ -192,21 +192,21 @@ class Navigation extends AbstractForm
             ),
             'on_class' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('"On" Class') . ':',
+                'label'      => $this->i18n->__('"On" Class'),
                 'attributes' => array(
                     'size'    => 15
                 )
             ),
             'off_class' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('"Off" Class') . ':',
+                'label'      => $this->i18n->__('"Off" Class'),
                 'attributes' => array(
                     'size'    => 15
                 )
             ),
             'spaces' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Indentation Spaces') . ':',
+                'label'      => $this->i18n->__('Indentation Spaces'),
                 'attributes' => array(
                     'size'    => 3
                 ),

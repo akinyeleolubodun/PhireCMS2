@@ -23,7 +23,7 @@ class FieldGroup extends AbstractForm
         $this->initFieldsValues = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Name &amp; Order') . ':',
+                'label'      => $this->i18n->__('Name &amp; Order'),
                 'required'   => true,
                 'attributes' => array('size' => 46)
             ),

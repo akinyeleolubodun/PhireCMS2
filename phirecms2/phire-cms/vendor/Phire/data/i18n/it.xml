@@ -20,52 +20,52 @@
 <language src="en" output="it" name="Italian" native="Italiano">
     <locale region="IT" name="Italy" native="Italia">
         <text>
-            <source>Language:</source>
-            <output>Lingua:</output>
+            <source>Language</source>
+            <output>Lingua</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>Adattatore DB:</output>
+            <source>DB Adapter</source>
+            <output>Adattatore DB</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB Nome:</output>
+            <source>DB Name</source>
+            <output>DB Nome</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DB Username:</output>
+            <source>DB Username</source>
+            <output>DB Username</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>DB Password:</output>
+            <source>DB Password</source>
+            <output>DB Password</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>DB Host:</output>
+            <source>DB Host</source>
+            <output>DB Host</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DB Prefisso delle Tabelle:</output>
+            <source>DB Table Prefix</source>
+            <output>DB Prefisso delle Tabelle</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>Applicazione URI:</output>
+            <source>Application URI</source>
+            <output>Applicazione URI</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>Come si accede al sistema</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>Percorso Contenuto:</output>
+            <source>Content Path</source>
+            <output>Percorso Contenuto</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>Dove saranno collocati attività</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>Crittografia Password:</output>
+            <source>Password Encryption</source>
+            <output>Crittografia Password</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>Configurazione utente</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>Selezionare il tipo di utente:</output>
+            <source>Select User Type</source>
+            <output>Selezionare il tipo di utente</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>Email:</output>
+            <source>Email</source>
+            <output>Email</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>Re-Tipo E-mail:</output>
+            <source>Re-Type Email</source>
+            <output>Re-Tipo E-mail</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>Nome utente:</output>
+            <source>Username</source>
+            <output>Nome utente</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>Immettere la Password:</output>
+            <source>Enter Password</source>
+            <output>Immettere la Password</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>Re-Tipo Password:</output>
+            <source>Re-Type Password</source>
+            <output>Re-Tipo Password</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>Ruolo utente:</output>
+            <source>User Role</source>
+            <output>Ruolo utente</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>Verificato:</output>
+            <source>Verified</source>
+            <output>Verificato</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>Tentativi falliti:</output>
+            <source>Failed Attempts</source>
+            <output>Tentativi falliti</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>Siti consentiti:</output>
+            <source>Allowed Sites</source>
+            <output>Siti consentiti</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,8 +1188,8 @@
             <output>Sostituire?</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>Seleziona Revisione:</output>
+            <source>Select Revision</source>
+            <output>Seleziona Revisione</output>
         </text>
         <text>
             <source>Original</source>
@@ -1516,8 +1516,8 @@
             <output>Da</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>Cambia Editor:</output>
+            <source>Change Editor</source>
+            <output>Cambia Editor</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>Ricaricare</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>Scadenza</output>
         </text>
     </locale>
 </language>

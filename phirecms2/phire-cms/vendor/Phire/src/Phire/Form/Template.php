@@ -123,7 +123,7 @@ class Template extends AbstractForm
         $fields1 = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Name') . ':',
+                'label'      => $this->i18n->__('Name'),
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 95
@@ -152,7 +152,7 @@ class Template extends AbstractForm
         $fields3 = array(
             'template' => array(
                 'type'       => 'textarea',
-                'label'      => $this->i18n->__('Template') . ':',
+                'label'      => $this->i18n->__('Template'),
                 'required'   => true,
                 'attributes' => array(
                     'rows'    => 25,
@@ -187,7 +187,7 @@ class Template extends AbstractForm
             ),
             'parent_id' => array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Parent') . ':',
+                'label'      => $this->i18n->__('Parent'),
                 'value'      => $parents,
                 'attributes' => array(
                     'style'    => 'width: 200px;'
@@ -195,7 +195,7 @@ class Template extends AbstractForm
             ),
             'content_type' => array(
                 'type'  => 'select',
-                'label' => $this->i18n->__('Content Type') . ':',
+                'label' => $this->i18n->__('Content Type'),
                 'value' => self::$contentTypes,
                 'attributes' => array(
                     'style'    => 'width: 200px;'
@@ -203,7 +203,7 @@ class Template extends AbstractForm
             ),
             'device' => array(
                 'type'  => 'select',
-                'label' => $this->i18n->__('Device') . ':',
+                'label' => $this->i18n->__('Device'),
                 'value' => self::$mobileTemplates,
                 'attributes' => array(
                     'style'    => 'width: 200px;'

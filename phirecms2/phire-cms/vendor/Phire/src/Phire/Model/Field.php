@@ -282,7 +282,7 @@ class Field extends \Phire\Model\AbstractModel
                         }
                         $fieldsAry['history_' . $mid . '_' . $field->id] = array(
                             'type'       => 'select',
-                            'label'      => $i18n->__('Select Revision:'),
+                            'label'      => $i18n->__('Select Revision'),
                             'value'      => $history,
                             'marked'     => 0,
                             'attributes' => array(

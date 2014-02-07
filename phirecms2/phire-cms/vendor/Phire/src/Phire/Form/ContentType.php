@@ -62,7 +62,7 @@ class ContentType extends AbstractForm
         $fields1 = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Name') . ':',
+                'label'      => $this->i18n->__('Name'),
                 'required'   => true,
                 'attributes' => array('size' => 80)
             )
@@ -122,7 +122,7 @@ class ContentType extends AbstractForm
             ),
             'uri' => array(
                 'type'   => 'select',
-                'label'  => $this->i18n->__('URI Type') . ':',
+                'label'  => $this->i18n->__('URI Type'),
                 'value'  => array(
                     '1' => 'URI',
                     '0' => 'File'
@@ -132,7 +132,7 @@ class ContentType extends AbstractForm
             ),
             'order' =>  array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Order') . ':',
+                'label'      => $this->i18n->__('Order'),
                 'value'      => 0,
                 'attributes' => array(
                     'size'  => 3,

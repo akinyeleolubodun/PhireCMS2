@@ -177,7 +177,7 @@ class Install extends Form
         $fields = array(
             'language' => array (
                 'type' => 'select',
-                'label' => $this->i18n->__('Language:'),
+                'label' => $this->i18n->__('Language'),
                 'value' => $langs,
                 'marked' => POP_LANG,
                 'attributes' => array(
@@ -187,55 +187,55 @@ class Install extends Form
             ),
             'db_adapter' => array (
                 'type' => 'select',
-                'label' => $this->i18n->__('DB Adapter:'),
+                'label' => $this->i18n->__('DB Adapter'),
                 'required' => true,
                 'value' => $this->dbAdapters,
                 'attributes' => array('style' => 'width: 260px;')
             ),
             'db_name' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('DB Name:'),
+                'label' => $this->i18n->__('DB Name'),
                 'attributes' => array('size' => 30)
             ),
             'db_username' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('DB Username:'),
+                'label' => $this->i18n->__('DB Username'),
                 'attributes' => array('size' => 30)
             ),
             'db_password' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('DB Password:'),
+                'label' => $this->i18n->__('DB Password'),
                 'attributes' => array('size' => 30)
             ),
             'db_host' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('DB Host:'),
+                'label' => $this->i18n->__('DB Host'),
                 'attributes' => array('size' => 30),
                 'value' => 'localhost'
             ),
             'db_prefix' => array (
                 'type' => 'text',
                 'name' => 'db_prefix',
-                'label' => $this->i18n->__('DB Table Prefix:'),
+                'label' => $this->i18n->__('DB Table Prefix'),
                 'attributes' => array('size' => 30),
                 'value' => 'ph_'
             ),
             'app_uri' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('Application URI:') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('How you will access the system') . ')</em>',
+                'label' => $this->i18n->__('Application URI') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('How you will access the system') . ')</em>',
                 'attributes' => array('size' => 30),
                 'value' => APP_URI
             ),
             'content_path' => array (
                 'type' => 'text',
-                'label' => $this->i18n->__('Content Path:') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('Where assets will be located') . ')</em>',
+                'label' => $this->i18n->__('Content Path') . '<br /><em style="font-size: 0.9em; color: #666; font-weight: normal;">(' . $this->i18n->__('Where assets will be located') . ')</em>',
                 'required' => true,
                 'attributes' => array('size' => 30),
                 'value' => CONTENT_PATH
             ),
             'password_encryption' => array (
                 'type' => 'select',
-                'label' => $this->i18n->__('Password Encryption:'),
+                'label' => $this->i18n->__('Password Encryption'),
                 'value' => array(
                     '1' => 'MD5',
                     '2' => 'SHA1',

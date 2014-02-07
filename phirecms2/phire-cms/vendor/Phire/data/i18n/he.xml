@@ -20,52 +20,52 @@
 <language src="en" output="he" name="Hebrew" native="עברית">
     <locale region="IL" name="Israel" native="ישראל">
         <text>
-            <source>Language:</source>
-            <output>שפה:</output>
+            <source>Language</source>
+            <output>שפה</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>מתאם DB:</output>
+            <source>DB Adapter</source>
+            <output>מתאם DB</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB שם:</output>
+            <source>DB Name</source>
+            <output>DB שם</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DB שם משתמש:</output>
+            <source>DB Username</source>
+            <output>DB שם משתמש</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>מארח DB:</output>
+            <source>DB Password</source>
+            <output>מארח DB</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>מארח DB:</output>
+            <source>DB Host</source>
+            <output>מארח DB</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DB לוח קידומת:</output>
+            <source>DB Table Prefix</source>
+            <output>DB לוח קידומת</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>יישום URI:</output>
+            <source>Application URI</source>
+            <output>יישום URI</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>איך יהיה לך גישה למערכת</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>נתיב תוכן:</output>
+            <source>Content Path</source>
+            <output>נתיב תוכן</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>איפה נכסים יהיו ממוקמים</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>הצפנת סיסמא:</output>
+            <source>Password Encryption</source>
+            <output>הצפנת סיסמא</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>הגדרת משתמש</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>סוג המשתמש בחר:</output>
+            <source>Select User Type</source>
+            <output>סוג המשתמש בחר</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>דוא"ל:</output>
+            <source>Email</source>
+            <output>דוא"ל</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>הקלד מחדש דוא"ל:</output>
+            <source>Re-Type Email</source>
+            <output>הקלד מחדש דוא"ל</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>שם משתמש:</output>
+            <source>Username</source>
+            <output>שם משתמש</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>הזן את הסיסמה:</output>
+            <source>Enter Password</source>
+            <output>הזן את הסיסמה</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>הקלד שוב את סיסמא:</output>
+            <source>Re-Type Password</source>
+            <output>הקלד שוב את סיסמא</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>תפקיד משתמש:</output>
+            <source>User Role</source>
+            <output>תפקיד משתמש</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>מאומת:</output>
+            <source>Verified</source>
+            <output>מאומת</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>ניסיונות כושלים:</output>
+            <source>Failed Attempts</source>
+            <output>ניסיונות כושלים</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>אתרים מותרים:</output>
+            <source>Allowed Sites</source>
+            <output>אתרים מותרים</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1149,7 +1149,7 @@
         </text>
         <text>
             <source>Caution: This action can possibly overwrite content.</source>
-            <output>זהירות: פעולה זו יכולה אולי להחליף את התוכן.</output>
+            <output>זהירות פעולה זו יכולה אולי להחליף את התוכן.</output>
         </text>
         <text>
             <source>There are currently no additional sites.</source>
@@ -1188,8 +1188,8 @@
             <output>להחליף?</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>בחר עדכון:</output>
+            <source>Select Revision</source>
+            <output>בחר עדכון</output>
         </text>
         <text>
             <source>Original</source>
@@ -1377,7 +1377,7 @@
         </text>
         <text>
             <source>You can now login to the website at:</source>
-            <output>עכשיו אתה יכול להיכנסלאתר האינטרנט בכתובת :</output>
+            <output>עכשיו אתה יכול להיכנסלאתר האינטרנט בכתובת:</output>
         </text>
         <text>
             <source>Here is your password for</source>
@@ -1413,7 +1413,7 @@
         </text>
         <text>
             <source>Once you are approved, you will be able to login to the website at:</source>
-            <output>ברגע שאתה מאושר, אתה תוכל להיכנסלאתר האינטרנט בכתובת :</output>
+            <output>ברגע שאתה מאושר, אתה תוכל להיכנסלאתר האינטרנט בכתובת:</output>
         </text>
         <text>
             <source>Thank You</source>
@@ -1516,8 +1516,8 @@
             <output>על ידי</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>שינוי עורך:</output>
+            <source>Change Editor</source>
+            <output>שינוי עורך</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>לטעון מחדש</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>פקיעה</output>
         </text>
     </locale>
 </language>

@@ -59,7 +59,7 @@ class Batch extends AbstractForm
             $fields2 = array(
                 'archive_file' => array(
                     'type'       => 'file',
-                    'label'      => $this->i18n->__('Archive of Multiple Files') . ':<br /><span style="display: block; margin: 5px 0 0 0; font-size: 0.9em;"><strong>' . $this->i18n->__('Supported Types') . ':</strong> ' . implode(', ', array_keys($formats)) . '</span>',
+                    'label'      => $this->i18n->__('Archive of Multiple Files') . '<br /><span style="display: block; margin: 5px 0 0 0; font-size: 0.9em;"><strong>' . $this->i18n->__('Supported Types') . ':</strong> ' . implode(', ', array_keys($formats)) . '</span>',
                     'attributes' => array(
                         'size' => 40,
                         'style' => 'display: block; margin: 0 0 10px 0; padding: 1px 4px 1px 1px; margin: 0px 0px 10px 0; height: 26px;'
@@ -73,10 +73,10 @@ class Batch extends AbstractForm
                 ),
                 'site_id' => array(
                     'type'       => 'select',
-                    'label'      => $this->i18n->__('Site') . ':',
+                    'label'      => $this->i18n->__('Site'),
                     'value'      => $siteIds,
                     'marked'     => 0,
-                    'attributes' => array('style' => 'min-width: 200px;')
+                    'attributes' => array('style' => 'width: 200px;')
                 ),
                 'submit' => array(
                     'type'  => 'submit',
@@ -96,10 +96,10 @@ class Batch extends AbstractForm
             );
             $fields1['site_id'] = array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Site') . ':',
+                'label'      => $this->i18n->__('Site'),
                 'value'      => $siteIds,
                 'marked'     => 0,
-                'attributes' => array('style' => 'min-width: 200px;')
+                'attributes' => array('style' => 'width: 200px;')
             );
             $fields1['submit'] = array(
                 'type'  => 'submit',

@@ -38,7 +38,7 @@ class User extends AbstractForm
                 'type_id' => array(
                     'type'     => 'select',
                     'required' => true,
-                    'label'    => $this->i18n->__('Select User Type:'),
+                    'label'    => $this->i18n->__('Select User Type'),
                     'value'    => $typesAry,
                     'attributes' => array(
                         'style' => 'margin: 0 10px 0 0; padding: 6px 5px 7px 5px; height: 32px;'
@@ -148,7 +148,7 @@ class User extends AbstractForm
         // Continue setting up initial user fields
         $fields1['email1'] = array(
             'type'       => 'text',
-            'label'      => $this->i18n->__('Email:'),
+            'label'      => $this->i18n->__('Email'),
             'required'   => true,
             'attributes' => array('size' => 30),
             'validators' => new Validator\Email()
@@ -156,7 +156,7 @@ class User extends AbstractForm
         if ($type->email_verification) {
             $fields1['email2'] = array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Re-Type Email:'),
+                'label'      => $this->i18n->__('Re-Type Email'),
                 'required'   => true,
                 'attributes' => array('size' => 30),
                 'validators' => new Validator\Email()
@@ -168,7 +168,7 @@ class User extends AbstractForm
             $fields2 = array(
                 'username' => array(
                     'type'       => 'text',
-                    'label'      => $this->i18n->__('Username:'),
+                    'label'      => $this->i18n->__('Username'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => array(
@@ -186,14 +186,14 @@ class User extends AbstractForm
             $fields3 = array(
                 'password1' => array(
                     'type'       => 'password',
-                    'label'      => $this->i18n->__('Enter Password:'),
+                    'label'      => $this->i18n->__('Enter Password'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
                 ),
                 'password2' => array(
                     'type'       => 'password',
-                    'label'      => $this->i18n->__('Re-Type Password:'),
+                    'label'      => $this->i18n->__('Re-Type Password'),
                     'required'   => true,
                     'attributes' => array('size' => 30),
                     'validators' => new Validator\LengthGte(6)
@@ -285,25 +285,25 @@ class User extends AbstractForm
             $fields4['role_id'] = array(
                 'type'     => 'select',
                 'required' => true,
-                'label'    => $this->i18n->__('User Role:'),
+                'label'    => $this->i18n->__('User Role'),
                 'value'    => $rolesAry,
                 'marked'   => $type->default_role_id
             );
 
             $fields4['verified'] = array(
                 'type'   => 'select',
-                'label'  => $this->i18n->__('Verified:'),
+                'label'  => $this->i18n->__('Verified'),
                 'value'  => array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')),
                 'marked' => '0'
             );
             $fields4['failed_attempts'] = array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Failed Attempts:'),
+                'label'      => $this->i18n->__('Failed Attempts'),
                 'attributes' => array('size' => 3)
             );
             $fields4['site_ids'] = array(
                 'type'  => 'checkbox',
-                'label' => $this->i18n->__('Allowed Sites:'),
+                'label' => $this->i18n->__('Allowed Sites'),
                 'value' => $siteIds
             );
         }

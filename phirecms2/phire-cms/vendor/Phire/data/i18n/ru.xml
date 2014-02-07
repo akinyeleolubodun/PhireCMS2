@@ -20,52 +20,52 @@
 <language src="en" output="ru" name="Russian" native="Россию">
     <locale region="RU" name="Russia" native="Россия">
         <text>
-            <source>Language:</source>
-            <output>Язык:</output>
+            <source>Language</source>
+            <output>Язык</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>DB адаптер:</output>
+            <source>DB Adapter</source>
+            <output>DB адаптер</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB имя:</output>
+            <source>DB Name</source>
+            <output>DB имя</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>DB Имя пользователя:</output>
+            <source>DB Username</source>
+            <output>DB Имя пользователя</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>DB Пароль:</output>
+            <source>DB Password</source>
+            <output>DB Пароль</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>DB хоста:</output>
+            <source>DB Host</source>
+            <output>DB хоста</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>DB Префикс таблиц:</output>
+            <source>DB Table Prefix</source>
+            <output>DB Префикс таблиц</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>URI приложения:</output>
+            <source>Application URI</source>
+            <output>URI приложения</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>Как вы будете получать доступ к системе</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>Содержимое Путь:</output>
+            <source>Content Path</source>
+            <output>Содержимое Путь</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>Где активы будут находиться</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>Пароль Шифрование:</output>
+            <source>Password Encryption</source>
+            <output>Пароль Шифрование</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>Настройка пользователя</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>Выберите тип пользователя:</output>
+            <source>Select User Type</source>
+            <output>Выберите тип пользователя</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>E-mail:</output>
+            <source>Email</source>
+            <output>E-mail</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>повторно Тип E-mail:</output>
+            <source>Re-Type Email</source>
+            <output>повторно Тип E-mail</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>Имя пользователя:</output>
+            <source>Username</source>
+            <output>Имя пользователя</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>Введите пароль:</output>
+            <source>Enter Password</source>
+            <output>Введите пароль</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>Повторите пароль:</output>
+            <source>Re-Type Password</source>
+            <output>Повторите пароль</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>Роль пользователя:</output>
+            <source>User Role</source>
+            <output>Роль пользователя</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>Проверенные:</output>
+            <source>Verified</source>
+            <output>Проверенные</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>Неудачных попыток:</output>
+            <source>Failed Attempts</source>
+            <output>Неудачных попыток</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>Разрешенные сайты:</output>
+            <source>Allowed Sites</source>
+            <output>Разрешенные сайты</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,8 +1188,8 @@
             <output>Заменить ?</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>Выберите Revision:</output>
+            <source>Select Revision</source>
+            <output>Выберите Revision</output>
         </text>
         <text>
             <source>Original</source>
@@ -1516,8 +1516,8 @@
             <output>по</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>Изменение редактор:</output>
+            <source>Change Editor</source>
+            <output>Изменение редактор</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>перезагружать</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>истечение</output>
         </text>
     </locale>
 </language>

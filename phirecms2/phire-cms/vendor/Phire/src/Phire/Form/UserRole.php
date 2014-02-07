@@ -63,7 +63,7 @@ class UserRole extends AbstractForm
         $fields1 = array(
             'name' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Name') . ':',
+                'label'      => $this->i18n->__('Name'),
                 'required'   => true,
                 'attributes' => array('size' => 84)
             )
@@ -131,13 +131,13 @@ class UserRole extends AbstractForm
                     'type'       => 'select',
                     'value'      => $classActions[$permission['resource']],
                     'marked'     => $p,
-                    'attributes' => array('style' => 'display: block; min-width: 150px;')
+                    'attributes' => array('style' => 'display: block; width: 150px;')
                 );
                 $fields2['type_cur_' . $i] = array(
                     'type'       => 'select',
                     'value'      => $classTypes[$permission['resource']],
                     'marked'     => $t,
-                    'attributes' => array('style' => 'display: block; min-width: 150px;')
+                    'attributes' => array('style' => 'display: block; width: 150px;')
                 );
                 $fields2['allow_cur_' . $i] = array(
                     'type'       => 'select',
@@ -146,7 +146,7 @@ class UserRole extends AbstractForm
                         '0' => $this->i18n->__('deny')
                     ),
                     'marked'     => $permission['allow'],
-                    'attributes' => array('style' => 'display: block; min-width: 150px;')
+                    'attributes' => array('style' => 'display: block; width: 150px;')
                 );
                 $fields2['rm_resource_' . $i] = array(
                     'type'       => 'checkbox',
@@ -160,7 +160,7 @@ class UserRole extends AbstractForm
         $fields3 = array(
             'resource_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<span class="label-pad-2"><a href="#" onclick="phire.addResource(); return false;">[+]</a> ' . $this->i18n->__('Resource') . ':</span><span class="label-pad-2">' . $this->i18n->__('Action') . ':</span><span class="label-pad-2">' . $this->i18n->__('Type') . ':</span><span class="label-pad-2">' . $this->i18n->__('Permission') . ':</span>',
+                'label'      => '<span class="label-pad-2"><a href="#" onclick="phire.addResource(); return false;">[+]</a> ' . $this->i18n->__('Resource') . '</span><span class="label-pad-2">' . $this->i18n->__('Action') . '</span><span class="label-pad-2">' . $this->i18n->__('Type') . '</span><span class="label-pad-2">' . $this->i18n->__('Permission') . '</span>',
                 'attributes' => array(
                     'onchange' => 'phire.changePermissions(this);',
                     'style' => 'display: block; margin: 3px 0 3px 0;'
@@ -169,17 +169,17 @@ class UserRole extends AbstractForm
             ),
             'permission_new_1' => array(
                 'type'       => 'select',
-                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
+                'attributes' => array('style' => 'display: block; width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array('0' => '(' . $this->i18n->__('All') . ')')
             ),
             'type_new_1' => array(
                 'type'       => 'select',
-                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
+                'attributes' => array('style' => 'display: block; width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array('0' => '(' . $this->i18n->__('All') . ')')
             ),
             'allow_new_1' => array(
                 'type'       => 'select',
-                'attributes' => array('style' => 'display: block; min-width: 150px; margin: 3px 0 3px 0;'),
+                'attributes' => array('style' => 'display: block; width: 150px; margin: 3px 0 3px 0;'),
                 'value'      => array(
                     '1' => $this->i18n->__('allow'),
                     '0' => $this->i18n->__('deny')
@@ -205,10 +205,10 @@ class UserRole extends AbstractForm
             'type_id' => array(
                 'type'       => 'select',
                 'required'   => true,
-                'label'      => $this->i18n->__('User Type') . ':',
+                'label'      => $this->i18n->__('User Type'),
                 'value'      => $typesAry,
                 'attributes' => array(
-                    'style'  => 'min-width: 200px;'
+                    'style'  => 'width: 200px;'
                 )
             ),
             'id' => array(

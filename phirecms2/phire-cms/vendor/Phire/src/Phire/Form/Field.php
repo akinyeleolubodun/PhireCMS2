@@ -164,7 +164,7 @@ class Field extends AbstractForm
         $fields1 = array(
             'type' => array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Field Type') . ':',
+                'label'      => $this->i18n->__('Field Type'),
                 'required'   => true,
                 'value'      => array(
                     'text'             => 'text',
@@ -178,7 +178,7 @@ class Field extends AbstractForm
                     'hidden'           => 'hidden'
                 ),
                 'attributes' => array(
-                    'style'    => 'min-width: 200px;',
+                    'style'    => 'width: 200px;',
                     'onchange' => 'phire.toggleEditor(this);'
                 )
             ),
@@ -192,33 +192,33 @@ class Field extends AbstractForm
             ),
             'name' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Field Name') . ':',
+                'label'      => $this->i18n->__('Field Name'),
                 'required'   => true,
                 'attributes' => array('size' => 64)
             ),
             'label' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Field Label') . ':',
+                'label'      => $this->i18n->__('Field Label'),
                 'attributes' => array('size' => 64)
             ),
             'values' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Field Values') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . '</span>',
+                'label'      => $this->i18n->__('Field Values') . ' <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . '</span>',
                 'attributes' => array('size' => 64)
             ),
             'default_values' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Default Field Values') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . ')</span>',
+                'label'      => $this->i18n->__('Default Field Values') . ' <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . ')</span>',
                 'attributes' => array('size' => 64)
             ),
             'attributes' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Field Attributes') . ':',
+                'label'      => $this->i18n->__('Field Attributes'),
                 'attributes' => array('size' => 64)
             ),
             'validator_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> ' . $this->i18n->__('Field Validators') . ':<br /><span style="font-size: 0.9em;">(' . $this->i18n->__('Type / Value / Message') . '</span>',
+                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> ' . $this->i18n->__('Field Validators') . '<br /><span style="font-size: 0.9em;">(' . $this->i18n->__('Type / Value / Message') . '</span>',
                 'value'      => $this->validators,
                 'attributes' => array(
                     'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 28px;'
@@ -247,7 +247,7 @@ class Field extends AbstractForm
 
         $fields3['model_new_1'] = array(
             'type'       => 'select',
-            'label'      => '<a href="#" onclick="phire.addModel(); return false;">[+]</a> ' . $this->i18n->__('Model &amp; Type') . ':',
+            'label'      => '<a href="#" onclick="phire.addModel(); return false;">[+]</a> ' . $this->i18n->__('Model &amp; Type'),
             'value'      => $models,
             'attributes' => array(
                 'style'    => 'display: block; margin: 0 0 4px 0;',
@@ -258,7 +258,7 @@ class Field extends AbstractForm
             'type'       => 'select',
             'value'      => \Phire\Project::getModelTypes($models),
             'attributes' => array(
-                'style' => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
+                'style' => 'display: block; width: 200px; margin: 0 0 4px 0;'
             )
         );
 
@@ -283,7 +283,7 @@ class Field extends AbstractForm
                         'value'      => \Phire\Project::getModelTypes(str_replace('\\', '_', $f2m['model'])),
                         'marked'     => $f2m['type_id'],
                         'attributes' => array(
-                            'style'  => 'display: block; min-width: 200px; margin: 0 0 4px 0;'
+                            'style'  => 'display: block; width: 200px; margin: 0 0 4px 0;'
                         )
                     );
                     $fields3['rm_model_cur_' . $i] = array(
@@ -316,21 +316,21 @@ class Field extends AbstractForm
         );
         $fields4['order'] = array(
             'type'       => 'text',
-            'label'      => $this->i18n->__('Order') . ':',
+            'label'      => $this->i18n->__('Order'),
             'value'      => 0,
             'attributes' => array('size' => 3)
         );
         $fields4['group_id'] = array(
             'type'   => 'select',
-            'label'  => $this->i18n->__('Field Group') . ':',
+            'label'  => $this->i18n->__('Field Group'),
             'value'  => $groups,
             'attributes' => array(
-                'style' => 'display: block; min-width: 150px;'
+                'style' => 'display: block; width: 200px;'
             )
         );
         $fields4['encryption'] = array(
             'type'       => 'select',
-            'label'  => $this->i18n->__('Encryption') . ':',
+            'label'  => $this->i18n->__('Encryption'),
             'value' => array(
                 '0' => 'None',
                 '1' => 'MD5',
@@ -344,12 +344,12 @@ class Field extends AbstractForm
             ),
             'marked'     => 0,
             'attributes' => array(
-                'style' => 'display: block; min-width: 150px;'
+                'style' => 'display: block; width: 200px;'
             )
         );
         $fields4['required'] = array(
             'type'   => 'select',
-            'label'  => $this->i18n->__('Required') . ':',
+            'label'  => $this->i18n->__('Required'),
             'value'  => array(
                 '0' => $this->i18n->__('No'),
                 '1' => $this->i18n->__('Yes')

@@ -42,7 +42,7 @@ class Content extends AbstractForm
                 'type_id' => array(
                     'type'     => 'select',
                     'required' => true,
-                    'label'    => $this->i18n->__('Select Content Type') . ':',
+                    'label'    => $this->i18n->__('Select Content Type'),
                     'value'    => $typesAry
                 ),
                 'submit' => array(
@@ -149,7 +149,7 @@ class Content extends AbstractForm
 
             $uri = array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('URI') . ':' . (($mid != 0) ? ' <a class="small-link" href="#" onclick="phire.slug(\'content_title\', \'uri\'); return false;">[ ' . $this->i18n->__('Generate URI') . ' ]</a>': null),
+                'label'      => $this->i18n->__('URI') . (($mid != 0) ? ' <a class="small-link" href="#" onclick="phire.slug(\'content_title\', \'uri\'); return false;">[ ' . $this->i18n->__('Generate URI') . ' ]</a>' : null),
                 'attributes' => array(
                     'size'    => 80,
                     'onkeyup' => "phire.slug(null, 'uri');"
@@ -165,7 +165,7 @@ class Content extends AbstractForm
         // Else, if type is a file
         } else {
             $this->hasFile = true;
-            $label = $this->i18n->__('File') . ': <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> ' . $this->i18n->__('Max Size') . ' ]</span>';
+            $label = $this->i18n->__('File') . ' <span style="font-weight: normal; color: #666; padding: 0 0 0 10px; font-size: 0.9em;">[ <strong>' . \Phire\Table\Config::getMaxFileSize() . '</strong> ' . $this->i18n->__('Max Size') . ' ]</span>';
             $required = true;
             if ($mid != 0) {
                 $content = Table\Content::findById($mid);
@@ -192,7 +192,7 @@ class Content extends AbstractForm
 
         $fields1['content_title'] = array(
             'type'       => 'text',
-            'label'      => $this->i18n->__('Title') . ':',
+            'label'      => $this->i18n->__('Title'),
             'required'   => (!$this->hasFile),
             'attributes' => $titleAttributes
         );
@@ -212,7 +212,7 @@ class Content extends AbstractForm
         $fields4 = array(
             'site_id' => array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Site') . ':',
+                'label'      => $this->i18n->__('Site'),
                 'value'      => $siteIds,
                 'marked'     => 0,
                 'attributes' => array('style' => 'width: 200px;')
@@ -223,7 +223,7 @@ class Content extends AbstractForm
         if ($type->uri == 1) {
             $fields4['parent_id'] = array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Parent') . ':',
+                'label'      => $this->i18n->__('Parent'),
                 'value'      => $parents,
                 'attributes' => array(
                     'onchange' => "phire.slug(null, 'uri');",
@@ -232,7 +232,7 @@ class Content extends AbstractForm
             );
             $fields4['template'] = array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Template') . ':',
+                'label'      => $this->i18n->__('Template'),
                 'value'      => $this->getTemplates($cfg),
                 'attributes' => array(
                     'style'    => 'width: 200px;'
@@ -244,7 +244,7 @@ class Content extends AbstractForm
         if (!$this->hasFile) {
             $fields4['status'] = array(
                 'type'   => 'select',
-                'label'  => $this->i18n->__('Status') . ':',
+                'label'  => $this->i18n->__('Status'),
                 'value'  => array(
                     0 => $this->i18n->__('Unpublished'),
                     1 => $this->i18n->__('Draft'),
@@ -272,7 +272,7 @@ class Content extends AbstractForm
             }
             $fields5['navigation_id'] = array(
                 'type'   => 'checkbox',
-                'label'  => $this->i18n->__('Navigation') . ' / ' . $this->i18n->__('Order') . ':',
+                'label'  => $this->i18n->__('Navigation') . ' / ' . $this->i18n->__('Order'),
                 'value'  => $navsAry,
                 'marked' => $navsMarked
             );
@@ -280,19 +280,19 @@ class Content extends AbstractForm
             if (count($categoryAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
-                    'label'    => $this->i18n->__('Categories') . ':',
+                    'label'    => $this->i18n->__('Categories'),
                     'value'    => $categoryAry
                 );
             }
             $fields5['feed'] = array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Include in Feed') . ':',
+                'label'  => $this->i18n->__('Include in Feed'),
                 'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 1
             );
             $fields5['force_ssl'] = array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Force SSL') . ':',
+                'label'  => $this->i18n->__('Force SSL'),
                 'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 0
             );
@@ -303,7 +303,7 @@ class Content extends AbstractForm
             }
             $fields5['roles'] = array(
                 'type'   => 'checkbox',
-                'label'  => $this->i18n->__('Roles') . ':',
+                'label'  => $this->i18n->__('Roles'),
                 'value'  => $rolesAry
             );
         } else {
@@ -311,13 +311,13 @@ class Content extends AbstractForm
             if (count($categoryAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
-                    'label'    => $this->i18n->__('Categories') . ':',
+                    'label'    => $this->i18n->__('Categories'),
                     'value'    => $categoryAry
                 );
             }
             $fields5['feed'] = array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Include in Feed') . ':',
+                'label'  => $this->i18n->__('Include in Feed'),
                 'value'  => array(1 => $this->i18n->__('Yes'), 0 => $this->i18n->__('No')),
                 'marked' => 1
             );
@@ -344,7 +344,7 @@ class Content extends AbstractForm
         if ($type->uri) {
             $fields4['published_month'] = array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Publish') . ' / ' . $this->i18n->__('Start Date') . ':',
+                'label'      => $this->i18n->__('Publish') . ' / ' . $this->i18n->__('Start Date'),
                 'value'      => Element\Select::MONTHS_SHORT,
                 'marked'     => date('m')
             );
@@ -370,7 +370,7 @@ class Content extends AbstractForm
             );
             $fields4['expired_month'] = array(
                 'type'       => 'select',
-                'label'      => 'Expiration / End Date:',
+                'label'      => $this->i18n->__('Expiration') . ' / ' . $this->i18n->__('End Date'),
                 'value'      => Element\Select::MONTHS_SHORT
             );
             $fields4['expired_day'] = array(

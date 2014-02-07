@@ -95,7 +95,7 @@ class Category extends AbstractForm
         $fields1 = array(
             'category_title' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Title') . ':',
+                'label'      => $this->i18n->__('Title'),
                 'required'   => true,
                 'attributes' => array(
                     'size'    => 80,
@@ -104,7 +104,7 @@ class Category extends AbstractForm
             ),
             'slug' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Slug') . ':',
+                'label'      => $this->i18n->__('Slug'),
                 'required'   => true,
                 'attributes' => array(
                     'size' => 80,
@@ -157,7 +157,7 @@ class Category extends AbstractForm
             ),
             'parent_id' => array(
                 'type'       => 'select',
-                'label'      => $this->i18n->__('Parent') . ':',
+                'label'      => $this->i18n->__('Parent'),
                 'value'      => $parents,
                 'attributes' => array(
                     'style'    => 'width: 200px;',
@@ -166,13 +166,13 @@ class Category extends AbstractForm
             ),
             'order' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Order') . ':',
+                'label'      => $this->i18n->__('Order'),
                 'attributes' => array('size' => 3),
                 'value'      => 0
             ),
             'total' => array(
                 'type'       => 'radio',
-                'label'      => $this->i18n->__('Show Total') . ':',
+                'label'      => $this->i18n->__('Show Total'),
                 'value'      => array(
                     '1' => $this->i18n->__('Yes'),
                     '0' => $this->i18n->__('No')
@@ -199,7 +199,7 @@ class Category extends AbstractForm
         }
         $fields3['navigation_id'] = array(
             'type'   => 'checkbox',
-            'label'  => $this->i18n->__('Navigation') . ' / ' . $this->i18n->__('Order') . ':',
+            'label'  => $this->i18n->__('Navigation') . ' / ' . $this->i18n->__('Order'),
             'value'  => $navsAry,
             'marked' => $navsMarked
         );

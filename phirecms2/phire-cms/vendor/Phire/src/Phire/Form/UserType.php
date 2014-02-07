@@ -70,75 +70,75 @@ class UserType extends AbstractForm
         $fields1 = array(
             'type' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Type') . ':',
+                'label'      => $this->i18n->__('Type'),
                 'required'   => true,
                 'attributes' => array('size' => 40)
             ),
             'ip_allowed' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('IPs Allowed') . ':',
+                'label'      => $this->i18n->__('IPs Allowed'),
                 'attributes' => array('size' => 40)
             ),
             'ip_blocked' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('IPs Blocked') . ':',
+                'label'      => $this->i18n->__('IPs Blocked'),
                 'attributes' => array('size' => 40)
             ),
             'log_emails' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Log Emails') . ':',
+                'label'      => $this->i18n->__('Log Emails'),
                 'attributes' => array('size' => 40)
             ),
             'log_exclude' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Log Exclude') . ':',
+                'label'      => $this->i18n->__('Log Exclude'),
                 'attributes' => array('size' => 40)
             ),
             'controller' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Controller') . ':',
+                'label'      => $this->i18n->__('Controller'),
                 'attributes' => array('size' => 40)
             ),
             'sub_controllers' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Sub Controllers') . ':',
+                'label'      => $this->i18n->__('Sub Controllers'),
                 'attributes' => array('size' => 40)
             )
         );
         $fields2a = array(
             'log_in' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Allow Login') . ':',
+                'label'  => $this->i18n->__('Allow Login'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'registration' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Allow Registration') . ':',
+                'label'  => $this->i18n->__('Allow Registration'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'multiple_sessions' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Allow Multiple Sessions') . ':',
+                'label'  => $this->i18n->__('Allow Multiple Sessions'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'timeout_warning' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Session Timeout Warning') . ':',
+                'label'  => $this->i18n->__('Session Timeout Warning'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'mobile_access' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Allow Mobile Access') . ':',
+                'label'  => $this->i18n->__('Allow Mobile Access'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'email_as_username' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Allow Email as Username') . ':',
+                'label'  => $this->i18n->__('Allow Email as Username'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
@@ -146,37 +146,37 @@ class UserType extends AbstractForm
         $fields2b = array(
             'email_verification' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('User Email Verification') . ':',
+                'label'  => $this->i18n->__('User Email Verification'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'force_ssl' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Force SSL') . ':',
+                'label'  => $this->i18n->__('Force SSL'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
             'track_sessions' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Track Sessions') . ':',
+                'label'  => $this->i18n->__('Track Sessions'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'verification' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('System Email Verification') . ':',
+                'label'  => $this->i18n->__('System Email Verification'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'approval' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Require Approval') . ':',
+                'label'  => $this->i18n->__('Require Approval'),
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
             'unsubscribe_login' => array(
                 'type'   => 'radio',
-                'label'  => $this->i18n->__('Require Login for Unsubscribe') . ':',
+                'label'  => $this->i18n->__('Require Login for Unsubscribe'),
                 'value'  => $yesNo,
                 'marked' => '1'
             )
@@ -226,15 +226,15 @@ class UserType extends AbstractForm
         );
         $fields4['default_role_id'] = array(
             'type'   => 'select',
-            'label'  => $this->i18n->__('Default Role') . ':',
+            'label'  => $this->i18n->__('Default Role'),
             'value'  => $rolesAry,
             'attributes' => array(
-                'style' => 'min-width: 200px;'
+                'style' => 'width: 200px;'
             )
         );
         $fields4['password_encryption'] = array(
             'type'  => 'select',
-            'label' => $this->i18n->__('Password Encryption') . ':',
+            'label' => $this->i18n->__('Password Encryption'),
             'value' => array(
                 '1' => 'MD5',
                 '2' => 'SHA1',
@@ -248,24 +248,24 @@ class UserType extends AbstractForm
             ),
             'marked' => '4',
             'attributes' => array(
-                'style' => 'min-width: 200px;'
+                'style' => 'width: 200px;'
             )
         );
         $fields4['global_access'] = array(
             'type'   => 'select',
-            'label'  => $this->i18n->__('Allow Global Access') . ':',
+            'label'  => $this->i18n->__('Allow Global Access'),
             'value'  => $yesNo,
             'marked' => '0'
         );
         $fields4['allowed_attempts'] = array(
             'type'       => 'text',
-            'label'      => $this->i18n->__('Allowed Attempts') . ':',
+            'label'      => $this->i18n->__('Allowed Attempts'),
             'attributes' => array('size' => 3),
             'value'      => '0'
         );
         $fields4['session_expiration'] = array(
             'type'       => 'text',
-            'label'      => $this->i18n->__('Session Expiration') . ': <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Minutes') . ')</span>',
+            'label'      => $this->i18n->__('Session Expiration') . ' <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Minutes') . ')</span>',
             'attributes' => array('size' => 3),
             'value'      => '0'
         );

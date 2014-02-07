@@ -24,7 +24,7 @@ class Login extends AbstractForm
         $this->initFieldsValues = array(
             'username' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Username:'),
+                'label'      => $this->i18n->__('Username'),
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
@@ -33,7 +33,7 @@ class Login extends AbstractForm
             ),
             'password' => array(
                 'type'       => 'password',
-                'label'      => $this->i18n->__('Password') . ':',
+                'label'      => $this->i18n->__('Password'),
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,

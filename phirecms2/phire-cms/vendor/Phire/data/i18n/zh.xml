@@ -20,52 +20,52 @@
 <language src="en" output="zh" name="Chinese" native="中文">
     <locale region="CN" name="China" native="中国">
         <text>
-            <source>Language:</source>
-            <output>语言：</output>
+            <source>Language</source>
+            <output>语言</output>
         </text>
         <text>
-            <source>DB Adapter:</source>
-            <output>DB适配器：</output>
+            <source>DB Adapter</source>
+            <output>DB适配器</output>
         </text>
         <text>
-            <source>DB Name:</source>
-            <output>DB名称：</output>
+            <source>DB Name</source>
+            <output>DB名称</output>
         </text>
         <text>
-            <source>DB Username:</source>
-            <output>数据库用户名：</output>
+            <source>DB Username</source>
+            <output>数据库用户名</output>
         </text>
         <text>
-            <source>DB Password:</source>
-            <output>数据库密码：</output>
+            <source>DB Password</source>
+            <output>数据库密码</output>
         </text>
         <text>
-            <source>DB Host:</source>
-            <output>数据库主机：</output>
+            <source>DB Host</source>
+            <output>数据库主机</output>
         </text>
         <text>
-            <source>DB Table Prefix:</source>
-            <output>数据库表前缀：</output>
+            <source>DB Table Prefix</source>
+            <output>数据库表前缀</output>
         </text>
         <text>
-            <source>Application URI:</source>
-            <output>应用程序的URI：</output>
+            <source>Application URI</source>
+            <output>应用程序的URI</output>
         </text>
         <text>
             <source>How you will access the system</source>
             <output>你将如何访问系统</output>
         </text>
         <text>
-            <source>Content Path:</source>
-            <output>内容路径：</output>
+            <source>Content Path</source>
+            <output>内容路径</output>
         </text>
         <text>
             <source>Where assets will be located</source>
             <output>凡资产将位于</output>
         </text>
         <text>
-            <source>Password Encryption:</source>
-            <output>密码加密：</output>
+            <source>Password Encryption</source>
+            <output>密码加密</output>
         </text>
         <text>
             <source>NEXT</source>
@@ -124,44 +124,44 @@
             <output>用户设置</output>
         </text>
         <text>
-            <source>Select User Type:</source>
-            <output>选择用户类型：</output>
+            <source>Select User Type</source>
+            <output>选择用户类型</output>
         </text>
         <text>
-            <source>Email:</source>
-            <output>电子邮件：</output>
+            <source>Email</source>
+            <output>电子邮件</output>
         </text>
         <text>
-            <source>Re-Type Email:</source>
-            <output>再次输入：</output>
+            <source>Re-Type Email</source>
+            <output>再次输入</output>
         </text>
         <text>
-            <source>Username:</source>
-            <output>用户名：</output>
+            <source>Username</source>
+            <output>用户名</output>
         </text>
         <text>
-            <source>Enter Password:</source>
-            <output>输入密码：</output>
+            <source>Enter Password</source>
+            <output>输入密码</output>
         </text>
         <text>
-            <source>Re-Type Password:</source>
-            <output>再次输入密码：</output>
+            <source>Re-Type Password</source>
+            <output>再次输入密码</output>
         </text>
         <text>
-            <source>User Role:</source>
-            <output>用户角色：</output>
+            <source>User Role</source>
+            <output>用户角色</output>
         </text>
         <text>
-            <source>Verified:</source>
-            <output>验证：</output>
+            <source>Verified</source>
+            <output>验证</output>
         </text>
         <text>
-            <source>Failed Attempts:</source>
-            <output>失败的尝试：</output>
+            <source>Failed Attempts</source>
+            <output>失败的尝试</output>
         </text>
         <text>
-            <source>Allowed Sites:</source>
-            <output>允许的网站：</output>
+            <source>Allowed Sites</source>
+            <output>允许的网站</output>
         </text>
         <text>
             <source>SELECT</source>
@@ -1188,8 +1188,8 @@
             <output>更换？</output>
         </text>
         <text>
-            <source>Select Revision:</source>
-            <output>选择版本：</output>
+            <source>Select Revision</source>
+            <output>选择版本</output>
         </text>
         <text>
             <source>Original</source>
@@ -1516,8 +1516,8 @@
             <output>通过</output>
         </text>
         <text>
-            <source>Change Editor:</source>
-            <output>改变编辑器：</output>
+            <source>Change Editor</source>
+            <output>改变编辑器</output>
         </text>
         <text>
             <source>Clear</source>
@@ -1566,6 +1566,10 @@
         <text>
             <source>Reload</source>
             <output>刷新</output>
+        </text>
+        <text>
+            <source>Expiration</source>
+            <output>呼气</output>
         </text>
     </locale>
 </language>

@@ -24,7 +24,7 @@ class Forgot extends AbstractForm
         $this->initFieldsValues = array(
             'email' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Email:'),
+                'label'      => $this->i18n->__('Email'),
                 'required'   => true,
                 'attributes' => array(
                     'size'  => 30,
