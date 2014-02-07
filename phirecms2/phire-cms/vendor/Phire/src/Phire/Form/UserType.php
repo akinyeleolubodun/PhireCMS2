@@ -244,7 +244,7 @@ class UserType extends AbstractForm
                 '6' => 'Crypt_MD5',
                 '7' => 'Crypt_SHA256',
                 '8' => 'Crypt_SHA512',
-                '0' => 'None'
+                '0' => $this->i18n->__('None')
             ),
             'marked' => '4',
             'attributes' => array(

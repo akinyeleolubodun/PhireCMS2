@@ -203,7 +203,7 @@ class Field extends AbstractForm
             ),
             'values' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Field Values') . ' <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . '</span>',
+                'label'      => $this->i18n->__('Field Values') . ' <span style="font-size: 0.9em; font-weight: normal;">(' . $this->i18n->__('Pipe delimited') . ')</span>',
                 'attributes' => array('size' => 64)
             ),
             'default_values' => array(
@@ -218,7 +218,7 @@ class Field extends AbstractForm
             ),
             'validator_new_1' => array(
                 'type'       => 'select',
-                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> ' . $this->i18n->__('Field Validators') . '<br /><span style="font-size: 0.9em;">(' . $this->i18n->__('Type / Value / Message') . '</span>',
+                'label'      => '<a href="#" onclick="phire.addValidator(); return false;">[+]</a> ' . $this->i18n->__('Field Validators') . '<br /><span style="font-size: 0.9em;">(' . $this->i18n->__('Type / Value / Message') . ')</span>',
                 'value'      => $this->validators,
                 'attributes' => array(
                     'style' => 'display: block; padding: 4px 4px 5px 4px; margin: 0 0 4px 0; height: 28px;'
@@ -332,7 +332,7 @@ class Field extends AbstractForm
             'type'       => 'select',
             'label'  => $this->i18n->__('Encryption'),
             'value' => array(
-                '0' => 'None',
+                '0' => $this->i18n->__('None'),
                 '1' => 'MD5',
                 '2' => 'SHA1',
                 '3' => 'Crypt',

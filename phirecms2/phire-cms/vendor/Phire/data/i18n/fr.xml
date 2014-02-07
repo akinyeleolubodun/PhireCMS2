@@ -553,7 +553,7 @@
         </text>
         <text>
             <source>Field Groups</source>
-            <output>Groupes Terrain</output>
+            <output>Groupes de Champs</output>
         </text>
         <text>
             <source>Navigation</source>
@@ -925,7 +925,7 @@
         </text>
         <text>
             <source>Minutes</source>
-            <output>procès-verbal</output>
+            <output>Minutes</output>
         </text>
         <text>
             <source>IPs Allowed</source>
