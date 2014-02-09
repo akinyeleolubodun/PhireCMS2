@@ -13,6 +13,25 @@ class Cli
      */
     protected $args = null;
 
+
+    /**
+     * CLI commands
+     * @var array
+     */
+    protected $commands = array(
+        'help',
+        'config',
+        'version',
+        'user',
+        'ext',
+        'sql',
+        'install',
+        'update',
+        'upgrade',
+        'archive',
+        'deploy'
+    );
+
     /**
      * Constructor method to instantiate the CLI object
      *
@@ -24,15 +43,23 @@ class Cli
         $this->args = $args;
         //print_r($this->args);
 
-        if (!in_array('install', $this->args) && !Project::isInstalled(true)) {
-            echo 'Phire CMS 2 does not appear to be installed. Please check the config file or install the application.' . PHP_EOL . PHP_EOL;
+        if (isset($this->args[1]) && ($this->args[1] == 'help')) {
+            $this->showHelp();
+            exit();
+        } else if (isset($this->args[1]) && !in_array($this->args[1], $this->commands)) {
+            echo '  The command \'' . $this->args[1] . '\' was not recognized. Use ./phire help for help.' . PHP_EOL . PHP_EOL;
+            exit();
+        }
+
+        if (isset($this->args[1]) && ($this->args[1] != 'install') && !Project::isInstalled(true)) {
+            echo '  Phire CMS 2 does not appear to be installed. Please check the config file or install the application.' . PHP_EOL . PHP_EOL;
+            exit();
+        } else if (isset($this->args[1]) && ($this->args[1] == 'install') && Project::isInstalled(true)) {
+            echo '  Phire CMS 2 appears to already be installed.' . PHP_EOL . PHP_EOL;
+            exit();
         } else {
             if (isset($this->args[1])) {
                 switch ($this->args[1]) {
-                    case 'help':
-                        $this->showHelp();
-                        break;
-
                     case 'config':
                         $this->showConfig();
                         break;
@@ -64,9 +91,7 @@ class Cli
      */
     protected function showHelp()
     {
-        echo 'Help' . PHP_EOL;
-        echo '----' . PHP_EOL;
-        echo PHP_EOL;
+        echo file_get_contents(__DIR__ . '/../../data/cli-help.txt');
     }
 
     /**
@@ -76,8 +101,17 @@ class Cli
      */
     protected function showConfig()
     {
-        echo 'Config' . PHP_EOL;
-        echo '------' . PHP_EOL;
+        echo 'Current Configuration' . PHP_EOL;
+        echo '---------------------' . PHP_EOL;
+        echo PHP_EOL;
+        $config = new Model\Config();
+        $config->getAll();
+        foreach ($config->config->server as $key => $value) {
+            if ($key != 'system_domain') {
+                $name = ucwords(str_replace(array('_', 'php'), array(' ', 'PHP'), $key));
+                echo '  ' . $name . ': ' . str_repeat(' ', (30 - strlen($name))) . $value . PHP_EOL;
+            }
+        }
         echo PHP_EOL;
     }
 
@@ -88,7 +122,18 @@ class Cli
      */
     protected function showVersion()
     {
+        $latest = 'N/A';
+        $handle = fopen('http://www.phirecms.org/version', 'r');
+        if ($handle !== false) {
+            $latest = trim(stream_get_contents($handle));
+            fclose($handle);
+        }
+
         echo 'Version' . PHP_EOL;
+        echo '-------' . PHP_EOL;
+        echo PHP_EOL;
+        echo '  Current Installed: ' . Project::VERSION . PHP_EOL;
+        echo '  Latest Available:  ' . $latest . PHP_EOL;
         echo PHP_EOL;
     }
 
@@ -179,9 +224,7 @@ class Cli
 
             $input['language'] = $langKeys[$inputLang];
 
-            echo PHP_EOL;
-
-            echo '  Select DB Adapter:' . PHP_EOL . PHP_EOL;
+            echo PHP_EOL . '  Select DB Adapter:' . PHP_EOL . PHP_EOL;
             foreach ($db as $key => $value) {
                 echo  '  ' . $key . ' : ' . $value . PHP_EOL;
             }
@@ -234,23 +277,25 @@ class Cli
                 }
             }
 
-            echo PHP_EOL . '  ...Installing Database...' . PHP_EOL;
+            echo '  ...Installing Database...' . PHP_EOL;
 
             $install = $install = new Model\Install();
             $install->config(new \ArrayObject($input, \ArrayObject::ARRAY_AS_PROPS), realpath(__DIR__ . '/../../../../../'));
 
-            echo '  ...Database Complete.' . PHP_EOL . PHP_EOL;
+            echo '  ...Database Installation Complete.' . PHP_EOL . PHP_EOL;
 
             // Install initial user
+
+            echo PHP_EOL . '  Initial User Setup:' . PHP_EOL . PHP_EOL;
             $user = array(
                 'email'    => null,
                 'username' => null,
                 'password' => null,
             );
 
-            $user['email']    = self::cliInput('  User Email: ');
-            $user['username']  = self::cliInput('  Username: ');
-            $user['password'] = self::cliInput('  Password: ');
+            $user['email']    = self::cliInput('  Enter User Email: ');
+            $user['username']  = self::cliInput('  Enter Username: ');
+            $user['password'] = self::cliInput('  Enter Password: ');
 
             echo PHP_EOL . '  ...Saving Initial User...' . PHP_EOL . PHP_EOL;
 
@@ -276,7 +321,7 @@ class Cli
 
             $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "')");
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'content SET created_by = 1001');
-            echo '  Done!' . PHP_EOL . PHP_EOL;
+            echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
         }
     }
 

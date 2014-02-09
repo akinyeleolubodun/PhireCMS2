@@ -43,7 +43,9 @@ abstract class AbstractModel
         }
 
         $this->config = \Phire\Table\Config::getSystemConfig();
-        $sess = \Pop\Web\Session::getInstance();
+        if (!headers_sent()) {
+            $sess = \Pop\Web\Session::getInstance();
+        }
         $this->i18n = Table\Config::getI18n();
 
         if (isset($sess->user)) {

@@ -123,7 +123,6 @@ class Config extends AbstractModel
     {
         $cfg = Table\Config::getConfig();
         $config = array();
-        $formattedConfig = array();
 
         foreach ($cfg->rows as $c) {
             if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
@@ -175,7 +174,7 @@ class Config extends AbstractModel
         // Set server config settings
         $formattedConfig['server'] = array(
             'system_version'          => $config['system_version'],
-            'system_domain'           => $_SERVER['HTTP_HOST'],
+            'system_domain'           => (isset($_SERVER) && isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : 'N/A',
             'system_document root'    => $config['system_document_root'],
             'system_base_path'        => BASE_PATH,
             'system_application_path' => APP_PATH,
