@@ -23,27 +23,39 @@ else
 
     DB_INTERFACE=`cat ../../config.php | grep DB_INTERFACE`
     DB_INTERFACE=${DB_INTERFACE:24}
-    DB_INTERFACE=${DB_INTERFACE:0:-3}
+    POS=`expr index "$DB_INTERFACE" "'"`
+    let "POS-=1"
+    DB_INTERFACE=${DB_INTERFACE:0:$POS}
 
     DB_TYPE=`cat ../../config.php | grep DB_TYPE`
     DB_TYPE=${DB_TYPE:19}
-    DB_TYPE=${DB_TYPE:0:-3}
+    POS=`expr index "$DB_TYPE" "'"`
+    let "POS-=1"
+    DB_TYPE=${DB_TYPE:0:$POS}
 
     DB_NAME=`cat ../../config.php | grep DB_NAME`
     DB_NAME=${DB_NAME:19}
-    DB_NAME=${DB_NAME:0:-3}
+    POS=`expr index "$DB_NAME" "'"`
+    let "POS-=1"
+    DB_NAME=${DB_NAME:0:$POS}
 
     DB_USER=`cat ../../config.php | grep DB_USER`
     DB_USER=${DB_USER:19}
-    DB_USER=${DB_USER:0:-3}
+    POS=`expr index "$DB_USER" "'"`
+    let "POS-=1"
+    DB_USER=${DB_USER:0:$POS}
 
     DB_PASS=`cat ../../config.php | grep DB_PASS`
     DB_PASS=${DB_PASS:19}
-    DB_PASS=${DB_PASS:0:-3}
+    POS=`expr index "$DB_PASS" "'"`
+    let "POS-=1"
+    DB_PASS=${DB_PASS:0:$POS}
 
     DB_HOST=`cat ../../config.php | grep DB_HOST`
     DB_HOST=${DB_HOST:19}
-    DB_HOST=${DB_HOST:0:-3}
+    POS=`expr index "$DB_HOST" "'"`
+    let "POS-=1"
+    DB_HOST=${DB_HOST:0:$POS}
 
     if [ "$DB_INTERFACE" = "Mysqli" ] || [ "$DB_TYPE" = "mysql" ]; then
         DB_CLI=`which mysql`
@@ -65,6 +77,7 @@ else
 
     if [ "$2" = "cli" ]; then
         if [ "$DB_CLI" != "" ]; then
+            DB_CLI=${DB_CLI// /\\ }
             eval "$DB_CLI $DB_CLI_PARAMS"
         else
             echo -e "\n  That database CLI client was not found.\n"
@@ -72,6 +85,7 @@ else
     elif [ "$2" = "dump" ]; then
         if [ "$DB_CLI_DUMP" != "" ]; then
             echo -e "\n  Dumping Phire CMS 2 Database..."
+            DB_CLI_DUMP=${DB_CLI_DUMP// /\\ }
             eval "$DB_CLI_DUMP $DB_CLI_DUMP_PARAMS"
             echo -e "  Done!\n"
         else
