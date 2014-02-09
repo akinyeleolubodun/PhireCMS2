@@ -177,17 +177,20 @@ class Install
         // Get server info
         if (isset($_SERVER) && isset($_SERVER['SERVER_SOFTWARE'])) {
             $server = new Server();
-            $os = $server->getOs() . ' (' . $server->getDistro() . ')';
-            $srv = $server->getServer() . ' ' . $server->getServerVersion();
-            $doc = $_SERVER['DOCUMENT_ROOT'];
+            $os     = $server->getOs() . ' (' . $server->getDistro() . ')';
+            $srv    = $server->getServer() . ' ' . $server->getServerVersion();
+            $domain = $_SERVER['HTTP_HOST'];
+            $doc    = $_SERVER['DOCUMENT_ROOT'];
         } else {
-            $os  = '';
-            $srv = '';
-            $doc = '';
+            $os     = '';
+            $srv    = '';
+            $domain = '';
+            $doc    = '';
         }
 
         // Set the system configuration
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . \Phire\Project::VERSION . "' WHERE setting = 'system_version'");
+        $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($domain) . "' WHERE setting = 'system_domain'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($doc) . "' WHERE setting = 'system_document_root'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($os) . "' WHERE setting = 'server_operating_system'");
         $db->adapter()->query("UPDATE " . $db->adapter()->escape($dbPrefix) . "config SET value = '" . $db->adapter()->escape($srv) . "' WHERE setting = 'server_software'");

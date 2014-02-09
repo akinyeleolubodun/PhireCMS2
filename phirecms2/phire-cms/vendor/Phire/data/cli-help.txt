@@ -1,8 +1,8 @@
   Basic
   -----
-    ./phire help              - Display help
-    ./phire config            - View current configuration
-    ./phire version           - View current version
+    ./phire help               - Display help
+    ./phire config             - View current configuration
+    ./phire version            - View current version
 
   Users
   -----
@@ -28,7 +28,6 @@
   SQL
   ---
     ./phire sql cli           - Open SQL CLI
-    ./phire sql optimize      - Optimize the DB
     ./phire sql dump          - Export the DB into a SQL file
 
   System

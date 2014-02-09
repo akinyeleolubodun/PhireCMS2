@@ -12,4 +12,70 @@ if [ "$CYG_PATH" != "" ]; then
 else
     SCRIPT_PATH="$SCRIPT_DIR/phire.php $@"
 fi
-php $SCRIPT_PATH
+
+if [ "$1" != "sql" ]; then
+    php $SCRIPT_PATH
+else
+    DB_CLI=
+    DB_CLI_DUMP=
+    DB_CLI_PARAMS=
+    DB_CLI_DUMP_PARAMS=
+
+    DB_INTERFACE=`cat ../../config.php | grep DB_INTERFACE`
+    DB_INTERFACE=${DB_INTERFACE:24}
+    DB_INTERFACE=${DB_INTERFACE:0:-3}
+
+    DB_TYPE=`cat ../../config.php | grep DB_TYPE`
+    DB_TYPE=${DB_TYPE:19}
+    DB_TYPE=${DB_TYPE:0:-3}
+
+    DB_NAME=`cat ../../config.php | grep DB_NAME`
+    DB_NAME=${DB_NAME:19}
+    DB_NAME=${DB_NAME:0:-3}
+
+    DB_USER=`cat ../../config.php | grep DB_USER`
+    DB_USER=${DB_USER:19}
+    DB_USER=${DB_USER:0:-3}
+
+    DB_PASS=`cat ../../config.php | grep DB_PASS`
+    DB_PASS=${DB_PASS:19}
+    DB_PASS=${DB_PASS:0:-3}
+
+    DB_HOST=`cat ../../config.php | grep DB_HOST`
+    DB_HOST=${DB_HOST:19}
+    DB_HOST=${DB_HOST:0:-3}
+
+    if [ "$DB_INTERFACE" = "Mysqli" ] || [ "$DB_TYPE" = "mysql" ]; then
+        DB_CLI=`which mysql`
+        DB_CLI_DUMP=`which mysqldump`
+        DB_CLI_PARAMS="--database=$DB_NAME --user=$DB_USER --password=$DB_PASS --host=$DB_HOST"
+        DB_CLI_DUMP_PARAMS="--user=$DB_USER --password=$DB_PASS --host=$DB_HOST $DB_NAME > $DB_NAME""_$(date +%Y-%m-%d_%H-%M).mysql.sql"
+    elif [ "$DB_INTERFACE" = "Pgsql" ] || [ "$DB_TYPE" = "pgsql" ]; then
+        DB_CLI=`which psql`
+        DB_CLI_DUMP=`which pg_dump`
+        DB_CLI_PARAMS="--dbname=$DB_NAME --username=$DB_USER"
+        DB_CLI_DUMP_PARAMS="--username=$DB_USER $DB_NAME > $DB_NAME""_$(date +%Y-%m-%d_%H-%M).pgsql.sql"
+    elif [ "$DB_INTERFACE" = "Sqlite" ] || [ "$DB_TYPE" = "sqlite" ]; then
+        DB_NAME=${DB_NAME:10}
+        DB_CLI=`which sqlite3`
+        DB_CLI_DUMP=`which sqlite3`
+        DB_CLI_PARAMS="../..$DB_NAME"
+        DB_CLI_DUMP_PARAMS="../..$DB_NAME .dump > phirecms_$(date +%Y-%m-%d_%H-%M).sqlite.sql"
+    fi
+
+    if [ "$2" = "cli" ]; then
+        if [ "$DB_CLI" != "" ]; then
+            eval "$DB_CLI $DB_CLI_PARAMS"
+        else
+            echo -e "\n  That database CLI client was not found.\n"
+        fi
+    elif [ "$2" = "dump" ]; then
+        if [ "$DB_CLI_DUMP" != "" ]; then
+            echo -e "\n  Dumping Phire CMS 2 Database..."
+            eval "$DB_CLI_DUMP $DB_CLI_DUMP_PARAMS"
+            echo -e "  Done!\n"
+        else
+            echo -e "\n  That database CLI dump client was not found.\n"
+        fi
+    fi
+fi

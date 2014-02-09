@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]config" (
 --
 
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_version', '');
+INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_domain', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('system_document_root', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('server_operating_system', '');
 INSERT INTO "[{prefix}]config" ("setting", "value") VALUES ('server_software', '');

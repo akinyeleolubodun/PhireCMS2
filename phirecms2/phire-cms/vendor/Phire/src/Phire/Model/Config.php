@@ -137,7 +137,7 @@ class Config extends AbstractModel
         // Set server config settings
         $overview = array(
             'system_version'          => $config['system_version'],
-            'system_domain'           => $_SERVER['HTTP_HOST'],
+            'system_domain'           => $config['system_domain'],
             'server_operating_system' => $config['server_operating_system'],
             'server_software'         => $config['server_software'],
             'database_version'        => $config['database_version'],
@@ -174,7 +174,7 @@ class Config extends AbstractModel
         // Set server config settings
         $formattedConfig['server'] = array(
             'system_version'          => $config['system_version'],
-            'system_domain'           => (isset($_SERVER) && isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : 'N/A',
+            'system_domain'           => $config['system_domain'],
             'system_document root'    => $config['system_document_root'],
             'system_base_path'        => BASE_PATH,
             'system_application_path' => APP_PATH,

@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]config` (
 
 INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('system_version', ''),
+('system_domain', ''),
 ('system_document_root', ''),
 ('server_operating_system', ''),
 ('server_software', ''),

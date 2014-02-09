@@ -123,27 +123,33 @@ class Config extends Record
      */
     public static function setConfig()
     {
-        $server = new Server();
+        if (isset($_SERVER) && isset($_SERVER['SERVER_SOFTWARE'])) {
+            $server = new Server();
 
-        $cfg = static::findById('system_document_root');
-        $cfg->value = $_SERVER['DOCUMENT_ROOT'];
-        $cfg->update();
+            $cfg = static::findById('system_domain');
+            $cfg->value = $_SERVER['HTTP_HOST'];
+            $cfg->update();
 
-        $cfg = static::findById('server_operating_system');
-        $cfg->value = $server->getOs() . ' (' . $server->getDistro() . ')';
-        $cfg->update();
+            $cfg = static::findById('system_document_root');
+            $cfg->value = $_SERVER['DOCUMENT_ROOT'];
+            $cfg->update();
 
-        $cfg = static::findById('server_software');
-        $cfg->value = $server->getServer() . ' ' . $server->getServerVersion();
-        $cfg->update();
+            $cfg = static::findById('server_operating_system');
+            $cfg->value = $server->getOs() . ' (' . $server->getDistro() . ')';
+            $cfg->update();
 
-        $cfg = static::findById('database_version');
-        $cfg->value = static::getDb()->adapter()->version();
-        $cfg->update();
+            $cfg = static::findById('server_software');
+            $cfg->value = $server->getServer() . ' ' . $server->getServerVersion();
+            $cfg->update();
 
-        $cfg = static::findById('php_version');
-        $cfg->value = $server->getPhp();
-        $cfg->update();
+            $cfg = static::findById('database_version');
+            $cfg->value = static::getDb()->adapter()->version();
+            $cfg->update();
+
+            $cfg = static::findById('php_version');
+            $cfg->value = $server->getPhp();
+            $cfg->update();
+        }
     }
 
     /**

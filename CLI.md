@@ -1,5 +1,5 @@
-Phire CMS 2.0 CLI Tool
-======================
+Phire CMS 2.0 CLI
+=================
 
 Basic
 -----
@@ -35,7 +35,6 @@ SQL
 ---
 
     ./phire sql cli             - Open SQL CLI
-    ./phire sql optimize        - Optimize the DB
     ./phire sql dump            - Export the DB into a SQL file
 
 System

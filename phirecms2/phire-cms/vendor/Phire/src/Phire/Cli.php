@@ -24,7 +24,6 @@ class Cli
         'version',
         'user',
         'ext',
-        'sql',
         'install',
         'update',
         'upgrade',
@@ -44,7 +43,7 @@ class Cli
         //print_r($this->args);
 
         if (isset($this->args[1]) && ($this->args[1] == 'help')) {
-            $this->showHelp();
+            $this->help();
             exit();
         } else if (isset($this->args[1]) && !in_array($this->args[1], $this->commands)) {
             echo '  The command \'' . $this->args[1] . '\' was not recognized. Use ./phire help for help.' . PHP_EOL . PHP_EOL;
@@ -61,11 +60,11 @@ class Cli
             if (isset($this->args[1])) {
                 switch ($this->args[1]) {
                     case 'config':
-                        $this->showConfig();
+                        $this->config();
                         break;
 
                     case 'version':
-                        $this->showVersion();
+                        $this->version();
                         break;
 
                     case 'user':
@@ -73,11 +72,27 @@ class Cli
                         break;
 
                     case 'ext':
-                        $this->extensions();
+                        $this->ext();
                         break;
 
                     case 'install':
                         $this->install();
+                        break;
+
+                    case 'update':
+                        $this->update();
+                        break;
+
+                    case 'upgrade':
+                        $this->upgrade();
+                        break;
+
+                    case 'archive':
+                        $this->archive();
+                        break;
+
+                    case 'deploy':
+                        $this->deploy();
                         break;
                 }
             }
@@ -89,7 +104,7 @@ class Cli
      *
      * @return void
      */
-    protected function showHelp()
+    protected function help()
     {
         echo file_get_contents(__DIR__ . '/../../data/cli-help.txt');
     }
@@ -99,7 +114,7 @@ class Cli
      *
      * @return void
      */
-    protected function showConfig()
+    protected function config()
     {
         echo 'Current Configuration' . PHP_EOL;
         echo '---------------------' . PHP_EOL;
@@ -107,7 +122,7 @@ class Cli
         $config = new Model\Config();
         $config->getAll();
         foreach ($config->config->server as $key => $value) {
-            if ($key != 'system_domain') {
+            if (!empty($value)) {
                 $name = ucwords(str_replace(array('_', 'php'), array(' ', 'PHP'), $key));
                 echo '  ' . $name . ': ' . str_repeat(' ', (30 - strlen($name))) . $value . PHP_EOL;
             }
@@ -120,7 +135,7 @@ class Cli
      *
      * @return void
      */
-    protected function showVersion()
+    protected function version()
     {
         $latest = 'N/A';
         $handle = fopen('http://www.phirecms.org/version', 'r');
@@ -154,7 +169,7 @@ class Cli
      *
      * @return void
      */
-    protected function extensions()
+    protected function ext()
     {
         echo 'Extensions' . PHP_EOL;
         echo '----------' . PHP_EOL;
@@ -256,7 +271,20 @@ class Cli
             $inputContentPath = self::cliInput('  Content Path (Enter for \'/phire-content\'): ');
             $input['content_path'] = (empty($inputContentPath)) ? '/phire-content' : $inputContentPath;
 
-            echo PHP_EOL . '  ...Checking Database...' . PHP_EOL;
+            // Check the content directory
+            if (!file_exists(__DIR__ . '/../../../../../' . $input['content_path'])) {
+                echo PHP_EOL . '  The content directory does not exist.' . PHP_EOL . PHP_EOL;
+                exit();
+            } else {
+                $checkDirs = Project::checkDirs(__DIR__ . '/../../../../../' . $input['content_path'], true);
+                if (count($checkDirs) > 0) {
+                    echo PHP_EOL . '  The content directory (or subdirectories) are not writable.' . PHP_EOL . PHP_EOL;
+                    exit();
+                }
+            }
+
+            echo PHP_EOL . '  ...Checking Database...';
+
             if (stripos($input['db_adapter'], 'sqlite') === false) {
                 $oldError = ini_get('error_reporting');
                 error_reporting(E_ERROR);
@@ -271,22 +299,19 @@ class Cli
                 error_reporting($oldError);
 
                 if (null != $dbCheck) {
-                    echo PHP_EOL . '  ' . wordwrap($dbCheck, 70, PHP_EOL . '  ') . PHP_EOL . PHP_EOL;
+                    echo PHP_EOL . PHP_EOL . '  ' . wordwrap($dbCheck, 70, PHP_EOL . '  ') . PHP_EOL . PHP_EOL;
                     echo '  Please try again.' . PHP_EOL . PHP_EOL;
                     exit();
                 }
             }
 
-            echo '  ...Installing Database...' . PHP_EOL;
+            echo '..OK!' . PHP_EOL . '  ...Installing Database...';
 
             $install = $install = new Model\Install();
             $install->config(new \ArrayObject($input, \ArrayObject::ARRAY_AS_PROPS), realpath(__DIR__ . '/../../../../../'));
 
-            echo '  ...Database Installation Complete.' . PHP_EOL . PHP_EOL;
-
             // Install initial user
-
-            echo PHP_EOL . '  Initial User Setup:' . PHP_EOL . PHP_EOL;
+            echo 'OK!' . PHP_EOL . PHP_EOL . '  Initial User Setup:' . PHP_EOL . PHP_EOL;
             $user = array(
                 'email'    => null,
                 'username' => null,
@@ -326,6 +351,54 @@ class Cli
     }
 
     /**
+     * Perform system update
+     *
+     * @return void
+     */
+    protected function update()
+    {
+        echo 'System Update' . PHP_EOL;
+        echo '-------------' . PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    /**
+     * Perform system upgrade
+     *
+     * @return void
+     */
+    protected function upgrade()
+    {
+        echo 'System Upgrade' . PHP_EOL;
+        echo '--------------' . PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    /**
+     * Perform system archive
+     *
+     * @return void
+     */
+    protected function archive()
+    {
+        echo 'System Archive' . PHP_EOL;
+        echo '--------------' . PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    /**
+     * Perform system deploy
+     *
+     * @return void
+     */
+    protected function deploy()
+    {
+        echo 'System Deploy' . PHP_EOL;
+        echo '-------------' . PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    /**
      * Return the input from STDIN
      *
      * @param  string $msg
@@ -333,7 +406,7 @@ class Cli
      */
     protected static function cliInput($msg = null)
     {
-        echo ((null === $msg) ? I18n::factory()->__('Continue?') . ' (Y/N) ' : $msg);
+        echo ((null === $msg) ? \Pop\I18n\I18n::factory()->__('Continue?') . ' (Y/N) ' : $msg);
         $input = null;
 
         while (null === $input) {
