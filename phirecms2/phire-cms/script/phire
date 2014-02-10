@@ -75,21 +75,27 @@ else
         DB_CLI_DUMP_PARAMS="../..$DB_NAME .dump > phirecms_$(date +%Y-%m-%d_%H-%M).sqlite.sql"
     fi
 
-    if [ "$2" = "cli" ]; then
-        if [ "$DB_CLI" != "" ]; then
-            DB_CLI=${DB_CLI// /\\ }
-            eval "$DB_CLI $DB_CLI_PARAMS"
-        else
-            echo -e "\n  That database CLI client was not found.\n"
+    if [ "$DB_INTERFACE" != "" ]; then
+        if [ "$2" = "cli" ]; then
+            if [ "$DB_CLI" != "" ]; then
+                DB_CLI=${DB_CLI// /\\ }
+                eval "$DB_CLI $DB_CLI_PARAMS"
+            else
+                echo -e "\n  That database CLI client was not found.\n"
+            fi
+        elif [ "$2" = "dump" ]; then
+            if [ "$DB_CLI_DUMP" != "" ]; then
+                echo -e "\n  Dumping Phire CMS 2 Database..."
+                DB_CLI_DUMP=${DB_CLI_DUMP// /\\ }
+                eval "$DB_CLI_DUMP $DB_CLI_DUMP_PARAMS"
+                echo -e "  Done!\n"
+            else
+                echo -e "\n  That database CLI dump client was not found.\n"
+            fi
         fi
-    elif [ "$2" = "dump" ]; then
-        if [ "$DB_CLI_DUMP" != "" ]; then
-            echo -e "\n  Dumping Phire CMS 2 Database..."
-            DB_CLI_DUMP=${DB_CLI_DUMP// /\\ }
-            eval "$DB_CLI_DUMP $DB_CLI_DUMP_PARAMS"
-            echo -e "  Done!\n"
-        else
-            echo -e "\n  That database CLI dump client was not found.\n"
-        fi
+    else
+        echo -e "\nPhire CMS 2 CLI"
+        echo -e "===============\n"
+        echo -e "  Phire CMS 2 does not appear to be installed. Please check the config file or install the application."
     fi
 fi
