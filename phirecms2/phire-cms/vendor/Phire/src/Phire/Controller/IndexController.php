@@ -120,6 +120,9 @@ class IndexController extends AbstractController
             } else if (isset($content->id) && ($content->allowed)) {
                 $template = $this->getTemplate($content->template, 'index');
                 if (strpos($template, '[{categor') !== false) {
+                    if ((strpos($template, 'category_[{slug}]}]') !== false) && isset($content->slug)) {
+                        $template = str_replace('category_[{slug}]}]', 'category_' . $content->slug . '}]', $template);
+                    }
                     $this->view->merge(Model\Template::parseCategories($template));
                 }
                 if (strpos($template, '[{recent') !== false) {
@@ -198,6 +201,9 @@ class IndexController extends AbstractController
                 $tmpl = Table\Templates::findBy(array('name' => 'Category'));
                 $template = (isset($tmpl->id)) ? $this->getTemplate($tmpl->id, 'category') : $this->getTemplate('category.phtml', 'category');
                 if (strpos($template, '[{categor') !== false) {
+                    if ((strpos($template, 'category_[{slug}]}]') !== false) && isset($category->slug)) {
+                        $template = str_replace('category_[{slug}]}]', 'category_' . $category->slug . '}]', $template);
+                    }
                     $this->view->merge(Model\Template::parseCategories($template));
                 }
                 $this->view->setTemplate($template);
