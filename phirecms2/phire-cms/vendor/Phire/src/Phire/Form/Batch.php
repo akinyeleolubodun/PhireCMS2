@@ -5,6 +5,7 @@
 namespace Phire\Form;
 
 use Pop\Validator;
+use Phire\Model;
 use Phire\Table;
 
 class Batch extends AbstractForm
@@ -34,6 +35,12 @@ class Batch extends AbstractForm
 
         $browser = new \Pop\Web\Browser();
         $height = ($browser->isMsie()) ? 30 : 26;
+
+        // Get categories
+        $categories = new Model\Category();
+        $categories->getAll();
+        $categoryAry = $categories->getCategoryArray();
+        unset($categoryAry[0]);
 
         $fields1 = array(
             'file_name_1' => array(
@@ -66,40 +73,59 @@ class Batch extends AbstractForm
                     )
                 )
             );
-            $fields3 = array(
-                'type_id' => array(
-                    'type'  => 'hidden',
-                    'value' => $tid
-                ),
-                'site_id' => array(
-                    'type'       => 'select',
-                    'label'      => $this->i18n->__('Site'),
-                    'value'      => $siteIds,
-                    'marked'     => 0,
-                    'attributes' => array('style' => 'width: 200px;')
-                ),
-                'submit' => array(
-                    'type'  => 'submit',
-                    'label' => '&nbsp;',
-                    'value' => $this->i18n->__('UPLOAD'),
-                    'attributes' => array(
-                        'class' => 'save-btn',
-                    'style' => 'width: 200px;'
-                    )
-                )
+            $fields3 = array();
+
+            $fields3['site_id'] = array(
+                'type'       => 'select',
+                'label'      => $this->i18n->__('Site'),
+                'value'      => $siteIds,
+                'marked'     => 0,
+                'attributes' => array('style' => 'width: 200px;')
             );
-            $this->initFieldsValues = array($fields1, $fields2, $fields3);
-        } else {
-            $fields1['type_id'] = array(
+
+            // Add categories
+            if (count($categoryAry) > 0) {
+                $fields3['category_id'] = array(
+                    'type'     => 'checkbox',
+                    'label'    => $this->i18n->__('Categories'),
+                    'value'    => $categoryAry
+                );
+            }
+            $fields3['type_id'] = array(
                 'type'  => 'hidden',
                 'value' => $tid
             );
+            $fields3['submit'] = array(
+                'type'  => 'submit',
+                'label' => '&nbsp;',
+                'value' => $this->i18n->__('UPLOAD'),
+                'attributes' => array(
+                    'class' => 'save-btn',
+                'style' => 'width: 200px;'
+                )
+            );
+
+            $this->initFieldsValues = array($fields1, $fields2, $fields3);
+        } else {
             $fields1['site_id'] = array(
                 'type'       => 'select',
                 'label'      => $this->i18n->__('Site'),
                 'value'      => $siteIds,
                 'marked'     => 0,
                 'attributes' => array('style' => 'width: 200px;')
+            );
+
+            // Add categories
+            if (count($categoryAry) > 0) {
+                $fields1['category_id'] = array(
+                    'type'     => 'checkbox',
+                    'label'    => $this->i18n->__('Categories'),
+                    'value'    => $categoryAry
+                );
+            }
+            $fields1['type_id'] = array(
+                'type'  => 'hidden',
+                'value' => $tid
             );
             $fields1['submit'] = array(
                 'type'  => 'submit',

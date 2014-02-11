@@ -1141,6 +1141,7 @@ class Content extends AbstractModel
     public function batch()
     {
         $batchErrors = array();
+        $contentIds  = array();
 
         // Check for global file setting configurations
         if ($_FILES) {
@@ -1225,6 +1226,7 @@ class Content extends AbstractModel
                             ));
 
                             $content->save();
+                            $contentIds[] = $content->id;
                         }
                     }
 
@@ -1266,7 +1268,21 @@ class Content extends AbstractModel
                         ));
 
                         $content->save();
+                        $contentIds[] = $content->id;
                     }
+                }
+            }
+        }
+
+        // Save content categories
+        if ((count($contentIds) > 0) && isset($_POST['category_id'])) {
+            foreach ($contentIds as $cid) {
+                foreach ($_POST['category_id'] as $cat) {
+                    $contentToCategory = new Table\ContentToCategories(array(
+                        'content_id'  => $cid,
+                        'category_id' => $cat
+                    ));
+                    $contentToCategory->save();
                 }
             }
         }
