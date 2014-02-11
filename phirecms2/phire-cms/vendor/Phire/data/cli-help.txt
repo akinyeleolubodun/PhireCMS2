@@ -12,7 +12,7 @@
     ./phire user password      - Set a user password
     ./phire user role          - Set a user role
     ./phire user remove        - Remove a user
-    ./phire user info          - List user info
+    ./phire user list          - List users
     ./phire user kill          - Kill user session
     ./phire user sessions      - List user sessions
 

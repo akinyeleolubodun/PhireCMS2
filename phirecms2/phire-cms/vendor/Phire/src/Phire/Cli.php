@@ -13,7 +13,6 @@ class Cli
      */
     protected $args = null;
 
-
     /**
      * CLI commands
      * @var array
@@ -27,8 +26,37 @@ class Cli
         'install',
         'update',
         'upgrade',
-        'archive',
         'deploy'
+    );
+    /**
+     *
+     * CLI command arguments
+     * @var array
+     */
+    protected $arguments = array(
+        'user'   => array(
+            'types',
+            'roles',
+            'add',
+            'password',
+            'role',
+            'remove',
+            'list',
+            'kill',
+            'sessions'
+        ),
+        'ext'    => array(
+            'install',
+            'update',
+            'list',
+            'activate',
+            'deactivate',
+            'remove'
+        ),
+        'deploy' => array(
+            'content',
+            'assets'
+        )
     );
 
     /**
@@ -40,7 +68,6 @@ class Cli
     public function __construct($args = array())
     {
         $this->args = $args;
-        //print_r($this->args);
 
         if (isset($this->args[1]) && ($this->args[1] == 'help')) {
             $this->help();
@@ -85,10 +112,6 @@ class Cli
 
                     case 'upgrade':
                         $this->upgrade();
-                        break;
-
-                    case 'archive':
-                        $this->archive();
                         break;
 
                     case 'deploy':
@@ -162,6 +185,255 @@ class Cli
         echo 'Users' . PHP_EOL;
         echo '-----' . PHP_EOL;
         echo PHP_EOL;
+
+        if (!isset($this->args[2])) {
+            $this->argNotFound('user');
+        } else if (!in_array($this->args[2], $this->arguments['user'])) {
+            $this->argInvalid('user', $this->args[2]);
+        } else {
+            switch ($this->args[2]) {
+                // Show user types
+                case 'types':
+                    echo '  User Types:' . PHP_EOL;
+                    echo '  ===========' . PHP_EOL;
+                    $types = Table\UserTypes::findAll('id ASC');
+                    echo "  ID# \tType" . PHP_EOL;
+                    echo "  ----\t----" . PHP_EOL;
+                    foreach ($types->rows as $type) {
+                        echo "  " . $type->id . "\t" . $type->type . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+
+                // Show user roles
+                case 'roles':
+                    echo '  User Roles:' . PHP_EOL;
+                    echo '  ===========' . PHP_EOL;
+                    $roles = Table\UserRoles::findAll('type_id, id ASC');
+                    echo "  ID# \tType\tRole" . PHP_EOL;
+                    echo "  ----\t----\t----" . PHP_EOL;
+                    foreach ($roles->rows as $role) {
+                        if ((int)$role->type_id != 0) {
+                            $type = Table\UserTypes::findById($role->type_id);
+                            $typeName = (isset($role->id)) ? $type->type : '(N/A)';
+                        } else {
+                            $typeName = '(N/A)';
+                        }
+                        echo "  " . $role->id . "\t" . $typeName . "\t" . $role->name . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+
+                // Change a user's role
+                case 'role':
+                    echo '  Change User Role:' . PHP_EOL;
+                    echo '  =================' . PHP_EOL;
+                    $userId = self::cliInput('  Enter User ID#: ');
+                    $user = Table\Users::findById($userId);
+                    if (isset($user->id)) {
+                        $roles = Table\UserRoles::findAll('id ASC', array('type_id' => $user->type_id));
+                        echo PHP_EOL . '  User Roles' . PHP_EOL;
+                        echo '  ----------' . PHP_EOL;
+                        echo "  0   \t(Blocked)" . PHP_EOL;
+                        $roleIds = array(0);
+                        $roleId = -1;
+                        foreach ($roles->rows as $role) {
+                            echo "  " . $role->id . "\t" . $role->name . PHP_EOL;
+                            $roleIds[] = $role->id;
+                        }
+                        echo PHP_EOL;
+                        while (!in_array($roleId, $roleIds)) {
+                            $roleId = self::cliInput('  Enter Role ID#: ');
+                        }
+                        $user->role_id = ((int)$roleId > 0) ? (int)$roleId : null;
+                        $user->update();
+                        echo '  The user role has been changed.' . PHP_EOL;
+                    } else {
+                        echo '  The user ID ' . $userId . ' was not found.' . PHP_EOL;
+                    }
+                    break;
+
+                // Add a user
+                case 'add':
+                    echo '  Add User:' . PHP_EOL;
+                    echo '  =========' . PHP_EOL;
+                    $types = Table\UserTypes::findAll('id ASC');
+                    echo PHP_EOL . '  User Types' . PHP_EOL;
+                    echo '  ----------' . PHP_EOL;
+                    $typeIds = array(0);
+                    $typeId = -1;
+                    foreach ($types->rows as $type) {
+                        echo "  " . $type->id . "\t" . $type->type . PHP_EOL;
+                        $typeIds[] = $type->id;
+                    }
+                    echo PHP_EOL;
+                    while (!in_array($typeId, $typeIds)) {
+                        $typeId = self::cliInput('  Enter User Type ID#: ');
+                    }
+
+                    $roles = Table\UserRoles::findAll('id ASC', array('type_id' => $typeId));
+                    echo PHP_EOL . '  User Roles' . PHP_EOL;
+                    echo '  ----------' . PHP_EOL;
+                    echo "  0   \t(Blocked)" . PHP_EOL;
+                    $roleIds = array(0);
+                    $roleId = -1;
+                    foreach ($roles->rows as $role) {
+                        echo "  " . $role->id . "\t" . $role->name . PHP_EOL;
+                        $roleIds[] = $role->id;
+                    }
+                    echo PHP_EOL;
+                    while (!in_array($roleId, $roleIds)) {
+                        $roleId = self::cliInput('  Enter Role ID#: ');
+                    }
+                    $type = Table\UserTypes::findById($typeId);
+
+                    $user = array(
+                        'type_id'         => $typeId,
+                        'role_id'         => (((int)$roleId > 0) ? (int)$roleId : null),
+                        'email'           => null,
+                        'username'        => null,
+                        'password'        => null,
+                        'verified'        => 1,
+                        'failed_attempts' => 0,
+                        'site_ids'        => 'a:1:{i:0;i:0;}'
+                    );
+
+                    $user['email']    = self::cliInput('  Enter User Email: ');
+                    if (!$type->email_as_username) {
+                        $user['username']  = self::cliInput('  Enter Username: ');
+                    }  else {
+                        $user['username'] = $user['email'];
+                    }
+
+                    $dupe = Table\Users::findBy(array('username' => $user['username']));
+
+                    while (isset($dupe->id)) {
+                        echo PHP_EOL . '  That username already exists. Please choose another username.' . PHP_EOL . PHP_EOL;
+                        $user['email']    = self::cliInput('  Enter User Email: ');
+                        if (!$type->email_as_username) {
+                            $user['username']  = self::cliInput('  Enter Username: ');
+                        }  else {
+                            $user['username'] = $user['email'];
+                        }
+                        $dupe = Table\Users::findBy(array('username' => $user['username']));
+                    }
+
+                    $user['password'] = self::cliInput('  Enter Password: ');
+                    $user['password'] = Model\User::encryptPassword($user['password'], $type->password_encryption);
+                    $u = new Table\Users($user);
+                    $u->save();
+                    echo '  The new user has been added.' . PHP_EOL;
+                    break;
+
+                // Change a user's password
+                case 'password':
+                    echo '  Change User Password:' . PHP_EOL;
+                    echo '  =====================' . PHP_EOL;
+                    $userId = self::cliInput('  Enter User ID#: ');
+                    $user = Table\Users::findById($userId);
+                    if (isset($user->id)) {
+                        $type = Table\UserTypes::findById($user->type_id);
+                        $password = self::cliInput('  Enter New Password: ');
+                        $user->password = Model\User::encryptPassword($password, $type->password_encryption);
+                        $user->update();
+                        echo '  The user password has been changed.' . PHP_EOL;
+                    } else {
+                        echo '  The user ID ' . $userId . ' was not found.' . PHP_EOL;
+                    }
+                    break;
+
+                // List users
+                case 'list':
+                    $users = Table\Users::findAll('type_id, id ASC');
+                    echo "  ID# \tType\t\tRole\t\tUsername\tEmail" . PHP_EOL;
+                    echo "  ----\t----\t\t----\t\t--------\t-----" . PHP_EOL;
+                    foreach ($users->rows as $user) {
+                        if ((int)$user->role_id != 0) {
+                            $role = Table\UserRoles::findById($user->role_id);
+                            $roleName = (isset($role->id)) ? $role->name : '(N/A)';
+                        } else {
+                            $roleName = '(Blocked)';
+                        }
+                        if ((int)$user->type_id != 0) {
+                            $type = Table\UserTypes::findById($user->type_id);
+                            $typeName = (isset($type->id)) ? $type->type : '(N/A)';
+                        } else {
+                            $typeName = '(N/A)';
+                        }
+                        $username = $user->username;
+                        if (strlen($user->username) < 8) {
+                            $username .= str_repeat(' ', 8 - strlen($user->username));
+                        }
+                        if (strlen($roleName) < 8) {
+                            $roleName .= str_repeat(' ', 8 - strlen($roleName));
+                        }
+                        if (strlen($typeName) < 8) {
+                            $typeName .= str_repeat(' ', 8 - strlen($typeName));
+                        }
+                        echo "  " . $user->id . "\t" . $typeName . "\t" . $roleName . "\t" . $username . "\t" . $user->email . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+
+                // List user sessions
+                case 'sessions':
+                    echo '  User Sessions:' . PHP_EOL;
+                    echo '  ==============' . PHP_EOL;
+                    $sessions = Table\UserSessions::findAll('id ASC');
+                    echo "  ID# \tUsername\tIP  \t\tBrowser\t\tLast\t\t\tStart" . PHP_EOL;
+                    echo "  ----\t--------\t----\t\t-------\t\t----\t\t\t-----" . PHP_EOL;
+                    foreach ($sessions->rows as $session) {
+                        $user = Table\Users::findById($session->user_id);
+                        $username = (isset($user->id)) ? $user->username : '(N/A)';
+                        if (strlen($username) < 8) {
+                            $username .= str_repeat(' ', 8 - strlen($username));
+                        }
+                        $browser = '(N/A)   ';
+                        if (stripos($session->ua, 'firefox') !== false) {
+                            $browser = 'Firefox';
+                        } else if (stripos($session->ua, 'chrome') !== false) {
+                            $browser = 'Chrome';
+                        } else if (stripos($session->ua, 'safari') !== false) {
+                            $browser = 'Safari';
+                        } else if ((stripos($session->ua, 'msie') !== false) || (stripos($session->ua, 'trident') !== false)) {
+                            $browser = 'MSIE';
+                        }
+                        echo "  " . $session->id . "\t" . $username . "\t" . $session->ip . "\t" . $browser . "\t\t" .  date('M d Y H:i:s', strtotime($session->last)) . "\t" . date('M d Y H:i:s', strtotime($session->start)) . PHP_EOL;
+                    }
+                    break;
+
+                // Remove a user
+                case 'remove':
+                    echo '  Remove User:' . PHP_EOL;
+                    echo '  ============' . PHP_EOL;
+                    $id = self::cliInput('  Enter User ID#: ');
+                    $user = Table\Users::findById($id);
+                    if (isset($user->id)) {
+                        $sessions = new Table\UserSessions();
+                        $sessions->delete(array('user_id' => $id));
+                        Model\FieldValue::remove($id);
+                        $user->delete();
+                        echo '  The user ID ' . $id . ' has been removed.' . PHP_EOL;
+                    } else {
+                        echo '  The user ID ' . $id . ' was not found.' . PHP_EOL;
+                    }
+                    break;
+
+                // Remove a user's session
+                case 'kill':
+                    echo '  Remove User Session:' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL;
+                    $id = self::cliInput('  Enter User Session ID#: ');
+                    $sess = Table\UserSessions::findById($id);
+                    if (isset($sess->id)) {
+                        $sess->delete();
+                        echo '  The user session ID ' . $id . ' has been removed.' . PHP_EOL;
+                    } else {
+                        echo '  The user session ID ' . $id . ' was not found.' . PHP_EOL;
+                    }
+                    break;
+            }
+        }
     }
 
     /**
@@ -174,6 +446,14 @@ class Cli
         echo 'Extensions' . PHP_EOL;
         echo '----------' . PHP_EOL;
         echo PHP_EOL;
+
+        if (!isset($this->args[2])) {
+            $this->argNotFound('ext');
+        } else if (!in_array($this->args[2], $this->arguments['ext'])) {
+            $this->argInvalid('ext', $this->args[2]);
+        } else {
+            echo $this->args[2] . PHP_EOL;
+        }
     }
 
     /**
@@ -375,18 +655,6 @@ class Cli
     }
 
     /**
-     * Perform system archive
-     *
-     * @return void
-     */
-    protected function archive()
-    {
-        echo 'System Archive' . PHP_EOL;
-        echo '--------------' . PHP_EOL;
-        echo PHP_EOL;
-    }
-
-    /**
      * Perform system deploy
      *
      * @return void
@@ -396,6 +664,41 @@ class Cli
         echo 'System Deploy' . PHP_EOL;
         echo '-------------' . PHP_EOL;
         echo PHP_EOL;
+
+        if (isset($this->args[2]) && !in_array($this->args[2], $this->arguments['user'])) {
+            $this->argInvalid('deploy', $this->args[2]);
+        } else {
+            echo 'deploy' . PHP_EOL;
+        }
+    }
+
+    /**
+     * Message for argument not found
+     *
+     * @param  string $cmd
+     * @return void
+     */
+    protected function argNotFound($cmd)
+    {
+        echo '  You must pass an argument with the \'' . $cmd . '\' command.' . PHP_EOL;
+        echo '  Available arguments for the \'' . $cmd . '\' command are: ' . PHP_EOL . PHP_EOL;
+        echo '     ' . implode(', ', $this->arguments[$cmd]) . PHP_EOL . PHP_EOL;
+        echo '  Use ./phire help for help.' . PHP_EOL;
+    }
+
+    /**
+     * Message for invalid argument
+     *
+     * @param  string $cmd
+     * @param  string $arg
+     * @return void
+     */
+    protected function argInvalid($cmd, $arg)
+    {
+        echo '  The argument \'' . $arg . '\' was not recognized.' . PHP_EOL;
+        echo '  Available arguments for the \'' . $cmd . '\' command are: ' . PHP_EOL . PHP_EOL;
+        echo '    ' . implode(', ', $this->arguments[$cmd]) . PHP_EOL . PHP_EOL;
+        echo '  Use ./phire help for help.' . PHP_EOL;
     }
 
     /**
