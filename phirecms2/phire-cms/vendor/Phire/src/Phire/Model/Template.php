@@ -140,6 +140,7 @@ class Template extends AbstractModel
         $catAry = array();
         $cats   = array();
         $phire  = new \Phire\Model\Phire();
+
         preg_match_all('/\[\{category_.*\}\]/', $template, $cats);
         if (isset($cats[0]) && isset($cats[0][0])) {
             foreach ($cats[0] as $cat) {
@@ -154,6 +155,20 @@ class Template extends AbstractModel
                     } else {
                         $cont = $phire->getContentByCategory($c, 'id ASC', null);
                     }
+
+                    foreach ($cont as $key => $value) {
+                        if (isset($value->created)) {
+                            $value->created = date($phire->config->datetime_format, strtotime($value->created));
+                        }
+                        if (isset($value->updated)) {
+                            $value->updated = date($phire->config->datetime_format, strtotime($value->updated));
+                        }
+                        if (isset($value->published)) {
+                            $value->published = date($phire->config->datetime_format, strtotime($value->published));
+                        }
+                        $cont[$key] = $value;
+                    }
+
                     $catAry['category_' . $c] = $cont;
                 }
             }
