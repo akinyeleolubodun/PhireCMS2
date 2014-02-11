@@ -3,7 +3,7 @@
 <?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'export' . (isset($typeId) ? '_' . $typeId : null)))): ?>
         <a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>"><?php $i18n->_e('Export'); ?></a>
 <?php endif; ?>
-<?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add') && $acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ <?php $i18n->_e('Add'); ?></a>
 <?php endif; ?>
 <?php if (isset($table)): ?>

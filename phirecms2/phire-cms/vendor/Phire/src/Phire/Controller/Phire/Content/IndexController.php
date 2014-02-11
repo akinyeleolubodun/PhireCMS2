@@ -207,7 +207,7 @@ class IndexController extends AbstractController
             $content->getById($this->request->getPath(1));
 
             // If content object is found and valid
-            if (isset($content->id) && !in_array($content->site_id, $content->user->site_ids)) {
+            if (isset($content->id) && (!in_array($content->site_id, $content->user->site_ids) || (!$this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $content->type_id)))) {
                 Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
             } else if (isset($content->id)) {
                 $type = Table\ContentTypes::findById($content->type_id);

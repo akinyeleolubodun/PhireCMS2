@@ -281,8 +281,9 @@ class Template extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array('parent_id', 'template'),
-            'indent'  => '        '
+            'separator' => '',
+            'exclude'   => array('parent_id', 'template'),
+            'indent'    => '        '
         );
 
         // Get template children

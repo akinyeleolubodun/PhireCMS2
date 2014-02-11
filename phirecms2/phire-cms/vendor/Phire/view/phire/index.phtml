@@ -10,7 +10,7 @@
             <tr><th colspan="5"><?php $i18n->_e('Recent Content'); ?></th></tr>
             <tr><th class="recent-header" style="background-color: #efefef;"><?php $i18n->_e('Type'); ?></th><th class="recent-header" style="background-color: #efefef;"><?php $i18n->_e('Title'); ?></th><th class="recent-header" style="background-color: #efefef;"><?php $i18n->_e('URI'); ?></th><th class="recent-header" style="background-color: #efefef;"><?php $i18n->_e('Created'); ?></th><th class="recent-header" style="background-color: #efefef;"><?php $i18n->_e('Status'); ?></th></tr>
 <?php foreach ($recent as $content):
-if (in_array($content->site_id, $user->site_ids)):
+if (in_array($content->site_id, $user->site_ids) && $acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $content->type_id)):
     $link = ($content->type_uri == 0) ? '<a href="http://' . $content->domain . $content->base_path . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' . $content->uri . '</a>' : '<a href="http://' . $content->domain . $content->base_path . $content->uri . '" target="_blank">http://' . $content->domain . $content->base_path . $content->uri . '</a>';
     if (null !== $content->status):
         switch ($content->status):
@@ -28,12 +28,12 @@ if (in_array($content->site_id, $user->site_ids)):
         $status = '&nbsp;';
     endif;
 
-    if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index')):
+    if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index') && ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $content->type_id))):
         $typeLink = '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $content->type_id . '">' . $content->name . '</a>';
     else:
         $typeLink = $content->name;
     endif;
-    if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')):
+    if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit') && ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $content->type_id))):
         $title = '<a href="' . BASE_PATH . APP_URI . '/content/edit/' . $content->id . '">' . $content->title . '</a>';
     else:
         $title = $content->title;
@@ -44,8 +44,10 @@ if (in_array($content->site_id, $user->site_ids)):
 endif;
 endforeach; ?>
         </table>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'index')): ?>
         <table class="dashboard-table" cellpadding="0" cellspacing="0">
             <tr><th colspan="2"><?php $i18n->_e('Extensions'); ?></th></tr>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'themes')): ?>
             <tr><th class="recent-header" style="background-color: #efefef;" colspan="2"><?php $i18n->_e('Themes'); ?></th></tr>
 <?php if (count($themes) > 0): ?>
 <?php foreach ($themes as $theme): ?>
@@ -54,6 +56,8 @@ endforeach; ?>
 <?php else: ?>
             <tr><td colspan="2"><?php $i18n->_e('There are currently no themes installed.'); ?></td></tr>
 <?php endif; ?>
+<?php endif; ?>
+<?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'modules')): ?>
             <tr><th class="recent-header" style="background-color: #efefef;" colspan="2"><?php $i18n->_e('Modules'); ?></th></tr>
 <?php if (count($modules) > 0): ?>
 <?php foreach ($modules as $module): ?>
@@ -62,5 +66,7 @@ endforeach; ?>
 <?php else: ?>
             <tr><td colspan="2"><?php $i18n->_e('There are currently no modules installed.'); ?></td></tr>
 <?php endif; ?>
+<?php endif; ?>
         </table>
+<?php endif; ?>
 <?php include __DIR__ . '/footer.phtml'; ?>

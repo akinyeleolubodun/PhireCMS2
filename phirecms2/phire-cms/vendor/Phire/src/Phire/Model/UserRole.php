@@ -201,9 +201,10 @@ class UserRole extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array('type_id', 'process' => array('id' => $this->data['user']->role_id)),
-            'name'    => $name,
-            'indent'  => '        '
+            'separator' => '',
+            'exclude'   => array('type_id', 'process' => array('id' => $this->data['user']->role_id)),
+            'name'      => $name,
+            'indent'    => '        '
         );
 
         if (isset($roles->rows[0])) {

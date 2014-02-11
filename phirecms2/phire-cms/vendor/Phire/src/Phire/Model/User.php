@@ -256,10 +256,11 @@ class User extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array(
+            'separator' => '',
+            'exclude'   => array(
                 'type_id', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
             ),
-            'indent'  => '        '
+            'indent'    => '        '
         );
 
         if (isset($userRows[0])) {

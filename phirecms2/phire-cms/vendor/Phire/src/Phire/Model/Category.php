@@ -74,7 +74,8 @@ class Category extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'indent' => '        '
+            'separator' => '',
+            'indent'    => '        '
         );
 
         $catAry = array();

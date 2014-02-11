@@ -68,11 +68,12 @@ class Site extends \Phire\Model\AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array(
+            'separator' => '',
+            'exclude'   => array(
                 'force_ssl'
             ),
-            'domain'   => $domain,
-            'indent' => '        '
+            'domain'    => $domain,
+            'indent'    => '        '
         );
 
         $siteAry = array();

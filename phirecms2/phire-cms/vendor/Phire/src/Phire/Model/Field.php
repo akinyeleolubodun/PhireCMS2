@@ -617,7 +617,8 @@ class Field extends \Phire\Model\AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array(
+            'separator' => '',
+            'exclude'   => array(
                 'group_id', 'values', 'default_values', 'attributes', 'validators', 'encryption', 'editor', 'models'
             ),
             'name'   => $name,

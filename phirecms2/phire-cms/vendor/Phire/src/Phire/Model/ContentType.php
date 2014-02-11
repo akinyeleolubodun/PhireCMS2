@@ -64,9 +64,10 @@ class ContentType extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array('uri'),
-            'name'    => $name,
-            'indent'  => '        '
+            'separator' => '',
+            'exclude'   => array('uri'),
+            'name'      => $name,
+            'indent'    => '        '
         );
 
         if (isset($types->rows[0])) {

@@ -93,12 +93,13 @@ class UserSession extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0,
             ),
-            'date' => $this->config->datetime_format,
-            'exclude' => array(
+            'separator' => '',
+            'date'      => $this->config->datetime_format,
+            'exclude'   => array(
                 'type_id', 'user_id', 'start', 'process' => array('id' => $this->data['user']->sess_id)
             ),
-            'username' => $username,
-            'indent'   => '        '
+            'username'  => $username,
+            'indent'    => '        '
         );
 
         $sessAry = array();

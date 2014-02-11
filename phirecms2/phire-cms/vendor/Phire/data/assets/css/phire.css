@@ -958,6 +958,10 @@ tr.table-bottom-row, td.table-bottom-row {
     background: transparent;
 }
 
+td.table-bottom-row > div.page-links {
+    margin: 0;
+}
+
 tr.table-bottom-row:hover, td.table-bottom-row:hover {
     background: transparent;
 }
@@ -1154,18 +1158,40 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .page-links {
-    margin: 5px 0 0 0;
+    margin: 0 0 0 10px;
     padding: 0;
-    font-size: 0.9em;
+    font-size: 0.825em;
     float: left;
+}
+
+.page-links > span {
+    margin: 0 5px 0 0;
+    padding: 4px 8px 4px 8px;
+    display: inline-block;
+    background-color: #dedede;
+    border-radius: 4px;
+}
+
+.page-links > a {
+    margin: 0 5px 0 0;
+    padding: 4px 8px 4px 8px;
+    display: inline-block;
+    color: #666;
+    background-color: #c6c6c6;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.page-links > a:hover {
+    color: #fff;
+    background-color: #999;
+    text-decoration: none;
 }
 
 .export-btn {
     float: right;
-
     margin: 0 2px 6px 2px;
     padding: 4px 8px 4px 8px;
-
     display: block;
     color: #fff;
     text-align: center;

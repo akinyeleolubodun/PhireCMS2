@@ -27,8 +27,10 @@ class Extension extends AbstractModel
 
         $dir = new Dir($themePath, false, false, false);
         $themeFiles = array();
+
+        $formats = Archive::formats();
         foreach ($dir->getFiles() as $file) {
-            if ($file != 'index.html') {
+            if (array_key_exists(substr($file, strrpos($file, '.') + 1), $formats)) {
                 $themeFiles[substr($file, 0, strpos($file, '.'))] = $file;
             }
         }
@@ -85,8 +87,10 @@ class Extension extends AbstractModel
 
         $dirs = array_merge($moduleDir1->getFiles(), $moduleDir2->getFiles());
         $moduleFiles = array();
+
+        $formats = Archive::formats();
         foreach ($dirs as $file) {
-            if ($file != 'index.html') {
+            if (array_key_exists(substr($file, strrpos($file, '.') + 1), $formats)) {
                 $moduleFiles[substr($file, 0, strpos($file, '.'))] = $file;
             }
         }

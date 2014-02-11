@@ -517,13 +517,7 @@ class Content extends AbstractForm
             }
 
             foreach ($assets['templates'] as $key => $value) {
-                if ((stripos($value, 'search') === false) &&
-                    (stripos($value, 'sidebar') === false) &&
-                    (stripos($value, 'category') === false) &&
-                    (stripos($value, 'date') === false) &&
-                    (stripos($value, 'error') === false) &&
-                    (stripos($value, 'header') === false) &&
-                    (stripos($value, 'footer') === false)) {
+                if (!$this->isSystemTemplate($value)) {
                     if (strpos($key, 'template_') !== false) {
                         $id = substr($key, (strpos($key, '_') + 1));
                         $templates[$id] = $value . ' (' . $themeName . ')';
@@ -539,13 +533,7 @@ class Content extends AbstractForm
 
         foreach ($tmpls->rows as $tmpl) {
             if (null === $tmpl->parent_id) {
-                if ((stripos($tmpl->name, 'search') === false) &&
-                    (stripos($tmpl->name, 'sidebar') === false) &&
-                    (stripos($tmpl->name, 'category') === false) &&
-                    (stripos($tmpl->name, 'date') === false) &&
-                    (stripos($tmpl->name, 'error') === false) &&
-                    (stripos($tmpl->name, 'header') === false) &&
-                    (stripos($tmpl->name, 'footer') === false)) {
+                if (!$this->isSystemTemplate($tmpl->name)) {
                     $templates[$tmpl->id] = $tmpl->name;
                 }
             }
@@ -554,13 +542,7 @@ class Content extends AbstractForm
         foreach ($viewDir->getFiles() as $file) {
             $ext = strtolower(substr($file, strrpos($file, '.')));
             if (($ext == '.phtml') || ($ext == '.php') || ($ext == '.php3')) {
-                if ((stripos($file, 'search') === false) &&
-                    (stripos($file, 'sidebar') === false) &&
-                    (stripos($file, 'category') === false) &&
-                    (stripos($file, 'date') === false) &&
-                    (stripos($file, 'error') === false) &&
-                    (stripos($file, 'header') === false) &&
-                    (stripos($file, 'footer') === false)) {
+                if (!$this->isSystemTemplate($file)) {
                     $templates[$file] = $file;
                 }
             }
@@ -593,6 +575,29 @@ class Content extends AbstractForm
         }
 
         return $children;
+    }
+
+    /**
+     * Method to detect if the template is a system template
+     *
+     * @param  string $tmpl
+     * @return boolean
+     */
+    protected function isSystemTemplate($tmpl)
+    {
+        $isSystemTmpl = true;
+
+        if ((strtolower($tmpl) != 'search') && (stripos($tmpl, 'search.ph') === false) &&
+            (strtolower($tmpl) != 'sidebar') && (stripos($tmpl, 'sidebar.ph') === false) &&
+            (strtolower($tmpl) != 'category') && (stripos($tmpl, 'category.ph') === false) &&
+            (strtolower($tmpl) != 'date') && (stripos($tmpl, 'date.ph') === false) &&
+            (strtolower($tmpl) != 'error') && (stripos($tmpl, 'error.ph') === false) &&
+            (strtolower($tmpl) != 'header') && (stripos($tmpl, 'header.ph') === false) &&
+            (strtolower($tmpl) != 'footer') && (stripos($tmpl, 'footer.ph') === false)) {
+            $isSystemTmpl = false;
+        }
+
+        return $isSystemTmpl;
     }
 
 }

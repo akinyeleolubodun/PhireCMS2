@@ -70,11 +70,12 @@ class UserType extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'exclude' => array(
+            'separator' => '',
+            'exclude'   => array(
                 'process' => array('id' => $this->data['user']->type_id)
             ),
-            'type'   => $type,
-            'indent' => '        '
+            'type'      => $type,
+            'indent'    => '        '
         );
 
         if (isset($types->rows[0])) {

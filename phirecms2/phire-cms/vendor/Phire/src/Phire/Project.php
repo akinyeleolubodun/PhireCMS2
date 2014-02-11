@@ -259,9 +259,11 @@ class Project extends P
                 $permission = 'error';
             }
 
-            $permId = $router->controller()->getRequest()->getPath(1);
-            if ((null !== $permId) && is_numeric($permId)) {
-                $permission .= '_' . $permId;
+            if (($router->controller()->getRequest()->getPath(0) == 'index') || ($router->controller()->getRequest()->getPath(0) == 'add')) {
+                $permId = $router->controller()->getRequest()->getPath(1);
+                if ((null !== $permId) && is_numeric($permId)) {
+                    $permission .= '_' . $permId;
+                }
             }
 
             // Get the user URI

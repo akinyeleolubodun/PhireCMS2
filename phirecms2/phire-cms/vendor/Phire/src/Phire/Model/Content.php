@@ -302,11 +302,12 @@ class Content extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'date' => 'M j, Y',
-            'exclude' => array(
+            'separator' => '',
+            'date'      => 'M j, Y',
+            'exclude'   => array(
                 'parent_id', 'type_id', 'type_uri', 'name', 'order', 'created_by', 'user_id', 'published', 'expired'
             ),
-            'indent' => '        '
+            'indent'    => '        '
         );
 
         $this->data['title']   = (isset($contentType->id)) ? $contentType->name : null;

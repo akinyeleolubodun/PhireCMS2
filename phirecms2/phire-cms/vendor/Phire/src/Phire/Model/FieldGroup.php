@@ -65,9 +65,10 @@ class FieldGroup extends \Phire\Model\AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'name'   => $name,
-            'indent' => '        ',
-            'exclude' => 'dynamic'
+            'separator' => '',
+            'name'      => $name,
+            'indent'    => '        ',
+            'exclude'   => 'dynamic'
         );
 
         if (isset($groups->rows[0])) {
