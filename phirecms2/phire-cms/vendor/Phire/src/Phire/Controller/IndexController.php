@@ -453,8 +453,6 @@ class IndexController extends AbstractController
     /**
      * Method to determine the mobile device
      *
-        $this->view->setTemplate($template);
-        $this->view->merge($content->getData());
      * @return string
      */
     protected function getDevice()

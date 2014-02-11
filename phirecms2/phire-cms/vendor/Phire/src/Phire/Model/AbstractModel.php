@@ -5,6 +5,7 @@
 namespace Phire\Model;
 
 use Pop\Web\Session;
+use Phire\Model;
 use Phire\Table;
 
 abstract class AbstractModel
@@ -186,6 +187,15 @@ abstract class AbstractModel
         foreach ($dataAry as $key => $value) {
             if (is_string($value)) {
                 $value = str_replace(array('[{base_path}]', '[{content_path}]'), array($site->base_path, CONTENT_PATH), $value);
+                if (strpos($value, '[{') !== false) {
+                    $value = Model\Template::parse($value);
+                }
+                if (strpos($value, '[{categor') !== false) {
+                    $catAry = Model\Template::parseCategories($value);
+                    $view = new \Pop\Mvc\View($value, $catAry);
+                    $value = $view->render(true);
+                }
+
                 foreach ($keys as $k) {
                     if ((strpos($value, '[{' . $k . '}]') !== false) && ($dataAry[$k])) {
                         $value = str_replace('[{' . $k . '}]', $dataAry[$k], $value);
@@ -197,6 +207,8 @@ abstract class AbstractModel
 
         if (null === $data) {
             $this->data = $dataAry;
+        } else {
+            $this->data = array_merge($this->data, $dataAry);
         }
 
         return $dataAry;
