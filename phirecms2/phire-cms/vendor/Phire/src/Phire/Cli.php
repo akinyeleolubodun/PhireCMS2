@@ -47,7 +47,6 @@ class Cli
         ),
         'ext'    => array(
             'install',
-            'update',
             'list',
             'activate',
             'deactivate',
@@ -199,8 +198,12 @@ class Cli
                     $types = Table\UserTypes::findAll('id ASC');
                     echo "  ID# \tType" . PHP_EOL;
                     echo "  ----\t----" . PHP_EOL;
-                    foreach ($types->rows as $type) {
-                        echo "  " . $type->id . "\t" . $type->type . PHP_EOL;
+                    if (isset($types->rows[0])) {
+                        foreach ($types->rows as $type) {
+                            echo "  " . $type->id . "\t" . $type->type . PHP_EOL;
+                        }
+                    } else {
+                        echo "  There are currently no user types." . PHP_EOL;
                     }
                     echo PHP_EOL;
                     break;
@@ -212,14 +215,18 @@ class Cli
                     $roles = Table\UserRoles::findAll('type_id, id ASC');
                     echo "  ID# \tType\tRole" . PHP_EOL;
                     echo "  ----\t----\t----" . PHP_EOL;
-                    foreach ($roles->rows as $role) {
-                        if ((int)$role->type_id != 0) {
-                            $type = Table\UserTypes::findById($role->type_id);
-                            $typeName = (isset($role->id)) ? $type->type : '(N/A)';
-                        } else {
-                            $typeName = '(N/A)';
+                    if (isset($roles->rows[0])) {
+                        foreach ($roles->rows as $role) {
+                            if ((int)$role->type_id != 0) {
+                                $type = Table\UserTypes::findById($role->type_id);
+                                $typeName = (isset($role->id)) ? $type->type : '(N/A)';
+                            } else {
+                                $typeName = '(N/A)';
+                            }
+                            echo "  " . $role->id . "\t" . $typeName . "\t" . $role->name . PHP_EOL;
                         }
-                        echo "  " . $role->id . "\t" . $typeName . "\t" . $role->name . PHP_EOL;
+                    } else {
+                        echo "  There are currently no user roles." . PHP_EOL;
                     }
                     echo PHP_EOL;
                     break;
@@ -347,30 +354,34 @@ class Cli
                     $users = Table\Users::findAll('type_id, id ASC');
                     echo "  ID# \tType\t\tRole\t\tUsername\tEmail" . PHP_EOL;
                     echo "  ----\t----\t\t----\t\t--------\t-----" . PHP_EOL;
-                    foreach ($users->rows as $user) {
-                        if ((int)$user->role_id != 0) {
-                            $role = Table\UserRoles::findById($user->role_id);
-                            $roleName = (isset($role->id)) ? $role->name : '(N/A)';
-                        } else {
-                            $roleName = '(Blocked)';
+                    if (isset($users->rows[0])) {
+                        foreach ($users->rows as $user) {
+                            if ((int)$user->role_id != 0) {
+                                $role = Table\UserRoles::findById($user->role_id);
+                                $roleName = (isset($role->id)) ? $role->name : '(N/A)';
+                            } else {
+                                $roleName = '(Blocked)';
+                            }
+                            if ((int)$user->type_id != 0) {
+                                $type = Table\UserTypes::findById($user->type_id);
+                                $typeName = (isset($type->id)) ? $type->type : '(N/A)';
+                            } else {
+                                $typeName = '(N/A)';
+                            }
+                            $username = $user->username;
+                            if (strlen($user->username) < 8) {
+                                $username .= str_repeat(' ', 8 - strlen($user->username));
+                            }
+                            if (strlen($roleName) < 8) {
+                                $roleName .= str_repeat(' ', 8 - strlen($roleName));
+                            }
+                            if (strlen($typeName) < 8) {
+                                $typeName .= str_repeat(' ', 8 - strlen($typeName));
+                            }
+                            echo "  " . $user->id . "\t" . $typeName . "\t" . $roleName . "\t" . $username . "\t" . $user->email . PHP_EOL;
                         }
-                        if ((int)$user->type_id != 0) {
-                            $type = Table\UserTypes::findById($user->type_id);
-                            $typeName = (isset($type->id)) ? $type->type : '(N/A)';
-                        } else {
-                            $typeName = '(N/A)';
-                        }
-                        $username = $user->username;
-                        if (strlen($user->username) < 8) {
-                            $username .= str_repeat(' ', 8 - strlen($user->username));
-                        }
-                        if (strlen($roleName) < 8) {
-                            $roleName .= str_repeat(' ', 8 - strlen($roleName));
-                        }
-                        if (strlen($typeName) < 8) {
-                            $typeName .= str_repeat(' ', 8 - strlen($typeName));
-                        }
-                        echo "  " . $user->id . "\t" . $typeName . "\t" . $roleName . "\t" . $username . "\t" . $user->email . PHP_EOL;
+                    } else {
+                        echo "  There are currently no users." . PHP_EOL;
                     }
                     echo PHP_EOL;
                     break;
@@ -382,23 +393,27 @@ class Cli
                     $sessions = Table\UserSessions::findAll('id ASC');
                     echo "  ID# \tUsername\tIP  \t\tBrowser\t\tLast\t\t\tStart" . PHP_EOL;
                     echo "  ----\t--------\t----\t\t-------\t\t----\t\t\t-----" . PHP_EOL;
-                    foreach ($sessions->rows as $session) {
-                        $user = Table\Users::findById($session->user_id);
-                        $username = (isset($user->id)) ? $user->username : '(N/A)';
-                        if (strlen($username) < 8) {
-                            $username .= str_repeat(' ', 8 - strlen($username));
+                    if (isset($sessions->rows[0])) {
+                        foreach ($sessions->rows as $session) {
+                            $user = Table\Users::findById($session->user_id);
+                            $username = (isset($user->id)) ? $user->username : '(N/A)';
+                            if (strlen($username) < 8) {
+                                $username .= str_repeat(' ', 8 - strlen($username));
+                            }
+                            $browser = '(N/A)   ';
+                            if (stripos($session->ua, 'firefox') !== false) {
+                                $browser = 'Firefox';
+                            } else if (stripos($session->ua, 'chrome') !== false) {
+                                $browser = 'Chrome';
+                            } else if (stripos($session->ua, 'safari') !== false) {
+                                $browser = 'Safari';
+                            } else if ((stripos($session->ua, 'msie') !== false) || (stripos($session->ua, 'trident') !== false)) {
+                                $browser = 'MSIE';
+                            }
+                            echo "  " . $session->id . "\t" . $username . "\t" . $session->ip . "\t" . $browser . "\t\t" .  date('M d Y H:i:s', strtotime($session->last)) . "\t" . date('M d Y H:i:s', strtotime($session->start)) . PHP_EOL;
                         }
-                        $browser = '(N/A)   ';
-                        if (stripos($session->ua, 'firefox') !== false) {
-                            $browser = 'Firefox';
-                        } else if (stripos($session->ua, 'chrome') !== false) {
-                            $browser = 'Chrome';
-                        } else if (stripos($session->ua, 'safari') !== false) {
-                            $browser = 'Safari';
-                        } else if ((stripos($session->ua, 'msie') !== false) || (stripos($session->ua, 'trident') !== false)) {
-                            $browser = 'MSIE';
-                        }
-                        echo "  " . $session->id . "\t" . $username . "\t" . $session->ip . "\t" . $browser . "\t\t" .  date('M d Y H:i:s', strtotime($session->last)) . "\t" . date('M d Y H:i:s', strtotime($session->start)) . PHP_EOL;
+                    } else {
+                        echo "  There are currently no user sessions." . PHP_EOL;
                     }
                     break;
 
@@ -452,7 +467,149 @@ class Cli
         } else if (!in_array($this->args[2], $this->arguments['ext'])) {
             $this->argInvalid('ext', $this->args[2]);
         } else {
-            echo $this->args[2] . PHP_EOL;
+            switch ($this->args[2]) {
+                case 'install':
+                    echo '  Extension Installation:' . PHP_EOL;
+                    echo '  =======================' . PHP_EOL . PHP_EOL;
+
+                    $themes = new Model\Extension();
+                    $themes->getThemes();
+
+                    $modules = new Model\Extension();
+                    $modules->getModules();
+
+                    echo '  Installing Theme(s):' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL . PHP_EOL;
+                    if (count($themes->new) > 0) {
+                        echo '  ' . count($themes->new) . ' theme(s) available for installation.' . PHP_EOL;
+                        echo '  Installing...';
+                        $themes->installThemes();
+                        echo 'OK!' . PHP_EOL;
+                    } else {
+                        echo '  There are no themes available for installation.' . PHP_EOL;
+                    }
+                    echo PHP_EOL . PHP_EOL;
+
+                    echo '  Installing Modules(s):' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL . PHP_EOL;
+                    if (count($modules->new) > 0) {
+                        echo '  ' . count($modules->new) . ' module(s) available for installation.' . PHP_EOL;
+                        echo '  Installing...';
+                        $modules->installModules();
+                        echo 'OK!' . PHP_EOL;
+                    } else {
+                        echo '  There are no modules available for installation.' . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+
+                    break;
+                case 'list':
+                    $themes = new Model\Extension();
+                    $themes->getThemes();
+
+                    $modules = new Model\Extension();
+                    $modules->getModules();
+
+                    $installThemes = null;
+                    if (count($themes->new) > 0) {
+                        $installThemes = ' (' . count($themes->new) . ' Available for Install) ';
+                    }
+
+                    echo '  Themes:' . $installThemes . PHP_EOL;
+                    echo '  =======' . PHP_EOL . PHP_EOL;
+                    echo "  ID# \t\tName\t\tActive" . PHP_EOL;
+                    echo "  ----\t\t----\t\t------" . PHP_EOL;
+                    if (isset($themes->themes[0])) {
+                        foreach ($themes->themes as $theme) {
+                            $themeName = $theme->name;
+                            if (strlen($themeName) < 8) {
+                                $themeName .= str_repeat(' ', 8 - strlen($themeName));
+                            }
+                            echo "  " . $theme->id . "\t\t" . $themeName . "\t" . (($theme->active) ? "Yes" : "No") . PHP_EOL;
+                        }
+                    } else {
+                        echo "  There are currently no themes." . PHP_EOL;
+                    }
+
+                    $installModules = null;
+                    if (count($modules->new) > 0) {
+                        $installModules = ' (' . count($modules->new) . ' Available for Install) ';
+                    }
+
+                    echo PHP_EOL . PHP_EOL . '  Modules:' . $installModules . PHP_EOL;
+                    echo '  ========' . PHP_EOL . PHP_EOL;
+                    echo "  ID# \t\tName\t\tActive" . PHP_EOL;
+                    echo "  ----\t\t----\t\t------" . PHP_EOL;
+                    if (isset($modules->modules[0])) {
+                        foreach ($modules->modules as $module) {
+                            $moduleName = $module->name;
+                            if (strlen($moduleName) < 8) {
+                                $moduleName .= str_repeat(' ', 8 - strlen($moduleName));
+                            }
+                            echo "  " . $module->id . "\t\t" . $moduleName . "\t" . (($module->active) ? "Yes" : "No") . PHP_EOL;
+                        }
+                    } else {
+                        echo "  There are currently no modules." . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+                case 'activate':
+                    echo '  Activate an Extension:' . PHP_EOL;
+                    echo '  ======================' . PHP_EOL;
+                    $id = self::cliInput('  Enter Extension ID#: ');
+                    $ext = Table\Extensions::findById($id);
+                    if (isset($ext->id)) {
+                        if (!$ext->type) {
+                            $exts = Table\Extensions::findAll(null, array('type' => 0));
+                            foreach ($exts->rows as $ex) {
+                                $e = Table\Extensions::findById($ex->id);
+                                if (isset($e->id)) {
+                                    $e->active = 0;
+                                    $e->update();
+                                }
+                            }
+                        }
+                        $ext->active = 1;
+                        $ext->update();
+                        echo '  The extension ID ' . $id . ' has been activated.' . PHP_EOL;
+                    } else {
+                        echo '  The extension ID ' . $id . ' was not found.' . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+                case 'deactivate':
+                    echo '  Deactivate an Extension:' . PHP_EOL;
+                    echo '  ========================' . PHP_EOL;
+                    $id = self::cliInput('  Enter Extension ID#: ');
+                    $ext = Table\Extensions::findById($id);
+                    if (isset($ext->id)) {
+                        $ext->active = 0;
+                        $ext->update();
+                        echo '  The extension ID ' . $id . ' has been deactivated.' . PHP_EOL;
+                    } else {
+                        echo '  The extension ID ' . $id . ' was not found.' . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+                case 'remove':
+                    echo '  Remove an Extension:' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL;
+                    $id = self::cliInput('  Enter Extension ID#: ');
+                    $ext = Table\Extensions::findById($id);
+                    if (isset($ext->id)) {
+                        $ex = new Model\Extension();
+                        if (!$ext->type) {
+                            $ex->processThemes(array('remove_themes' => array($id)));
+                        } else {
+                            $ex->processModules(array('remove_modules' => array($id)));
+                        }
+                        echo '  The extension ID ' . $id . ' has been removed.' . PHP_EOL;
+                    } else {
+                        echo '  The extension ID ' . $id . ' was not found.' . PHP_EOL;
+                    }
+                    echo PHP_EOL;
+                    break;
+            }
         }
     }
 
@@ -599,7 +756,7 @@ class Cli
             );
 
             $user['email']    = self::cliInput('  Enter User Email: ');
-            $user['username']  = self::cliInput('  Enter Username: ');
+            $user['username'] = self::cliInput('  Enter Username: ');
             $user['password'] = self::cliInput('  Enter Password: ');
 
             echo PHP_EOL . '  ...Saving Initial User...' . PHP_EOL . PHP_EOL;
@@ -626,6 +783,7 @@ class Cli
 
             $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "')");
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'content SET created_by = 1001');
+            $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'config SET value = \'' . $user['email'] . '\' WHERE setting = \'system_email\'');
             echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
         }
     }

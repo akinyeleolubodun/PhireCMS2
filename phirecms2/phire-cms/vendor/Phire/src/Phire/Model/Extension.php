@@ -77,7 +77,7 @@ class Extension extends AbstractModel
      * @param  \Phire\Project $project
      * @return void
      */
-    public function getModules(\Phire\Project $project)
+    public function getModules(\Phire\Project $project = null)
     {
         $modules = Table\Extensions::findAll('id ASC', array('type' => 1));
         $moduleRows = $modules->rows;
@@ -96,18 +96,20 @@ class Extension extends AbstractModel
         }
 
         foreach ($moduleRows as $key => $module) {
-            $cfg = $project->module($module->name);
-            if ((null !== $cfg) && (null !== $cfg->module_nav)) {
-                $n = (!is_array($cfg->module_nav)) ? $cfg->module_nav->asArray() : $cfg->module_nav;
-                $modNav = new Nav($n, array(
-                    'top' => array(
-                        'id'    => strtolower($module->name) . '-nav',
-                        'class' => 'module-nav'
-                    ))
-                );
-                $modNav->setAcl($this->data['acl']);
-                $modNav->setRole($this->data['role']);
-                $moduleRows[$key]->module_nav = $modNav;
+            if (null !== $project) {
+                $cfg = $project->module($module->name);
+                if ((null !== $cfg) && (null !== $cfg->module_nav)) {
+                    $n = (!is_array($cfg->module_nav)) ? $cfg->module_nav->asArray() : $cfg->module_nav;
+                    $modNav = new Nav($n, array(
+                        'top' => array(
+                            'id'    => strtolower($module->name) . '-nav',
+                            'class' => 'module-nav'
+                        ))
+                    );
+                    $modNav->setAcl($this->data['acl']);
+                    $modNav->setRole($this->data['role']);
+                    $moduleRows[$key]->module_nav = $modNav;
+                }
             }
             if (isset($moduleFiles[$module->name])) {
                 unset($moduleFiles[$module->name]);
@@ -422,9 +424,11 @@ class Extension extends AbstractModel
 
         Table\Extensions::execute($sql->render(true));
 
-        $ext = Table\Extensions::findById($post['theme_active']);
-        $ext->active = 1;
-        $ext->save();
+        if (isset($post['theme_active'])) {
+            $ext = Table\Extensions::findById($post['theme_active']);
+            $ext->active = 1;
+            $ext->save();
+        }
 
         $active = false;
         if (isset($post['remove_themes'])) {

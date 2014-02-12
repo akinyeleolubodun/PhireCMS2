@@ -19,7 +19,6 @@
   Extensions
   ----------
     ./phire ext install       - Install a module or theme
-    ./phire ext update        - Update a module or theme
     ./phire ext list          - List modules and themes installed
     ./phire ext activate      - Activate a module or theme
     ./phire ext deactivate    - De-activate a module or theme

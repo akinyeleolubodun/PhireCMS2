@@ -39,7 +39,7 @@ class Config extends Record
     public static function getConfig()
     {
         $cfg = static::findById('system_document_root');
-        if ($cfg->value == '') {
+        if (($cfg->value == '') || (isset($_SERVER['DOCUMENT_ROOT']) && ($cfg->value != $_SERVER['DOCUMENT_ROOT']))) {
             static::setConfig();
         }
 
