@@ -703,7 +703,7 @@ jax(document).ready(function(){
     if (jax.query('saved') != undefined) {
         var ts = Math.round(new Date().getTime() / 1000);
         var diff = Math.abs(jax.query('saved') - ts);
-        if (diff < 40) {
+        if (diff < 180) {
             if (jax('#result')[0] != undefined) {
                 jax('#result').css({
                     "background-color" : '#dbf2bf',
@@ -786,7 +786,7 @@ jax(document).ready(function(){
             if (jax.query('preview') != undefined) {
                 var ts = Math.round(new Date().getTime() / 1000);
                 var diff = Math.abs(jax.query('preview') - ts);
-                if (diff < 40) {
+                if (diff < 180) {
                     if (jax('#uri-span')[0] != undefined) {
                         window.open(decodeURIComponent(jax.query('base_path')) + jax('#uri-span').val());
                     }
