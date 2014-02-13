@@ -633,8 +633,8 @@ class Field extends \Phire\Model\AbstractModel
 
             $fAry['name'] = $field->name;
             $fAry['label'] = $field->label;
-            $fAry['order'] = $field->order;
             $fAry['required'] = ($field->required) ? $this->i18n->__('Yes') : $this->i18n->__('No');
+            $fAry['order'] = $field->order;
 
             if (null !== $edit) {
                 $fAry['edit'] = str_replace('[{id}]', $field->id, $edit);
