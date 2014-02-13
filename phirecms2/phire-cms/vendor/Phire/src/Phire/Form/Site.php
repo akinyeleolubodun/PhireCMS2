@@ -61,8 +61,7 @@ class Site extends AbstractForm
             'base_path' => array(
                 'type'       => 'text',
                 'label'      => $this->i18n->__('Base Path'),
-                'attributes' => array('size' => 80),
-                'value'      => BASE_PATH
+                'attributes' => array('size' => 80)
             )
         );
         $fields2 = array(

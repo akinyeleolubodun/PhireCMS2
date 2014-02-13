@@ -123,6 +123,7 @@ class Config extends AbstractModel
     {
         $cfg = Table\Config::getConfig();
         $config = array();
+        $overview = array();
 
         foreach ($cfg->rows as $c) {
             if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
@@ -135,7 +136,7 @@ class Config extends AbstractModel
         }
 
         // Set server config settings
-        $overview = array(
+        $overview['system'] = array(
             'system_version'          => $config['system_version'],
             'system_domain'           => $config['system_domain'],
             'server_operating_system' => $config['server_operating_system'],
@@ -146,6 +147,14 @@ class Config extends AbstractModel
             'updated_on'              => ($config['updated_on'] != '0000-00-00 00:00:00') ?
                 date($this->config->datetime_format, strtotime($config['updated_on'])) : '(' . $this->i18n->__('Never') . ')'
         );
+
+        $overview['sites'] = array();
+        $overview['sites'][$config['system_domain']] = $config['live'];
+
+        $sites = Table\Sites::findAll('id ASC');
+        foreach ($sites->rows as $site) {
+            $overview['sites'][$site->domain] = $site->live;
+        }
 
         return $overview;
     }

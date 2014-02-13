@@ -43,7 +43,7 @@ class Project extends P
         $events = array();
 
         // Load Phire any overriding Phire configuration
-        if ($basePath == BASE_PATH) {
+        if (!$site) {
             $this->loadAssets(__DIR__ . '/../../../Phire/data', 'Phire', $docRoot);
         }
 
@@ -51,6 +51,8 @@ class Project extends P
         self::isInstalled();
 
         $sess = Session::getInstance();
+        //echo $docRoot . '<br />';
+        //echo $basePath . '<br />';
         $errors = self::checkDirs($docRoot . $basePath . CONTENT_PATH, true, $docRoot);
         if (count($errors) > 0) {
             $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
@@ -95,7 +97,7 @@ class Project extends P
                         $ext = Table\Extensions::findBy(array('name' => $d));
                         if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
                             // Load assets
-                            if ($basePath == BASE_PATH) {
+                            if (!$site) {
                                 $this->loadAssets($directory . $d . '/data', $d, $docRoot);
                             }
 

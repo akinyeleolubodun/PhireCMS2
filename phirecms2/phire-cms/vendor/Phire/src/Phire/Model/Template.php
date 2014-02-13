@@ -287,6 +287,7 @@ class Template extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/templates?sort=name">' . $this->i18n->__('Name') . '</a>',
                     'copy'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Copy') . '</span>',
                     'process' => $removeCheckAll
@@ -309,20 +310,37 @@ class Template extends AbstractModel
                 $t = (array)$tmpl['template'];
 
                 if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
-                    $name = '<a href="' . BASE_PATH . APP_URI . '/structure/templates/edit/' . $t['id'] .'">' . $t['name'] . '</a>';
+                    $t['edit'] = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/structure/templates/edit/' . $t['id'] . '">Edit</a>';
                 } else {
-                    $name = $t['name'];
+                    $t['edit'] = null;
                 }
 
                 if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
                     $t['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/structure/templates/copy/' . $t['id'] .'">Copy</a>';
                 } else {
+                    $t['copy'] = null;
                     unset($options['table']['headers']['copy']);
                 }
 
-                $t['name'] = $name;
                 $t['device'] = $devices[$t['device']];
-                $tmplAry[] = $t;
+
+                $tAry = array(
+                    'id' => $t['id']
+                );
+
+                $tAry['name'] = $t['name'];
+                $tAry['content_type'] = $t['content_type'];
+                $tAry['device'] = $t['device'];
+
+                if (null !== $t['edit']) {
+                    $tAry['edit'] = $t['edit'];
+                }
+
+                if (null !== $t['copy']) {
+                    $tAry['copy'] = $t['copy'];
+                }
+
+                $tmplAry[] = $tAry;
 
                 // Get child templates
                 if (count($tmpl['children']) > 0) {
@@ -330,16 +348,35 @@ class Template extends AbstractModel
                         $c = (array)$child;
 
                         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
-                            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/templates/edit/' . $c['id'] .'">' . $c['name'] . '</a>';
+                            $c['edit'] = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/structure/templates/edit/' . $c['id'] . '">Edit</a>';
                         } else {
-                            $name = $c['name'];
+                            $c['edit'] = null;
                         }
-                        $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $name;
+                        $c['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt; ' . $c['name'];
                         $c['device'] = $devices[$c['device']];
                         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'copy')) {
                             $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/structure/templates/copy/' . $c['id'] .'">Copy</a>';
+                        } else {
+                            $c['copy'] = null;
                         }
-                        $tmplAry[] = $c;
+
+                        $cAry = array(
+                            'id' => $c['id']
+                        );
+
+                        $cAry['name'] = $c['name'];
+                        $cAry['content_type'] = $c['content_type'];
+                        $cAry['device'] = $c['device'];
+
+                        if (null !== $c['edit']) {
+                            $cAry['edit'] = $c['edit'];
+                        }
+
+                        if (null !== $c['copy']) {
+                            $cAry['copy'] = $c['copy'];
+                        }
+
+                        $tmplAry[] = $cAry;
                     }
                 }
             }

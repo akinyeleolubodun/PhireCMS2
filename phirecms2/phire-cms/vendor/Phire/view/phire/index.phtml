@@ -5,6 +5,10 @@
 <?php foreach ($overview as $key => $value): ?>
             <tr><td><strong><?php $i18n->_e(ucwords(str_replace(array('_', 'php'), array(' ', 'PHP'), $key))); ?>:</strong></td><td><?php echo $value; ?></td></tr>
 <?php endforeach; ?>
+            <tr><th colspan="2" style="border-top: solid 1px #ccc;"><?php $i18n->_e('Sites'); ?></th></tr>
+<?php foreach ($sites as $domain => $live): ?>
+            <tr><td class="site-<?php echo ((!$live) ? 'not-' : null);?>live"><strong><?php echo $domain; ?></strong></td><td class="site-<?php echo ((!$live) ? 'not-' : null);?>live"><?php $i18n->_e((($live) ? 'Live' : 'Not Live')); ?></td></tr>
+<?php endforeach; ?>
         </table>
         <table class="dashboard-table" cellpadding="0" cellspacing="0">
             <tr><th colspan="5"><?php $i18n->_e('Recent Content'); ?></th></tr>

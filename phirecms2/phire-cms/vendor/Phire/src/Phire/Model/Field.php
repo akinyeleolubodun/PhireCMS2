@@ -573,7 +573,7 @@ class Field extends \Phire\Model\AbstractModel
         $order = $this->getSortOrder($sort, $page);
         $fields = Table\Fields::findAll($order['field'] . ' ' . $order['order']);
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Structure\FieldsController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\FieldsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_fields[]" id="remove_fields[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_fields" />';
             $submit = array(
@@ -590,10 +590,10 @@ class Field extends \Phire\Model\AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Structure\FieldsController', 'edit')) {
-            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/fields/edit/[{id}]">[{name}]</a>';
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\FieldsController', 'edit')) {
+            $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/structure/fields/edit/[{id}]">Edit</a>';
         } else {
-            $name = '[{name}]';
+            $edit = null;
         }
 
         $options = array(
@@ -607,6 +607,7 @@ class Field extends \Phire\Model\AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'type'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=type">' . $this->i18n->__('Type') . '</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=name">' . $this->i18n->__('Name') . '</a>',
                     'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields?sort=order">' . $this->i18n->__('Order') . '</a>',
@@ -621,14 +622,25 @@ class Field extends \Phire\Model\AbstractModel
             'exclude'   => array(
                 'group_id', 'values', 'default_values', 'attributes', 'validators', 'encryption', 'editor', 'models'
             ),
-            'name'   => $name,
             'indent' => '        '
         );
 
         $fieldsAry = array();
         foreach ($fields->rows as $field) {
-            $field->required = ($field->required) ? $this->i18n->__('Yes') : $this->i18n->__('No');
-            $fieldsAry[] = $field;
+            $fAry = array(
+                'id' => $field->id,
+            );
+
+            $fAry['name'] = $field->name;
+            $fAry['label'] = $field->label;
+            $fAry['order'] = $field->order;
+            $fAry['required'] = ($field->required) ? $this->i18n->__('Yes') : $this->i18n->__('No');
+
+            if (null !== $edit) {
+                $fAry['edit'] = str_replace('[{id}]', $field->id, $edit);
+            }
+
+            $fieldsAry[] = $fAry;
         }
 
         if (isset($fieldsAry[0])) {

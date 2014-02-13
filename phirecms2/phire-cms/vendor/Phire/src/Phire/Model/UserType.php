@@ -45,12 +45,6 @@ class UserType extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\TypesController', 'edit')) {
-            $type = '<a href="' . BASE_PATH . APP_URI . '/users/types/edit/[{id}]">[{type}]</a>';
-        } else {
-            $type = '[{type}]';
-        }
-
         $options = array(
             'form' => array(
                 'id'      => 'type-remove-form',
@@ -62,6 +56,7 @@ class UserType extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/types?sort=type">' . $this->i18n->__('Type') . '</a>',
                     'process' => $removeCheckAll
                 ),
@@ -74,15 +69,29 @@ class UserType extends AbstractModel
             'exclude'   => array(
                 'process' => array('id' => $this->data['user']->type_id)
             ),
-            'type'      => $type,
             'indent'    => '        '
         );
 
         if (isset($types->rows[0])) {
             $typeRows = array();
             foreach ($types->rows as $type) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\TypesController', 'edit')) {
+                    $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/users/types/edit/' . $type->id . '">Edit</a>';
+                } else {
+                    $edit = null;
+                }
+
                 $type->type = ucwords(str_replace('-', ' ', $type->type));
-                $typeRows[] = $type;
+                $tAry = array(
+                    'id'   => $type->id,
+                    'type' => $type->type
+                );
+
+                if (null !== $edit) {
+                    $tAry['edit'] = $edit;
+                }
+
+                $typeRows[] = $tAry;
             }
             $this->data['table'] = Html::encode($typeRows, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }

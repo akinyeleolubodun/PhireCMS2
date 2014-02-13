@@ -66,6 +66,7 @@ class Category extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'       => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=id">#</a>',
+                    'edit'     => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'title'    => '<a href="' . BASE_PATH . APP_URI . '/structure/categories?sort=title">' . $this->i18n->__('Title') . '</a>',
                     'process'  => $removeCheckAll
                 ),
@@ -84,12 +85,18 @@ class Category extends AbstractModel
 
         foreach ($cats as $id => $name) {
             if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'edit'))) {
-                $name = '<a href="' . BASE_PATH . APP_URI . '/structure/categories/edit/' . $id . '">' . $name . '</a>';
+                $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/structure/categories/edit/' . $id . '">Edit</a>';
+            } else {
+                $edit = null;
             }
-            $catAry[] = array(
+            $cAry = array(
                 'id'    => $id,
                 'title' => $name
             );
+            if (null !== $edit) {
+                $cAry['edit'] = $edit;
+            }
+            $catAry[] = $cAry;
         }
 
         if (isset($catAry[0])) {

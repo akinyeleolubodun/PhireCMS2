@@ -175,12 +175,6 @@ class UserRole extends AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\RolesController', 'edit')) {
-            $name = '<a href="' . BASE_PATH . APP_URI . '/users/roles/edit/[{id}]">[{name}]</a>';
-        } else {
-            $name = '[{name}]';
-        }
-
         $options = array(
             'form' => array(
                 'id'      => 'role-remove-form',
@@ -192,6 +186,7 @@ class UserRole extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'type'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=type">' . $this->i18n->__('Type') . '</a>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/users/roles?sort=name">' . $this->i18n->__('Role') . '</a>',
                     'process' => $removeCheckAll
@@ -203,12 +198,31 @@ class UserRole extends AbstractModel
             ),
             'separator' => '',
             'exclude'   => array('type_id', 'process' => array('id' => $this->data['user']->role_id)),
-            'name'      => $name,
             'indent'    => '        '
         );
 
         if (isset($roles->rows[0])) {
-            $this->data['table'] = Html::encode($roles->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $rolesAry = array();
+            foreach ($roles->rows as $role) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\RolesController', 'edit')) {
+                    $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/users/roles/edit/' . $role->id . '">Edit</a>';
+                } else {
+                    $edit = null;
+                }
+
+                $rAry = array(
+                    'id'   => $role->id,
+                    'name' => $role->name,
+                    'type' => $role->type
+                );
+
+                if (null !== $edit) {
+                    $rAry['edit'] = $edit;
+                }
+
+                $rolesAry[] = $rAry;
+            }
+            $this->data['table'] = Html::encode($rolesAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 

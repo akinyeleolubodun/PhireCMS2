@@ -9,14 +9,14 @@
 <?php echo $form;
 elseif (isset($navigation) && isset($navigation[0])): ?>
             <table class="data-table" cellpadding="0" cellspacing="0" border="0">
-                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th>&nbsp;</th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation"><?php $i18n->_e('Navigation'); ?></a></th><th class="last-th">&nbsp;</th></tr>
+                <tr><th class="first-th"><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=id">#</a></th><th style="width: 5%; text-align: center;"><?php echo (($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit')) ? $i18n->__('Edit') : '&nbsp;'); ?></th><th><a href="<?php echo BASE_PATH . APP_URI; ?>/structure/navigation?sort=navigation"><?php $i18n->_e('Navigation'); ?></a></th><th class="last-th">&nbsp;</th></tr>
 <?php foreach ($navigation as $nav):
     $navDiv = null;
-    $expand = ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))) ? '<a href="#" onclick="$(\'#nav-div-' . $nav['nav']->id . '\').toggle(); return false;">[+]</a>&nbsp;' : '&nbsp;';
+    $expand = ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))) ? '<a href="#" onclick="$(\'#nav-div-' . $nav['nav']->id . '\').toggle(); return false;">[+]&nbsp;' . $nav['nav']->navigation . '</a>' : $nav['nav']->navigation;
     $remove = ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'process')) ?
         '<input type="checkbox" name="remove_navigation[]" id="remove_navigation1" value="' . $nav['nav']->id . '" />' : '&nbsp;';
     $edit = ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit')) ?
-        '<a href="' . BASE_PATH . APP_URI .'/structure/navigation/edit/' . $nav['nav']->id . '">' . $nav['nav']->navigation . '</a>' : $nav['nav']->navigation;
+        '<a class="edit-link" title="' . $i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI .'/structure/navigation/edit/' . $nav['nav']->id . '">Edit</a>' : '&nbsp;';
 
     if ((count($nav['children']) > 0) && ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit'))):
         $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div"><strong>' . $i18n->__('Parent') . ' / ' . $i18n->__('Order') . '</strong><br />';
@@ -39,7 +39,7 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
         $navDiv .= '<input style="float: left;" class="small-save-btn" type="submit" name="submit" value="' . $i18n->__('SAVE') . '" /> <input style="float: left; margin: 3px 5px 0 15px;" type="checkbox" name="rm_nav" value="' . $nav['nav']->id . '" /> <span style="float: left; margin: 4px 0 0 0;">' . $i18n->__('Remove') . '?</span></form></div>';
     endif;
 ?>
-                <tr><td class="first-td vert-top"><?php echo $nav['nav']->id; ?></td><td class="vert-top" style="width: 2%;"><?php echo $expand; ?></td><td class="vert-top"><?php echo $edit . $navDiv; ?></td><td class="last-td vert-top">&nbsp;</td></tr>
+                <tr><td class="first-td vert-top"><?php echo $nav['nav']->id; ?></td><td class="vert-top" style="width: 5%; text-align: center;"><?php echo $edit; ?></td><td class="vert-top"><?php echo $expand . $navDiv; ?></td><td class="last-td vert-top">&nbsp;</td></tr>
 <?php endforeach; ?>
                 <tr class="table-bottom-row"><td colspan="4" class="table-bottom-row"><div class="page-links"></div></td></tr>
             </table>

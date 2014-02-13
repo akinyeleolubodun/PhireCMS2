@@ -40,12 +40,6 @@ class Site extends \Phire\Model\AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Config\SitesController', 'edit')) {
-            $domain = '<a href="' . BASE_PATH . APP_URI . '/config/sites/edit/[{id}]">[{domain}]</a>';
-        } else {
-            $domain = '[{domain}]';
-        }
-
         $options = array(
             'form' => array(
                 'id'      => 'sites-remove-form',
@@ -57,6 +51,7 @@ class Site extends \Phire\Model\AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'            => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=id">#</a>',
+                    'edit'          => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'domain'        => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=domain">' . $this->i18n->__('Domain') . '</a>',
                     'document_root' => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=document_root">' . $this->i18n->__('Document Root') . '</a>',
                     'title'         => '<a href="' . BASE_PATH . APP_URI . '/sites?sort=title">' . $this->i18n->__('Title') . '</a>',
@@ -72,14 +67,31 @@ class Site extends \Phire\Model\AbstractModel
             'exclude'   => array(
                 'force_ssl'
             ),
-            'domain'    => $domain,
             'indent'    => '        '
         );
 
         $siteAry = array();
         foreach ($sites->rows as $site) {
-            $site->live = ($site->live == 1) ? $this->i18n->__('Yes') : $this->i18n->__('No');
-            $siteAry[] = $site;
+            if ($this->data['acl']->isAuth('Phire\Controller\Config\SitesController', 'edit')) {
+                $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/config/sites/edit/' . $site->id . '">Edit</a>';
+            } else {
+                $edit = null;
+            }
+
+            $sAry = array(
+                'id'            => $site->id,
+                'title'         => $site->title,
+                'domain'        => $site->domain,
+                'document_root' => $site->document_root,
+                'base_path'     => ($site->base_path == '') ? '&nbsp;' : $site->base_path,
+                'live'          => ($site->live == 1) ? $this->i18n->__('Yes') : $this->i18n->__('No')
+            );
+
+            if (null !== $edit) {
+                $sAry['edit'] = $edit;
+            }
+
+            $siteAry[] = $sAry;
         }
 
         if (isset($siteAry[0])) {
@@ -130,8 +142,8 @@ class Site extends \Phire\Model\AbstractModel
 
         $site = new Table\Sites(array(
             'domain'        => $fields['domain'],
-            'document_root' => $docRoot,
-            'base_path'     => $basePath,
+            'document_root' => str_replace('\\', '/', $docRoot),
+            'base_path'     => str_replace('\\', '/', $basePath),
             'title'         => $fields['title'],
             'force_ssl'     => (int)$fields['force_ssl'],
             'live'          => (int)$fields['live']
@@ -191,6 +203,8 @@ class Site extends \Phire\Model\AbstractModel
 
         $oldDocRoot = $site->document_root;
 
+        $docRoot = str_replace('\\', '/', $docRoot);
+
         if ($fields['base_path'] != '') {
             $basePath = ((substr($fields['base_path'], 0, 1) != '/') && (substr($fields['base_path'], 0, 1) != "\\")) ?
                 '/' . $fields['base_path'] : $fields['base_path'];
@@ -201,6 +215,8 @@ class Site extends \Phire\Model\AbstractModel
         } else {
             $basePath = '';
         }
+
+        $basePath = str_replace('\\', '/', $basePath);
 
         $site->domain        = $fields['domain'];
         $site->document_root = $docRoot;

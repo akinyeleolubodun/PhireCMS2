@@ -203,11 +203,12 @@ class User extends AbstractModel
 
         // Clean up user data
         $userRows = $users->rows;
+        $userAry = array();
         foreach ($userRows as $key => $value) {
             $logins = unserialize($value->logins);
             if (is_array($logins)) {
                 $lastAry = end($logins);
-                $last = date('D  M j, Y H:i:s', key($logins)) . ', ' . $lastAry['ua'] . ' [' . $lastAry['ip'] . ']';
+                $last = date('D  M j, Y H:i:s', key($logins)) . ' (' . $lastAry['ip'] . '), ' . $lastAry['ua'];
                 if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'logins')) &&
                     ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'logins_' . $typeId))) {
                     $count = '<a href="' . BASE_PATH . APP_URI . '/users/logins/' . $value->id . '">' . count($logins) . '</a>';
@@ -221,7 +222,9 @@ class User extends AbstractModel
 
             if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit')) &&
                 ($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'edit_' . $typeId))) {
-                $userRows[$key]->username = '<a href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">' . $userRows[$key]->username . '</a>';
+                $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/users/edit/' . $userRows[$key]->id . '">Edit</a>';
+            } else {
+                $edit = null;
             }
 
             if (($this->data['acl']->isAuth('Phire\Controller\Phire\User\IndexController', 'type')) &&
@@ -232,6 +235,24 @@ class User extends AbstractModel
             $userRows[$key]->name = (null !== $value->name) ? $value->name : '(Blocked)';
             $userRows[$key]->last_login = $last;
             $userRows[$key]->login_count = $count;
+
+            $lastLogin = $userRows[$key]->last_login;
+            $lastLoginShort = (strlen($lastLogin) > 100) ? substr($lastLogin, 0, 100) . '...' : $lastLogin;
+
+            $uAry = array(
+                'id'          => $userRows[$key]->id,
+                'username'    => $userRows[$key]->username,
+                'email'       => $userRows[$key]->email,
+                'name'        => $userRows[$key]->name,
+                'last_login'  => $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>',
+                'type'        => $userRows[$key]->type
+            );
+
+            if (null !== $edit) {
+                $uAry['edit'] = $edit;
+            }
+
+            $userAry[] = $uAry;
         }
 
         $options = array(
@@ -245,10 +266,11 @@ class User extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'          => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=id">#</a>',
+                    'edit'        => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'name'        => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=name">' . $this->i18n->__('Role') . '</a>',
                     'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username">' . $this->i18n->__('Username') . '</a>',
                     'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email">' . $this->i18n->__('Email') . '</a>',
-                    'login_count' => $this->i18n->__('Logins'),
+                    'last_login'  => $this->i18n->__('Logins') . ' <span style="font-weight: normal;">[ ' . $this->i18n->__('Last Login') . ' ]</span>',
                     'process'     => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -264,7 +286,7 @@ class User extends AbstractModel
         );
 
         if (isset($userRows[0])) {
-            $this->data['table'] = Html::encode($userRows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 

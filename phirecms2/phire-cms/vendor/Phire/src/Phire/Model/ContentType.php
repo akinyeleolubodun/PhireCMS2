@@ -40,9 +40,9 @@ class ContentType extends AbstractModel
         }
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TypesController', 'edit')) {
-            $name = '<a href="' . BASE_PATH . APP_URI . '/content/types/edit/[{id}]">[{name}]</a>';
+            $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/content/types/edit/[{id}]">Edit</a>';
         } else {
-            $name = '[{name}]';
+            $edit = null;
         }
 
         $options = array(
@@ -56,6 +56,7 @@ class ContentType extends AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/content/types?sort=name">' . $this->i18n->__('Name') . '</a>',
                     'process' => $removeCheckAll
                 ),
@@ -66,12 +67,24 @@ class ContentType extends AbstractModel
             ),
             'separator' => '',
             'exclude'   => array('uri'),
-            'name'      => $name,
             'indent'    => '        '
         );
 
         if (isset($types->rows[0])) {
-            $this->data['table'] = Html::encode($types->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            if (null !== $edit) {
+                $typesAry = array();
+                foreach ($types->rows as $type) {
+                    $typesAry[] = array(
+                        'id'    => $type->id,
+                        'name'  => $type->name,
+                        'order' => $type->order,
+                        'edit'  => str_replace('[{id}]', $type->id, $edit)
+                    );
+                }
+            } else {
+                $typesAry = $types->rows;
+            }
+            $this->data['table'] = Html::encode($typesAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 
@@ -130,7 +143,7 @@ class ContentType extends AbstractModel
         $type->uri   = (int)$fields['uri'];
         $type->order = (int)$fields['order'];
         $type->update();
-        
+
         $this->data['id'] = $type->id;
 
         FieldValue::update($fields, $type->id);

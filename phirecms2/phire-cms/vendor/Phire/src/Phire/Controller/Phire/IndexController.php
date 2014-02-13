@@ -103,10 +103,13 @@ class IndexController extends AbstractController
             unset($this->sess->sessionError);
         }
 
+        $overview = $config->getOverview();
+
         $this->view->set('recent', $content->getRecent())
                    ->set('themes', $content->getThemes())
                    ->set('modules', $content->getModules())
-                   ->set('overview', $config->getOverview());
+                   ->set('overview', $overview['system'])
+                   ->set('sites', $overview['sites']);
 
         $this->send();
     }

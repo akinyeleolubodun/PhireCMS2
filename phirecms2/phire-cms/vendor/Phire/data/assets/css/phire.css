@@ -854,6 +854,16 @@ input[type=submit]:focus, button:focus {
     font-size: 0.9em;
 }
 
+.site-live {
+    color: #315900;
+    background-color: #dbf2bf;
+}
+
+.site-not-live {
+    color: #8e0202;
+    background-color: #e8d0d0;
+}
+
 .error-div {
     margin: 0 auto 5px auto;
     padding: 10px 1% 10px 1%;
@@ -1295,6 +1305,17 @@ th.config-header > a {
 th.config-header > a:hover {
     color: #808080;
     text-decoration: underline;
+}
+
+.edit-link {
+    margin: 0 auto;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    width: 19px;
+    height: 21px;
+    background-image: url(../img/edit.png);
+    text-indent: -1000px;
 }
 
 .copy-link {

@@ -22,7 +22,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
         $order = $this->getSortOrder($sort, $page);
         $groups = Table\FieldGroups::findAll($order['field'] . ' ' . $order['order']);
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Structure\GroupsController', 'remove')) {
+        if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_groups[]" id="remove_groups[{i}]" value="[{id}]" />';
             $removeCheckAll = '<input type="checkbox" id="checkall" name="checkall" value="remove_groups" />';
             $submit = array(
@@ -39,12 +39,6 @@ class FieldGroup extends \Phire\Model\AbstractModel
             );
         }
 
-        if ($this->data['acl']->isAuth('Phire\Controller\Structure\GroupsController', 'edit')) {
-            $name = '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups/edit/[{id}]">[{name}]</a>';
-        } else {
-            $name = '[{name}]';
-        }
-
         $options = array(
             'form' => array(
                 'id'      => 'field-group-remove-form',
@@ -56,6 +50,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
             'table' => array(
                 'headers' => array(
                     'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=id">#</a>',
+                    'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                     'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=name">' . $this->i18n->__('Name') . '</a>',
                     'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=order">' . $this->i18n->__('Order') . '</a>',
                     'process' => $removeCheckAll
@@ -66,13 +61,33 @@ class FieldGroup extends \Phire\Model\AbstractModel
                 'border'      => 0
             ),
             'separator' => '',
-            'name'      => $name,
             'indent'    => '        ',
             'exclude'   => 'dynamic'
         );
 
         if (isset($groups->rows[0])) {
-            $this->data['table'] = Html::encode($groups->rows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $groupsAry = array();
+
+            foreach ($groups->rows as $group) {
+                if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'edit')) {
+                    $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/structure/fields/groups/edit/' . $group->id . '">Edit</a>';
+                } else {
+                    $edit = null;
+                }
+
+                $gAry = array(
+                    'id'    => $group->id,
+                    'name'  => $group->name,
+                    'order' => $group->order
+                );
+
+                if (null !== $edit) {
+                    $gAry['edit'] = $edit;
+                }
+
+                $groupsAry[] = $gAry;
+            }
+            $this->data['table'] = Html::encode($groupsAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
         }
     }
 

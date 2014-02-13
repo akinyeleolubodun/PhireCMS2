@@ -268,8 +268,9 @@ class Content extends AbstractModel
                 'title'        => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=title">' . $this->i18n->__('Title') . '</a>',
                 'created_date' => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=created">' . $this->i18n->__('Created') . '</a>',
                 'status'       => '<a href="' . BASE_PATH . APP_URI . '/content/index/' . $typeId . '?sort=status">' . $this->i18n->__('Status') . '</a>',
-                'uri'          => $this->i18n->__('URI'),
+                'uri'          => $this->i18n->__('URI') . ' (' . $this->i18n->__('Click to View') . ')',
                 'username'     => $this->i18n->__('Author'),
+                'edit'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                 'copy'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Copy') . '</span>',
                 'process'      => $removeCheckAll
             );
@@ -282,7 +283,8 @@ class Content extends AbstractModel
                 'username'     => $this->i18n->__('Author'),
                 'status'       => $this->i18n->__('File'),
                 'size'         => $this->i18n->__('Size'),
-                'uri'          => $this->i18n->__('URI'),
+                'uri'          => $this->i18n->__('URI') . ' (' . $this->i18n->__('Click to View') . ')',
+                'edit'         => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
                 'process'      => $removeCheckAll
             );
         }
@@ -328,11 +330,19 @@ class Content extends AbstractModel
             // Track open authoring
             if ((!$this->config->open_authoring) && ($c['created_by'] != $this->user->id)) {
                 $ids[] = $c['id'];
+                $c['edit'] = '&nbsp;';
             } else {
                 if (($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')) &&
                     ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $typeId))) {
-                    $c['title'] = '<a href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">' . $c['title'] . '</a>';
+                    $c['edit'] = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="http://' . $_SERVER['HTTP_HOST'] . BASE_PATH . APP_URI . '/content/edit/' . $c['id'] . '">Edit</a>';
+                } else {
+                    $c['edit'] = '&nbsp;';
                 }
+            }
+
+            if ((!$this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit')) ||
+                (!$this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'edit_' . $typeId))) {
+                unset($c['edit']);
             }
 
             // Adjust URI link based on URI or file
@@ -349,13 +359,40 @@ class Content extends AbstractModel
             // Add copy link
             if (($contentType->uri) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy')) &&
                 ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'copy_' . $typeId))) {
-                $c['copy'] = '<a class="copy-link" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">' . $this->i18n->__('Copy') . '</a>';
+                $c['copy'] = '<a class="copy-link" title="' . $this->i18n->__('Copy') . '" href="' . BASE_PATH . APP_URI . '/content/copy/' . $c['id'] . '">' . $this->i18n->__('Copy') . '</a>';
             }
 
             if (in_array($c['site_id'], $sess->user->site_ids)) {
                 $c['site_id'] = $domain;
                 unset($c['created']);
-                $contentAry[] = $c;
+                $cAry = array(
+                    'id'   => $c['id']
+                );
+
+                $cAry['parent_id']    = $c['parent_id'];
+                $cAry['type_id']      = $c['type_id'];
+                $cAry['name']         = $c['name'];
+                $cAry['type_uri']     = $c['type_uri'];
+                $cAry['title']        = $c['title'];
+                $cAry['uri']          = $c['uri'];
+                $cAry['published']    = $c['published'];
+                $cAry['expired']      = $c['expired'];
+                $cAry['created_by']   = $c['created_by'];
+                $cAry['user_id']      = $c['user_id'];
+                $cAry['site_id']      = $c['site_id'];
+                $cAry['username']     = $c['username'];
+                $cAry['status']       = $c['status'];
+                $cAry['created_date'] = $c['created_date'];
+
+                if (isset($c['edit'])) {
+                    $cAry['edit'] = $c['edit'];
+                }
+
+                if (isset($c['copy'])) {
+                    $cAry['copy'] = $c['copy'];
+                }
+
+                $contentAry[] = $cAry;
             }
         }
 
