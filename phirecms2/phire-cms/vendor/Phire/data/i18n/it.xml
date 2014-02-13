@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>Scadenza</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>Non Vivo</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>Modifica</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>Clicca per Vedere</output>
+        </text>
     </locale>
 </language>

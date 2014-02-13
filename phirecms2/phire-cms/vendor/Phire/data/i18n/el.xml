@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>λήξη</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>δεν ζωντανά</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>Επεξεργασία</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>Κάντε κλικ για να δείτε</output>
+        </text>
     </locale>
 </language>

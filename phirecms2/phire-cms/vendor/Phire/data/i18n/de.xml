@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>Ablauf</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>Nicht Leben</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>Bearbeiten</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>Klicken zum Anschauen</output>
+        </text>
     </locale>
 </language>

@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>Expiração</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>Não Vivo</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>Editar</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>Clique para ver</output>
+        </text>
     </locale>
 </language>

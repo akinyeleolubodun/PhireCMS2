@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>פקיעה</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>לא בשידור חי</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>לערוך</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>לחץ לצפייה</output>
+        </text>
     </locale>
 </language>

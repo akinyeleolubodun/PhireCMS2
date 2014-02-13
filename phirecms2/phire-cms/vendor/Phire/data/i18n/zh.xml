@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>呼气</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>不活</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>编辑</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>点击查看</output>
+        </text>
     </locale>
 </language>

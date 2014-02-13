@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>期限切れ</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>生きていけない</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>編集</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>クリックして表示</output>
+        </text>
     </locale>
 </language>

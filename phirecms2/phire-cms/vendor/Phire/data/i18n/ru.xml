@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>истечение</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>Не жить</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>редактировать</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>Нажмите для просмотра</output>
+        </text>
     </locale>
 </language>

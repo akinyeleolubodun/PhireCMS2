@@ -1571,5 +1571,17 @@
             <source>Expiration</source>
             <output>انتهاء</output>
         </text>
+        <text>
+            <source>Not Live</source>
+            <output>لا لايف</output>
+        </text>
+        <text>
+            <source>Edit</source>
+            <output>تحرير</output>
+        </text>
+        <text>
+            <source>Click to View</source>
+            <output>انقر لمشاهدة</output>
+        </text>
     </locale>
 </language>
