@@ -175,7 +175,7 @@ class Config extends AbstractModel
         $formattedConfig['server'] = array(
             'system_version'          => $config['system_version'],
             'system_domain'           => $config['system_domain'],
-            'system_document root'    => $config['system_document_root'],
+            'system_document_root'    => $config['system_document_root'],
             'system_base_path'        => BASE_PATH,
             'system_application_path' => APP_PATH,
             'system_content_path'     => CONTENT_PATH,

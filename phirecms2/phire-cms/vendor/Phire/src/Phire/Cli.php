@@ -143,9 +143,13 @@ class Cli
         echo PHP_EOL;
         $config = new Model\Config();
         $config->getAll();
+
         foreach ($config->config->server as $key => $value) {
             if (!empty($value)) {
                 $name = ucwords(str_replace(array('_', 'php'), array(' ', 'PHP'), $key));
+                if (($key == 'system_base_path') && !empty($config->config->server['system_document_root'])) {
+                    $value = str_replace($config->config->server['system_document_root'], '', $value);
+                }
                 echo '  ' . $name . ': ' . str_repeat(' ', (30 - strlen($name))) . $value . PHP_EOL;
             }
         }
