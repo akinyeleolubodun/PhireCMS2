@@ -214,7 +214,8 @@ class IndexController extends AbstractController
                 $this->view->set('title', $this->view->i18n->__('Content') . ' ' . $this->view->separator . ' ' . $content->type_name . ' ' . $this->view->separator . ' ' . $content->content_title)
                            ->set('typeUri', $type->uri)
                            ->set('typeId', $content->type_id)
-                           ->set('updated', $content->updated);
+                           ->set('updated', $content->updated)
+                           ->set('fullUri', $content->full_uri);
 
                 $form = new Form\Content(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',

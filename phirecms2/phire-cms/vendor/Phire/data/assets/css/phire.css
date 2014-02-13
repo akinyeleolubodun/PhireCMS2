@@ -699,10 +699,19 @@ input[type=submit]:focus, button:focus {
     overflow: auto;
 }
 
+#quick-view {
+    clear: left;
+    margin: 5px 0 0 0;
+    padding: 0 10px 0 0;
+    font-size: 0.9em;
+    float: right;
+    text-align: right;
+}
+
 #updated {
     clear: left;
     margin: 5px 0 0 0;
-    padding: 0 20px 0 0;
+    padding: 0 10px 0 0;
     width: 300px;
     font-size: 0.9em;
     float: right;
