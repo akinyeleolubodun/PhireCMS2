@@ -14,7 +14,7 @@ class Project extends P
     /**
      * Phire version
      */
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.0b';
 
     /**
      * Project assets

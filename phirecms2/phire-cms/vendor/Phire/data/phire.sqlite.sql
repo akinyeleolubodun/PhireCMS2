@@ -310,6 +310,7 @@ INSERT INTO "[{prefix}]categories" ("id", "parent_id", "title", "uri", "slug", "
 CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
   "content_id" integer NOT NULL,
   "category_id" integer NOT NULL,
+  "order" integer NOT NULL,
   UNIQUE ("content_id", "category_id"),
   CONSTRAINT "fk_category_content_id" FOREIGN KEY ("content_id") REFERENCES "[{prefix}]content" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "fk_content_category_id" FOREIGN KEY ("category_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -319,8 +320,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_to_categories" (
 -- Dumping data for table "content_to_categories"
 --
 
-INSERT INTO "[{prefix}]content_to_categories" ("content_id", "category_id") VALUES (6002, 8001);
-INSERT INTO "[{prefix}]content_to_categories" ("content_id", "category_id") VALUES (6003, 8001);
+INSERT INTO "[{prefix}]content_to_categories" ("content_id", "category_id", "order") VALUES (6002, 8001, 1);
+INSERT INTO "[{prefix}]content_to_categories" ("content_id", "category_id", "order") VALUES (6003, 8001, 2);
 
 -- --------------------------------------------------------
 

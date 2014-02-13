@@ -153,7 +153,7 @@ class Template extends AbstractModel
                         $limit = (isset($cAry[2])) ? $cAry[2] : null;
                         $cont = $phire->getContentByCategory($ct, $orderBy, $limit);
                     } else {
-                        $cont = $phire->getContentByCategory($c, 'id ASC', null);
+                        $cont = $phire->getContentByCategory($c, 'order ASC', null);
                     }
 
                     foreach ($cont as $key => $value) {

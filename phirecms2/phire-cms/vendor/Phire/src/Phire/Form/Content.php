@@ -137,12 +137,6 @@ class Content extends AbstractForm
             }
         }
 
-        // Get categories
-        $categories = new Model\Category();
-        $categories->getAll();
-        $categoryAry = $categories->getCategoryArray();
-        unset($categoryAry[0]);
-
         // If type requires a URI
         if ($type->uri == 1) {
             $fields1 = array();
@@ -240,6 +234,24 @@ class Content extends AbstractForm
             );
         }
 
+        // Categories
+        $catOrder = array();
+        $catsMarked = array();
+        if ($mid != 0) {
+            $cats = Table\ContentToCategories::findAll(null, array('content_id' => $mid));
+            if (isset($cats->rows[0])) {
+                foreach ($cats->rows as $cat) {
+                    $catsMarked[] = $cat->category_id;
+                    $catOrder[$cat->category_id] = $cat->order;
+                }
+            }
+        }
+        $catsAry = array();
+        $cats = \Phire\Table\Categories::findAll('id ASC');
+        foreach ($cats->rows as $cat) {
+            $catsAry[$cat->id] = '<strong style="display: block; float: left; width: 90px; font-size: 0.9em;">' . $cat->title . '</strong> <input style="margin: -4px 0 0 10px; padding: 2px; font-size: 0.9em;" type="text" name="category_order_' . $cat->id . '" value="' . (isset($catOrder[$cat->id]) ? $catOrder[$cat->id] : 0) . '" size="3" />';
+        }
+
         // Add nav include and roles
         if (!$this->hasFile) {
             $fields4['status'] = array(
@@ -277,11 +289,11 @@ class Content extends AbstractForm
                 'marked' => $navsMarked
             );
             // Add categories
-            if (count($categoryAry) > 0) {
+            if (count($catsAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
                     'label'    => $this->i18n->__('Categories'),
-                    'value'    => $categoryAry
+                    'value'    => $catsAry
                 );
             }
             $fields5['feed'] = array(
@@ -308,11 +320,11 @@ class Content extends AbstractForm
             );
         } else {
             // Add categories
-            if (count($categoryAry) > 0) {
+            if (count($catsAry) > 0) {
                 $fields5['category_id'] = array(
                     'type'     => 'checkbox',
                     'label'    => $this->i18n->__('Categories'),
-                    'value'    => $categoryAry
+                    'value'    => $catsAry
                 );
             }
             $fields5['feed'] = array(

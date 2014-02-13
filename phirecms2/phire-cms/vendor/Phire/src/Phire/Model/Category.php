@@ -128,7 +128,7 @@ class Category extends AbstractModel
 
             // Get content object within the category
             $categoryValues['items'] = array();
-            $content = Table\ContentToCategories::findBy(array('category_id' => $category->id));
+            $content = Table\ContentToCategories::findBy(array('category_id' => $category->id), 'order ASC');
             $site   = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
             $siteId = (isset($site->id)) ? $site->id : '0';
             if (isset($content->rows[0])) {

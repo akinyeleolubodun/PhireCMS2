@@ -151,7 +151,7 @@ class Phire extends AbstractModel
      * @param  int     $limit
      * @return array
      */
-    public function getContentByCategory($cat, $orderBy = 'id ASC', $limit = null)
+    public function getContentByCategory($cat, $orderBy = 'order ASC', $limit = null)
     {
         if (!is_numeric($cat)) {
             $c = Table\Categories::findBy(array('title' => $cat));
@@ -181,7 +181,8 @@ class Phire extends AbstractModel
                 14         => DB_PREFIX . 'content.expired',
                 15         => DB_PREFIX . 'content.created_by',
                 16         => DB_PREFIX . 'content.updated_by',
-                'type_uri' => DB_PREFIX . 'content_types.uri'
+                'type_uri' => DB_PREFIX . 'content_types.uri',
+                'order'    => DB_PREFIX . 'content_to_categories.order',
             ));
 
             $sql->select()->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN');

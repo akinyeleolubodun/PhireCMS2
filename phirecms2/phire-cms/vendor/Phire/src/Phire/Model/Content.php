@@ -852,7 +852,8 @@ class Content extends AbstractModel
             foreach ($fields['category_id'] as $cat) {
                 $contentToCategory = new Table\ContentToCategories(array(
                     'content_id'  => $content->id,
-                    'category_id' => $cat
+                    'category_id' => $cat,
+                    'order'       => (int)$_POST['category_order_' . $cat]
                 ));
                 $contentToCategory->save();
             }
@@ -1046,7 +1047,8 @@ class Content extends AbstractModel
             foreach ($_POST['category_id'] as $cat) {
                 $contentToCategory = new Table\ContentToCategories(array(
                     'content_id'  => $content->id,
-                    'category_id' => $cat
+                    'category_id' => $cat,
+                    'order'       => (int)$_POST['category_order_' . $cat]
                 ));
                 $contentToCategory->save();
             }

@@ -172,6 +172,10 @@ class Cli
         echo '  Current Installed: ' . Project::VERSION . PHP_EOL;
         echo '  Latest Available:  ' . $latest . PHP_EOL;
         echo PHP_EOL;
+        echo (version_compare(Project::VERSION, $latest) >= 0) ?
+            '  The latest version is installed.' :
+            '  A newer version is available.';
+        echo PHP_EOL . PHP_EOL;
     }
 
     /**
