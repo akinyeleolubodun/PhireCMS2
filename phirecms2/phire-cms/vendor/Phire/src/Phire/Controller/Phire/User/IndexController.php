@@ -102,8 +102,10 @@ class IndexController extends AbstractController
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    )
                 );
 
                 // If form is valid, redirect to the second part of the form
@@ -136,8 +138,10 @@ class IndexController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array(
+                            'strip_tags'   => null,
+                            'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                        )
                     );
 
                     // If form is valid, save new user
@@ -208,8 +212,10 @@ class IndexController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array(
+                            'strip_tags'   => null,
+                            'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                        )
                     );
 
                     // If form is valid, save the user
@@ -238,11 +244,7 @@ class IndexController extends AbstractController
                 } else {
                     $userData = $user->getData(null, false);
                     $userData['site_ids'] = unserialize($userData['site_ids']);
-                    $form->setFieldValues(
-                        $userData,
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
-                    );
+                    $form->setFieldValues($userData);
                     $this->view->set('form', $form);
                     $this->send();
                 }

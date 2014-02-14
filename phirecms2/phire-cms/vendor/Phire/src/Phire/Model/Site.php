@@ -123,7 +123,6 @@ class Site extends \Phire\Model\AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $docRoot = ((substr($fields['document_root'], -1) == '/') && (substr($fields['document_root'], -1) == "\\")) ?
@@ -193,7 +192,6 @@ class Site extends \Phire\Model\AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $site = Table\Sites::findById($fields['id']);

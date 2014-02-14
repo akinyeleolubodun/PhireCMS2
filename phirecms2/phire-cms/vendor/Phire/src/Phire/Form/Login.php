@@ -59,16 +59,15 @@ class Login extends AbstractForm
      * Set the field values
      *
      * @param  array                  $values
-     * @param  mixed                  $filters
-     * @param  mixed                  $params
+     * @param  array                  $filters
      * @param  \Phire\Auth\Auth       $auth
      * @param  \Phire\Table\UserTypes $type
      * @param  \Phire\Model\User      $user
      * @return \Pop\Form\Form
      */
-    public function setFieldValues(array $values = null, $filters = null, $params = null, $auth = null, $type = null, $user = null)
+    public function setFieldValues(array $values = null, $filters = null, $auth = null, $type = null, $user = null)
     {
-        parent::setFieldValues($values, $filters, $params);
+        parent::setFieldValues($values, $filters);
 
         if ($_POST) {
             // Authenticate and get the auth result

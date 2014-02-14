@@ -30,13 +30,12 @@ class ContentType extends AbstractForm
      * Set the field values
      *
      * @param  array $values
-     * @param  mixed $filters
-     * @param  mixed $params
+     * @param  array $filters
      * @return \Pop\Form\Form
      */
-    public function setFieldValues(array $values = null, $filters = null, $params = null)
+    public function setFieldValues(array $values = null, $filters = null)
     {
-        parent::setFieldValues($values, $filters, $params);
+        parent::setFieldValues($values, $filters);
 
         // Check for dupe content type names
         if ($_POST) {

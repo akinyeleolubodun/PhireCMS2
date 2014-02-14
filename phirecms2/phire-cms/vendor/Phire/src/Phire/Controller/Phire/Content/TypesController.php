@@ -88,8 +88,7 @@ class TypesController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
@@ -152,8 +151,7 @@ class TypesController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
@@ -181,9 +179,7 @@ class TypesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $type->getData(null, false),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        $type->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

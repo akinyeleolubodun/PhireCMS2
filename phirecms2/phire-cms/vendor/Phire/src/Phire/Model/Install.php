@@ -73,14 +73,6 @@ class Install
      */
     public function config($form, $docRoot = null)
     {
-        // Get config file contents
-        $cfgFile = new File($docRoot . '/config.php');
-        $config = $cfgFile->read();
-
-        if ($form instanceof \Pop\Form\Form) {
-            $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
-        }
-
         if (null === $docRoot) {
             $docRoot = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH;
         }

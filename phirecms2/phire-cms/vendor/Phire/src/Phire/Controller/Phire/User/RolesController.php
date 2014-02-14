@@ -90,8 +90,7 @@ class RolesController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
             );
 
             // If form is valid, save new role
@@ -156,8 +155,7 @@ class RolesController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save role
@@ -185,9 +183,7 @@ class RolesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $role->getData(null, false),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        $role->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

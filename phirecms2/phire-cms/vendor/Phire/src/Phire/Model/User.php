@@ -244,8 +244,8 @@ class User extends AbstractModel
                 'username'    => $userRows[$key]->username,
                 'email'       => $userRows[$key]->email,
                 'name'        => $userRows[$key]->name,
-                'last_login'  => $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>',
-                'type'        => $userRows[$key]->type
+                'type'        => $userRows[$key]->type,
+                'last_login'  => $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>'
             );
 
             if (null !== $edit) {
@@ -426,7 +426,6 @@ class User extends AbstractModel
     {
         $encOptions = $config->encryptionOptions->asArray();
 
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
         $type = Table\UserTypes::findById($fields['type_id']);
 
@@ -485,7 +484,6 @@ class User extends AbstractModel
     {
         $encOptions = $config->encryptionOptions->asArray();
 
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
         $type = Table\UserTypes::findById($fields['type_id']);
         $user = Table\Users::findById($fields['id']);
@@ -545,8 +543,6 @@ class User extends AbstractModel
      */
     public function updateType(\Pop\Form\Form $form, $config)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
-
         // If the user type has changed
         if ($this->type_id != $form->type_id) {
             $user = Table\Users::findById($this->id);
@@ -609,7 +605,6 @@ class User extends AbstractModel
      */
     public function unsubscribe(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $user = Table\Users::findBy(array('email' => $form->email));
 
         if (isset($user->id)) {

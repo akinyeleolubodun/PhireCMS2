@@ -85,8 +85,7 @@ class CategoriesController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
@@ -148,8 +147,7 @@ class CategoriesController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
@@ -177,9 +175,7 @@ class CategoriesController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $category->getData(null, false),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        $category->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

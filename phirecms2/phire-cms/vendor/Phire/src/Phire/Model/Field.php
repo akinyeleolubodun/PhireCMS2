@@ -838,7 +838,6 @@ class Field extends \Phire\Model\AbstractModel
      */
     public function upload(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         // If content is a file
@@ -888,7 +887,6 @@ class Field extends \Phire\Model\AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $validators = array();
@@ -896,8 +894,8 @@ class Field extends \Phire\Model\AbstractModel
             if ((strpos($key, 'validator_new_') !== false) && ($value != '') && ($value != '----')) {
                 $id = substr($key, (strrpos($key, '_') + 1));
                 $validators[$value] = array(
-                    'value'   => html_entity_decode(strip_tags($_POST['validator_value_new_' . $id]), ENT_QUOTES, 'UTF-8'),
-                    'message' => html_entity_decode(strip_tags($_POST['validator_message_new_' . $id]), ENT_QUOTES, 'UTF-8')
+                    'value'   => $_POST['validator_value_new_' . $id],
+                    'message' => $_POST['validator_message_new_' . $id]
                 );
             }
         }
@@ -945,7 +943,6 @@ class Field extends \Phire\Model\AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $curValidators = array();
@@ -954,16 +951,16 @@ class Field extends \Phire\Model\AbstractModel
             if ((strpos($key, 'validator_new_') !== false) && ($value != '') && ($value != '----')) {
                 $id = substr($key, (strrpos($key, '_') + 1));
                 $newValidators[$value] = array(
-                    'value'   => html_entity_decode(strip_tags($_POST['validator_value_new_' . $id]), ENT_QUOTES, 'UTF-8'),
-                    'message' => html_entity_decode(strip_tags($_POST['validator_message_new_' . $id]), ENT_QUOTES, 'UTF-8')
+                    'value'   => $_POST['validator_value_new_' . $id],
+                    'message' => $_POST['validator_message_new_' . $id]
                 );
             } else if (strpos($key, 'validator_cur_') !== false) {
                 $id = substr($key, (strrpos($key, '_') + 1));
                 if (!isset($_POST['validator_remove_cur_' . $id])) {
                     if (($value != '') && ($value != '----')) {
                         $curValidators[$value] = array(
-                            'value'   => html_entity_decode(strip_tags($_POST['validator_value_cur_' . $id]), ENT_QUOTES, 'UTF-8'),
-                            'message' => html_entity_decode(strip_tags($_POST['validator_message_cur_' . $id]), ENT_QUOTES, 'UTF-8')
+                            'value'   => $_POST['validator_value_cur_' . $id],
+                            'message' => $_POST['validator_message_cur_' . $id]
                         );
                     }
                 }
@@ -987,8 +984,6 @@ class Field extends \Phire\Model\AbstractModel
         $field->editor         = (($fields['editor'] != '0') ? $fields['editor'] : null);
         $field->update();
         $this->data['id'] = $field->id;
-
-        $removed = array();
 
         $models = array();
 

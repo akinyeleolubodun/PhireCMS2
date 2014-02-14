@@ -126,13 +126,8 @@ class Config extends AbstractModel
         $overview = array();
 
         foreach ($cfg->rows as $c) {
-            if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
-                $value = unserialize($c->value);
-            } else {
-                $value = htmlentities($c->value, ENT_QUOTES, 'UTF-8');
-            }
-
-            $config[$c->setting] = $value;
+            $config[$c->setting] = (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) ?
+                unserialize($c->value) : $c->value;
         }
 
         // Set server config settings
@@ -171,13 +166,8 @@ class Config extends AbstractModel
         $formattedConfig = array();
 
         foreach ($cfg->rows as $c) {
-            if (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) {
-                $value = unserialize($c->value);
-            } else {
-                $value = htmlentities($c->value, ENT_QUOTES, 'UTF-8');
-            }
-
-            $config[$c->setting] = $value;
+            $config[$c->setting] = (($c->setting == 'media_allowed_types') || ($c->setting == 'media_actions')) ?
+                $value = unserialize($c->value) : $c->value;
         }
 
         // Set server config settings
@@ -198,22 +188,22 @@ class Config extends AbstractModel
         );
 
         // Set system title form element
-        $systemTitle = new Element('text', 'system_title', html_entity_decode($config['system_title'], ENT_QUOTES, 'UTF-8'));
+        $systemTitle = new Element('text', 'system_title', $config['system_title']);
         $systemTitle->setAttributes('size', 40)
                     ->setAttributes('style', 'padding: 5px;');
 
         // Set system email form element
-        $systemEmail = new Element('text', 'system_email', html_entity_decode($config['system_email'], ENT_QUOTES, 'UTF-8'));
+        $systemEmail = new Element('text', 'system_email', $config['system_email']);
         $systemEmail->setAttributes('size', 40)
                     ->setAttributes('style', 'padding: 5px;');
 
         // Set site title form element
-        $siteTitle = new Element('text', 'site_title', html_entity_decode($config['site_title'], ENT_QUOTES, 'UTF-8'));
+        $siteTitle = new Element('text', 'site_title', $config['site_title']);
         $siteTitle->setAttributes('size', 40)
                   ->setAttributes('style', 'padding: 5px;');
 
         // Set separator form element
-        $separator = new Element('text', 'separator', html_entity_decode($config['separator'], ENT_QUOTES, 'UTF-8'));
+        $separator = new Element('text', 'separator', $config['separator']);
         $separator->setAttributes('size', 10)
                   ->setAttributes('style', 'padding: 5px;');
 
@@ -226,7 +216,7 @@ class Config extends AbstractModel
         $lang = new Element\Select('default_language', $langs, $config['default_language'], '                    ');
 
         // Set error message form element
-        $error = new Element\Textarea('error_message', html_entity_decode($config['error_message'], ENT_QUOTES, 'UTF-8'));
+        $error = new Element\Textarea('error_message', $config['error_message']);
         $error->setAttributes(array('rows' => 5, 'cols' => 100));
 
         // Set date and time format form element
@@ -314,7 +304,7 @@ class Config extends AbstractModel
                     $value = ($post['custom_datetime'] != '') ? $post['custom_datetime'] : 'F d, Y';
                 }
 
-                $cfg->value = (is_string($value)) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
+                $cfg->value = htmlentities($value, ENT_QUOTES, 'UTF-8');
                 $cfg->update();
             }
         }

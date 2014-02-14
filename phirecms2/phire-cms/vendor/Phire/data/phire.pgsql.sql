@@ -31,7 +31,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
 ('system_title', 'Phire CMS 2.0'),
 ('system_email', ''),
 ('site_title', 'Default Site Title'),
-('separator', '>'),
+('separator', '&gt;'),
 ('default_language', 'en_US'),
 ('error_message', 'Sorry. That page was not found.'),
 ('datetime_format', 'M j Y g:i A'),

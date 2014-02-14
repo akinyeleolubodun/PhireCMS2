@@ -85,8 +85,7 @@ class NavigationController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
@@ -147,8 +146,7 @@ class NavigationController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
@@ -176,9 +174,7 @@ class NavigationController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $navigation->getData(null, false),
-                        array('strip_tags', 'htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        $navigation->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

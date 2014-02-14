@@ -83,8 +83,7 @@ class GroupsController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('htmlentities'),
-                array(array(ENT_QUOTES, 'UTF-8'))
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
             );
 
             if ($form->isValid()) {
@@ -142,8 +141,7 @@ class GroupsController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('htmlentities'),
-                        array(array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save group
@@ -170,9 +168,7 @@ class GroupsController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $group->getData(null, false),
-                        array('htmlentities'),
-                        array(array(ENT_QUOTES, 'UTF-8'))
+                        $group->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

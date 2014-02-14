@@ -113,7 +113,6 @@ class FieldGroup extends \Phire\Model\AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $group = new Table\FieldGroups(array(
@@ -134,7 +133,6 @@ class FieldGroup extends \Phire\Model\AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $group = Table\FieldGroups::findById($fields['id']);

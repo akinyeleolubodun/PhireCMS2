@@ -298,7 +298,6 @@ class Navigation extends AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $navigation = new Table\Navigation(array(
@@ -334,7 +333,6 @@ class Navigation extends AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
         $navigation = Table\Navigation::findById($fields['id']);
         $navigation->navigation  = $fields['navigation'];

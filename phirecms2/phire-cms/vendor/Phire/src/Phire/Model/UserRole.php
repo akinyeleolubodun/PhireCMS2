@@ -250,7 +250,6 @@ class UserRole extends AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $role = new Table\UserRoles(array(
@@ -294,7 +293,6 @@ class UserRole extends AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $role = Table\UserRoles::findById($fields['id']);

@@ -107,8 +107,7 @@ class IndexController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     if ($form->isValid()) {
@@ -140,8 +139,7 @@ class IndexController extends AbstractController
                     if ($this->request->isPost()) {
                         $form->setFieldValues(
                             $this->request->getPost(),
-                            array('htmlentities'),
-                            array(null, array(ENT_QUOTES, 'UTF-8'))
+                            array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                         );
 
                         // If form is valid, save new content
@@ -226,8 +224,7 @@ class IndexController extends AbstractController
                 if ($this->request->isPost()) {
                     $form->setFieldValues(
                         $this->request->getPost(),
-                        array('htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
                     );
 
                     // If form is valid, save field
@@ -263,9 +260,7 @@ class IndexController extends AbstractController
                 // Else, render form
                 } else {
                     $form->setFieldValues(
-                        $content->getData(null, false),
-                        array('htmlentities'),
-                        array(null, array(ENT_QUOTES, 'UTF-8'))
+                        $content->getData(null, false)
                     );
                     $this->view->set('form', $form);
                     $this->send();

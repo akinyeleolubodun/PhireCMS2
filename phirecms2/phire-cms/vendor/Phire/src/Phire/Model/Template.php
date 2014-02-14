@@ -427,7 +427,6 @@ class Template extends AbstractModel
      */
     public function save(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $template = new Table\Templates(array(
@@ -452,7 +451,6 @@ class Template extends AbstractModel
      */
     public function update(\Pop\Form\Form $form)
     {
-        $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
         $fields = $form->getFields();
 
         $template = Table\Templates::findById($fields['id']);

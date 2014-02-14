@@ -163,8 +163,10 @@ class IndexController extends AbstractController
                 $user = new Model\User();
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8')),
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    ),
                     $this->project->getService('auth')->config($this->type, $this->request->getPost('username')),
                     $this->type, $user
                 );
@@ -230,8 +232,10 @@ class IndexController extends AbstractController
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    )
                 );
 
                 // If form is valid, save the user
@@ -315,9 +319,7 @@ class IndexController extends AbstractController
             // Else, render the form
             } else {
                 $form->setFieldValues(
-                    $user->getData(null, false),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    $user->getData(null, false)
                 );
                 $this->view->set('form', $form);
                 $this->send();
@@ -348,8 +350,10 @@ class IndexController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array(
+                    'strip_tags'   => null,
+                    'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                )
             );
 
             // If form is valid, unsubscribe the user
@@ -407,8 +411,10 @@ class IndexController extends AbstractController
         if ($this->request->isPost()) {
             $form->setFieldValues(
                 $this->request->getPost(),
-                array('strip_tags', 'htmlentities'),
-                array(null, array(ENT_QUOTES, 'UTF-8'))
+                array(
+                    'strip_tags'   => null,
+                    'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                )
             );
 
             // If form is valid, send reminder

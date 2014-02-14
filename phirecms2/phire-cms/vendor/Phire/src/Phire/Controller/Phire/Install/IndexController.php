@@ -92,8 +92,10 @@ class IndexController extends C
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    )
                 );
 
                 if ($form->isValid()) {
@@ -169,8 +171,10 @@ class IndexController extends C
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    )
                 );
 
                 if ($form->isValid()) {
