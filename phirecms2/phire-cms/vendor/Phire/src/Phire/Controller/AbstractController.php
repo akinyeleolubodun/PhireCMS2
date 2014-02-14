@@ -81,7 +81,7 @@ class AbstractController extends \Pop\Mvc\Controller
 
                 // If the sub-children haven't been added yet
                 if (isset($tree[0])) {
-                    // And any content types to the main nav
+                    // And any content types to the main phire nav
                     $contentTypes = \Phire\Table\ContentTypes::findAll('order ASC');
                     if (isset($contentTypes->rows)) {
                         foreach ($contentTypes->rows as $type) {
@@ -102,7 +102,7 @@ class AbstractController extends \Pop\Mvc\Controller
                         }
                     }
 
-                    // And any user types to the main nav
+                    // And any user types to the main phire nav
                     $userTypes = \Phire\Table\UserTypes::findAll('id ASC');
                     if (isset($userTypes->rows)) {
                         foreach ($userTypes->rows as $type) {

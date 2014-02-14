@@ -369,11 +369,12 @@ class IndexController extends AbstractController
 
             // Construct the full parent URI
             if (isset($content->id)) {
-                $uri = $content->slug;
+                $uri = (substr($content->slug, -1) == '#') ? substr($content->slug, 0, -1) : $content->slug;
                 while ($content->parent_id != 0) {
                     $content = Table\Content::findById($content->parent_id);
                     if (isset($content->id)) {
-                        $uri = $content->slug . '/' . $uri;
+                        $slug = (substr($content->slug, -1) == '#') ? substr($content->slug, 0, -1) : $content->slug;
+                        $uri = $slug . '/' . $uri;
                     }
                 }
             }

@@ -234,6 +234,8 @@ class Navigation extends AbstractModel
                         $indent = (null !== $nav->spaces) ? str_repeat(' ', $nav->spaces) : '    ';
                         $newNav = new Nav($navChildren, $navConfig);
                         $newNav->nav()->setIndent($indent);
+                        $newNav->returnFalse(true);
+                        $newNav->rebuild();
                         $navs[$navName] = $newNav;
                     }
                 }
@@ -266,6 +268,8 @@ class Navigation extends AbstractModel
             $navChildren = $this->getCategoryChildren($categories->rows, 0, true, Table\Sites::getBasePath());
             if (count($navChildren) > 0) {
                 $nav = new Nav($navChildren, $catConfig);
+                $nav->returnFalse(true);
+                $nav->rebuild();
                 $nav->nav()->setIndent('    ');
             }
         }

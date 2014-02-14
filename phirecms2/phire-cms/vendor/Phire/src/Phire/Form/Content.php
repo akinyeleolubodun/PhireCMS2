@@ -85,7 +85,7 @@ class Content extends AbstractForm
                     if ($this->uri == '') {
                         $this->getElement('uri')
                              ->addValidator(new Validator\NotEmpty($this->uri, $this->i18n->__('The root URI already exists.')));
-                    } else {
+                    } else if ($this->uri != '#') {
                         $this->getElement('uri')
                              ->addValidator(new Validator\NotEqual($this->uri, $this->i18n->__('That URI already exists under that parent content.')));
                     }
