@@ -143,15 +143,24 @@ class Category extends AbstractModel
                     $c = Table\Content::findById($cont->content_id);
                     if (isset($c->id) && ($c->site_id == $siteId) && ((null === $c->status) || ($c->status == 2))) {
                         $c = $c->getValues();
+                        if (isset($c['title'])) {
+                            $c['title'] = html_entity_decode($c['title'], ENT_QUOTES, 'UTF-8');
+                        }
                         if (substr($c['uri'], 0, 1) != '/') {
                             $c['uri'] = CONTENT_PATH . '/media/' . $c['uri'];
                             $c['isFile'] = true;
                         } else {
                             $c['isFile'] = false;
                         }
-                        $c['category_title'] = $category->title;
+                        $c['category_title'] = html_entity_decode($category->title, ENT_QUOTES, 'UTF-8');;
                         $c['category_uri'] = $category->uri;
-                        $c = array_merge($c, FieldValue::getAll($c['id'], true));
+
+                        $fieldValues = FieldValue::getAll($c['id'], true);
+                        foreach ($fieldValues as $key => $value) {
+                            $fieldValues[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+                        }
+
+                        $c = array_merge($c, $fieldValues);
                         $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
                     }
                 }
@@ -340,7 +349,7 @@ class Category extends AbstractModel
         $breadcrumb = $this->title;
         $pId = $this->parent_id;
         $basePath = Table\Sites::getBasePath();
-        $sep = htmlentities($this->config->separator, ENT_QUOTES, 'UTF-8');
+        $sep = $this->config->separator;
 
         while ($pId != 0) {
             $category = Table\Categories::findById($pId);

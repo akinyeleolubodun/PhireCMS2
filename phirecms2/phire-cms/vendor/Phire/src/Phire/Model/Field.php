@@ -631,6 +631,7 @@ class Field extends \Phire\Model\AbstractModel
                 'id' => $field->id,
             );
 
+            $fAry['type'] = $field->type;
             $fAry['name'] = $field->name;
             $fAry['label'] = $field->label;
             $fAry['required'] = ($field->required) ? $this->i18n->__('Yes') : $this->i18n->__('No');
@@ -659,6 +660,7 @@ class Field extends \Phire\Model\AbstractModel
         $field = Table\Fields::findById($id);
         if (isset($field->id)) {
             $fieldValues = $field->getValues();
+            $fieldValues['attributes'] = htmlentities($fieldValues['attributes'], ENT_QUOTES, 'UTF-8');
             $this->data = array_merge($this->data, $fieldValues);
         }
     }
@@ -907,7 +909,7 @@ class Field extends \Phire\Model\AbstractModel
             'label'          => $fields['label'],
             'values'         => $fields['values'],
             'default_values' => $fields['default_values'],
-            'attributes'     => $fields['attributes'],
+            'attributes'     => html_entity_decode($fields['attributes'], ENT_QUOTES, 'UTF-8'),
             'validators'     => ((count($validators) > 0) ? serialize($validators) : null),
             'encryption'     => (int)$fields['encryption'],
             'order'          => (int)$fields['order'],
@@ -976,7 +978,7 @@ class Field extends \Phire\Model\AbstractModel
         $field->label          = $fields['label'];
         $field->values         = $fields['values'];
         $field->default_values = $fields['default_values'];
-        $field->attributes     = $fields['attributes'];
+        $field->attributes     = html_entity_decode($fields['attributes'], ENT_QUOTES, 'UTF-8');
         $field->validators     = ((count($validators) > 0) ? serialize($validators) : null);
         $field->encryption     = (int)$fields['encryption'];
         $field->order          = (int)$fields['order'];

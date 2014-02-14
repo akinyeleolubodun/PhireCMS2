@@ -471,7 +471,12 @@ class Content extends AbstractModel
                 if ((int)$content->site_id == $siteId) {
                     $this->data['allowed'] = self::isAllowed($content);
                     $contentValues = (array)$content;
-                    $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
+                    $contentValues['title'] = html_entity_decode($contentValues['title'], ENT_QUOTES, 'UTF-8');
+                    $fieldValues = FieldValue::getAll($content->id, true);
+                    foreach ($fieldValues as $key => $value) {
+                        $fieldValues[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+                    }
+                    $contentValues = array_merge($contentValues, $fieldValues);
                     $this->data = array_merge($this->data, $contentValues);
                     $this->filterContent();
                 }
@@ -508,7 +513,12 @@ class Content extends AbstractModel
         } else if (isset($content->id)) {
             $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
-            $contentValues = array_merge($contentValues, FieldValue::getAll($content->id, true));
+            $contentValues['title'] = html_entity_decode($contentValues['title'], ENT_QUOTES, 'UTF-8');
+            $fieldValues = FieldValue::getAll($content->id, true);
+            foreach ($fieldValues as $key => $value) {
+                $fieldValues[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+            }
+            $contentValues = array_merge($contentValues, $fieldValues);
             $this->data = array_merge($this->data, $contentValues);
             $this->filterContent();
         }
@@ -589,10 +599,13 @@ class Content extends AbstractModel
 
             foreach ($results as $key => $result) {
                 if (self::isAllowed($result)) {
+                    if (isset($result['title'])) {
+                        $result['title'] = html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8');
+                    }
                     $fv = FieldValue::getAll($result->id, true);
                     if (count($fv) > 0) {
                         foreach ($fv as $k => $v) {
-                            $results[$key]->{$k} = $v;
+                            $results[$key]->{$k} = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
                         }
                     }
                 } else {
@@ -746,7 +759,7 @@ class Content extends AbstractModel
     {
         $breadcrumb = $this->title;
         $pId = $this->parent_id;
-        $sep = htmlentities($this->config->separator, ENT_QUOTES, 'UTF-8');
+        $sep = $this->config->separator;
 
         while ($pId != 0) {
             $content = Table\Content::findById($pId);
