@@ -55,7 +55,7 @@ class Template extends AbstractModel
                 if (($t != $id) && ($t != $pid)) {
                     $template = (is_numeric($t)) ? Table\Templates::findById($t) : Table\Templates::findBy(array('name' => $t));
                     if (isset($template->id)) {
-                        $t = self::parse($template->template, $template->id, $id);
+                        $t = self::parse(html_entity_decode($template->template, ENT_QUOTES, 'UTF-8'), $template->id, $id);
                         $tmp = str_replace($tmpl, $t, $tmp);
                     } else {
                         $tmp = str_replace($tmpl, '', $tmp);

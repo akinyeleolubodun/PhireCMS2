@@ -649,7 +649,7 @@ class Cli
             $langKeys  = array_keys($langs);
             $langsList = null;
 
-            $i = 0;
+            $i = 1;
             foreach ($langs as $key => $value) {
                 $num = ($i < 10) ? ' ' . $i : $i;
                 $langsList .= '  ' . $num . ' : [' . $key . '] ' . $value . PHP_EOL;
@@ -679,6 +679,8 @@ class Cli
                 $inputLang = self::cliInput('  Enter Language # (Enter for English): ');
                 if (empty($inputLang)) {
                     $inputLang = 3;
+                } else {
+                    $inputLang--;
                 }
             }
 
@@ -686,7 +688,7 @@ class Cli
 
             echo PHP_EOL . '  Select DB Adapter:' . PHP_EOL . PHP_EOL;
             foreach ($db as $key => $value) {
-                echo  '  ' . $key . ' : ' . $value . PHP_EOL;
+                echo  '  ' . ($key + 1) . ' : ' . $value . PHP_EOL;
             }
             echo PHP_EOL;
 
@@ -694,6 +696,7 @@ class Cli
 
             while (!isset($db[$inputDb])) {
                 $inputDb = self::cliInput('  Enter DB Adapter #: ');
+                $inputDb--;
             }
 
             $input['db_adapter'] = $db[$inputDb];

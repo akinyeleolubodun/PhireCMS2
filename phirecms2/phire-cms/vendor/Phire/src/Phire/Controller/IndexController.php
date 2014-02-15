@@ -539,7 +539,7 @@ class IndexController extends AbstractController
                         }
                     }
 
-                    $t = Model\Template::parse($t, $template);
+                    $t = Model\Template::parse(html_entity_decode($t, ENT_QUOTES, 'UTF-8'), $template);
                 }
             // Else, if the template is a file
             } else {
