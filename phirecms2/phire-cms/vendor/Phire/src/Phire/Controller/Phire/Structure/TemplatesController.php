@@ -93,6 +93,8 @@ class TemplatesController extends AbstractController
             if ($form->isValid()) {
                 $template = new Model\Template();
                 $template->save($form);
+                $this->view->set('id', $template->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -154,6 +156,8 @@ class TemplatesController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $template->update($form);
+                        $this->view->set('id', $template->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $template->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

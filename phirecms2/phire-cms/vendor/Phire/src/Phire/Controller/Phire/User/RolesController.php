@@ -97,6 +97,8 @@ class RolesController extends AbstractController
             if ($form->isValid()) {
                 $role = new Model\UserRole();
                 $role->save($form);
+                $this->view->set('id', $role->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -161,6 +163,8 @@ class RolesController extends AbstractController
                     // If form is valid, save role
                     if ($form->isValid()) {
                         $role->update($form);
+                        $this->view->set('id', $role->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $role->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

@@ -93,6 +93,8 @@ class FieldsController extends AbstractController
             if ($form->isValid()) {
                 $field = new Model\Field();
                 $field->save($form);
+                $this->view->set('id', $field->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $field->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -154,6 +156,8 @@ class FieldsController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $field->update($form);
+                        $this->view->set('id', $field->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $field->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -291,6 +295,7 @@ class FieldsController extends AbstractController
 
                 if ($form->isValid()) {
                     $field->upload($form);
+                    $this->view->set('id', $field->id);
                     Response::redirect($form->getAction());
                 } else {
                     $this->view->set('form', $form);

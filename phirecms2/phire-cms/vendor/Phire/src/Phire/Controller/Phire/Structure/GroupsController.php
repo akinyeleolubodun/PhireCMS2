@@ -89,6 +89,8 @@ class GroupsController extends AbstractController
             if ($form->isValid()) {
                 $group = new Model\FieldGroup();
                 $group->save($form);
+                $this->view->set('id', $group->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $group->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -147,6 +149,8 @@ class GroupsController extends AbstractController
                     // If form is valid, save group
                     if ($form->isValid()) {
                         $group->update($form);
+                        $this->view->set('id', $group->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $group->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

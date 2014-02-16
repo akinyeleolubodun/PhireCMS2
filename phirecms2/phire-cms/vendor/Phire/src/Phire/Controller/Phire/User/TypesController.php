@@ -96,6 +96,8 @@ class TypesController extends AbstractController
             if ($form->isValid()) {
                 $type = new Model\UserType();
                 $type->save($form);
+                $this->view->set('id', $type->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -159,6 +161,8 @@ class TypesController extends AbstractController
                     // If form is valid, save type
                     if ($form->isValid()) {
                         $type->update($form, $this->project->module('Phire'));
+                        $this->view->set('id', $type->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

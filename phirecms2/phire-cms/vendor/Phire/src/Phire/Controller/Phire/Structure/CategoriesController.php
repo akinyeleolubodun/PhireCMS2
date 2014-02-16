@@ -91,6 +91,7 @@ class CategoriesController extends AbstractController
             if ($form->isValid()) {
                 $category = new Model\Category();
                 $category->save($form);
+                $this->view->set('id', $category->id);
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                 } else if (null !==         $this->request->getQuery('update')) {
@@ -153,6 +154,7 @@ class CategoriesController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $category->update($form);
+                        $this->view->set('id', $category->id);
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $category->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

@@ -148,6 +148,8 @@ class IndexController extends AbstractController
                     if ($form->isValid()) {
                         $user = new Model\User();
                         $user->save($form, $this->project->module('Phire'));
+                        $this->view->set('id', $user->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
@@ -221,6 +223,8 @@ class IndexController extends AbstractController
                     // If form is valid, save the user
                     if ($form->isValid()) {
                         $user->update($form, $this->project->module('Phire'));
+                        $this->view->set('id', $user->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $user->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

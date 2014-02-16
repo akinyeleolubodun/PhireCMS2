@@ -94,6 +94,8 @@ class TypesController extends AbstractController
             if ($form->isValid()) {
                 $type = new Model\ContentType();
                 $type->save($form);
+                $this->view->set('id', $type->id);
+
                 $url = ($form->redirect) ? BASE_PATH . APP_URI . '/content/add/' . $type->id : $this->request->getBasePath();
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
@@ -157,6 +159,8 @@ class TypesController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $type->update($form);
+                        $this->view->set('id', $type->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $type->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {

@@ -91,6 +91,8 @@ class NavigationController extends AbstractController
             if ($form->isValid()) {
                 $navigation = new Model\Navigation();
                 $navigation->save($form);
+                $this->view->set('id', $navigation->id);
+
                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                     Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
                 } else if (null !== $this->request->getQuery('update')) {
@@ -152,6 +154,8 @@ class NavigationController extends AbstractController
                     // If form is valid, save field
                     if ($form->isValid()) {
                         $navigation->update($form);
+                        $this->view->set('id', $navigation->id);
+
                         if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
                             Response::redirect($this->request->getBasePath() . '/edit/' . $navigation->id . '?saved=' . time());
                         } else if (null !== $this->request->getQuery('update')) {
