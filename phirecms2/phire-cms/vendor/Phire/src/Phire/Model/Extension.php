@@ -297,8 +297,9 @@ class Extension extends AbstractModel
                 $sqlFile = $modPath . '/' .
                     $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
 
+                $cfg    = null;
                 $tables = array();
-                $info = array();
+                $info   = array();
 
                 // Check for a config and try to get info out of it
                 if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.php')) {
@@ -401,6 +402,14 @@ class Extension extends AbstractModel
                         ))
                     ));
                     $ext->save();
+                }
+
+                if (null !== $cfg) {
+                    $config = include_once $modPath . '/' . $name . '/config/module.php';
+                    if (null !== $config[$name]->install) {
+                        $installFunc = $config[$name]->install;
+                        $installFunc();
+                    }
                 }
             }
         } catch (\Exception $e) {

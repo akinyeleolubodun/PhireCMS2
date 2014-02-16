@@ -147,6 +147,8 @@ class IndexController extends AbstractController
                             try {
                                 $content = new Model\Content();
                                 $content->save($form);
+                                $this->view->set('id', $content->id);
+
                                 if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
                                     Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
                                 } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
@@ -231,6 +233,8 @@ class IndexController extends AbstractController
                     if ($form->isValid()) {
                         try {
                             $content->update($form);
+                            $this->view->set('id', $content->id);
+
                             if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '2')) {
                                 Response::redirect($this->request->getBasePath() . '/edit/' . $content->id . '?saved=' . time() . '&preview=' . time() . '&base_path=' . urlencode(BASE_PATH));
                             } else if (null !== $this->request->getPost('update_value') && ($this->request->getPost('update_value') == '1')) {
