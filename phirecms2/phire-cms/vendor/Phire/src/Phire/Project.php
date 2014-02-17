@@ -51,8 +51,7 @@ class Project extends P
         self::isInstalled();
 
         $sess = Session::getInstance();
-        //echo $docRoot . '<br />';
-        //echo $basePath . '<br />';
+
         $errors = self::checkDirs($docRoot . $basePath . CONTENT_PATH, true, $docRoot);
         if (count($errors) > 0) {
             $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
@@ -63,7 +62,7 @@ class Project extends P
         $modulesDirs = array(
             __DIR__ . '/../../../',
             __DIR__ . '/../../../../module/',
-            $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/modules/'
+            __DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/modules/'
         );
 
         // Check for overriding Phire config
