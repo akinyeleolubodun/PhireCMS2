@@ -1128,20 +1128,20 @@
             <output>устанавливать</output>
         </text>
         <text>
-            <source>New modules have been detected. Click the button below to install them.</source>
-            <output>Новые модули были обнаружены. Нажмите на кнопку ниже , чтобы установить их.</output>
+            <source>New modules have been detected. Click the button above to install them.</source>
+            <output>Новые модули были обнаружены. Нажмите кнопку выше, чтобы установить их.</output>
         </text>
         <text>
-            <source>There are currently no modules.</source>
-            <output>Там в настоящее время нет модулей.</output>
+            <source>There are currently no modules installed.</source>
+            <output>Там в настоящее время нет модули, установленные.</output>
         </text>
         <text>
-            <source>New themes have been detected. Click the button below to install them.</source>
-            <output>Новые темы были обнаружены. Нажмите на кнопку ниже , чтобы установить их.</output>
+            <source>New themes have been detected. Click the button above to install them.</source>
+            <output>Новые темы были обнаружены. Нажмите кнопку выше, чтобы установить их.</output>
         </text>
         <text>
-            <source>There are currently no themes.</source>
-            <output>Там в настоящее время нет темы.</output>
+            <source>There are currently no themes installed.</source>
+            <output>Там в настоящее время нет темы установлены.</output>
         </text>
         <text>
             <source>There are currently no content types.</source>

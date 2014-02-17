@@ -5,8 +5,8 @@
 <?php else: ?>
 <?php if (count($new) > 0): ?>
         <div id="install-nav">
-            <?php $i18n->_e('New themes have been detected. Click the button below to install them.'); ?>
             <a class="install-ext-btn" href="<?php echo BASE_PATH . APP_URI; ?>/extensions/themes/install"><?php $i18n->_e('Install'); ?> (<?php echo count($new); ?>)</a>
+            <p><?php $i18n->_e('New themes have been detected. Click the button above to install them.'); ?></p>
         </div>
 <?php endif; ?>
 <?php if (count($themes) > 0): ?>
@@ -29,7 +29,7 @@ foreach ($themes as $theme):
             </table>
         </form>
 <?php else: ?>
-        <p><?php $i18n->_e('There are currently no themes.'); ?></p>
+        <p><?php $i18n->_e('There are currently no themes installed.'); ?></p>
 <?php endif; ?>
 <?php endif; ?>
 <?php include __DIR__ . '/../footer.phtml'; ?>

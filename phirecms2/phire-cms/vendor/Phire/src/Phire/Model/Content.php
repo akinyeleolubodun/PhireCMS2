@@ -845,8 +845,8 @@ class Content extends AbstractModel
                     $parentContent = Table\Content::findById($pId);
                     if (isset($parentContent->id)) {
                         $pId = $parentContent->parent_id;
-                        $slug = (substr($parentContent->slug, -1) == '#') ? substr($parentContent->slug, 0, -1) : $parentContent->slug;
-                        $uri = $slug . '/' . $uri;
+                        $pSlug = (substr($parentContent->slug, -1) == '#') ? substr($parentContent->slug, 0, -1) : $parentContent->slug;
+                        $uri = $pSlug . '/' . $uri;
                     }
                 }
             }
@@ -994,8 +994,8 @@ class Content extends AbstractModel
                     $parentContent = Table\Content::findById($pId);
                     if (isset($parentContent->id)) {
                         $pId = $parentContent->parent_id;
-                        $slug = (substr($parentContent->slug, -1) == '#') ? substr($parentContent->slug, 0, -1) : $parentContent->slug;
-                        $uri = $slug . '/' . $uri;
+                        $pSlug = (substr($parentContent->slug, -1) == '#') ? substr($parentContent->slug, 0, -1) : $parentContent->slug;
+                        $uri = $pSlug . '/' . $uri;
                     }
                 }
             }

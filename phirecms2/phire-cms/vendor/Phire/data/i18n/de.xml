@@ -1128,20 +1128,20 @@
             <output>Installieren</output>
         </text>
         <text>
-            <source>New modules have been detected. Click the button below to install them.</source>
-            <output>Neue Module festgestellt. Klicken Sie auf die Schaltfläche unten, um sie zu installieren.</output>
+            <source>New modules have been detected. Click the button above to install them.</source>
+            <output>Neue Module festgestellt. Klicken Sie oben auf die Schaltfläche, um sie zu installieren.</output>
         </text>
         <text>
-            <source>There are currently no modules.</source>
-            <output>Es liegen noch keine Module.</output>
+            <source>There are currently no modules installed.</source>
+            <output>Es liegen noch keine Module installiert.</output>
         </text>
         <text>
-            <source>New themes have been detected. Click the button below to install them.</source>
-            <output>Neue Themen erkannt wurden. Klicken Sie auf die Schaltfläche unten, um sie zu installieren.</output>
+            <source>New themes have been detected. Click the button above to install them.</source>
+            <output>Neue Themen erkannt wurden. Klicken Sie oben auf die Schaltfläche, um sie zu installieren.</output>
         </text>
         <text>
-            <source>There are currently no themes.</source>
-            <output>Es liegen noch keine Themen.</output>
+            <source>There are currently no themes installed.</source>
+            <output>Es liegen noch keine Themen installiert.</output>
         </text>
         <text>
             <source>There are currently no content types.</source>

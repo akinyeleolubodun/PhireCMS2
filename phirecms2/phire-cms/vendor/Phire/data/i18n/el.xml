@@ -1128,20 +1128,20 @@
             <output>Εγκατάσταση</output>
         </text>
         <text>
-            <source>New modules have been detected. Click the button below to install them.</source>
-            <output>Νέες ενότητες έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παρακάτω για να τα εγκαταστήσετε.</output>
+            <source>New modules have been detected. Click the button above to install them.</source>
+            <output>Νέες ενότητες έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παραπάνω για να τα εγκαταστήσετε.</output>
         </text>
         <text>
-            <source>There are currently no modules.</source>
-            <output>Δεν υπάρχουν ενότητες.</output>
+            <source>There are currently no modules installed.</source>
+            <output>Δεν υπάρχουν εγκατεστημένες μονάδες.</output>
         </text>
         <text>
-            <source>New themes have been detected. Click the button below to install them.</source>
-            <output>Νέες θέματα έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παρακάτω για να τα εγκαταστήσετε.</output>
+            <source>New themes have been detected. Click the button above to install them.</source>
+            <output>Νέες θέματα έχουν εντοπιστεί. Κάντε κλικ στο κουμπί παραπάνω για να τα εγκαταστήσετε.</output>
         </text>
         <text>
-            <source>There are currently no themes.</source>
-            <output>Δεν υπάρχουν θέματα.</output>
+            <source>There are currently no themes installed.</source>
+            <output>Δεν υπάρχουν εγκατεστημένα θέματα.</output>
         </text>
         <text>
             <source>There are currently no content types.</source>

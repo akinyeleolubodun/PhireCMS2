@@ -61,11 +61,15 @@ class Sites extends Record
             $siteAry['domain']        = $site->domain;
             $siteAry['document_root'] = $site->document_root;
             $siteAry['base_path']     = $site->base_path;
+            $siteAry['force_ssl']     = $site->force_ssl;
+            $siteAry['live']          = $site->live;
         } else {
             $siteAry['id']            = 0;
             $siteAry['domain']        = $_SERVER['HTTP_HOST'];
             $siteAry['document_root'] = $_SERVER['DOCUMENT_ROOT'];
             $siteAry['base_path']     = BASE_PATH;
+            $siteAry['force_ssl']     = (int)\Phire\Table\Config::findById('force_ssl')->value;
+            $siteAry['live']          = (int)\Phire\Table\Config::findById('live')->value;
         }
 
         return new \ArrayObject($siteAry, \ArrayObject::ARRAY_AS_PROPS);

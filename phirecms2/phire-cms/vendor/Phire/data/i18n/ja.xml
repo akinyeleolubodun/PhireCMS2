@@ -1128,20 +1128,20 @@
             <output>インストール</output>
         </text>
         <text>
-            <source>New modules have been detected. Click the button below to install them.</source>
-            <output>新しいモジュールが検出されている。それらをインストールするには、以下のボタンをクリックしてください。</output>
+            <source>New modules have been detected. Click the button above to install them.</source>
+            <output>新しいモジュールが検出されている。それらをインストールするには、上のボタンをクリックしてください。</output>
         </text>
         <text>
-            <source>There are currently no modules.</source>
-            <output>何のモジュールは現在ありません。</output>
+            <source>There are currently no modules installed.</source>
+            <output>インストールさモジュールは現在ありません。</output>
         </text>
         <text>
-            <source>New themes have been detected. Click the button below to install them.</source>
-            <output>新しいテーマが検出されている。それらをインストールするには、以下のボタンをクリックしてください。</output>
+            <source>New themes have been detected. Click the button above to install them.</source>
+            <output>新しいテーマが検出されている。それらをインストールするには、上のボタンをクリックしてください。</output>
         </text>
         <text>
-            <source>There are currently no themes.</source>
-            <output>何のテーマは現在ありません。</output>
+            <source>There are currently no themes installed.</source>
+            <output>インストールさテーマはありません。</output>
         </text>
         <text>
             <source>There are currently no content types.</source>
