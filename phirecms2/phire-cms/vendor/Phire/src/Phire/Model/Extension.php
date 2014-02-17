@@ -405,7 +405,7 @@ class Extension extends AbstractModel
                 }
 
                 if (null !== $cfg) {
-                    $config = include_once $modPath . '/' . $name . '/config/module.php';
+                    $config = include $modPath . '/' . $name . '/config/module.php';
                     if (null !== $config[$name]->install) {
                         $installFunc = $config[$name]->install;
                         $installFunc();
@@ -525,11 +525,16 @@ class Extension extends AbstractModel
             }
         }
 
+        $modulePath1 = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
+        $modulePath2 = __DIR__ . '/../../../../../module';
+
         if (isset($post['remove_modules'])) {
             foreach ($post['remove_modules'] as $id) {
                 $ext = Table\Extensions::findById($id);
                 if (isset($ext->id)) {
-                    $assets = unserialize($ext->assets);
+                    $modPath = (file_exists($modulePath1 . '/' . $ext->file)) ? $modulePath1 : $modulePath2;
+                    $assets  = unserialize($ext->assets);
+
                     if (count($assets['tables']) > 0) {
                         $db = Table\Extensions::getDb();
                         if ((DB_INTERFACE == 'Mysqli') || (DB_TYPE == 'mysql')) {
@@ -551,6 +556,15 @@ class Extension extends AbstractModel
 
                     $contentPath = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH;
                     $exts = array('.zip', '.tar.gz', '.tar.bz2', '.tgz', '.tbz', '.tbz2');
+
+                    // Check for a config and remove function
+                    if (file_exists($modPath . '/' . $ext->name . '/config') && file_exists($modPath . '/' . $ext->name . '/config/module.php')) {
+                        $config = include $modPath . '/' . $ext->name . '/config/module.php';
+                        if (null !== $config[$ext->name]->remove) {
+                            $removeFunc = $config[$ext->name]->remove;
+                            $removeFunc();
+                        }
+                    }
 
                     if (file_exists($contentPath . '/extensions/modules/' . $ext->name)) {
                         $dir = new Dir($contentPath . '/extensions/modules/' . $ext->name);

@@ -88,40 +88,43 @@ class Template extends AbstractModel
             $session = Session::getInstance();
             foreach ($sess as $s) {
                 $sessString = str_replace(array('[{sess}]', '[{/sess}]'), array('', ''), $s);
-
+                $isSess = null;
+                $noSess = null;
                 if (strpos($sessString, '[{or}]') !== false) {
                     $sessValues = explode('[{or}]', $sessString);
-                    if (isset($sessValues[0]) && isset($sessValues[1])) {
-                        $sessValues[0] = str_replace(array('[{', '}]'), array('', ''), $sessValues[0]);
-                        if (strpos($sessValues[0], '->') !== false) {
-                            $sV = explode('->', $sessValues[0]);
-                            if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
-                                $tmp = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $tmp);
-                            } else {
-                                $tmp = str_replace($s, $sessValues[1], $tmp);
-                            }
-                        } else if (isset($session->{$sessValues[0]})) {
-                            $tmp = str_replace($s, $session->{$sessValues[0]}, $tmp);
-                        } else {
-                            $tmp = str_replace($s, $sessValues[1], $tmp);
-                        }
-                    } else {
-                        $tmp = str_replace($s, '', $tmp);
+                    if (isset($sessValues[0])) {
+                        $isSess = $sessValues[0];
+                    }
+                    if (isset($sessValues[1])) {
+                        $noSess = $sessValues[1];
                     }
                 } else {
-                    $sessValue = str_replace(array('[{', '}]'), array('', ''), $sessString);
-                    if (strpos($sessValue, '->') !== false) {
-                        $sV = explode('->', $sessValue);
-                        if (isset($sV[0]) && isset($sV[1]) && isset($session->{$sV[0]}) && isset($session->{$sV[0]}->{$sV[1]})) {
-                            $tmp = str_replace($s, $session->{$sV[0]}->{$sV[1]}, $tmp);
-                        } else {
-                            $tmp = str_replace($s, '', $tmp);
-                        }
-                    } else if (isset($session->{$sessValue})) {
-                        $tmp = str_replace($s, $session->{$sessValue}, $tmp);
+                    $isSess = $sessString;
+                }
+                if (null !== $isSess) {
+                    if (!isset($session->user)) {
+                        $tmp = str_replace($s, $noSess, $tmp);
                     } else {
-                        $tmp = str_replace($s, '', $tmp);
+                        $newSess = $isSess;
+                        foreach ($_SESSION as $sessKey => $sessValue) {
+                            if ((is_array($sessValue) || ($sessValue instanceof \ArrayObject)) && (strpos($tmp, '[{' . $sessKey . '->') !== false)) {
+                                foreach ($sessValue as $sessK => $sessV) {
+                                    if (!is_array($sessV)) {
+                                        $newSess = str_replace('[{' . $sessKey . '->' . $sessK . '}]', $sessV, $newSess);
+                                    }
+                                }
+                            } else if (!is_array($sessValue) && !($sessValue instanceof \ArrayObject) && (strpos($tmp, '[{' . $sessKey) !== false)) {
+                                $newSess = str_replace('[{' . $sessKey . '}]', $sessValue, $newSess);
+                            }
+                        }
+                        if ($newSess != $isSess) {
+                            $tmp = str_replace('[{sess}]' . $sessString . '[{/sess}]', $newSess, $tmp);
+                        } else {
+                            $tmp = str_replace($s, $noSess, $tmp);
+                        }
                     }
+                } else {
+                    $tmp = str_replace($s, '', $tmp);
                 }
             }
         }
