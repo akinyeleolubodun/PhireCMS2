@@ -242,6 +242,16 @@ class Phire extends AbstractModel
     }
 
     /**
+     * Get session object
+     *
+     * @return \Pop\Web\Session
+     */
+    public function getSession()
+    {
+        return \Pop\Web\Session::getInstance();
+    }
+
+    /**
      * Check is a module is loaded
      *
      * @param  string $name

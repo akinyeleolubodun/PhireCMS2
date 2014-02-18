@@ -555,7 +555,12 @@ class Project extends P
             chmod($newModuleDir . '/index.html', 0777);
         }
 
-        $assetDirs = array('js', 'css', 'css/fonts', 'img', 'i18n');
+        $assetDirs = array(
+            'css', 'css/fonts', 'styles', 'styles/fonts', 'style', 'style/fonts', // CSS folders
+            'js', 'scripts', 'script', 'scr',                                     // JS folders
+            'image', 'images', 'img', 'imgs',                                     // Image folders
+            'i18n'                                                                // I18n folder
+        );
 
         // Check and install asset files
         foreach ($assetDirs as $assetDir) {
@@ -577,11 +582,31 @@ class Project extends P
                             $as->copy($newDir . '/' . $as->getBasename(), true);
                             $as->setPermissions(0777);
                         }
-                        if (($assetDir == 'js') && ($as->getExt() == 'js') && ($as->getBasename() != 'phire.edit.js')) {
-                            $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/js/' . $as->getBasename() . '"></script>' . PHP_EOL;
-                        } else if (($assetDir == 'css') && ($as->getExt() == 'css')) {
-                            if ($as->getBasename() != 'phire.edit.css') {
-                                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . '/css/' . $as->getBasename() . '" />' . PHP_EOL;
+                        if (($as->getExt() == 'js') && ($as->getBasename() != 'phire.edit.js')) {
+                            $folder = null;
+                            if (strpos($as->getFullPath(), '/js/') !== false) {
+                                $folder = '/js/';
+                            } else if (strpos($as->getFullPath(), '/scripts/') !== false) {
+                                $folder = '/scripts/';
+                            } else if (strpos($as->getFullPath(), '/script/') !== false) {
+                                $folder = '/script/';
+                            } else if (strpos($as->getFullPath(), '/scr/') !== false) {
+                                $folder = '/scr/';
+                            }
+                            if (null !== $folder) {
+                                $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . $folder . $as->getBasename() . '"></script>' . PHP_EOL;
+                            }
+                        } else if (($as->getExt() == 'css') && ($as->getBasename() != 'phire.edit.css')) {
+                            $folder = null;
+                            if (strpos($as->getFullPath(), '/css/') !== false) {
+                                $folder = '/css/';
+                            } else if (strpos($as->getFullPath(), '/styles/') !== false) {
+                                $folder = '/styles/';
+                            } else if (strpos($as->getFullPath(), '/style/') !== false) {
+                                $folder = '/style/';
+                            }
+                            if (null !== $folder) {
+                                $this->assets['css'] .= '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . $folder . $as->getBasename() . '" />' . PHP_EOL;
                             }
                         }
                     }
