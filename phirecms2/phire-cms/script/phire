@@ -16,6 +16,7 @@ fi
 TAR="$(which tar)"
 ZIP="$(which zip)"
 
+PH_CLI_ROOT=../..
 DB_CLI=
 DB_CLI_DUMP=
 DB_CLI_PARAMS=
@@ -29,37 +30,37 @@ DB_PASS=
 DB_HOST=
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 
-DB_INTERFACE=`cat ../../config.php | grep DB_INTERFACE`
+DB_INTERFACE=`cat "$PH_CLI_ROOT/config.php" | grep DB_INTERFACE`
 DB_INTERFACE=${DB_INTERFACE:24}
 POS=`expr index "$DB_INTERFACE" "'"`
 let "POS-=1"
 DB_INTERFACE=${DB_INTERFACE:0:$POS}
 
-DB_TYPE=`cat ../../config.php | grep DB_TYPE`
+DB_TYPE=`cat "$PH_CLI_ROOT/config.php" | grep DB_TYPE`
 DB_TYPE=${DB_TYPE:19}
 POS=`expr index "$DB_TYPE" "'"`
 let "POS-=1"
 DB_TYPE=${DB_TYPE:0:$POS}
 
-DB_NAME=`cat ../../config.php | grep DB_NAME`
+DB_NAME=`cat "$PH_CLI_ROOT/config.php" | grep DB_NAME`
 DB_NAME=${DB_NAME:19}
 POS=`expr index "$DB_NAME" "'"`
 let "POS-=1"
 DB_NAME=${DB_NAME:0:$POS}
 
-DB_USER=`cat ../../config.php | grep DB_USER`
+DB_USER=`cat "$PH_CLI_ROOT/config.php" | grep DB_USER`
 DB_USER=${DB_USER:19}
 POS=`expr index "$DB_USER" "'"`
 let "POS-=1"
 DB_USER=${DB_USER:0:$POS}
 
-DB_PASS=`cat ../../config.php | grep DB_PASS`
+DB_PASS=`cat "$PH_CLI_ROOT/config.php" | grep DB_PASS`
 DB_PASS=${DB_PASS:19}
 POS=`expr index "$DB_PASS" "'"`
 let "POS-=1"
 DB_PASS=${DB_PASS:0:$POS}
 
-DB_HOST=`cat ../../config.php | grep DB_HOST`
+DB_HOST=`cat "$PH_CLI_ROOT/config.php" | grep DB_HOST`
 DB_HOST=${DB_HOST:19}
 POS=`expr index "$DB_HOST" "'"`
 let "POS-=1"
@@ -82,8 +83,8 @@ elif [ "$DB_INTERFACE" = "Sqlite" ] || [ "$DB_TYPE" = "sqlite" ]; then
     DB_NAME=${DB_NAME:10}
     DB_CLI=`which sqlite3`
     DB_CLI_DUMP=`which sqlite3`
-    DB_CLI_PARAMS="../..$DB_NAME"
-    DB_CLI_DUMP_PARAMS="../..$DB_NAME .dump > phirecms_$TIMESTAMP.sqlite.sql"
+    DB_CLI_PARAMS="$PH_CLI_ROOT$DB_NAME"
+    DB_CLI_DUMP_PARAMS="$PH_CLI_ROOT$DB_NAME .dump > phirecms_$TIMESTAMP.sqlite.sql"
     DB_DUMP_NAME=phirecms_"$TIMESTAMP".sqlite.sql
 fi
 
@@ -123,9 +124,9 @@ elif [ "$1" = "archive" ]; then
         echo -e "  Archiving the Phire CMS 2 installation..."
         eval "$DB_CLI_DUMP $DB_CLI_DUMP_PARAMS"
         if [ "$TAR" != "" ]; then
-            "$TAR" -cvzpf "phirecms_$TIMESTAMP.tar.gz" ../../.htaccess ../../web.config ../../*
+            "$TAR" -cvzpf "phirecms_$TIMESTAMP.tar.gz" $PH_CLI_ROOT/.htaccess $PH_CLI_ROOT/*
         else
-            "$ZIP" -r "phirecms_$TIMESTAMP.zip" ../../.htaccess ../../web.config ../../*
+            "$ZIP" -r "phirecms_$TIMESTAMP.zip" $PH_CLI_ROOT/.htaccess $PH_CLI_ROOT/*
         fi
         rm "$DB_DUMP_NAME"
         echo -e "  Done!\n"

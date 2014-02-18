@@ -8,6 +8,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET SCRIPT_DIR=%~dp0
 SET TAR=
 SET ZIP=
+SET PH_CLI_ROOT=..\..
 SET DB_CLI=
 SET DB_CLI_DUMP=
 SET DB_DUMP_NAME=
@@ -25,12 +26,12 @@ SET TIMESTAMP=%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%_%TIME:~0,2%-%TIME:~3,2%
 FOR /f "delims=" %%i IN ('where tar') DO SET TAR=%%i
 FOR /f "delims=" %%i IN ('where zip') DO SET ZIP=%%i
 
-FOR /f "delims=" %%a in ('findstr "DB_INTERFACE" ..\..\config.php') DO SET DB_INTERFACE=%%a
-FOR /f "delims=" %%a in ('findstr "DB_TYPE" ..\..\config.php') DO SET DB_TYPE=%%a
-FOR /f "delims=" %%a in ('findstr "DB_NAME" ..\..\config.php') DO SET DB_NAME=%%a
-FOR /f "delims=" %%a in ('findstr "DB_USER" ..\..\config.php') DO SET DB_USER=%%a
-FOR /f "delims=" %%a in ('findstr "DB_PASS" ..\..\config.php') DO SET DB_PASS=%%a
-FOR /f "delims=" %%a in ('findstr "DB_HOST" ..\..\config.php') DO SET DB_HOST=%%a
+FOR /f "delims=" %%a in ('findstr "DB_INTERFACE" !PH_CLI_ROOT!\config.php') DO SET DB_INTERFACE=%%a
+FOR /f "delims=" %%a in ('findstr "DB_TYPE" !PH_CLI_ROOT!\config.php') DO SET DB_TYPE=%%a
+FOR /f "delims=" %%a in ('findstr "DB_NAME" !PH_CLI_ROOT!\config.php') DO SET DB_NAME=%%a
+FOR /f "delims=" %%a in ('findstr "DB_USER" !PH_CLI_ROOT!\config.php') DO SET DB_USER=%%a
+FOR /f "delims=" %%a in ('findstr "DB_PASS" !PH_CLI_ROOT!\config.php') DO SET DB_PASS=%%a
+FOR /f "delims=" %%a in ('findstr "DB_HOST" !PH_CLI_ROOT!\config.php') DO SET DB_HOST=%%a
 
 SET DB_INTERFACE=!DB_INTERFACE:~24,-3!
 SET DB_TYPE=!DB_TYPE:~19,-3!
@@ -123,7 +124,7 @@ IF "%1" == "sql" (
         IF "!SQLITE!" == "true" (
             IF "%2" == "cli" (
                 IF NOT "!DB_CLI!" == "" (
-                    "!DB_CLI!" "../..!DB_NAME!"
+                    "!DB_CLI!" "!PH_CLI_ROOT!!DB_NAME!"
                 ) ELSE (
                     echo.
                     echo   That database CLI client was not found.
@@ -134,7 +135,7 @@ IF "%1" == "sql" (
                 IF NOT "!DB_CLI_DUMP!" == "" (
                     echo.
                     echo   Dumping Phire CMS 2 Database...
-                    "!DB_CLI_DUMP!" "../..!DB_NAME!" .dump > phirecms_!TIMESTAMP!.sqlite.sql"
+                    "!DB_CLI_DUMP!" "!PH_CLI_ROOT!!DB_NAME!" .dump > phirecms_!TIMESTAMP!.sqlite.sql"
                     echo   Done!
                     echo.
                 ) ELSE (
@@ -168,15 +169,15 @@ IF "%1" == "archive" (
             "!DB_CLI_DUMP!" --username=!DB_USER! !DB_NAME!> !DB_NAME!_!TIMESTAMP!.pgsql.sql
         )
         IF "!SQLITE!" == "true" (
-            "!DB_CLI_DUMP!" "../..!DB_NAME!" .dump > phirecms_!TIMESTAMP!.sqlite.sql"
+            "!DB_CLI_DUMP!" "!PH_CLI_ROOT!!DB_NAME!" .dump > phirecms_!TIMESTAMP!.sqlite.sql"
         )
         IF NOT "!TAR!" == "" (
-            "!TAR!" -cvzpf phirecms_!TIMESTAMP!.tar.gz ../../.htaccess ../../web.config ../../*
+            "!TAR!" -cvzpf phirecms_!TIMESTAMP!.tar.gz !PH_CLI_ROOT!\.htaccess !PH_CLI_ROOT!\*
             echo   Done!
             echo.
         ) ELSE (
             IF NOT "!ZIP!" == "" (
-                "!ZIP!" -r phirecms_!TIMESTAMP!.zip ../../.htaccess ../../web.config ../../*
+                "!ZIP!" -r phirecms_!TIMESTAMP!.zip !PH_CLI_ROOT!\.htaccess !PH_CLI_ROOT!\*
                 echo   Done!
                 echo.
             ) ELSE (

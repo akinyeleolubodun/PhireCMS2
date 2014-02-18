@@ -628,7 +628,7 @@ class Cli
      */
     protected function install()
     {
-        if (!is_writable(__DIR__ . '/../../../../../config.php')) {
+        if (!is_writable(PH_CLI_ROOT . '/config.php')) {
             echo '  The configuration file is not writable. Please make it writable before continuing.' . PHP_EOL . PHP_EOL;
         } else {
             // Install config file and database
@@ -720,11 +720,11 @@ class Cli
             $input['content_path'] = (empty($inputContentPath)) ? '/phire-content' : $inputContentPath;
 
             // Check the content directory
-            if (!file_exists(__DIR__ . '/../../../../../' . $input['content_path'])) {
+            if (!file_exists(PH_CLI_ROOT . '/' . $input['content_path'])) {
                 echo PHP_EOL . '  The content directory does not exist.' . PHP_EOL . PHP_EOL;
                 exit();
             } else {
-                $checkDirs = Project::checkDirs(__DIR__ . '/../../../../../' . $input['content_path'], true);
+                $checkDirs = Project::checkDirs(PH_CLI_ROOT . '/' . $input['content_path'], true);
                 if (count($checkDirs) > 0) {
                     echo PHP_EOL . '  The content directory (or subdirectories) are not writable.' . PHP_EOL . PHP_EOL;
                     exit();
@@ -756,7 +756,7 @@ class Cli
             echo '..OK!' . PHP_EOL . '  ...Installing Database...';
 
             $install = $install = new Model\Install();
-            $install->config(new \ArrayObject($input, \ArrayObject::ARRAY_AS_PROPS), realpath(__DIR__ . '/../../../../../'));
+            $install->config(new \ArrayObject($input, \ArrayObject::ARRAY_AS_PROPS), realpath(PH_CLI_ROOT));
 
             // Install initial user
             echo 'OK!' . PHP_EOL . PHP_EOL . '  Initial User Setup:' . PHP_EOL . PHP_EOL;
@@ -781,7 +781,7 @@ class Cli
             }
 
             if (stripos($input['db_adapter'], 'sqlite') !== false) {
-                $input['db_name'] = __DIR__ . '/../../../../../' . $input['content_path'] . '/.htphire.sqlite';
+                $input['db_name'] = PH_CLI_ROOT . '/' . $input['content_path'] . '/.htphire.sqlite';
             }
 
             $db = \Pop\Db\Db::factory($dbInterface, array(

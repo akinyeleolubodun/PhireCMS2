@@ -6,7 +6,9 @@
 
 set_time_limit(0);
 
-require_once __DIR__  . '/../../bootstrap.php';
+define('PH_CLI_ROOT', __DIR__ . '/../..');
+
+require_once PH_CLI_ROOT . '/bootstrap.php';
 
 // Write header
 echo PHP_EOL;
