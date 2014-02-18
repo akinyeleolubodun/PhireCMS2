@@ -63,7 +63,7 @@ class IndexController extends C
         }
 
         $this->i18n = I18n::factory();
-        $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . '/phire-cms/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
+        $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
 
         parent::__construct($request, $response, $project, $viewPath);
         $this->sess = Session::getInstance();
