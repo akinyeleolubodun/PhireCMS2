@@ -638,10 +638,10 @@ class Cli
                 'db_name'             => null,
                 'db_username'         => null,
                 'db_password'         => null,
-                'db_host'             => 'localhost',
-                'db_prefix'           => 'ph_',
-                'app_uri'             => '/phire',
-                'content_path'        => '/phire-content',
+                'db_host'             => ((defined('DB_HOST') && (DB_HOST != '')) ? DB_HOST : 'localhost'),
+                'db_prefix'           => ((defined('DB_PREFIX') && (DB_HOST != '')) ? DB_PREFIX : 'ph_'),
+                'app_uri'             => (defined('APP_URI') ? APP_URI : '/phire'),
+                'content_path'        => (defined('CONTENT_PATH') ? CONTENT_PATH : '/phire-content'),
                 'password_encryption' => 4
             );
 
@@ -706,17 +706,17 @@ class Cli
                 $input['db_username'] = self::cliInput('  DB Username: ');
                 $input['db_password'] = self::cliInput('  DB Password: ');
 
-                $inputHost = self::cliInput('  DB Host (Enter for \'localhost\'): ');
+                $inputHost = self::cliInput('  DB Host (Enter for \'' . $input['db_host'] . '\'): ');
                 $input['db_host'] = (empty($inputHost)) ? 'localhost' : $inputHost;
             }
 
-            $inputPrefix = self::cliInput('  DB Prefix (Enter for \'ph_\'): ');
+            $inputPrefix = self::cliInput('  DB Prefix (Enter for \'' . $input['db_prefix'] . '\'): ');
             $input['db_prefix'] = (empty($inputPrefix)) ? 'ph_' : $inputPrefix;
 
-            $inputAppUri = self::cliInput('  Application URI (Enter for \'/phire\'): ');
+            $inputAppUri = self::cliInput('  Application URI (Enter for \'' . $input['app_uri'] . '\'): ');
             $input['app_uri'] = (empty($inputAppUri)) ? '/phire' : $inputAppUri;
 
-            $inputContentPath = self::cliInput('  Content Path (Enter for \'/phire-content\'): ');
+            $inputContentPath = self::cliInput('  Content Path (Enter for \'' . $input['content_path'] . '\'): ');
             $input['content_path'] = (empty($inputContentPath)) ? '/phire-content' : $inputContentPath;
 
             // Check the content directory
