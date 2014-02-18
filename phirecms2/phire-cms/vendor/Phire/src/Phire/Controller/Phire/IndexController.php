@@ -90,7 +90,12 @@ class IndexController extends AbstractController
         $content = new Model\Content();
         $config = new Model\Config();
 
-        $this->prepareView($this->viewPath . '/index.phtml', array(
+        // Allow for the dashboard view to be overridden
+        $view = (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/index.phtml')) ?
+            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/index.phtml' :
+            $this->viewPath . '/index.phtml';
+
+        $this->prepareView($view, array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
