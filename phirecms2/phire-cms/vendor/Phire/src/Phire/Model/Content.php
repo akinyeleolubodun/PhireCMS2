@@ -1013,7 +1013,8 @@ class Content extends AbstractModel
             if ($uri != $oldUri) {
                 $children = Table\Content::findAll(null, array('parent_id' => $content->id));
                 if (isset($children->rows[0])) {
-                    $this->changeChildUris($uri, $children->rows);
+                    $newUri = (substr($uri, -1) == '#') ? substr($uri, 0, -1) : $uri;
+                    $this->changeChildUris($newUri, $children->rows);
                 }
             }
         }
