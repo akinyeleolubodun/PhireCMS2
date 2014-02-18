@@ -117,7 +117,7 @@ class Router
      *
      * @return \Pop\Project\Project
      */
-    public function project()
+    public function getProject()
     {
         return $this->project;
     }
@@ -127,23 +127,43 @@ class Router
      *
      * @return \Pop\Http\Request
      */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Get the current controller object
+     *
+     * @return \Pop\Mvc\Controller
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Get the project object (shorthand alias)
+     *
+     * @return \Pop\Project\Project
+     */
+    public function project()
+    {
+        return $this->project;
+    }
+
+    /**
+     * Get the request object (shorthand alias)
+     *
+     * @return \Pop\Http\Request
+     */
     public function request()
     {
         return $this->request;
     }
 
     /**
-     * Get the controller class name string
-     *
-     * @return string
-     */
-    public function getControllerClass()
-    {
-        return $this->controllerClass;
-    }
-
-    /**
-     * Get the current controller object
+     * Get the current controller object (shorthand alias)
      *
      * @return \Pop\Mvc\Controller
      */
@@ -153,12 +173,22 @@ class Router
     }
 
     /**
-     * Get an available controller class name
+     * Get the current controller class name string
+     *
+     * @return string
+     */
+    public function getControllerClass()
+    {
+        return $this->controllerClass;
+    }
+
+    /**
+     * Get a controller class name string, if available
      *
      * @param  string $controller
      * @return string
      */
-    public function getController($controller)
+    public function getControllerName($controller)
     {
         return (isset($this->controllers[$controller])) ? $this->controllers[$controller] : null;
     }
