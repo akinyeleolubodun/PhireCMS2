@@ -555,7 +555,7 @@ class Project extends P
             chmod($newModuleDir . '/index.html', 0777);
         }
 
-        $assetDirs = array('js', 'css', 'css/fonts', 'img');
+        $assetDirs = array('js', 'css', 'css/fonts', 'img', 'i18n');
 
         // Check and install asset files
         foreach ($assetDirs as $assetDir) {

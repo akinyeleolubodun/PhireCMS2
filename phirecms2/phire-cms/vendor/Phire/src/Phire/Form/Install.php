@@ -50,7 +50,7 @@ class Install extends Form
         }
 
         $this->i18n = I18n::factory();
-        $this->i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/data/i18n/' . $this->i18n->getLanguage() . '.xml');
+        $this->i18n->loadFile(__DIR__ . '/../../../data/assets/i18n/' . $this->i18n->getLanguage() . '.xml');
 
         $this->initFieldsValues = $this->getInitFields();
         parent::__construct($action, $method, null, '        ');
@@ -168,7 +168,7 @@ class Install extends Form
             }
         }
 
-        $langs = I18n::getLanguages(__DIR__ . '/../../../data/i18n');
+        $langs = I18n::getLanguages(__DIR__ . '/../../../data/assets/i18n');
         foreach ($langs as $key => $value) {
             $langs[$key] = substr($value, 0, strpos($value, ' ('));
         }

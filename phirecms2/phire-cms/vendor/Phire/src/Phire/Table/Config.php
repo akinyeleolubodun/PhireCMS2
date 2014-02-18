@@ -216,16 +216,16 @@ class Config extends Record
             define('POP_LANG', $lang);
         }
         $i18n = \Pop\I18n\I18n::factory($lang);
-        $i18n->loadFile(__DIR__ . '/../../../data/i18n/' . $i18n->getLanguage() . '.xml');
+        $i18n->loadFile(__DIR__ . '/../../../data/assets/i18n/' . $i18n->getLanguage() . '.xml');
 
         // Load any module language files
         $modules = Extensions::findAll(null, array('type' => 1));
         foreach ($modules->rows as $module) {
             if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name) &&
                 file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data') &&
-                file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/i18n') &&
-                file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/i18n/' . $i18n->getLanguage() . '.xml')) {
-                $i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/i18n/' . $i18n->getLanguage() . '.xml');
+                file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/assets/i18n') &&
+                file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/assets/i18n/' . $i18n->getLanguage() . '.xml')) {
+                $i18n->loadFile($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/assets/i18n/' . $i18n->getLanguage() . '.xml');
             }
         }
         return $i18n;

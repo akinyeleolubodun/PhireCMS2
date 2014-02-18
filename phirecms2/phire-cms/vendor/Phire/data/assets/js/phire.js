@@ -600,6 +600,8 @@ var phire = {
 jax(document).ready(function(){
     phire.sysBasePath = window.location.href;
 
+    phire.sysBasePath = window.location.href;
+
     if (phire.sysBasePath.indexOf('/content') != -1) {
         phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/content'));
     } else if (phire.sysBasePath.indexOf('/structure') != -1) {
@@ -617,16 +619,29 @@ jax(document).ready(function(){
     }
 
     phire.basePath = jax.root.substring(0, jax.root.lastIndexOf('/'));
-    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
-    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
-    phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    if (phire.basePath.lastIndexOf('/') != -1) {
+        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    }
+    if (phire.basePath.lastIndexOf('/') != -1) {
+        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    }
+    if (phire.basePath.lastIndexOf('/') != -1) {
+        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
+    }
 
-    phire.sysBasePath = phire.sysBasePath.replace(phire.basePath + '/', '');
+    var slashCount = phire.basePath.match(/\//g);
+
+    if (slashCount.length > 2) {
+        phire.sysBasePath = phire.sysBasePath.replace(phire.basePath + '/', '');
+    }
+
     if (phire.sysBasePath.indexOf('/') != -1) {
         phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/'));
     }
 
-    phire.sysBasePath = phire.basePath + '/' + phire.sysBasePath;
+    if (slashCount.length > 2) {
+        phire.sysBasePath = phire.basePath + '/' + phire.sysBasePath;
+    }
 
     if (jax.cookie.load('phire') == '') {
         jax.cookie.save('phire', jax.random(100000, 999999));
@@ -641,11 +656,11 @@ jax(document).ready(function(){
     phire.sysBasePath = path.base_path + path.app_uri;
 
     phire.i18n = jax.i18n();
-    phire.i18n.loadFile(phire.basePath + phire.appPath + '/vendor/Phire/data/i18n/' + phire.i18n.getLanguage() + '.xml');
+    phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/phire/i18n/' + phire.i18n.getLanguage() + '.xml');
 
     if (path.modules.length > 0) {
         for (var i = 0; i < path.modules.length; i++) {
-            phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/i18n/' + phire.i18n.getLanguage() + '.xml');
+            phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/assets/i18n/' + phire.i18n.getLanguage() + '.xml');
         }
     }
 

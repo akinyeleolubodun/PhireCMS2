@@ -531,7 +531,7 @@ class IndexController extends AbstractController
                 foreach($modules->rows as $module) {
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name) &&
                         file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data') &&
-                        file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/i18n')) {
+                        file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/assets/i18n')) {
                         $modulesAry[] = $module->name;
                     }
                 }
