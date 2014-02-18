@@ -1008,6 +1008,14 @@ class Content extends AbstractModel
             } else if ($uri == '') {
                 $uri = '/';
             }
+
+            // If the URI changed, change the child URIs
+            if ($uri != $oldUri) {
+                $children = Table\Content::findAll(null, array('parent_id' => $content->id));
+                if (isset($children->rows[0])) {
+                    $this->changeChildUris($uri, $children->rows);
+                }
+            }
         }
 
         $content->site_id    = (int)$fields['site_id'];
@@ -1025,7 +1033,6 @@ class Content extends AbstractModel
         $content->published  = $published;
         $content->expired    = $expired;
         $content->updated_by = ((isset($this->user) && isset($this->user->id)) ? $this->user->id : null);
-
 
         $content->update();
         $this->data['id'] = $content->id;
@@ -1374,6 +1381,28 @@ class Content extends AbstractModel
                 // If the Fields module is installed, and if there are fields for this form/model
                 if (($process < 0) && !((!$open) && ($createdBy != $this->user->id))) {
                     FieldValue::remove($id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Change child URIs
+     *
+     * @param  string $newUri
+     * @param  array  $children
+     * @return void
+     */
+    protected function changeChildUris($newUri, $children)
+    {
+        foreach ($children as $child) {
+            $c = Table\Content::findById($child->id);
+            if (isset($c->id)) {
+                $c->uri = $newUri . '/' . $c->slug;
+                $c->update();
+                $chldren = Table\Content::findAll(null, array('parent_id' => $c->id));
+                if (isset($chldren->rows[0])) {
+                    $this->changeChildUris($c->uri, $chldren->rows);
                 }
             }
         }
