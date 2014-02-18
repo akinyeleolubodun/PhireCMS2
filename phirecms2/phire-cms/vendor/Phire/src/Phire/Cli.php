@@ -711,20 +711,20 @@ class Cli
             }
 
             $inputPrefix = self::cliInput('  DB Prefix (Enter for \'' . $input['db_prefix'] . '\'): ');
-            $input['db_prefix'] = (empty($inputPrefix)) ? 'ph_' : $inputPrefix;
+            $input['db_prefix'] = (empty($inputPrefix)) ? $input['db_prefix'] : $inputPrefix;
 
             $inputAppUri = self::cliInput('  Application URI (Enter for \'' . $input['app_uri'] . '\'): ');
-            $input['app_uri'] = (empty($inputAppUri)) ? '/phire' : $inputAppUri;
+            $input['app_uri'] = (empty($inputAppUri)) ? $input['app_uri'] : $inputAppUri;
 
             $inputContentPath = self::cliInput('  Content Path (Enter for \'' . $input['content_path'] . '\'): ');
-            $input['content_path'] = (empty($inputContentPath)) ? '/phire-content' : $inputContentPath;
+            $input['content_path'] = (empty($inputContentPath)) ? $input['content_path'] : $inputContentPath;
 
             // Check the content directory
-            if (!file_exists(PH_CLI_ROOT . '/' . $input['content_path'])) {
+            if (!file_exists(PH_CLI_ROOT . $input['content_path'])) {
                 echo PHP_EOL . '  The content directory does not exist.' . PHP_EOL . PHP_EOL;
                 exit();
             } else {
-                $checkDirs = Project::checkDirs(PH_CLI_ROOT . '/' . $input['content_path'], true);
+                $checkDirs = Project::checkDirs(PH_CLI_ROOT . $input['content_path'], true);
                 if (count($checkDirs) > 0) {
                     echo PHP_EOL . '  The content directory (or subdirectories) are not writable.' . PHP_EOL . PHP_EOL;
                     exit();
@@ -781,7 +781,7 @@ class Cli
             }
 
             if (stripos($input['db_adapter'], 'sqlite') !== false) {
-                $input['db_name'] = PH_CLI_ROOT . '/' . $input['content_path'] . '/.htphire.sqlite';
+                $input['db_name'] = PH_CLI_ROOT . $input['content_path'] . '/.htphire.sqlite';
             }
 
             $db = \Pop\Db\Db::factory($dbInterface, array(
