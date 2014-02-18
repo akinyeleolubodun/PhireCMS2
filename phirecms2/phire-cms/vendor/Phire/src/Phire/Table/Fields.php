@@ -109,8 +109,8 @@ class Fields extends Record
                         unset($models[$k]);
                         $fld = static::findById($field->id);
                         if (isset($fld->id)) {
-                            $fld = serialize($models);
-                            $fld->save();
+                            $fld->models = serialize($models);
+                            $fld->update();
                         }
                     }
                 }
