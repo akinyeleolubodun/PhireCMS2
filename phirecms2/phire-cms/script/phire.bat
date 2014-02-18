@@ -8,7 +8,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET SCRIPT_DIR=%~dp0
 SET TAR=
 SET ZIP=
-SET PH_CLI_ROOT=..\..
+SET PH_CLI_ROOT=../..
 SET DB_CLI=
 SET DB_CLI_DUMP=
 SET DB_DUMP_NAME=
@@ -21,7 +21,12 @@ SET DB_HOST=
 SET MYSQL=false
 SET PGSQL=false
 SET SQLITE=false
-SET TIMESTAMP=%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%_%TIME:~0,2%-%TIME:~3,2%
+
+SET HOUR=%TIME:~0,2%
+SET TIMESTAMP9=%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%
+SET TIMESTAMP24=%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%
+
+if "%HOUR:~0,1%" == " " (SET TIMESTAMP=!TIMESTAMP9!) else (SET TIMESTAMP=!TIMESTAMP24!)
 
 FOR /f "delims=" %%i IN ('where tar') DO SET TAR=%%i
 FOR /f "delims=" %%i IN ('where zip') DO SET ZIP=%%i
@@ -172,12 +177,12 @@ IF "%1" == "archive" (
             "!DB_CLI_DUMP!" "!PH_CLI_ROOT!!DB_NAME!" .dump > phirecms_!TIMESTAMP!.sqlite.sql"
         )
         IF NOT "!TAR!" == "" (
-            "!TAR!" -cvzpf phirecms_!TIMESTAMP!.tar.gz !PH_CLI_ROOT!\.htaccess !PH_CLI_ROOT!\*
+            "!TAR!" -cvzpf phirecms_!TIMESTAMP!.tar.gz !PH_CLI_ROOT!/.htaccess !PH_CLI_ROOT!/*
             echo   Done!
             echo.
         ) ELSE (
             IF NOT "!ZIP!" == "" (
-                "!ZIP!" -r phirecms_!TIMESTAMP!.zip !PH_CLI_ROOT!\.htaccess !PH_CLI_ROOT!\*
+                "!ZIP!" -r -v phirecms_!TIMESTAMP!.zip !PH_CLI_ROOT!\.htaccess !PH_CLI_ROOT!\*
                 echo   Done!
                 echo.
             ) ELSE (
