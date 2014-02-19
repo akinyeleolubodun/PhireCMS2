@@ -424,36 +424,37 @@ class Navigation extends AbstractModel
                 if ($c->cont_parent_id === $pid) {
                     if (!in_array($c->cont_id, $this->trackNav)) {
                         $this->trackNav[] = $c->cont_id;
-                    }
-                    $p = (array)$c;
-                    $p['uri'] = $basePath . $c->cont_uri;
-                    $p['href'] = $p['uri'];
-                    $p['name'] = $c->cont_title;
+                        $p = (array)$c;
+                        $p['uri'] = $basePath . $c->cont_uri;
+                        $p['href'] = $p['uri'];
+                        $p['name'] = $c->cont_title;
 
-                    $cont = $c;
-                    $cont->id        = $c->cont_id;
-                    $cont->parent_id = $c->cont_parent_id;
-                    $cont->title     = $c->cont_title;
-                    $cont->uri       = $c->cont_uri;
-                    if (($override) || (\Phire\Model\Content::isAllowed($cont) && (!in_array($c->cont_parent_id, $this->trackNavNotAllowed)))) {
-                        $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override, $basePath);
-                        $children[] = $p;
-                    } else {
-                        $this->trackNavNotAllowed[] = $cont->cont_id;
+                        $cont = $c;
+                        $cont->id        = $c->cont_id;
+                        $cont->parent_id = $c->cont_parent_id;
+                        $cont->title     = $c->cont_title;
+                        $cont->uri       = $c->cont_uri;
+
+                        if (($override) || (\Phire\Model\Content::isAllowed($cont) && (!in_array($c->cont_parent_id, $this->trackNavNotAllowed)))) {
+                            $p['children'] = $this->getTreeChildren($content, $c->cont_id, $override, $basePath);
+                            $children[] = $p;
+                        } else {
+                            $this->trackNavNotAllowed[] = $cont->cont_id;
+                        }
                     }
                 }
             } else if (null !== $c->cat_id) {
-                if ($c->cat_parent_id == $pid) {
+                if ($c->cat_parent_id === $pid) {
                     if (!in_array($c->cat_id, $this->trackNav)) {
                         $this->trackNav[] = $c->cat_id;
-                    }
-                    $p = (array)$c;
-                    $p['uri'] = $basePath . '/category' . $c->cat_uri;
-                    $p['href'] = $p['uri'];
-                    $p['name'] = $c->cat_title;
+                        $p = (array)$c;
+                        $p['uri'] = $basePath . '/category' . $c->cat_uri;
+                        $p['href'] = $p['uri'];
+                        $p['name'] = $c->cat_title;
 
-                    $p['children'] = $this->getTreeChildren($content, $c->cat_id, $override, $basePath);
-                    $children[] = $p;
+                        $p['children'] = $this->getTreeChildren($content, $c->cat_id, $override, $basePath);
+                        $children[] = $p;
+                    }
                 }
             }
         }
