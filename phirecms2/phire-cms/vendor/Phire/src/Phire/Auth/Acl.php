@@ -5,6 +5,7 @@
 namespace Phire\Auth;
 
 use Pop\Auth\Acl as A;
+use Pop\Web\Cookie;
 use Pop\Web\Session;
 use Phire\Table;
 
@@ -140,8 +141,15 @@ class Acl extends A
 
         // Destroy the session object.
         unset($this->sess->user);
-        unset($_COOKIE['phire']);
-        setcookie('phire', null, -1, '/');
+
+        // Delete the phire cookie
+        $path = BASE_PATH . APP_URI;
+        if ($path == '') {
+            $path = '/';
+        }
+
+        $cookie = Cookie::getInstance(array('path' => $path));
+        $cookie->delete('phire');
 
         if ($redirect) {
             $uri = ($this->basePath == '') ? '/' : $this->basePath;

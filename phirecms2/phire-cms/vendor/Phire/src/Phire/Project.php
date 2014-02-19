@@ -6,6 +6,7 @@ namespace Phire;
 
 use Pop\File\Dir;
 use Pop\Project\Project as P;
+use Pop\Web\Cookie;
 use Pop\Web\Session;
 
 class Project extends P
@@ -59,6 +60,7 @@ class Project extends P
             unset($sess->errors);
         }
 
+        $modulesAry  = array();
         $modulesDirs = array(
             __DIR__ . '/../../../',
             __DIR__ . '/../../../../module/',
@@ -91,10 +93,12 @@ class Project extends P
                 $dirs = $dir->getFiles();
                 sort($dirs);
                 foreach ($dirs as $d) {
-                    $moduleCfg = null;
+                    $moduleCfg    = null;
                     if (($d != 'PopPHPFramework') && ($d != 'Phire') && ($d != 'config') && ($d != 'vendor') && (is_dir($directory . $d))) {
                         $ext = Table\Extensions::findBy(array('name' => $d));
                         if (!isset($ext->id) || (isset($ext->id) && ($ext->active))) {
+                            $modulesAry[] = $d;
+
                             // Load assets
                             if (!$site) {
                                 $this->loadAssets($directory . $d . '/data', $d, $docRoot);
@@ -160,6 +164,25 @@ class Project extends P
         // Add Phire CSS override file if it exists
         if (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css')) {
             $this->assets['css'] .= '    <style type="text/css">@import "' . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/css/phire.css";</style>' . PHP_EOL;
+        }
+
+        // If logged in, set Phire path cookie
+        if ((!$site) && isset($sess->user)) {
+            $path = BASE_PATH . APP_URI;
+            if ($path == '') {
+                $path = '/';
+            }
+
+            $cookie = Cookie::getInstance(array('path' => $path));
+            if (!isset($cookie->phire)) {
+                $cookie->set('phire', array(
+                    'base_path'    => BASE_PATH,
+                    'app_path'     => APP_PATH,
+                    'content_path' => CONTENT_PATH,
+                    'app_uri'      => APP_URI,
+                    'modules'      => $modulesAry
+                ));
+            }
         }
 
         // Initiate the router object

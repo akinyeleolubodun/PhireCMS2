@@ -522,41 +522,6 @@ class IndexController extends AbstractController
     }
 
     /**
-     * Method to get the system constants
-     *
-     * @return void
-     */
-    public function json()
-    {
-        if (null !== $this->request->getPath(1)) {
-            if ($_COOKIE['phire'] == $this->request->getPath(1)) {
-
-                $modules = Table\Extensions::findAll(null, array('type' => 1));
-                $modulesAry = array();
-                foreach($modules->rows as $module) {
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name) &&
-                        file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data') &&
-                        file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/' . $module->name . '/data/assets/i18n')) {
-                        $modulesAry[] = $module->name;
-                    }
-                }
-
-                // Build the response and send it
-                $response = new Response();
-                $response->setHeader('Content-Type', 'application/json')
-                         ->setBody(json_encode(array(
-                             'app_uri'      => APP_URI,
-                             'app_path'     => APP_PATH,
-                             'base_path'    => BASE_PATH,
-                             'content_path' => CONTENT_PATH,
-                             'modules'      => $modulesAry
-                         )));
-                $response->send();
-            }
-        }
-    }
-
-    /**
      * Error method
      *
      * @return void

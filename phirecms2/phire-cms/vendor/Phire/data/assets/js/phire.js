@@ -598,70 +598,21 @@ var phire = {
  * Document ready function for Phire
  */
 jax(document).ready(function(){
-    phire.sysBasePath = window.location.href;
-
-    phire.sysBasePath = window.location.href;
-
-    if (phire.sysBasePath.indexOf('/content') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/content'));
-    } else if (phire.sysBasePath.indexOf('/structure') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/structure'));
-    } else if (phire.sysBasePath.indexOf('/extensions') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/extensions'));
-    } else if (phire.sysBasePath.indexOf('/users') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/users'));
-    } else if (phire.sysBasePath.indexOf('/config') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/config'));
-    }
-
-    if (phire.sysBasePath.substring(0, -1) == '/') {
-        phire.sysBasePath = phire.sysBasePath.substring(0, (phire.sysBasePath.length - 1));
-    }
-
-    phire.basePath = jax.root.substring(0, jax.root.lastIndexOf('/'));
-
-    if (phire.basePath.lastIndexOf('/') != -1) {
-        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
-    }
-    if (phire.basePath.lastIndexOf('/') != -1) {
-        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
-    }
-    if (phire.basePath.lastIndexOf('/') != -1) {
-        phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
-    }
-
-    var slashCount = phire.basePath.match(/\//g);
-
-    if (slashCount.length > 2) {
-        phire.sysBasePath = phire.sysBasePath.replace(phire.basePath + '/', '');
-    }
-
-    if (phire.sysBasePath.indexOf('/') != -1) {
-        phire.sysBasePath = phire.sysBasePath.substring(0, phire.sysBasePath.indexOf('/'));
-    }
-
-    if (slashCount.length > 2) {
-        phire.sysBasePath = phire.basePath + '/' + phire.sysBasePath;
-    }
-
-    if (jax.cookie.load('phire') == '') {
-        jax.cookie.save('phire', jax.random(100000, 999999), {path : '/'});
-    }
-
-    var path = jax.ajax(phire.sysBasePath + '/json/' + jax.cookie.load('phire'));
-
-    phire.appUri      = path.app_uri;
-    phire.appPath     = path.app_path;
-    phire.contentPath = path.content_path;
-    phire.basePath    = path.base_path;
-    phire.sysBasePath = path.base_path + path.app_uri;
-
     phire.i18n = jax.i18n();
-    phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/phire/i18n/' + phire.i18n.getLanguage() + '.xml');
+    if (jax.cookie.load('phire') != '') {
+        var path = jax.cookie.load('phire');
+        phire.appUri      = path.app_uri;
+        phire.appPath     = path.app_path;
+        phire.contentPath = path.content_path;
+        phire.basePath    = path.base_path;
+        phire.sysBasePath = path.base_path + path.app_uri;
 
-    if (path.modules.length > 0) {
-        for (var i = 0; i < path.modules.length; i++) {
-            phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/assets/i18n/' + phire.i18n.getLanguage() + '.xml');
+        phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/phire/i18n/' + phire.i18n.getLanguage() + '.xml');
+
+        if (path.modules.length > 0) {
+            for (var i = 0; i < path.modules.length; i++) {
+                phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/assets/i18n/' + phire.i18n.getLanguage() + '.xml');
+            }
         }
     }
 
