@@ -619,6 +619,7 @@ jax(document).ready(function(){
     }
 
     phire.basePath = jax.root.substring(0, jax.root.lastIndexOf('/'));
+
     if (phire.basePath.lastIndexOf('/') != -1) {
         phire.basePath = phire.basePath.substring(0, phire.basePath.lastIndexOf('/'));
     }
@@ -644,7 +645,7 @@ jax(document).ready(function(){
     }
 
     if (jax.cookie.load('phire') == '') {
-        jax.cookie.save('phire', jax.random(100000, 999999));
+        jax.cookie.save('phire', jax.random(100000, 999999), {path : '/'});
     }
 
     var path = jax.ajax(phire.sysBasePath + '/json/' + jax.cookie.load('phire'));
