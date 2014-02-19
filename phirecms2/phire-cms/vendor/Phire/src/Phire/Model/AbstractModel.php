@@ -186,6 +186,7 @@ abstract class AbstractModel
 
         foreach ($dataAry as $key => $value) {
             if (is_string($value)) {
+                $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
                 $value = str_replace(array('[{base_path}]', '[{content_path}]'), array($site->base_path, CONTENT_PATH), $value);
                 if (strpos($value, '[{') !== false) {
                     $value = Model\Template::parse($value);
