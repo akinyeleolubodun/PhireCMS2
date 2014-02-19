@@ -176,12 +176,20 @@ abstract class AbstractModel
      * Method to filter the content and replace any placeholders
      *
      * @param   array $data
+     * @param   int   $siteId
      * @returns array
      */
-    protected function filterContent(array $data = null)
+    protected function filterContent(array $data = null, $siteId = null)
     {
         $dataAry = (null === $data) ? $this->data : $data;
-        $site = Table\Sites::getSite((int)$dataAry['site_id']);
+
+        if (isset($dataAry['site_id'])) {
+            $siteId = (int)$dataAry['site_id'];
+        } else {
+            $siteId = (int)$siteId;
+        }
+
+        $site = Table\Sites::getSite($siteId);
         $keys = array_keys($dataAry);
 
         foreach ($dataAry as $key => $value) {
@@ -203,6 +211,8 @@ abstract class AbstractModel
                     }
                 }
                 $dataAry[$key] = $value;
+            } else if (is_array($value)) {
+                $dataAry[$key] = $this->filterContent($value, $siteId);
             }
         }
 

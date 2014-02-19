@@ -478,9 +478,9 @@ class Content extends AbstractModel
                     }
                     $contentValues = array_merge($contentValues, $fieldValues);
                     $this->data = array_merge($this->data, $contentValues);
-                    $this->filterContent();
                 }
             }
+            $this->filterContent();
         }
     }
 

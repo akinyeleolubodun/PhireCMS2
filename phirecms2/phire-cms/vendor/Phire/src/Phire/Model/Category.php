@@ -138,6 +138,8 @@ class Category extends AbstractModel
             $content = Table\ContentToCategories::findBy(array('category_id' => $category->id), 'order ASC');
             $site   = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
             $siteId = (isset($site->id)) ? $site->id : '0';
+            $this->data['site_id'] = $siteId;
+
             if (isset($content->rows[0])) {
                 foreach ($content->rows as $cont) {
                     $c = Table\Content::findById($cont->content_id);
@@ -166,7 +168,12 @@ class Category extends AbstractModel
                 }
             }
 
+            foreach ($categoryValues['items'] as $key => $item) {
+                $categoryValues['items'][$key] = new \ArrayObject($this->filterContent((array)$item), \ArrayObject::ARRAY_AS_PROPS);
+            }
+
             $this->data = array_merge($this->data, $categoryValues);
+            $this->filterContent();
         }
     }
 
