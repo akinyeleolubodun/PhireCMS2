@@ -409,8 +409,12 @@ class Content extends AbstractModel
                     }
                 }
             }
-            $select = '<select name="content_process" id="content-process"><option value="-1">' . $this->i18n->__('Remove') . '</option><option value="2">' . $this->i18n->__('Publish') . '</option><option value="1">' . $this->i18n->__('Draft') . '</option><option value="0">' . $this->i18n->__('Unpublish') . '</option></select>';
-            $this->data['table'] = str_replace('value="' . $this->i18n->__('Process') . '" style="float: right;" />', 'value="' . $this->i18n->__('Process') . '" style="float: right;" />' . $select, $table);
+            if ($this->data['typeUri']) {
+                $contentProcess = '<select name="content_process" id="content-process"><option value="-1">' . $this->i18n->__('Remove') . '</option><option value="2">' . $this->i18n->__('Publish') . '</option><option value="1">' . $this->i18n->__('Draft') . '</option><option value="0">' . $this->i18n->__('Unpublish') . '</option></select>';
+            } else {
+                $contentProcess = '<input type="hidden" name="content_process" value="-1" />';
+            }
+            $this->data['table'] = str_replace('value="' . $this->i18n->__('Process') . '" style="float: right;" />', 'value="' . $this->i18n->__('Process') . '" style="float: right;" />' . $contentProcess, $table);
         }
 
         $sites = Table\Sites::findAll();
