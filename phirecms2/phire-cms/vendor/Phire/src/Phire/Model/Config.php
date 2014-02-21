@@ -144,11 +144,11 @@ class Config extends AbstractModel
         );
 
         $overview['sites'] = array();
-        $overview['sites'][$config['system_domain']] = $config['live'];
+        $overview['sites'][$config['system_domain'] . BASE_PATH] = $config['live'];
 
         $sites = Table\Sites::findAll('id ASC');
         foreach ($sites->rows as $site) {
-            $overview['sites'][$site->domain] = $site->live;
+            $overview['sites'][$site->domain . $site->base_path] = $site->live;
         }
 
         return $overview;

@@ -863,12 +863,18 @@ input[type=submit]:focus, button:focus {
     font-size: 0.9em;
 }
 
-.site-live {
+td.site-live {
+    max-width: 150px;
+    word-wrap: break-word;
+    font-size: 0.75em;
     color: #315900;
     background-color: #dbf2bf;
 }
 
-.site-not-live {
+td.site-not-live {
+    max-width: 150px;
+    word-wrap: break-word;
+    font-size: 0.75em;
     color: #8e0202;
     background-color: #e8d0d0;
 }
