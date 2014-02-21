@@ -291,7 +291,11 @@ class IndexController extends AbstractController
 
             if (isset($content->id)) {
                 $content->copy();
-                Response::redirect($this->request->getBasePath() . '/index/' . $content->type_id);
+                $uri = $this->request->getBasePath() . '/index/' . $content->type_id;
+                if (null !== $content->page) {
+                    $uri .= (strpos($uri, '?') !== false) ? '&page=' . $content->page : '?page=' . $content->page;
+                }
+                Response::redirect($uri);
             } else {
                 Response::redirect($this->request->getBasePath());
             }

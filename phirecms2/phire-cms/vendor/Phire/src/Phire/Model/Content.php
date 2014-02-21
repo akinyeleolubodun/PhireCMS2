@@ -1194,6 +1194,13 @@ class Content extends AbstractModel
                 }
             }
         }
+
+        $contents = Table\Content::findAll(null, array('type_id' => $this->data['type_id']));
+        $count    = $contents->count();
+        if ($count > $this->config->pagination_limit) {
+            $this->data['page'] = (($count - ($count % $this->config->pagination_limit)) / $this->config->pagination_limit) + 1;
+        }
+
     }
 
     /**
