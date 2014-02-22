@@ -20,7 +20,7 @@ elseif (isset($navigation) && isset($navigation[0])): ?>
 
     if ($acl->isAuth('Phire\Controller\Phire\Structure\NavigationController', 'edit')):
         $navDiv = '<div style="display: none;" id="nav-div-' . $nav['nav']->id . '" class="nav-div">' . ((count($nav['children']) > 0) ? '<strong>' . $i18n->__('Parent') . ' / ' . $i18n->__('Order') . '</strong>' : null) .'<br />';
-        $navDiv .= '<form action="' . BASE_PATH .'/phire/structure/navigation/process/' . $nav['nav']->id . '" method="post">';
+        $navDiv .= '<form action="' . BASE_PATH . APP_URI . '/structure/navigation/process/' . $nav['nav']->id . '" method="post">';
         foreach ($nav['children'] as $c):
             $parents = ($c['isCategory']) ? $nav['catParents'] : $nav['contParents'];
             $prefix = ($c['isCategory']) ? 'cat_' : 'cont_';
