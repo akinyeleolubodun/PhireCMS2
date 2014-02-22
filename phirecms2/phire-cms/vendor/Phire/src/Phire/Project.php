@@ -175,12 +175,19 @@ class Project extends P
 
             $cookie = Cookie::getInstance(array('path' => $path));
             if (!isset($cookie->phire)) {
+                $modsAry = array();
+
+                foreach ($modulesAry as $modName) {
+                    $i18n = (file_exists($docRoot . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($modName) . '/i18n'));
+                    $modsAry[] = array('name' => $modName, 'i18n' => $i18n);
+                }
+
                 $cookie->set('phire', array(
                     'base_path'    => BASE_PATH,
                     'app_path'     => APP_PATH,
                     'content_path' => CONTENT_PATH,
                     'app_uri'      => APP_URI,
-                    'modules'      => $modulesAry
+                    'modules'      => $modsAry
                 ));
             }
         }

@@ -8,6 +8,7 @@ use Pop\Archive\Archive;
 use Pop\File\Dir;
 use Pop\Nav\Nav;
 use Pop\Project\Install\Dbs;
+use Pop\Web\Cookie;
 use Phire\Table;
 
 class Extension extends AbstractModel
@@ -269,9 +270,15 @@ class Extension extends AbstractModel
     public function installModules()
     {
         try {
+            $path = BASE_PATH . APP_URI;
+            if ($path == '') {
+                $path = '/';
+            }
+
             $modulePath1 = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
             $modulePath2 = __DIR__ . '/../../../../../module';
 
+            $phireCookie = null;
             foreach ($this->data['new'] as $name => $module) {
                 $modPath = (file_exists($modulePath1 . '/' . $module)) ? $modulePath1 : $modulePath2;
 
@@ -411,6 +418,19 @@ class Extension extends AbstractModel
                         $installFunc();
                     }
                 }
+
+                $cookie = Cookie::getInstance(array('path' => $path));
+                if (isset($cookie->phire)) {
+                    if (null === $phireCookie) {
+                        $phireCookie = $cookie->phire;
+                    }
+                    $i18n = (file_exists($modPath . '/' . $name . '/data/assets/i18n'));
+                    $phireCookie->modules[] = array('name' => $name, 'i18n' => $i18n);
+                }
+            }
+            if (null !== $phireCookie) {
+                $cookie = Cookie::getInstance(array('path' => $path));
+                $cookie->set('phire', $phireCookie);
             }
         } catch (\Exception $e) {
             $this->data['error'] = $e->getMessage();
@@ -525,8 +545,21 @@ class Extension extends AbstractModel
             }
         }
 
+        $path = BASE_PATH . APP_URI;
+        if ($path == '') {
+            $path = '/';
+        }
+
         $modulePath1 = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
         $modulePath2 = __DIR__ . '/../../../../../module';
+
+        $phireCookie = null;
+        $cookie      = Cookie::getInstance(array('path' => $path));
+        if (isset($cookie->phire)) {
+            if (null === $phireCookie) {
+                $phireCookie = $cookie->phire;
+            }
+        }
 
         if (isset($post['remove_modules'])) {
             foreach ($post['remove_modules'] as $id) {
@@ -594,9 +627,23 @@ class Extension extends AbstractModel
                         $dir = new Dir($contentPath . '/assets/' . strtolower($ext->name));
                         $dir->emptyDir(null, true);
                     }
+
+                    if (null !== $phireCookie) {
+                        foreach ($phireCookie->modules as $key => $value) {
+                            if ($value->name == $ext->name) {
+                                unset($phireCookie->modules[$key]);
+                            }
+                        }
+                    }
+
                     $ext->delete();
                 }
             }
+        }
+
+        if (null !== $phireCookie) {
+            $cookie = Cookie::getInstance(array('path' => $path));
+            $cookie->set('phire', $phireCookie);
         }
     }
 

@@ -611,7 +611,9 @@ jax(document).ready(function(){
 
         if (path.modules.length > 0) {
             for (var i = 0; i < path.modules.length; i++) {
-                phire.i18n.loadFile(phire.basePath + phire.contentPath + '/extensions/modules/' + path.modules[i] + '/data/assets/i18n/' + phire.i18n.getLanguage() + '.xml');
+                if (path.modules[i].i18n) {
+                    phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/' + path.modules[i].name.toLowerCase() + '/i18n/' + phire.i18n.getLanguage() + '.xml');
+                }
             }
         }
     }
