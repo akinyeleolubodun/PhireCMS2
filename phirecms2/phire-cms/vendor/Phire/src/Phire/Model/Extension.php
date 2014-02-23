@@ -419,13 +419,15 @@ class Extension extends AbstractModel
                     }
                 }
 
-                $cookie = Cookie::getInstance(array('path' => $path));
-                if (isset($cookie->phire)) {
-                    if (null === $phireCookie) {
-                        $phireCookie = $cookie->phire;
+                if (php_sapi_name() != 'cli') {
+                    $cookie = Cookie::getInstance(array('path' => $path));
+                    if (isset($cookie->phire)) {
+                        if (null === $phireCookie) {
+                            $phireCookie = $cookie->phire;
+                        }
+                        $i18n = (file_exists($modPath . '/' . $name . '/data/assets/i18n'));
+                        $phireCookie->modules[] = array('name' => $name, 'i18n' => $i18n);
                     }
-                    $i18n = (file_exists($modPath . '/' . $name . '/data/assets/i18n'));
-                    $phireCookie->modules[] = array('name' => $name, 'i18n' => $i18n);
                 }
             }
             if (null !== $phireCookie) {
@@ -554,10 +556,13 @@ class Extension extends AbstractModel
         $modulePath2 = __DIR__ . '/../../../../../module';
 
         $phireCookie = null;
-        $cookie      = Cookie::getInstance(array('path' => $path));
-        if (isset($cookie->phire)) {
-            if (null === $phireCookie) {
-                $phireCookie = $cookie->phire;
+
+        if (php_sapi_name() != 'cli') {
+            $cookie      = Cookie::getInstance(array('path' => $path));
+            if (isset($cookie->phire)) {
+                if (null === $phireCookie) {
+                    $phireCookie = $cookie->phire;
+                }
             }
         }
 
