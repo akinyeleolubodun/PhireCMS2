@@ -72,5 +72,21 @@ class Content extends Record
         return $content;
     }
 
+    /**
+     * Static method to get count of content
+     *
+     * @param  int $cid
+     * @return int
+     */
+    public static function getCount($cid = null)
+    {
+        $sql = 'SELECT COUNT(*) AS total_content FROM ' . DB_PREFIX . 'content';
+        if (null !== $cid) {
+            $sql .= ' WHERE type_id = ' . (int)$cid;
+        }
+
+        return static::execute($sql)->total_contents;
+    }
+
 }
 

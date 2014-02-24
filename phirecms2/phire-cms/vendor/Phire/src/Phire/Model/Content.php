@@ -198,6 +198,12 @@ class Content extends AbstractModel
         $sql = Table\Content::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'content.id' : $order['field'];
 
+        $offset = 0;
+
+        if (null !== $page) {
+            $offset = ($page * $this->config->pagination_limit) - $this->config->pagination_limit + 1;
+        }
+
         $sql->select(array(
             DB_PREFIX . 'content.id',
             DB_PREFIX . 'content.parent_id',
@@ -216,7 +222,9 @@ class Content extends AbstractModel
             DB_PREFIX . 'content.status'
         ))->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
-          ->orderBy($order['field'], $order['order']);
+          ->orderBy($order['field'], $order['order'])
+          ->limit($this->config->pagination_limit)
+          ->offset($offset);
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', ':type_id');
         $params = array('type_id' => $typeId);
@@ -397,7 +405,7 @@ class Content extends AbstractModel
         }
 
         if (isset($contentAry[0])) {
-            $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Content::getCount($typeId)->total_content);
             if (($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process')) &&
                 ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process_' . $typeId))) {
                 // If there are open authoring ids, remove "remove" checkbox

@@ -159,6 +159,11 @@ class User extends AbstractModel
         $order = $this->getSortOrder($sort, $page);
         $sql = Table\Users::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
+        $offset = 0;
+
+        if (null !== $page) {
+            $offset = ($page * $this->config->pagination_limit) - $this->config->pagination_limit + 1;
+        }
 
         // Build the SQL statement to get users
         $sql->select(array(
@@ -172,7 +177,9 @@ class User extends AbstractModel
             DB_PREFIX . 'users.logins'
         ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
-          ->orderBy($order['field'], $order['order']);
+          ->orderBy($order['field'], $order['order'])
+          ->limit($this->config->pagination_limit)
+          ->offset($offset);
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
 
@@ -286,7 +293,7 @@ class User extends AbstractModel
         );
 
         if (isset($userRows[0])) {
-            $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Users::getCount($typeId));
         }
     }
 
