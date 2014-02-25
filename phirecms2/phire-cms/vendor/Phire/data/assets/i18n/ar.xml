@@ -1583,5 +1583,57 @@
             <source>Click to View</source>
             <output>انقر لمشاهدة</output>
         </text>
+        <text>
+            <source>Use CAPTCHA</source>
+            <output>استخدام CAPTCHA </output>
+        </text>
+        <text>
+            <source>Use CSRF</source>
+            <output>استخدام CSRF</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>إعادة تعيين كلمة المرور</output>
+        </text>
+        <text>
+            <source>Password Reset Interval</source>
+            <output>إعادة تعيين كلمة المرور الفاصل</output>
+        </text>
+        <text>
+            <source>1st Login</source>
+            <output>1 تسجيل الدخول </output>
+        </text>
+        <text>
+            <source>Every</source>
+            <output>كل </output>
+        </text>
+        <text>
+            <source>Day(s)</source>
+            <output>يوم (s)</output>
+        </text>
+        <text>
+            <source>Month(s)</source>
+            <output>الشهر (s)</output>
+        </text>
+        <text>
+            <source>Year(s)</source>
+            <output>سنة (s)</output>
+        </text>
+        <text>
+            <source>Enter Code</source>
+            <output>الكود </output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>تحديث الصفحة </output>
+        </text>
+        <text>
+            <source>You must reset your password before continuing.</source>
+            <output>يجب إعادة تعيين كلمة المرور الخاصة بك قبل المتابعة.</output>
+        </text>
+        <text>
+            <source>The new password cannot be the same.</source>
+            <output>كلمة المرور الجديدة لا يمكن أن تكون هي نفسها.</output>
+        </text>
     </locale>
 </language>

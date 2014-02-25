@@ -1579,5 +1579,57 @@
             <source>Click to View</source>
             <output>Haga clic para ver</output>
         </text>
+        <text>
+            <source>Use CAPTCHA</source>
+            <output>Utilice CAPTCHA</output>
+        </text>
+        <text>
+            <source>Use CSRF</source>
+            <output>Utilice CSRF</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>Restablecer Contraseña</output>
+        </text>
+        <text>
+            <source>Password Reset Interval</source>
+            <output>Restablecer Contraseña Intervalo</output>
+        </text>
+        <text>
+            <source>1st Login</source>
+            <output>Primera Sesión</output>
+        </text>
+        <text>
+            <source>Every</source>
+            <output>Cada</output>
+        </text>
+        <text>
+            <source>Day(s)</source>
+            <output>Día(s)</output>
+        </text>
+        <text>
+            <source>Month(s)</source>
+            <output>Mes(s)</output>
+        </text>
+        <text>
+            <source>Year(s)</source>
+            <output>Año(s)</output>
+        </text>
+        <text>
+            <source>Enter Code</source>
+            <output>Introduzca el Código</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>Recargar</output>
+        </text>
+        <text>
+            <source>You must reset your password before continuing.</source>
+            <output>Debe restablecer su contraseña antes de continuar.</output>
+        </text>
+        <text>
+            <source>The new password cannot be the same.</source>
+            <output>La nueva contraseña no puede ser igual.</output>
+        </text>
     </locale>
 </language>

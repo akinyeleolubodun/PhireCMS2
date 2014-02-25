@@ -1583,5 +1583,57 @@
             <source>Click to View</source>
             <output>Нажмите для просмотра</output>
         </text>
+        <text>
+            <source>Use CAPTCHA</source>
+            <output>Используйте CAPTCHA</output>
+        </text>
+        <text>
+            <source>Use CSRF</source>
+            <output>Используйте CSRF</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>Сброс пароля</output>
+        </text>
+        <text>
+            <source>Password Reset Interval</source>
+            <output>Сброс пароля интервал</output>
+        </text>
+        <text>
+            <source>1st Login</source>
+            <output>1-й Войти</output>
+        </text>
+        <text>
+            <source>Every</source>
+            <output>каждый</output>
+        </text>
+        <text>
+            <source>Day(s)</source>
+            <output>День (ы)</output>
+        </text>
+        <text>
+            <source>Month(s)</source>
+            <output>Месяц (ы)</output>
+        </text>
+        <text>
+            <source>Year(s)</source>
+            <output>Год (ы)</output>
+        </text>
+        <text>
+            <source>Enter Code</source>
+            <output>Введите код</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>перезагружать</output>
+        </text>
+        <text>
+            <source>You must reset your password before continuing.</source>
+            <output>Вы должны сбросить пароль, прежде чем продолжить.</output>
+        </text>
+        <text>
+            <source>The new password cannot be the same.</source>
+            <output>Новый пароль не может быть то же самое.</output>
+        </text>
     </locale>
 </language>

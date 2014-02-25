@@ -1583,5 +1583,57 @@
             <source>Click to View</source>
             <output>点击查看</output>
         </text>
+        <text>
+            <source>Use CAPTCHA</source>
+            <output>使用验证码</output>
+        </text>
+        <text>
+            <source>Use CSRF</source>
+            <output>使用CSRF</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>重设密码</output>
+        </text>
+        <text>
+            <source>Password Reset Interval</source>
+            <output>密码重设时间间隔</output>
+        </text>
+        <text>
+            <source>1st Login</source>
+            <output>第登录</output>
+        </text>
+        <text>
+            <source>Every</source>
+            <output>一切</output>
+        </text>
+        <text>
+            <source>Day(s)</source>
+            <output>天</output>
+        </text>
+        <text>
+            <source>Month(s)</source>
+            <output>个月</output>
+        </text>
+        <text>
+            <source>Year(s)</source>
+            <output>年（次）</output>
+        </text>
+        <text>
+            <source>Enter Code</source>
+            <output>输入验证码</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>刷新</output>
+        </text>
+        <text>
+            <source>You must reset your password before continuing.</source>
+            <output>在继续之前，您必须重置您的密码。</output>
+        </text>
+        <text>
+            <source>The new password cannot be the same.</source>
+            <output>新密码不能相同。</output>
+        </text>
     </locale>
 </language>

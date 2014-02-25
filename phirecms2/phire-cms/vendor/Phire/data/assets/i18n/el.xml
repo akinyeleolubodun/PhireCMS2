@@ -1583,5 +1583,57 @@
             <source>Click to View</source>
             <output>Κάντε κλικ για να δείτε</output>
         </text>
+        <text>
+            <source>Use CAPTCHA</source>
+            <output>Χρησιμοποιήστε CAPTCHA</output>
+        </text>
+        <text>
+            <source>Use CSRF</source>
+            <output>Χρησιμοποιήστε CSRF</output>
+        </text>
+        <text>
+            <source>Password Reset</source>
+            <output>επαναφοράς κωδικού πρόσβασης</output>
+        </text>
+        <text>
+            <source>Password Reset Interval</source>
+            <output>επαναφοράς κωδικού πρόσβασης διάστημα</output>
+        </text>
+        <text>
+            <source>1st Login</source>
+            <output>1ο σύνδεση</output>
+        </text>
+        <text>
+            <source>Every</source>
+            <output>κάθε</output>
+        </text>
+        <text>
+            <source>Day(s)</source>
+            <output>Ημέρα(ες)</output>
+        </text>
+        <text>
+            <source>Month(s)</source>
+            <output>Μήνας(ες)</output>
+        </text>
+        <text>
+            <source>Year(s)</source>
+            <output>Έτος(ες)</output>
+        </text>
+        <text>
+            <source>Enter Code</source>
+            <output>Εισάγετε τον κωδικό</output>
+        </text>
+        <text>
+            <source>Reload</source>
+            <output>Ανανέωση</output>
+        </text>
+        <text>
+            <source>You must reset your password before continuing.</source>
+            <output>Θα πρέπει να επαναφέρετε τον κωδικό πρόσβασής σας πριν συνεχίσετε.</output>
+        </text>
+        <text>
+            <source>The new password cannot be the same.</source>
+            <output>Το νέο κωδικό δεν μπορεί να είναι το ίδιο.</output>
+        </text>
     </locale>
 </language>
