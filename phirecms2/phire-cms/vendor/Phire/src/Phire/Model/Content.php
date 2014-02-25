@@ -405,7 +405,7 @@ class Content extends AbstractModel
         }
 
         if (isset($contentAry[0])) {
-            $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Content::getCount($typeId)->total_content);
+            $table = Html::encode($contentAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Content::getCount(array('type_id' => $typeId)));
             if (($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process')) &&
                 ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\IndexController', 'process_' . $typeId))) {
                 // If there are open authoring ids, remove "remove" checkbox

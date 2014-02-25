@@ -293,7 +293,7 @@ class User extends AbstractModel
         );
 
         if (isset($userRows[0])) {
-            $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Users::getCount($typeId));
+            $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Users::getCount(array('type_id' => $typeId)));
         }
     }
 
