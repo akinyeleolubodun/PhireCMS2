@@ -117,6 +117,18 @@ class UserType extends AbstractForm
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
+            'use_captcha' => array(
+                'type'   => 'radio',
+                'label'  => $this->i18n->__('Use CAPTCHA'),
+                'value'  => $yesNo,
+                'marked' => '1'
+            ),
+            'use_csrf' => array(
+                'type'   => 'radio',
+                'label'  => $this->i18n->__('Use CSRF'),
+                'value'  => $yesNo,
+                'marked' => '1'
+            ),
             'multiple_sessions' => array(
                 'type'   => 'radio',
                 'label'  => $this->i18n->__('Allow Multiple Sessions'),
@@ -134,15 +146,15 @@ class UserType extends AbstractForm
                 'label'  => $this->i18n->__('Allow Mobile Access'),
                 'value'  => $yesNo,
                 'marked' => '1'
-            ),
+            )
+        );
+        $fields2b = array(
             'email_as_username' => array(
                 'type'   => 'radio',
                 'label'  => $this->i18n->__('Allow Email as Username'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
-        );
-        $fields2b = array(
             'email_verification' => array(
                 'type'   => 'radio',
                 'label'  => $this->i18n->__('User Email Verification'),
@@ -255,6 +267,38 @@ class UserType extends AbstractForm
             'label'  => $this->i18n->__('Allow Global Access'),
             'value'  => $yesNo,
             'marked' => '0'
+        );
+        $fields4['reset_password'] = array(
+            'type'   => 'select',
+            'label'  => $this->i18n->__('Password Reset'),
+            'value'  => $yesNo,
+            'marked' => '0'
+        );
+        $fields4['reset_password_interval'] = array(
+            'type'   => 'select',
+            'label'  => $this->i18n->__('Password Reset Interval'),
+            'value'  => array(
+                '--'    => '--',
+                '1st'   => '1st Login',
+                'Every' => 'Every'
+            ),
+            'marked' => '0'
+        );
+        $fields4['reset_password_interval_value'] = array(
+            'type'       => 'text',
+            'attributes' => array(
+                'size'  => 2,
+                'style' => 'margin: 0; padding: 3px 5px 3px 5px; height: 16px; font-size: 0.9em;'
+            ),
+        );
+        $fields4['reset_password_interval_unit'] = array(
+            'type'   => 'select',
+            'value'  => array(
+                '--' => '--',
+                'Days'   => 'Day(s)',
+                'Months' => 'Month(s)',
+                'Years'  => 'Year(s)'
+            )
         );
         $fields4['allowed_attempts'] = array(
             'type'       => 'text',

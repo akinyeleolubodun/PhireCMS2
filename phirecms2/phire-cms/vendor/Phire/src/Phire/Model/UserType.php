@@ -110,6 +110,13 @@ class UserType extends AbstractModel
             $typeValues = $type->getValues();
             $typeValues['log_in'] = $typeValues['login'];
             unset($typeValues['login']);
+
+            if (!empty($typeValues['reset_password_interval']) && ($typeValues['reset_password_interval'] != '1st')) {
+                $resetAry = explode(' ', $typeValues['reset_password_interval']);
+                $typeValues['reset_password_interval']       = 'Every';
+                $typeValues['reset_password_interval_value'] = $resetAry[0];
+                $typeValues['reset_password_interval_unit']  = $resetAry[1];
+            }
             $typeValues = array_merge($typeValues, FieldValue::getAll($id));
 
             $this->data = array_merge($this->data, $typeValues);
@@ -142,6 +149,31 @@ class UserType extends AbstractModel
         unset($fields['update']);
 
         $fieldsAry = array();
+
+        $reset = '';
+        if (($fields['reset_password']) && ($fields['reset_password_interval'] != '')) {
+            if (isset($fields['reset_password_interval'])) {
+                switch ($fields['reset_password_interval']) {
+                    case '1st':
+                        $reset = '1st';
+                        break;
+                    case 'Every':
+                        $resetValue = (int)$fields['reset_password_interval_value'];
+                        if ($resetValue == 0) {
+                            $resetValue = 1;
+                        }
+                        $resetUnit = ($fields['reset_password_interval_unit'] != '--') ? $fields['reset_password_interval_unit'] : 'Days';
+                        $reset = $resetValue . ' ' . $resetUnit;
+                        break;
+                }
+            }
+        }
+
+        unset($fields['reset_password_interval_value']);
+        unset($fields['reset_password_interval_unit']);
+        $fields['reset_password_interval']    = $reset;
+        $fieldsAry['reset_password_interval'] = $reset;
+
         foreach ($fields as $key => $value) {
             if (substr($key, 0, 6) == 'field_') {
                 $fieldsAry[$key] = $value;
@@ -187,6 +219,31 @@ class UserType extends AbstractModel
 
         // Extract dynamic field values out of the form
         $fieldsAry = array();
+
+        $reset = '';
+        if (($fields['reset_password']) && ($fields['reset_password_interval'] != '')) {
+            if (isset($fields['reset_password_interval'])) {
+                switch ($fields['reset_password_interval']) {
+                    case '1st':
+                        $reset = '1st';
+                        break;
+                    case 'Every':
+                        $resetValue = (int)$fields['reset_password_interval_value'];
+                        if ($resetValue == 0) {
+                            $resetValue = 1;
+                        }
+                        $resetUnit = ($fields['reset_password_interval_unit'] != '--') ? $fields['reset_password_interval_unit'] : 'Days';
+                        $reset = $resetValue . ' ' . $resetUnit;
+                        break;
+                }
+            }
+        }
+
+        unset($fields['reset_password_interval_value']);
+        unset($fields['reset_password_interval_unit']);
+        $fields['reset_password_interval']    = $reset;
+        $fieldsAry['reset_password_interval'] = $reset;
+
         foreach ($fields as $key => $value) {
             if (substr($key, 0, 6) == 'field_') {
                 $fieldsAry[$key] = $value;

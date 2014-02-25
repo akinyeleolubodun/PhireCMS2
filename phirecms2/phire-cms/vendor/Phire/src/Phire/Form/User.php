@@ -19,9 +19,10 @@ class User extends AbstractForm
      * @param  boolean        $profile
      * @param  int            $uid
      * @param \Phire\Auth\Acl $acl
+     * @param  boolean        $register
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $acl = null)
+    public function __construct($action = null, $method = 'post', $tid = 0, $profile = false, $uid = 0, $acl = null, $register = false)
     {
         parent::__construct($action, $method, null, '        ');
 
@@ -56,7 +57,7 @@ class User extends AbstractForm
             $id = 'user-select-form';
         // Else, create initial user fields
         } else {
-            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $action);
+            $this->initFieldsValues = $this->getInitFields($tid, $profile, $uid, $action, $register);
             if (strpos($action, '/install/user') !== false) {
                 $id = 'user-install-form';
             } else if ($profile) {
@@ -72,11 +73,12 @@ class User extends AbstractForm
     /**
      * Set the field values
      *
-     * @param  array $values
-     * @param  array $filters
+     * @param  array       $values
+     * @param  array       $filters
+     * @param  \Pop\Config $config
      * @return \Pop\Form\Form
      */
-    public function setFieldValues(array $values = null, $filters = null)
+    public function setFieldValues(array $values = null, $filters = null, $config = null)
     {
         parent::setFieldValues($values, $filters);
 
@@ -84,7 +86,7 @@ class User extends AbstractForm
             if (null !== $this->getElement('email2')) {
                 $this->getElement('email2')->setRequired(false);
             }
-            if (null !== $this->getElement('password1')) {
+            if ((null !== $this->getElement('password1')) && (null === $this->reset_pwd)) {
                 $this->getElement('password1')->setRequired(false);
                 $this->getElement('password2')->setRequired(false);
             }
@@ -123,6 +125,23 @@ class User extends AbstractForm
                 $this->getElement('password2')
                      ->addValidator(new Validator\Equal($this->password1, $this->i18n->__('The passwords do not match.')));
             }
+
+            if ($this->reset_pwd) {
+                $user = Table\Users::findById($this->id);
+                if (isset($user->id)) {
+                    $curPassword = $user->password;
+                    $type = Table\UserTypes::findById($user->type_id);
+                    if (isset($type->id)) {
+                        $encOptions = $config->encryptionOptions->asArray();
+                        $auth = new \Pop\Auth\Adapter\Table('Phire\Table\Users');
+                        $result = $auth->authenticate($this->username, $this->password2, $type->password_encryption, $encOptions);
+                        if ($result != \Pop\Auth\Auth::PASSWORD_INCORRECT) {
+                            $this->getElement('password2')
+                                 ->addValidator(new Validator\Equal($curPassword, $this->i18n->__('The new password cannot be the same.')));
+                        }
+                    }
+                }
+            }
         }
 
         $this->checkFiles();
@@ -137,11 +156,12 @@ class User extends AbstractForm
      * @param  boolean $profile
      * @param  int     $uid
      * @param  string  $action
+     * @param  boolean $register
      * @return array
      */
-    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $action)
+    protected function getInitFields($tid = 0, $profile = false, $uid = 0, $action, $register = false)
     {
-        $type = Table\UserTypes::findById($tid);
+        $type    = Table\UserTypes::findById($tid);
         $fields1 = array();
 
         // Continue setting up initial user fields
@@ -221,6 +241,24 @@ class User extends AbstractForm
 
         $fields4 = array();
 
+        if ($register) {
+            $site = Table\Sites::getSite();
+            if ($type->use_csrf) {
+                $fields4['csrf'] = array(
+                    'type'  => 'csrf',
+                    'value' => \Pop\Filter\String::random(8)
+                );
+            }
+            if ($type->use_captcha) {
+                $fields4['captcha'] = array(
+                    'type'       => 'captcha',
+                    'label'      => $this->i18n->__('Enter Code'),
+                    'captcha'    => '<br /><img id="captcha-image" src="' . $site->base_path . '/captcha" /><br /><a class="reload-link" href="#" onclick="document.getElementById(\'captcha-image\').src = \'' . $site->base_path . '/captcha?reload=1\';return false;">' . $this->i18n->__('Reload') . '</a>',
+                    'attributes' => array('size' => 5)
+                );
+            }
+        }
+
         // Finish the initial fields
         $fields4['submit'] = array(
             'type'  => 'submit',
@@ -233,6 +271,17 @@ class User extends AbstractForm
         if ($profile) {
             $fields4['submit']['label'] = '&nbsp;';
             $fields4['submit']['attributes']['style'] = 'width: 250px;';
+            $fields4['profile'] = array(
+                'type'  => 'hidden',
+                'value' => 1
+            );
+            $sess = \Pop\Web\Session::getInstance();
+            if (isset($sess->reset_pwd)) {
+                $fields4['reset_pwd'] = array(
+                    'type'  => 'hidden',
+                    'value' => 1
+                );
+            }
         }
 
         if (!$profile) {

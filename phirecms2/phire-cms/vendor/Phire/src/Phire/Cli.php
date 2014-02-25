@@ -792,7 +792,7 @@ class Cli
                 'password' => $input['db_password']
             ));
 
-            $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "')");
+            $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids, created) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "', '" . date('Y-m-d H:i:s') . "')");
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'content SET created_by = 1001');
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'config SET value = \'' . $user['email'] . '\' WHERE setting = \'system_email\'');
             echo '  Installation Complete!' . PHP_EOL . PHP_EOL;

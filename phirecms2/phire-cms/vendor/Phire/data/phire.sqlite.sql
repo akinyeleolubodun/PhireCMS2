@@ -68,6 +68,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "default_role_id" integer,
   "login" integer,
   "registration" integer,
+  "use_captcha" integer,
+  "use_csrf" integer,
   "multiple_sessions" integer,
   "mobile_access" integer,
   "email_as_username" integer,
@@ -82,6 +84,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   "session_expiration" integer,
   "timeout_warning" integer,
   "password_encryption" integer,
+  "reset_password" integer,
+  "reset_password_interval" varchar,
   "ip_allowed" text,
   "ip_blocked" text,
   "log_emails" text,
@@ -97,8 +101,8 @@ INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_types', 2000
 -- Dumping data for table "user_types"
 --
 
-INSERT INTO "[{prefix}]user_types" ("id", "type", "default_role_id", "login", "registration", "multiple_sessions", "mobile_access", "email_as_username", "email_verification", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "timeout_warning", "password_encryption", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
-(2001, 'user', 3001, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 0, 2, '', '', '', '', '', '');
+INSERT INTO "[{prefix}]user_types" ("id", "type", "default_role_id", "login", "registration", "use_captcha", "use_csrf", "multiple_sessions", "mobile_access", "email_as_username", "email_verification", "force_ssl", "track_sessions", "verification", "approval", "unsubscribe_login", "global_access", "allowed_attempts", "session_expiration", "timeout_warning", "password_encryption", "reset_password", "reset_password_interval", "ip_allowed", "ip_blocked", "log_emails", "log_exclude", "controller", "sub_controllers") VALUES
+(2001, 'user', 3001, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 30, 0, 4, 0, '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -141,6 +145,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
   "logins" text,
   "failed_attempts" integer,
   "site_ids" text,
+  "created" datetime,
+  "updated" datetime,
+  "updated_pwd" datetime,
   UNIQUE ("id"),
   CONSTRAINT "fk_user_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE

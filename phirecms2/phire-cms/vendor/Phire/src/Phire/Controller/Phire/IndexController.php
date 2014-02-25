@@ -230,7 +230,7 @@ class IndexController extends AbstractController
 
             $form = new Form\User(
                 $this->request->getBasePath() . $this->request->getRequestUri(),
-                'post', $this->type->id, true, 0
+                'post', $this->type->id, true, 0, null, true
             );
 
             // If form is submitted
@@ -290,6 +290,10 @@ class IndexController extends AbstractController
 
         $this->view->set('title', $this->view->i18n->__('Profile'));
 
+        if (isset($this->sess->reset_pwd)) {
+            $this->view->set('reset', $this->view->i18n->__('You must reset your password before continuing.'));
+        }
+
         $user = new Model\User();
         $user->getById($this->sess->user->id);
 
@@ -304,8 +308,11 @@ class IndexController extends AbstractController
             if ($this->request->isPost()) {
                 $form->setFieldValues(
                     $this->request->getPost(),
-                    array('strip_tags', 'htmlentities'),
-                    array(null, array(ENT_QUOTES, 'UTF-8'))
+                    array(
+                        'strip_tags'   => null,
+                        'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                    ),
+                    $this->project->module('Phire')
                 );
 
                 // If the form is valid

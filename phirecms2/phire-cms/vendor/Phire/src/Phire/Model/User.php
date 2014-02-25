@@ -26,8 +26,8 @@ class User extends AbstractModel
      */
     public function login($username, $type, $success = true)
     {
-        $user = Table\Users::findBy(array('username' => $username));
-        $sess = Session::getInstance();
+        $user    = Table\Users::findBy(array('username' => $username));
+        $sess    = Session::getInstance();
         $typeUri = (strtolower($type->type) != 'user') ? '/' . strtolower($type->type) : APP_URI;
 
         // If login success
@@ -69,6 +69,29 @@ class User extends AbstractModel
             $timestamp = time();
             $ua = $_SERVER['HTTP_USER_AGENT'];
             $ip = $_SERVER['REMOTE_ADDR'];
+
+            if ($type->reset_password) {
+                if ($type->reset_password_interval == '1st') {
+                    if ($user->logins == '') {
+                        $sess->reset_pwd = true;
+                    }
+                } else {
+                    $interval = 86400;
+                    $resetAry = explode(' ', $type->reset_password_interval);
+                    if ($resetAry[1] == 'Months') {
+                        $interval = 2628000;
+                    } else if ($resetAry[1] == 'Years') {
+                        $interval = 31536000;
+                    }
+                    $interval = $resetAry[0] * $interval;
+                    if ($user->logins != '') {
+                        $lastL = key(unserialize($user->logins));
+                        if ((time() - $lastL) > $interval) {
+                            $sess->reset_pwd = true;
+                        }
+                    }
+                }
+            }
 
             if ($user->logins == '') {
                 $logins = array(
@@ -363,8 +386,8 @@ class User extends AbstractModel
             $type = Table\UserTypes::findById($user->type_id);
             $userValues = $user->getValues();
             $userValues['type_name'] = (isset($type->id) ? ucwords(str_replace('-', ' ', $type->type)) : null);
-            $userValues['email1'] = $userValues['email'];
-            $userValues['verified'] = (int)$userValues['verified'];
+            $userValues['email1']    = $userValues['email'];
+            $userValues['verified']  = (int)$userValues['verified'];
             $userValues = array_merge($userValues, FieldValue::getAll($id));
             $this->data = array_merge($this->data, $userValues);
         }
@@ -464,7 +487,8 @@ class User extends AbstractModel
             'verified'        => $fields['verified'],
             'logins'          => null,
             'failed_attempts' => 0,
-            'site_ids'        => (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array()))
+            'site_ids'        => (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array())),
+            'created'         => date('Y-m-d H:i:s')
         ));
         $user->save();
         $this->data['id'] = $user->id;
@@ -514,19 +538,32 @@ class User extends AbstractModel
 
             $first = ((null === $user->role_id) && (null === $user->logins) && ($type->login));
 
+            if (isset($fields['profile']) && ($fields['profile'])) {
+                $siteIds = $user->site_ids;
+            } else {
+                $siteIds = (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array()));
+            }
+
             // Save the user's updated data
             $user->role_id         = $roleId;
             $user->username        = (isset($fields['username'])) ? $fields['username'] : $fields['email1'];
             $user->email           = $fields['email1'];
             $user->verified        = $verified;
             $user->failed_attempts = $failedAttempts;
-            $user->site_ids        = (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array()));
+            $user->site_ids        = $siteIds;
+            $user->updated         = date('Y-m-d H:i:s');
 
             $sess = Session::getInstance();
+
+            if ($fields['reset_pwd']) {
+                $user->updated_pwd = date('Y-m-d H:i:s');
+                unset($sess->reset_pwd);
+            }
+
             $sess->last_user_id = $user->id;
             if ($sess->user->id == $user->id) {
                 $sess->user->username = $user->username;
-                $sess->user->site_ids = (isset($fields['site_ids']) ? $fields['site_ids'] : array());
+                $sess->user->site_ids = unserialize($siteIds);
             }
 
             $user->update();

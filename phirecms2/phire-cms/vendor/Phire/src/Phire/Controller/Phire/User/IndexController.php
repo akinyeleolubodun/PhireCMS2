@@ -247,7 +247,7 @@ class IndexController extends AbstractController
                 // Else, render the form
                 } else {
                     $userData = $user->getData(null, false);
-                    $userData['site_ids'] = unserialize($userData['site_ids']);
+                    $userData['site_ids'] = (null !== $userData['site_ids']) ? unserialize($userData['site_ids']) : array();
                     $form->setFieldValues($userData);
                     $this->view->set('form', $form);
                     $this->send();

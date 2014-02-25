@@ -4,6 +4,7 @@
  */
 namespace Phire;
 
+use Phire\Table\Sites;
 use Pop\File\Dir;
 use Pop\Project\Project as P;
 use Pop\Web\Cookie;
@@ -271,8 +272,12 @@ class Project extends P
      */
     public static function auth($router)
     {
-        $resource = $router->getControllerClass();
-        $permission = $router->getAction();
+        $sess     = Session::getInstance();
+        $site     = Sites::getSite();
+        $basePath = $site->base_path;
+
+        $resource          = $router->getControllerClass();
+        $permission        = $router->getAction();
         $isFrontController = (substr_count($resource, '\\') == 2);
 
         // Check for the resource and permission
@@ -302,28 +307,34 @@ class Project extends P
                 APP_URI :
                 '/' . strtolower($router->project()->getService('acl')->getType()->type);
 
+            // If reset password flag is set
+            if (isset($sess->reset_pwd) && ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/profile') &&
+                ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/login') &&
+                ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/logout')) {
+                \Pop\Http\Response::redirect($basePath . $uri . '/profile');
+                return \Pop\Event\Manager::KILL;
             // If not logged in for unsubscribe and required, redirect to the system login
-            if (($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/unsubscribe') &&
+            } else if (($_SERVER['REQUEST_URI'] == $basePath . $uri . '/unsubscribe') &&
                 ($router->project()->getService('acl')->getType()->unsubscribe_login) &&
                 (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                \Pop\Http\Response::redirect($basePath . $uri . '/login');
                 return \Pop\Event\Manager::KILL;
             // Else, if not logged in or allowed, redirect to the system login
-            } else if (($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/login') &&
-                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/register') &&
-                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/forgot') &&
-                ($_SERVER['REQUEST_URI'] != BASE_PATH . $uri . '/unsubscribe') &&
-                (substr($_SERVER['REQUEST_URI'], 0, strlen(BASE_PATH . $uri . '/json')) != (BASE_PATH . $uri . '/json')) &&
-                (strpos($_SERVER['REQUEST_URI'], BASE_PATH . $uri . '/verify') === false) &&
+            } else if (($_SERVER['REQUEST_URI'] != $basePath . $uri . '/login') &&
+                ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/register') &&
+                ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/forgot') &&
+                ($_SERVER['REQUEST_URI'] != $basePath . $uri . '/unsubscribe') &&
+                (substr($_SERVER['REQUEST_URI'], 0, strlen($basePath . $uri . '/json')) != ($basePath . $uri . '/json')) &&
+                (strpos($_SERVER['REQUEST_URI'], $basePath . $uri . '/verify') === false) &&
                 (!$router->project()->getService('acl')->isAuth($resource, $permission))) {
-                \Pop\Http\Response::redirect(BASE_PATH . $uri . '/login');
+                \Pop\Http\Response::redirect($basePath . $uri . '/login');
                 return \Pop\Event\Manager::KILL;
            // Else, if logged in and allowed, and a system access URI, redirect back to the system
-            } else if ((($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/login') ||
-                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/register') ||
-                    ($_SERVER['REQUEST_URI'] == BASE_PATH . $uri . '/forgot')) &&
+            } else if ((($_SERVER['REQUEST_URI'] == $basePath . $uri . '/login') ||
+                    ($_SERVER['REQUEST_URI'] == $basePath . $uri . '/register') ||
+                    ($_SERVER['REQUEST_URI'] == $basePath . $uri . '/forgot')) &&
                 ($router->project()->getService('acl')->isAuth($resource, $permission))) {
-                \Pop\Http\Response::redirect(BASE_PATH . (($uri == '') ? '/' : $uri));
+                \Pop\Http\Response::redirect($basePath . (($uri == '') ? '/' : $uri));
                 return \Pop\Event\Manager::KILL;
             }
         }

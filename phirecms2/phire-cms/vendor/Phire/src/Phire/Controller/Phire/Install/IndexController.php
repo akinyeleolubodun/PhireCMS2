@@ -183,6 +183,7 @@ class IndexController extends C
                     $newUser = Table\Users::findById($user->id);
                     if (isset($newUser->id)) {
                         $newUser->site_ids = serialize(array(0));
+                        $newUser->created = date('Y-m-d H:i:s');
                         $newUser->update();
                     }
 
