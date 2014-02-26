@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
 <?php echo $form;?>
 <?php if (isset($verify)): ?>
@@ -12,4 +12,4 @@
 <?php elseif (is_string($form)): ?>
         <p><?php $i18n->_e('You can %1log in here%2.', array('<a href="' . BASE_PATH . $typeUri . '/login">', '</a>')); ?></p>
 <?php endif; ?>
-<?php include __DIR__ . '/footer.phtml'; ?>
+<?php include $phireFooter; ?>

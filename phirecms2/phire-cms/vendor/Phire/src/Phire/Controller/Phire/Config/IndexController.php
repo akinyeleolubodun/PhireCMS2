@@ -52,7 +52,7 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/index.phtml', array(
+        $this->prepareView('index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -96,7 +96,7 @@ class IndexController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

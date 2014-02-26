@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
         <form id="config-form" action="<?php echo BASE_PATH . APP_URI; ?>/config" method="post">
@@ -52,4 +52,4 @@
                 <tr class="table-bottom-row"><td colspan="2" class="table-bottom-row" style="background: transparent;"><input type="submit" name="submit" id="submit" class="save-btn" value="<?php $i18n->_e('Save'); ?>" /></td></tr>
             </table>
         </form>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

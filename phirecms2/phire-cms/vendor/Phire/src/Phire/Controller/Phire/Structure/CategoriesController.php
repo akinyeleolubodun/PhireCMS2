@@ -52,7 +52,7 @@ class CategoriesController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/categories.phtml', array(
+        $this->prepareView('categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -71,7 +71,7 @@ class CategoriesController extends AbstractController
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/categories.phtml', array(
+        $this->prepareView('categories.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -127,7 +127,7 @@ class CategoriesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/categories.phtml', array(
+            $this->prepareView('categories.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -244,7 +244,7 @@ class CategoriesController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

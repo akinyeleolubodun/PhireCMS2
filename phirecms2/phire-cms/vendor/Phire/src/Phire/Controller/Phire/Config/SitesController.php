@@ -52,7 +52,7 @@ class SitesController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/sites.phtml', array(
+        $this->prepareView('sites.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -72,7 +72,7 @@ class SitesController extends AbstractController
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/sites.phtml', array(
+        $this->prepareView('sites.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -127,7 +127,7 @@ class SitesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/sites.phtml', array(
+            $this->prepareView('sites.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -193,7 +193,7 @@ class SitesController extends AbstractController
      */
     public function migrate()
     {
-        $this->prepareView($this->viewPath . '/sites.phtml', array(
+        $this->prepareView('sites.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -249,7 +249,7 @@ class SitesController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

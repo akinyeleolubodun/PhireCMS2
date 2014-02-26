@@ -29,6 +29,10 @@ class AbstractController extends \Pop\Mvc\Controller
      */
     public function prepareView($template = null, array $data = array())
     {
+        if (null !== $template) {
+            $template = $this->getCustomView($template);
+        }
+
         $sess = \Pop\Web\Session::getInstance();
         $config = \Phire\Table\Config::getSystemConfig();
         $i18n = \Phire\Table\Config::getI18n();
@@ -167,6 +171,42 @@ class AbstractController extends \Pop\Mvc\Controller
                    ->set('error_message', $config->error_message)
                    ->set('datetime_format', $config->datetime_format)
                    ->set('incontent_editing', $config->incontent_editing);
+    }
+
+    /**
+     * Get custom view
+     *
+     * @param  string $view
+     * @return string
+     */
+    public function getCustomView($view)
+    {
+        $viewTemplate = $this->viewPath . '/' . $view;
+
+        if ($this->hasCustomView($view)) {
+            $path = substr($this->viewPath, (strpos($this->viewPath, '/view/phire') + 11));
+            $viewTemplate = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view;
+        }
+
+        return $viewTemplate;
+    }
+
+    /**
+     * Check if custom view exists
+     *
+     * @param  string $view
+     * @return boolean
+     */
+    public function hasCustomView($view)
+    {
+        $result = false;
+
+        if (strpos($this->viewPath, '/view/phire') !== false) {
+            $path = substr($this->viewPath, (strpos($this->viewPath, '/view/phire') + 11));
+            $result = (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view));
+        }
+
+        return $result;
     }
 
 }

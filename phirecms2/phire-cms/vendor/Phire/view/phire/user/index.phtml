@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
 <?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'export' . (isset($typeId) ? '_' . $typeId : null)))): ?>
         <a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>"><?php $i18n->_e('Export'); ?></a>
@@ -22,4 +22,4 @@ elseif (isset($types) && isset($types[0])): ?>
 <?php else: ?>
         <p style="clear: left; padding: 15px 0 0 0;"><?php $i18n->_e('There are currently no users.'); ?><?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add')): ?> <?php $i18n->_e('You can add %1a new user here%2 or add %3a new user type here%4.', array('<a href="' . BASE_PATH . APP_URI . '/users/add' . ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null) . '">', '</a>', '<a href="' . BASE_PATH . APP_URI . '/users/types/add">', '</a>')); ?><?php endif; ?></p>
 <?php endif; ?>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

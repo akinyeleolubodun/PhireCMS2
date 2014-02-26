@@ -52,7 +52,7 @@ class SessionsController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/sessions.phtml', array(
+        $this->prepareView('sessions.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -88,7 +88,7 @@ class SessionsController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
 <?php if (isset($error)): ?>
         <h4 class="error"><?php echo $error; ?></h4>
@@ -36,4 +36,4 @@ foreach ($modules as $module):
         <p><?php $i18n->_e('There are currently no modules installed.'); ?></p>
 <?php endif; ?>
 <?php endif; ?>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

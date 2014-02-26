@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
 <?php if (isset($table)): ?>
         <form id="content-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="<?php $i18n->_e('Search'); ?>" id="submit" class="search-btn" name="submit" /> <?php echo $sitesSearch; ?> <input type="text" name="search_title" id="search-title" size="20" value="<?php echo $searchTitle; ?>" /></div></form>
@@ -35,4 +35,4 @@ elseif (isset($types) && isset($types[0])): ?>
 <?php endif; ?>
         <p style="clear: left; padding: 15px 0 0 0;"><?php $i18n->_e('There is currently no content.'); ?><?php if ($acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'add')): ?> <?php $i18n->_e('You can add new content %1here%2 or add a new content type %3here%4.', array('<a href="' . BASE_PATH . APP_URI . '/content/add' . ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null) . '">', '</a>', '<a href="' . BASE_PATH . APP_URI . '/content/types/add">', '</a>')); ?><?php endif; ?></p>
 <?php endif; ?>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

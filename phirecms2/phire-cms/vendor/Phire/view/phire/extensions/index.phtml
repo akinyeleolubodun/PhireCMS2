@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
         <table class="data-table" cellpadding="0" cellspacing="0" border="0" style="border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 1px #ccc;">
             <tr><th>&nbsp;</th></tr>
@@ -9,4 +9,4 @@
             <tr><td><a href="<?php echo BASE_PATH . APP_URI; ?>/extensions/modules"><?php $i18n->_e('Modules'); ?></a></td></tr>
 <?php endif; ?>
         </table>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

@@ -52,7 +52,7 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/index.phtml', array(
+        $this->prepareView('index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -84,7 +84,7 @@ class IndexController extends AbstractController
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/add.phtml', array(
+        $this->prepareView('add.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -192,7 +192,7 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/edit.phtml', array(
+            $this->prepareView('edit.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -269,7 +269,7 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/type.phtml', array(
+            $this->prepareView('type.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -332,7 +332,7 @@ class IndexController extends AbstractController
                 $typeId = (null !== $this->request->getQuery('type_id')) ? '/index/' . $this->request->getQuery('type_id') : null;
                 Response::redirect($this->request->getBasePath() . $typeId);
             } else {
-                $this->prepareView($this->viewPath . '/logins.phtml', array(
+                $this->prepareView('logins.phtml', array(
                     'assets'   => $this->project->getAssets(),
                     'acl'      => $this->project->getService('acl'),
                     'phireNav' => $this->project->getService('phireNav')
@@ -403,7 +403,7 @@ class IndexController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

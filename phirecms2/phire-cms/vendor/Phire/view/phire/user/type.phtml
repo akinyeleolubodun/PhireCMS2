@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../header.phtml'; ?>
+<?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/index<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>"><?php $i18n->_e('Back'); ?></a>
@@ -8,4 +8,4 @@ if (isset($form)):
         echo '        <h4 class="error">' . $error . '</h4>' . PHP_EOL;
     echo $form;
 endif; ?>
-<?php include __DIR__ . '/../footer.phtml'; ?>
+<?php include $phireFooter; ?>

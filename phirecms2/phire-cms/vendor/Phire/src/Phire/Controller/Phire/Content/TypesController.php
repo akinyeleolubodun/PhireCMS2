@@ -52,7 +52,7 @@ class TypesController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/types.phtml', array(
+        $this->prepareView('types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -73,7 +73,7 @@ class TypesController extends AbstractController
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/types.phtml', array(
+        $this->prepareView('types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -132,7 +132,7 @@ class TypesController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/types.phtml', array(
+            $this->prepareView('types.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -217,7 +217,7 @@ class TypesController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/types.phtml', array(
+        $this->prepareView('types.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

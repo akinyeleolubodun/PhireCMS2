@@ -52,7 +52,7 @@ class FieldsController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/fields.phtml', array(
+        $this->prepareView('fields.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -72,7 +72,7 @@ class FieldsController extends AbstractController
      */
     public function add()
     {
-        $this->prepareView($this->viewPath . '/fields.phtml', array(
+        $this->prepareView('fields.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -129,7 +129,7 @@ class FieldsController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/fields.phtml', array(
+            $this->prepareView('fields.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -265,7 +265,7 @@ class FieldsController extends AbstractController
     public function browser()
     {
         if ((null !== $this->request->getPath(1) && (null !== $this->request->getQuery('editor')))) {
-            $this->prepareView($this->viewPath . '/browser.phtml', array(
+            $this->prepareView('browser.phtml', array(
                 'editor' => $this->request->getQuery('editor')
             ));
 
@@ -315,7 +315,7 @@ class FieldsController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')

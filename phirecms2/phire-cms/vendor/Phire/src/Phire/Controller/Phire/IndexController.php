@@ -90,12 +90,7 @@ class IndexController extends AbstractController
         $content = new Model\Content();
         $config = new Model\Config();
 
-        // Allow for the dashboard view to be overridden
-        $view = (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/index.phtml')) ?
-            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/index.phtml' :
-            $this->viewPath . '/index.phtml';
-
-        $this->prepareView($view, array(
+        $this->prepareView('index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -139,7 +134,7 @@ class IndexController extends AbstractController
             Response::redirect(BASE_PATH . '/');
         // Else, render the form
         } else {
-            $this->prepareView($this->viewPath . '/login.phtml', array(
+            $this->prepareView('login.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -219,7 +214,7 @@ class IndexController extends AbstractController
             Response::redirect($this->request->getBasePath());
         // Else render the registration form
         } else {
-            $this->prepareView($this->viewPath . '/register.phtml', array(
+            $this->prepareView('register.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -281,7 +276,7 @@ class IndexController extends AbstractController
      */
     public function profile($redirect = null)
     {
-        $this->prepareView($this->viewPath . '/profile.phtml', array(
+        $this->prepareView('profile.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -347,7 +342,7 @@ class IndexController extends AbstractController
      */
     public function unsubscribe($redirect = null)
     {
-        $this->prepareView($this->viewPath . '/unsubscribe.phtml', array(
+        $this->prepareView('unsubscribe.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -378,7 +373,7 @@ class IndexController extends AbstractController
                 if (null !== $redirect) {
                     Response::redirect($redirect);
                 } else {
-                    $this->prepareView($this->viewPath . '/unsubscribe.phtml', array(
+                    $this->prepareView('unsubscribe.phtml', array(
                         'assets'   => $this->project->getAssets()
                     ));
                     $this->view->set('title', $this->view->i18n->__('Unsubscribe'));
@@ -408,7 +403,7 @@ class IndexController extends AbstractController
      */
     public function forgot($redirect = null)
     {
-        $this->prepareView($this->viewPath . '/forgot.phtml', array(
+        $this->prepareView('forgot.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),
@@ -465,7 +460,7 @@ class IndexController extends AbstractController
     {
         // If the required user ID and hash is submitted
         if ((null !== $this->request->getPath(1)) && (null !== $this->request->getPath(2))) {
-            $this->prepareView($this->viewPath . '/verify.phtml', array(
+            $this->prepareView('verify.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav'),
@@ -535,7 +530,7 @@ class IndexController extends AbstractController
      */
     public function error()
     {
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav'),

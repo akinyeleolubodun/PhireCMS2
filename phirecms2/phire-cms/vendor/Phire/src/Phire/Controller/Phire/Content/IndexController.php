@@ -52,7 +52,7 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView($this->viewPath . '/index.phtml', array(
+        $this->prepareView('index.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
@@ -89,7 +89,7 @@ class IndexController extends AbstractController
         if (count(Table\ContentTypes::findAll()->rows) == 0) {
             Response::redirect($this->request->getBasePath() . '/types/add?redirect=1');
         } else {
-            $this->prepareView($this->viewPath . '/add.phtml', array(
+            $this->prepareView('add.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -197,7 +197,7 @@ class IndexController extends AbstractController
         if (null === $this->request->getPath(1)) {
             Response::redirect($this->request->getBasePath());
         } else {
-            $this->prepareView($this->viewPath . '/edit.phtml', array(
+            $this->prepareView('edit.phtml', array(
                 'assets'   => $this->project->getAssets(),
                 'acl'      => $this->project->getService('acl'),
                 'phireNav' => $this->project->getService('phireNav')
@@ -316,7 +316,7 @@ class IndexController extends AbstractController
 
             // If content type is valid
             if (isset($type->id)) {
-                $this->prepareView($this->viewPath . '/batch.phtml', array(
+                $this->prepareView('batch.phtml', array(
                     'assets'   => $this->project->getAssets(),
                     'acl'      => $this->project->getService('acl'),
                     'phireNav' => $this->project->getService('phireNav'),
@@ -407,7 +407,7 @@ class IndexController extends AbstractController
     {
         $code = (null !== $msg) ? 200 : 404;
 
-        $this->prepareView($this->viewPath . '/error.phtml', array(
+        $this->prepareView('error.phtml', array(
             'assets'   => $this->project->getAssets(),
             'acl'      => $this->project->getService('acl'),
             'phireNav' => $this->project->getService('phireNav')
