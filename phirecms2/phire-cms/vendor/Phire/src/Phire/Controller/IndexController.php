@@ -140,7 +140,7 @@ class IndexController extends AbstractController
                 }
                 $date = $this->isDate($uri);
                 if (null !== $date) {
-                    $content->getByDate($date);
+                    $content->getByDate($date, $this->request->getQuery('page'));
                     if (isset($content->id) && ($content->allowed)) {
                         $template = $this->getTemplate($content->template, 'index');
                         $this->view->setTemplate($template);
@@ -148,7 +148,7 @@ class IndexController extends AbstractController
                                    ->set('breadcrumb_title', strip_tags($content->getBreadcrumb()));
                         $this->view->merge($content->getData());
                         $this->send();
-                    } else if (isset($content->results[0])) {
+                    } else if (isset($content->items[0])) {
                         $content->set('title', $date['match']);
                         $template = $this->getTemplate($content->template, 'date');
                         $this->view->setTemplate($template);
@@ -243,7 +243,7 @@ class IndexController extends AbstractController
                        ->set('title', 'Search');
 
             $content = new Model\Content();
-            $content->search($this->request);
+            $content->search($this->request, $this->request->getQuery('page'));
             $this->view->set('phire', new Model\Phire());
 
             if (count($content->keys) == 0) {
@@ -256,15 +256,15 @@ class IndexController extends AbstractController
             if (isset($tmpl->id)) {
                 $template = $this->getTemplate($tmpl->id, 'search');
 
-                foreach ($contentData['results'] as $key => $result) {
-                    $contentData['results'][$key]['published'] = date($this->view->datetime_format, strtotime($result['published']));
-                    foreach ($result as $k => $v) {
+                foreach ($contentData['items'] as $key => $item) {
+                    $contentData['items'][$key]['published'] = date($this->view->datetime_format, strtotime($item['published']));
+                    foreach ($item as $k => $v) {
                         $matches = array();
                         preg_match_all('/\[\{' . $k . '_\d+\}\]/', $template, $matches);
                         if (isset($matches[0]) && isset($matches[0][0])) {
                             $count = substr($matches[0][0], (strpos($matches[0][0], '_') + 1));
                             $count = substr($count, 0, strpos($count, '}]'));
-                            $contentData['results'][$key][$k . '_' . $count] = substr(strip_tags($result[$k]), 0, $count);
+                            $contentData['items'][$key][$k . '_' . $count] = substr(strip_tags($item[$k]), 0, $count);
                         }
                     }
                 }

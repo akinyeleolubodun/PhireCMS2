@@ -97,19 +97,28 @@ class Phire extends AbstractModel
     public function getContentByDate($from = null, $to = null, $limit = 5)
     {
         $site = Table\Sites::getSite();
+
+        // If from is just a year
+        if ((null !== $to) && is_numeric($from) && (strlen($from) == 4)) {
+            $from .= '-12-31 23:59:59';
+        }
+
         $from = (null === $from) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($from));
 
         if (null !== $to) {
+            if (is_numeric($to) && (strlen($to) == 4)) {
+                $to .= '-01-01 00:00:00';
+            }
             $to = date('Y-m-d H:i:s', strtotime($to));
         }
 
         $sql = Table\Content::getSql();
         $sql->select()
             ->where()->equalTo('site_id', ':site_id')
-                     ->isNotNull('status')
+                     ->equalTo('status', ':status')
                      ->lessThanOrEqualTo('published', ':published1');
 
-        $params = array('site_id' => $site->id, 'published' => array($from));
+        $params = array('site_id' => $site->id, 'status' => 2, 'published' => array($from));
 
         if (null !== $to) {
             $sql->select()

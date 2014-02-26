@@ -4,10 +4,10 @@
     <div id="content">
         <div id="content-area">
             <h1>Category <?php echo $separator . ' ' . $title; ?></h1>
+<?php if (count($items) > 0): ?>
 <?php if (isset($page_links) && (null !== $page_links)): ?>
             <div class="page-links"><?php echo $page_links; ?></div>
 <?php endif; ?>
-<?php if (count($items) > 0): ?>
 <?php foreach ($items as $item): ?>
             <div class="list-div"><a href="<?php echo $base_path . '/category' . $item->category_uri . '">' . $item->category_title . '</a> ' . $separator . ' <a href="' . $base_path . $item->uri . '">' . $item->title; ?></a></div>
 <?php endforeach; ?>

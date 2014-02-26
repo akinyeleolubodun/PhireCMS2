@@ -4,14 +4,20 @@
     <div id="content">
         <div id="content-area">
             <h1><?php echo $title; ?></h1>
-<?php if (count($results) > 0): ?>
-<?php foreach ($results as $result): ?>
+<?php if (count($items) > 0): ?>
+<?php if (isset($page_links) && (null !== $page_links)): ?>
+            <div class="page-links"><?php echo $page_links; ?></div>
+<?php endif; ?>
+<?php foreach ($items as $item): ?>
             <div class="list-div">
-                <span class="date"><?php echo date($datetime_format, strtotime($result->published)); ?></span>
-                <a href="<?php echo $base_path . $result->uri . '">' . $result->title; ?></a>
-                <p><?php echo substr(strip_tags($result->content), 0, 200) . '...'; ?></p>
+                <span class="date"><?php echo date($datetime_format, strtotime($item->published)); ?></span>
+                <a href="<?php echo $base_path . $item->uri . '">' . $item->title; ?></a>
+                <p><?php echo substr(strip_tags($item->content), 0, 200) . '...'; ?></p>
             </div>
 <?php endforeach; ?>
+<?php if (isset($page_links) && (null !== $page_links)): ?>
+            <div class="page-links"><?php echo $page_links; ?></div>
+<?php endif; ?>
 <?php else: ?>
             <p>No search results found. Please refine your search.</p>
 <?php endif; ?>

@@ -497,28 +497,44 @@ class Content extends AbstractModel
      * Get content by date method
      *
      * @param  array   $date
+     * @param  string  $page
      * @return void
      */
-    public function getByDate($date)
+    public function getByDate($date, $page = null)
     {
         $this->data['date'] = $date['match'];
+
+        $order   = $this->getSortOrder(null, $page);
         $content = Table\Content::findByDate($date);
 
         if (empty($date['uri'])) {
-            $results = $content->rows;
-            foreach ($results as $key => $result) {
-                if (self::isAllowed($result)) {
-                    $fv = FieldValue::getAll($result->id, true);
+            $items = $content->rows;
+            foreach ($items as $key => $item) {
+                if (self::isAllowed($item)) {
+                    $item->title = html_entity_decode($item->title, ENT_QUOTES, 'UTF-8');
+                    $fv = FieldValue::getAll($item->id, true);
                     if (count($fv) > 0) {
                         foreach ($fv as $k => $v) {
-                            $results[$key]->{$k} = $v;
+                            $items[$key]->{$k} = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
                         }
                     }
                 } else {
-                    unset($results[$key]);
+                    unset($items[$key]);
                 }
             }
-            $this->data['results'] = $results;
+
+            $count = count($items);
+
+            if ($count > (int)$order['limit']) {
+                $items = array_slice($items, $order['offset'], $order['limit']);
+                $pg = new \Pop\Paginator\Paginator($items, $this->config->pagination_limit, $this->config->pagination_range, $count);
+                $pg->render(((null !== $page) ? $page : 1), true);
+                $this->data['page_links'] = implode('', $pg->getLinks());
+            } else {
+                $this->data['page_links'] = null;
+            }
+
+            $this->data['items'] = $items;
         } else if (isset($content->id)) {
             $this->data['allowed'] = self::isAllowed($content);
             $contentValues = $content->getValues();
@@ -537,13 +553,16 @@ class Content extends AbstractModel
      * Search for content
      *
      * @param  \Pop\Http\Request $request
+     * @param  string            $page
      * @return void
      */
-    public function search($request)
+    public function search($request, $page = null)
     {
-        $this->data['keys'] = array();
-        $this->data['results'] = array();
+        $this->data['keys']  = array();
+        $this->data['items'] = array();
+
         $track = array();
+        $order = $this->getSortOrder(null, $page);
 
         // Get search keys
         if ($request->isPost()) {
@@ -556,14 +575,14 @@ class Content extends AbstractModel
 
         // Perform search
         if (count($this->data['keys']) > 0) {
-            $results = array();
+            $items = array();
 
             // If just a search by content title
             if (isset($search['title'])) {
                 $sql = Table\Content::getSql();
                 $sql->select()->where()->like('title', ':title');
                 $content = Table\Content::execute($sql->render(true), array('title' => '%' . $search['title'] . '%'));
-                $results = $content->rows;
+                $items = $content->rows;
             }
 
             foreach ($this->data['keys'] as $key) {
@@ -596,7 +615,7 @@ class Content extends AbstractModel
                                 if (!in_array($fv->model_id, $track)) {
                                     $cont = Table\Content::findById($fv->model_id);
                                     if (isset($cont->id)) {
-                                        $results[] = $cont;
+                                        $items[] = $cont;
                                         $track[] = $fv->model_id;
                                     }
                                 }
@@ -606,23 +625,34 @@ class Content extends AbstractModel
                 }
             }
 
-            foreach ($results as $key => $result) {
-                if (self::isAllowed($result)) {
-                    if (isset($result['title'])) {
-                        $result['title'] = html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8');
+            foreach ($items as $key => $item) {
+                if (self::isAllowed($item)) {
+                    if (isset($item['title'])) {
+                        $item['title'] = html_entity_decode($item['title'], ENT_QUOTES, 'UTF-8');
                     }
-                    $fv = FieldValue::getAll($result->id, true);
+                    $fv = FieldValue::getAll($item->id, true);
                     if (count($fv) > 0) {
                         foreach ($fv as $k => $v) {
-                            $results[$key]->{$k} = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
+                            $items[$key]->{$k} = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
                         }
                     }
                 } else {
-                    unset($results[$key]);
+                    unset($items[$key]);
                 }
             }
 
-            $this->data['results'] = $results;
+            $count = count($items);
+
+            if ($count > (int)$order['limit']) {
+                $items = array_slice($items, $order['offset'], $order['limit']);
+                $pg = new \Pop\Paginator\Paginator($items, $this->config->pagination_limit, $this->config->pagination_range, $count);
+                $pg->render(((null !== $page) ? $page : 1), true);
+                $this->data['page_links'] = implode('', $pg->getLinks());
+            } else {
+                $this->data['page_links'] = null;
+            }
+
+            $this->data['items'] = $items;
         }
     }
 

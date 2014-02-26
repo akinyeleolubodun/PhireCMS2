@@ -9,7 +9,7 @@
             <ul>
 <?php for ($y = date('Y'); $y > (date('Y') - 3); $y--): ?>
 <?php
-$archive = $phire->getContentByDate($y . '-12-31 23:59:59', $y . '-01-01 00:00:00', 0);
+$archive = $phire->getContentByDate($y, $y, 0);
 if (count($archive) > 0): ?>
                 <li><a href="<?php echo $base_path . '/' . $y; ?>"><?php echo $y . ' (' . count($archive) . ')'; ?></a></li>
 <?php endif; ?>
