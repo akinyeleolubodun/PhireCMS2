@@ -599,7 +599,7 @@ class Content extends AbstractForm
         $isSystemTmpl = true;
 
         if ((strtolower($tmpl) != 'search') && (stripos($tmpl, 'search.ph') === false) &&
-            (strtolower($tmpl) != 'sidebar') && (stripos($tmpl, 'sidebar.ph') === false) &&
+            (strtolower($tmpl) != 'sidebar') && (stripos($tmpl, 'sidebar.ph') === false) && (stripos($tmpl, 'sidebar-') === false) &&
             (strtolower($tmpl) != 'category') && (stripos($tmpl, 'category.ph') === false) &&
             (strtolower($tmpl) != 'date') && (stripos($tmpl, 'date.ph') === false) &&
             (strtolower($tmpl) != 'error') && (stripos($tmpl, 'error.ph') === false) &&
