@@ -42,17 +42,17 @@ class FieldGroup extends \Phire\Model\AbstractModel
         $options = array(
             'form' => array(
                 'id'      => 'field-group-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/structure/fields/groups/remove',
+                'action'  => BASE_PATH . APP_URI . '/structure/groups/remove',
                 'method'  => 'post',
                 'process' => $removeCheckbox,
                 'submit'  => $submit
             ),
             'table' => array(
                 'headers' => array(
-                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=id">#</a>',
+                    'id'      => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=id">#</a>',
                     'edit'    => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
-                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=name">' . $this->i18n->__('Name') . '</a>',
-                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/fields/groups?sort=order">' . $this->i18n->__('Order') . '</a>',
+                    'name'    => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=name">' . $this->i18n->__('Name') . '</a>',
+                    'order'   => '<a href="' . BASE_PATH . APP_URI . '/structure/groups?sort=order">' . $this->i18n->__('Order') . '</a>',
                     'process' => $removeCheckAll
                 ),
                 'class'       => 'data-table',
@@ -70,7 +70,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
 
             foreach ($groups->rows as $group) {
                 if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'edit')) {
-                    $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/structure/fields/groups/edit/' . $group->id . '">Edit</a>';
+                    $edit = '<a class="edit-link" title="' . $this->i18n->__('Edit') . '" href="' . BASE_PATH . APP_URI . '/structure/groups/edit/' . $group->id . '">Edit</a>';
                 } else {
                     $edit = null;
                 }

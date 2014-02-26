@@ -18,20 +18,15 @@ return array(
                 '/install'  => 'Phire\Controller\Phire\Install\IndexController',
                 '/content'  => array(
                     '/'           => 'Phire\Controller\Phire\Content\IndexController',
-                    '/categories' => 'Phire\Controller\Phire\Content\CategoriesController',
-                    '/navigation' => 'Phire\Controller\Phire\Content\NavigationController',
-                    '/templates'  => 'Phire\Controller\Phire\Content\TemplatesController',
                     '/types'      => 'Phire\Controller\Phire\Content\TypesController'
                 ),
                 '/structure'  => array(
                     '/'           => 'Phire\Controller\Phire\Structure\IndexController',
-                    '/categories' => 'Phire\Controller\Phire\Structure\CategoriesController',
-                    '/navigation' => 'Phire\Controller\Phire\Structure\NavigationController',
+                    '/fields'     => 'Phire\Controller\Phire\Structure\FieldsController',
+                    '/groups'     => 'Phire\Controller\Phire\Structure\GroupsController',
                     '/templates'  => 'Phire\Controller\Phire\Structure\TemplatesController',
-                    '/fields'     => array(
-                        '/'       => 'Phire\Controller\Phire\Structure\FieldsController',
-                        '/groups' => 'Phire\Controller\Phire\Structure\GroupsController',
-                    )
+                    '/categories' => 'Phire\Controller\Phire\Structure\CategoriesController',
+                    '/navigation' => 'Phire\Controller\Phire\Structure\NavigationController'
                 ),
                 '/extensions' => 'Phire\Controller\Phire\Extensions\IndexController',
                 '/users' => array(
@@ -88,16 +83,14 @@ return array(
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Structure\FieldsController',
                             'permission' => 'index'
-                        ),
-                        'children' => array(
-                            array(
-                                'name' => 'Field Groups',
-                                'href' => 'groups',
-                                'acl' => array(
-                                    'resource'   => 'Phire\Controller\Phire\Structure\GroupsController',
-                                    'permission' => 'index'
-                                )
-                            )
+                        )
+                    ),
+                    array(
+                        'name' => 'Field Groups',
+                        'href' => 'groups',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Structure\GroupsController',
+                            'permission' => 'index'
                         )
                     ),
                     array(

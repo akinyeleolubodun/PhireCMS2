@@ -60,7 +60,7 @@ class GroupsController extends AbstractController
 
         $group = new Model\FieldGroup(array('acl' => $this->project->getService('acl')));
         $group->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups'))
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups'))
                    ->set('table', $group->table);
         $this->send();
     }
@@ -78,7 +78,7 @@ class GroupsController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
+        $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Add'));
         $form = new Form\FieldGroup($this->request->getBasePath() . $this->request->getRequestUri(), 'post');
         if ($this->request->isPost()) {
             $form->setFieldValues(
@@ -136,7 +136,7 @@ class GroupsController extends AbstractController
 
             // If group is found and valid
             if (isset($group->id)) {
-                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $group->name);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $group->name);
                 $form = new Form\FieldGroup($this->request->getBasePath() . $this->request->getRequestUri());
 
                 // If form is submitted

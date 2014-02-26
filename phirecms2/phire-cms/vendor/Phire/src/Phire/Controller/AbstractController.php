@@ -29,29 +29,31 @@ class AbstractController extends \Pop\Mvc\Controller
      */
     public function prepareView($template = null, array $data = array())
     {
+        $site   = \Phire\Table\Sites::getSite();
+
         if (null !== $template) {
-            $template = $this->getCustomView($template);
+            $template = $this->getCustomView($template, $site);
         }
 
-        $sess = \Pop\Web\Session::getInstance();
+        $sess   = \Pop\Web\Session::getInstance();
         $config = \Phire\Table\Config::getSystemConfig();
-        $i18n = \Phire\Table\Config::getI18n();
+        $i18n   = \Phire\Table\Config::getI18n();
         $this->live = (bool)$config->live;
         $jsVars = null;
 
         $this->view = View::factory($template, $data);
-        $this->view->set('base_path', BASE_PATH)
+        $this->view->set('base_path', $site->base_path)
                    ->set('content_path', CONTENT_PATH);
 
         // Check for an override Phire theme for the header/footer
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml') &&
-            file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/footer.phtml')) {
-            $this->view->set('phireHeader', $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/header.phtml')
-                       ->set('phireFooter', $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/footer.phtml');
+        if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire/header.phtml') &&
+            file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire/footer.phtml')) {
+            $this->view->set('phireHeader', $site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire/header.phtml')
+                       ->set('phireFooter', $site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire/footer.phtml');
         // Else, just use the default header/footer
         } else {
-            $this->view->set('phireHeader', $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/header.phtml')
-                       ->set('phireFooter', $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . '/vendor/Phire/view/phire/footer.phtml');
+            $this->view->set('phireHeader', $site->document_root . $site->base_path . APP_PATH . '/vendor/Phire/view/phire/header.phtml')
+                       ->set('phireFooter', $site->document_root . $site->base_path . APP_PATH . '/vendor/Phire/view/phire/footer.phtml');
         }
 
         if (isset($this->view->assets)) {
@@ -62,7 +64,7 @@ class AbstractController extends \Pop\Mvc\Controller
             if (isset($this->view->assets)) {
                 if (isset($this->view->acl) && ($this->view->acl->getType()->session_expiration > 0) && ($this->view->acl->getType()->timeout_warning)) {
                     $exp = ($this->view->acl->getType()->session_expiration * 60) - 30;
-                    $uri = BASE_PATH . ((strtolower($this->view->acl->getType()->type) != 'user') ? '/' . strtolower($this->view->acl->getType()->type) : APP_URI);
+                    $uri = $site->base_path . ((strtolower($this->view->acl->getType()->type) != 'user') ? '/' . strtolower($this->view->acl->getType()->type) : APP_URI);
                     $jsVars .= '&_exp=' . $exp . '&_base=' . urlencode($uri);
                 }
             }
@@ -176,16 +178,17 @@ class AbstractController extends \Pop\Mvc\Controller
     /**
      * Get custom view
      *
-     * @param  string $view
+     * @param  string       $view
+     * @param  \ArrayObject $site
      * @return string
      */
-    public function getCustomView($view)
+    public function getCustomView($view, $site)
     {
         $viewTemplate = $this->viewPath . '/' . $view;
 
-        if ($this->hasCustomView($view)) {
+        if ($this->hasCustomView($view, $site)) {
             $path = substr($this->viewPath, (strpos($this->viewPath, '/view/phire') + 11));
-            $viewTemplate = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view;
+            $viewTemplate = $site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view;
         }
 
         return $viewTemplate;
@@ -195,15 +198,16 @@ class AbstractController extends \Pop\Mvc\Controller
      * Check if custom view exists
      *
      * @param  string $view
+     * @param  \ArrayObject $site
      * @return boolean
      */
-    public function hasCustomView($view)
+    public function hasCustomView($view, $site)
     {
         $result = false;
 
         if (strpos($this->viewPath, '/view/phire') !== false) {
             $path = substr($this->viewPath, (strpos($this->viewPath, '/view/phire') + 11));
-            $result = (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view));
+            $result = (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/extensions/themes/phire' . $path . '/' . $view));
         }
 
         return $result;
