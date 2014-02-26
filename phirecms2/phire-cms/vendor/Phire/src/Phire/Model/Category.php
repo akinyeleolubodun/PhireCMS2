@@ -100,7 +100,7 @@ class Category extends AbstractModel
         }
 
         if (isset($catAry[0])) {
-            $table = Html::encode($catAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $table = Html::encode($catAry, $options);
             if (isset($this->data['acl']) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\CategoriesController', 'edit'))) {
                 $tableLines = explode(PHP_EOL, $table);
 
@@ -124,9 +124,10 @@ class Category extends AbstractModel
      * Get category by URI method
      *
      * @param  string  $uri
+     * @param  string  $page
      * @return void
      */
-    public function getByUri($uri)
+    public function getByUri($uri, $page = null)
     {
         $category = Table\Categories::findBy(array('uri' => $uri));
         if (isset($category->id)) {
@@ -135,10 +136,12 @@ class Category extends AbstractModel
 
             // Get content object within the category
             $categoryValues['items'] = array();
+            $order   = $this->getSortOrder('order', $page);
             $content = Table\ContentToCategories::findBy(array('category_id' => $category->id), 'order ASC');
-            $site   = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
-            $siteId = (isset($site->id)) ? $site->id : '0';
+            $site    = Table\Sites::findBy(array('document_root' => $_SERVER['DOCUMENT_ROOT']));
+            $siteId  = (isset($site->id)) ? $site->id : '0';
             $this->data['site_id'] = $siteId;
+            $notAllowedCount = 0;
 
             if (isset($content->rows[0])) {
                 foreach ($content->rows as $cont) {
@@ -164,12 +167,25 @@ class Category extends AbstractModel
 
                         $c = array_merge($c, $fieldValues);
                         $categoryValues['items'][] = new \ArrayObject($c, \ArrayObject::ARRAY_AS_PROPS);
+                    } else {
+                        $notAllowedCount++;
                     }
                 }
             }
 
             foreach ($categoryValues['items'] as $key => $item) {
                 $categoryValues['items'][$key] = new \ArrayObject($this->filterContent((array)$item), \ArrayObject::ARRAY_AS_PROPS);
+            }
+
+            $count = count($categoryValues['items']);
+
+            if ($count > (int)$order['limit']) {
+                $categoryValues['items'] = array_slice($categoryValues['items'], $order['offset'], $order['limit']);
+                $pg = new \Pop\Paginator\Paginator($categoryValues['items'], $this->config->pagination_limit, $this->config->pagination_range, $count);
+                $pg->render(((null !== $page) ? $page : 1), true);
+                $categoryValues['page_links'] = implode('', $pg->getLinks());
+            } else {
+                $categoryValues['page_links'] = null;
             }
 
             $this->data = array_merge($this->data, $categoryValues);

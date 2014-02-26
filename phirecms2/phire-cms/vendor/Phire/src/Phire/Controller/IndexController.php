@@ -189,7 +189,7 @@ class IndexController extends AbstractController
         $this->view->set('category_nav', $nav->getCategoryNav());
 
         $category = new Model\Category();
-        $category->getByUri(substr($this->request->getRequestUri(), 9));
+        $category->getByUri(substr($this->request->getRequestUri(), 9), $this->request->getQuery('page'));
 
         // Set up breadcrumb
         $this->view->set('breadcrumb', $category->getBreadcrumb())

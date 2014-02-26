@@ -155,6 +155,11 @@ class UserRole extends AbstractModel
         ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
           ->orderBy($order['field'], $order['order']);
 
+        if (null !== $order['limit']) {
+            $sql->select()->limit($order['limit'])
+                          ->offset($order['offset']);
+        }
+
         // Execute SQL query
         $roles = Table\UserRoles::execute($sql->render(true));
 
@@ -222,7 +227,7 @@ class UserRole extends AbstractModel
 
                 $rolesAry[] = $rAry;
             }
-            $this->data['table'] = Html::encode($rolesAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($rolesAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\UserRoles::getCount());
         }
     }
 

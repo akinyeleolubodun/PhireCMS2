@@ -984,7 +984,7 @@ tr.table-bottom-row, td.table-bottom-row {
 }
 
 td.table-bottom-row > div.page-links {
-    margin: 0;
+    margin: 0 0 0 2px;
 }
 
 tr.table-bottom-row:hover, td.table-bottom-row:hover {
@@ -1139,7 +1139,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .small-btn {
-    margin: 0 2px 6px 2px;
+    margin: 0 3px 6px 2px;
     padding: 4px 8px 4px 8px;
     display: block;
     float: left;
@@ -1183,7 +1183,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .page-links {
-    margin: 0 0 0 10px;
+    margin: 0 0 6px 2px;
     padding: 0;
     font-size: 0.825em;
     float: left;

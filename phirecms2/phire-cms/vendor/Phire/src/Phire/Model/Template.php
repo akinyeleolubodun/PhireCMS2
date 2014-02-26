@@ -384,7 +384,7 @@ class Template extends AbstractModel
                 }
             }
 
-            $table = Html::encode($tmplAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $table = Html::encode($tmplAry, $options);
 
             if ($this->data['acl']->isAuth('Phire\Controller\Phire\Content\TemplatesController', 'edit')) {
                 $tableLines = explode(PHP_EOL, $table);

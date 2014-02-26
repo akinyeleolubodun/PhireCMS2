@@ -571,7 +571,7 @@ class Field extends \Phire\Model\AbstractModel
     public function getAll($sort = null, $page = null)
     {
         $order = $this->getSortOrder($sort, $page);
-        $fields = Table\Fields::findAll($order['field'] . ' ' . $order['order']);
+        $fields = Table\Fields::findAll($order['field'] . ' ' . $order['order'], null, $order['limit'], $order['offset']);
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\FieldsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_fields[]" id="remove_fields[{i}]" value="[{id}]" />';
@@ -645,7 +645,7 @@ class Field extends \Phire\Model\AbstractModel
         }
 
         if (isset($fieldsAry[0])) {
-            $this->data['table'] = Html::encode($fieldsAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($fieldsAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Fields::getCount());
         }
     }
 

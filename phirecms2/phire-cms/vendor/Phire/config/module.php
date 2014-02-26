@@ -101,18 +101,18 @@ return array(
                         )
                     ),
                     array(
-                        'name' => 'Navigation',
-                        'href' => 'navigation',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Structure\NavigationController',
-                            'permission' => 'index'
-                        )
-                    ),
-                    array(
                         'name' => 'Templates',
                         'href' => 'templates',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Structure\TemplatesController',
+                            'permission' => 'index'
+                        )
+                    ),
+                    array(
+                        'name' => 'Navigation',
+                        'href' => 'navigation',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Structure\NavigationController',
                             'permission' => 'index'
                         )
                     ),

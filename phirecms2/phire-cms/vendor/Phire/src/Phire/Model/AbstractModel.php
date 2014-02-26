@@ -96,10 +96,13 @@ abstract class AbstractModel
      */
     public function getSortOrder($sort = null, $page = null)
     {
-        $sess = Session::getInstance();
+        $sess  = Session::getInstance();
+        $limit = (int)$this->config->pagination_limit;
         $order = array(
-            'field' => 'id',
-            'order' => 'ASC'
+            'field'  => 'id',
+            'order'  => 'ASC',
+            'limit'  => (($limit > 0) ? $limit : null),
+            'offset' => 0
         );
 
         if (null !== $sort) {
@@ -121,9 +124,13 @@ abstract class AbstractModel
             }
         }
 
+        if ((null !== $page) && ((int)$page > 1)) {
+            $order['offset'] = ($page * $limit) - $limit;
+        }
+
         $sess->lastSortField = $order['field'];
         $sess->lastSortOrder = $order['order'];
-        $sess->lastPage = $page;
+        $sess->lastPage      = $page;
 
         return $order;
     }

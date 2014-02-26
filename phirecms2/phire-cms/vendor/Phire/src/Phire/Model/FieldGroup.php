@@ -20,7 +20,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
     public function getAll($sort = null, $page = null)
     {
         $order = $this->getSortOrder($sort, $page);
-        $groups = Table\FieldGroups::findAll($order['field'] . ' ' . $order['order']);
+        $groups = Table\FieldGroups::findAll($order['field'] . ' ' . $order['order'], null, $order['limit'], $order['offset']);
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\Structure\GroupsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_groups[]" id="remove_groups[{i}]" value="[{id}]" />';
@@ -87,7 +87,7 @@ class FieldGroup extends \Phire\Model\AbstractModel
 
                 $groupsAry[] = $gAry;
             }
-            $this->data['table'] = Html::encode($groupsAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($groupsAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\FieldGroups::getCount());
         }
     }
 

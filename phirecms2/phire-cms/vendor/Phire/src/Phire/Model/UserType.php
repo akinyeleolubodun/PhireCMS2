@@ -26,6 +26,11 @@ class UserType extends AbstractModel
         $sql->select(array(DB_PREFIX . 'user_types.id', DB_PREFIX . 'user_types.type'))
             ->orderBy($order['field'], $order['order']);
 
+        if (null !== $order['limit']) {
+            $sql->select()->limit($order['limit'])
+                          ->offset($order['offset']);
+        }
+
         $types = Table\UserTypes::execute($sql->render(true));
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\TypesController', 'remove')) {
@@ -93,7 +98,7 @@ class UserType extends AbstractModel
 
                 $typeRows[] = $tAry;
             }
-            $this->data['table'] = Html::encode($typeRows, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($typeRows, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\UserTypes::getCount());
         }
     }
 

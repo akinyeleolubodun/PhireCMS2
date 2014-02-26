@@ -146,7 +146,7 @@ class Content extends AbstractModel
             DB_PREFIX . 'content.status'
         ))->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
-          ->orderBy('created', 'DESC')
+          ->orderBy(DB_PREFIX . 'content.created', 'DESC')
           ->limit((int)$limit);
 
         $content = Table\Content::execute($sql->render(true));
@@ -198,12 +198,6 @@ class Content extends AbstractModel
         $sql = Table\Content::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'content.id' : $order['field'];
 
-        $offset = 0;
-
-        if (null !== $page) {
-            $offset = ($page * $this->config->pagination_limit) - $this->config->pagination_limit + 1;
-        }
-
         $sql->select(array(
             DB_PREFIX . 'content.id',
             DB_PREFIX . 'content.parent_id',
@@ -222,9 +216,12 @@ class Content extends AbstractModel
             DB_PREFIX . 'content.status'
         ))->join(DB_PREFIX . 'content_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'users', array('created_by', 'id'), 'LEFT JOIN')
-          ->orderBy($order['field'], $order['order'])
-          ->limit($this->config->pagination_limit)
-          ->offset($offset);
+          ->orderBy($order['field'], $order['order']);
+
+        if (null !== $order['limit']) {
+            $sql->select()->limit($order['limit'])
+                          ->offset($order['offset']);
+        }
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'content.type_id', ':type_id');
         $params = array('type_id' => $typeId);
@@ -1180,7 +1177,8 @@ class Content extends AbstractModel
             foreach ($cats->rows as $cat) {
                 $contentToCategory = new Table\ContentToCategories(array(
                     'content_id'  => $content->id,
-                    'category_id' => $cat->category_id
+                    'category_id' => $cat->category_id,
+                    'order'       => 0
                 ));
                 $contentToCategory->save();
             }
@@ -1208,7 +1206,6 @@ class Content extends AbstractModel
         if ($count > $this->config->pagination_limit) {
             $this->data['page'] = (($count - ($count % $this->config->pagination_limit)) / $this->config->pagination_limit) + 1;
         }
-
     }
 
     /**

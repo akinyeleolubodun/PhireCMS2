@@ -24,27 +24,27 @@ class UserSession extends AbstractModel
 
         // Create SQL object to get session data
         $sql = Table\UserSessions::getSql();
-        $sqlString = 'SELECT ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.id') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_types.type') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'users.username') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.ip') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.user_id') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.ua') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.start') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.last') . ' AS ' . $sql->quoteId('last_date') . ', ' .
-            $sql->quoteId(DB_PREFIX . 'users.type_id') . ' FROM ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions') . ' LEFT JOIN ' .
-            $sql->quoteId(DB_PREFIX . 'users') . ' ON ' .
-            $sql->quoteId(DB_PREFIX . 'user_sessions.user_id') . ' = ' .
-            $sql->quoteId(DB_PREFIX . 'users.id') . ' LEFT JOIN ' .
-            $sql->quoteId(DB_PREFIX . 'user_types') . ' ON ' .
-            $sql->quoteId(DB_PREFIX . 'users.type_id') . ' = ' .
-            $sql->quoteId(DB_PREFIX . 'user_types.id') . ' ORDER BY ' .
-            $sql->quoteId($order['field']) . ' ' . $order['order'];
+        $sql->select(array(
+            0 => DB_PREFIX . 'user_sessions.id',
+            1 => DB_PREFIX . 'user_types.type',
+            2 => DB_PREFIX . 'users.username',
+            3 => DB_PREFIX . 'user_sessions.ip',
+            4 => DB_PREFIX . 'user_sessions.user_id',
+            5 => DB_PREFIX . 'user_sessions.ua',
+            6 => DB_PREFIX . 'user_sessions.start',
+            'last_date' => DB_PREFIX . 'user_sessions.last',
+            7 => DB_PREFIX . 'users.type_id'
+        ))->join(DB_PREFIX . 'users', array('user_id', 'id'), 'LEFT JOIN')
+          ->join(DB_PREFIX . 'user_types', array(DB_PREFIX . 'users.type_id', 'id'), 'LEFT JOIN')
+          ->orderBy($order['field'], $order['order']);
+
+        if (null !== $order['limit']) {
+            $sql->select()->limit($order['limit'])
+                          ->offset($order['offset']);
+        }
 
         // Execute SQL query
-        $sessions = Table\UserSessions::execute($sqlString);
+        $sessions = Table\UserSessions::execute($sql->render(true));
 
         if ($this->data['acl']->isAuth('Phire\Controller\Phire\User\SessionsController', 'remove')) {
             $removeCheckbox = '<input type="checkbox" name="remove_sessions[]" id="remove_sessions[{i}]" value="[{id}]" />';
@@ -109,7 +109,7 @@ class UserSession extends AbstractModel
         }
 
         if (isset($sessAry[0])) {
-            $this->data['table'] = Html::encode($sessAry, $options, $this->config->pagination_limit, $this->config->pagination_range);
+            $this->data['table'] = Html::encode($sessAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\UserSessions::getCount());
         }
     }
 
