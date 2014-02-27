@@ -134,7 +134,7 @@ class AbstractController extends \Pop\Mvc\Controller
                     foreach ($tree as $key => $value) {
                         if (isset($value['name'])) {
                             $tree[$key]['name'] = $i18n->__($value['name']);
-                            if (count($value['children']) > 0) {
+                            if (isset($value['children']) && (count($value['children']) > 0)) {
                                 foreach ($value['children'] as $k => $v) {
                                     if (($v['name'] == 'Fields') && isset($tree[$key]['children'][$k]['children'][0]['name'])) {
                                         $tree[$key]['children'][$k]['children'][0]['name'] = $i18n->__($tree[$key]['children'][$k]['children'][0]['name']);

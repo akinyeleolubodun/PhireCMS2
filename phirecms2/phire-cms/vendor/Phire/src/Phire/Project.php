@@ -254,6 +254,9 @@ class Project extends P
             // Set up in-content editing on 'dispatch.send'
             $this->attachEvent('dispatch.send', 'Phire\Project::editor');
 
+            // Set up routing error check on 'route.error'
+            $this->attachEvent('route.error', 'Phire\Project::error');
+
             // If SSL is required for this user type, and not SSL,
             // redirect to SSL, else, just run
             if (($this->getService('acl')->getType()->force_ssl) && !($_SERVER['SERVER_PORT'] == '443')) {
@@ -262,6 +265,24 @@ class Project extends P
                 parent::run();
             }
         }
+    }
+
+    /**
+     * Event-based route error check
+     *
+     * @param  \Pop\Mvc\Router $router
+     * @return void
+     */
+    public static function error($router)
+    {
+        $view = \Pop\Mvc\View::factory(__DIR__ . '/../../view/error.phtml', array(
+                'title' => 'Phire CMS 2 &gt; Routing Error',
+                'msg'   => '    <p>There was no controller assigned for this route.</p>'
+            ));
+
+        $response = new \Pop\Http\Response(404);
+        $response->setBody($view->render(true));
+        $response->send();
     }
 
     /**

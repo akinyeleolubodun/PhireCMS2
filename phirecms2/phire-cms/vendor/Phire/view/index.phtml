@@ -3,12 +3,15 @@
 <html>
 
 <head>
-    <title><?php echo $site_title . ' ' . $separator . ' ' . $title; ?></title>
+    <title><?php echo (isset($title) ? $title : null); ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 </head>
 <body>
-    <h1><?php echo $title; ?></h1>
+    <h1><?php echo (isset($title) ? $title : null); ?></h1>
+<?php if (isset($msg)): ?>
+<?php echo $msg; ?>
+<?php endif; ?>
 </body>
 </html>
