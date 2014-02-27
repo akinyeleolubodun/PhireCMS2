@@ -15,6 +15,28 @@ class Extension extends AbstractModel
 {
 
     /**
+     * Get themes method
+     *
+     * @return array
+     */
+    public function getAllThemes()
+    {
+        $themes = Table\Extensions::findAll('id ASC', array('type' => 0));
+        return $themes->rows;
+    }
+
+    /**
+     * Get modules method
+     *
+     * @return array
+     */
+    public function getAllModules()
+    {
+        $modules = Table\Extensions::findAll('id ASC', array('type' => 1));
+        return $modules->rows;
+    }
+
+    /**
      * Get all themes method
      *
      * @return void

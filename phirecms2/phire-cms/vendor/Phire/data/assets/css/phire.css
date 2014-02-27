@@ -447,8 +447,8 @@ input[type=submit]:focus, button:focus {
     font-size: 0.9em;
 }
 
-#content-form, #content-type-form, #category-form, #template-form, #user-form,
-#user-select-form, #user-type-form, #user-role-form, #batch-form, #field-form,
+#content-form, #content-select-form, #content-type-form, #category-form, #template-form,
+#user-form, #user-select-form, #user-type-form, #user-role-form, #batch-form, #field-form,
 #field-group-form, #navigation-form, #site-form {
     clear: both;
     display: block;

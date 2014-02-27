@@ -203,8 +203,8 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $config->media_max_filesize, $config->media_allowed_types
                         );
                         chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
-                        if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                            \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
+                        if (($_FILES) && (preg_match(\Phire\Model\Media::getImageRegex(), $fileName))) {
+                            \Phire\Model\Media::process($fileName, $config, $docRoot . $basePath);
                         }
                     }
 
@@ -400,7 +400,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $fValue = unserialize($fv->value);
                                 if (isset($fValue[$num])) {
                                     if ($_FILES) {
-                                        \Phire\Model\Content::removeMedia($fValue[$num], $docRoot . $basePath);
+                                        \Phire\Model\Media::remove($fValue[$num], $docRoot . $basePath);
                                     }
                                 }
                             }
@@ -411,8 +411,8 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $config->media_max_filesize, $config->media_allowed_types
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
-                            if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
+                            if (($_FILES) && (preg_match(\Phire\Model\Media::getImageRegex(), $fileName))) {
+                                \Phire\Model\Media::process($fileName, $config, $docRoot . $basePath);
                             }
                         } else {
                             $num = substr($key, (strrpos($key, '_') + 1)) - 1;
@@ -440,8 +440,8 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $config->media_max_filesize, $config->media_allowed_types
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
-                            if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
+                            if (($_FILES) && (preg_match(\Phire\Model\Media::getImageRegex(), $fileName))) {
+                                \Phire\Model\Media::process($fileName, $config, $docRoot . $basePath);
                             }
                         }
 
@@ -452,7 +452,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             // If file field value exists, update
                             if (isset($field->field_id)) {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia(unserialize($field->value), $docRoot . $basePath);
+                                    \Phire\Model\Media::remove(unserialize($field->value), $docRoot . $basePath);
                                 }
 
                                 $field->value = serialize($fileName);
@@ -493,11 +493,11 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $fValue = unserialize($fv->value);
                             if (is_array($fValue) && isset($fValue[$num])) {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia($fValue[$num], $docRoot . $basePath);
+                                    \Phire\Model\Media::remove($fValue[$num], $docRoot . $basePath);
                                 }
                             } else {
                                 if ($_FILES) {
-                                    \Phire\Model\Content::removeMedia($fValue, $docRoot . $basePath);
+                                    \Phire\Model\Media::remove($fValue, $docRoot . $basePath);
                                 }
                             }
                         }
@@ -518,7 +518,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                 $id = substr($key, (strrpos($key, '_') + 1));
                 if (isset($value[0])) {
                     if ($_FILES) {
-                        \Phire\Model\Content::removeMedia($value[0], $docRoot . $basePath);
+                        \Phire\Model\Media::remove($value[0], $docRoot . $basePath);
                     }
                 }
                 $fv = Table\FieldValues::findById(array($id, $modelId));
@@ -576,8 +576,8 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $config->media_max_filesize, $config->media_allowed_types
                             );
                             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
-                            if (($_FILES) && (preg_match(\Phire\Model\Content::getImageRegex(), $fileName))) {
-                                \Phire\Model\Content::processMedia($fileName, $config, $docRoot . $basePath);
+                            if (($_FILES) && (preg_match(\Phire\Model\Media::getImageRegex(), $fileName))) {
+                                \Phire\Model\Media::process($fileName, $config, $docRoot . $basePath);
                             }
                         }
                         if (!isset($valueAry[$id])) {
@@ -721,24 +721,24 @@ class FieldValue extends \Phire\Model\AbstractModel
                             if (is_array($file)) {
                                 foreach ($file as $f) {
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $f)) {
-                                        \Phire\Model\Content::removeMedia($f);
+                                        \Phire\Model\Media::remove($f);
                                     } else {
                                         $sites = Table\Sites::findAll();
                                         foreach ($sites->rows as $site) {
                                             if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $f)) {
-                                                \Phire\Model\Content::removeMedia($f, $site->document_root . $site->base_path);
+                                                \Phire\Model\Media::remove($f, $site->document_root . $site->base_path);
                                             }
                                         }
                                     }
                                 }
                             } else {
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $file)) {
-                                    \Phire\Model\Content::removeMedia($file);
+                                    \Phire\Model\Media::remove($file);
                                 } else {
                                     $sites = Table\Sites::findAll();
                                     foreach ($sites->rows as $site) {
                                         if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $file)) {
-                                            \Phire\Model\Content::removeMedia($file, $site->document_root . $site->base_path);
+                                            \Phire\Model\Media::remove($file, $site->document_root . $site->base_path);
                                         }
                                     }
                                 }

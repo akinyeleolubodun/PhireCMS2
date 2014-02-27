@@ -165,7 +165,7 @@ class ContentType extends AbstractModel
                             $site = Table\Sites::getSite((int)$c->site_id);
                             if (file_exists($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $c->uri) &&
                                 !is_dir($site->document_root . $site->base_path . CONTENT_PATH . '/media/' . $c->uri)) {
-                                \Phire\Model\Content::removeMedia($c->uri, $site->document_root . $site->base_path);
+                                \Phire\Model\Media::remove($c->uri, $site->document_root . $site->base_path);
                             }
                         }
                     }

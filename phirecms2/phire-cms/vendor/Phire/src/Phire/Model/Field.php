@@ -161,8 +161,8 @@ class Field extends \Phire\Model\AbstractModel
                             $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
                             $site = Table\Sites::getSite($siteId);
 
-                            $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                            $fld['label'] .= ' <em>(' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
+                            $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
+                            $fld['label'] .= '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
                                 $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                 $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                 $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
@@ -365,8 +365,8 @@ class Field extends \Phire\Model\AbstractModel
                                         $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
                                         $site = Table\Sites::getSite($siteId);
 
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<em>' . $i18n->__('Replace?') .'</em><br /><a href="http://' .
+                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
+                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') .'</em><br /><a href="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
@@ -390,8 +390,8 @@ class Field extends \Phire\Model\AbstractModel
                                         $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
                                         $site = Table\Sites::getSite($siteId);
 
-                                        $fileInfo = \Phire\Model\Content::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<em >' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
+                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
+                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
                                             $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
@@ -711,7 +711,7 @@ class Field extends \Phire\Model\AbstractModel
             if (in_array($value->content_site_id, $sess->user->site_ids)) {
                 $site = Table\Sites::getSite((int)$value->content_site_id);
 
-                $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $site->document_root . $site->base_path);
+                $fileInfo = \Phire\Model\Media::getFileIcon($value->content_uri, $site->document_root . $site->base_path);
                 $value->file_icon = $fileInfo['fileIcon'];
                 $value->file_size = $fileInfo['fileSize'];
 
@@ -776,7 +776,7 @@ class Field extends \Phire\Model\AbstractModel
             if (in_array($value->content_site_id, $sess->user->site_ids)) {
                 $site = Table\Sites::getSite((int)$value->content_site_id);
 
-                $fileInfo = \Phire\Model\Content::getFileIcon($value->content_uri, $site->document_root . $site->base_path);
+                $fileInfo = \Phire\Model\Media::getFileIcon($value->content_uri, $site->document_root . $site->base_path);
                 $value->file_icon = $fileInfo['fileIcon'];
                 $value->file_size = $fileInfo['fileSize'];
 
@@ -854,8 +854,8 @@ class Field extends \Phire\Model\AbstractModel
                 $this->config->media_max_filesize, $this->config->media_allowed_types
             );
             chmod($dir . DIRECTORY_SEPARATOR . $fileName, 0777);
-            if (preg_match(\Phire\Model\Content::getImageRegex(), $fileName)) {
-                \Phire\Model\Content::processMedia($fileName, $this->config, $site->document_root . $site->base_path);
+            if (preg_match(\Phire\Model\Media::getImageRegex(), $fileName)) {
+                \Phire\Model\Media::process($fileName, $this->config, $site->document_root . $site->base_path);
             }
 
             $title = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($fileName, 0, strrpos($fileName, '.'))));

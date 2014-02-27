@@ -87,8 +87,9 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $content = new Model\Content();
-        $config = new Model\Config();
+        $content    = new Model\Content();
+        $config     = new Model\Config();
+        $extensions = new Model\Extension();
 
         $this->prepareView('index.phtml', array(
             'assets'   => $this->project->getAssets(),
@@ -106,8 +107,8 @@ class IndexController extends AbstractController
         $overview = $config->getOverview();
 
         $this->view->set('recent', $content->getRecent())
-                   ->set('themes', $content->getThemes())
-                   ->set('modules', $content->getModules())
+                   ->set('themes', $extensions->getAllThemes())
+                   ->set('modules', $extensions->getAllModules())
                    ->set('overview', $overview['system'])
                    ->set('sites', $overview['sites']);
 

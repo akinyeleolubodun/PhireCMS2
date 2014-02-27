@@ -43,14 +43,17 @@ class Content extends AbstractForm
                     'type'     => 'select',
                     'required' => true,
                     'label'    => $this->i18n->__('Select Content Type'),
-                    'value'    => $typesAry
+                    'value'    => $typesAry,
+                    'attributes' => array(
+                        'style' => 'margin: 0 10px 0 0; padding: 6px 5px 7px 5px; height: 32px;'
+                    )
                 ),
                 'submit' => array(
                     'type'  => 'submit',
                     'value' => $this->i18n->__('SELECT'),
                     'attributes' => array(
                         'class' => 'save-btn',
-                        'style' => 'padding: 5px 6px 6px 6px; width: 100px;'
+                        'style' => 'margin: 0; padding: 5px 6px 6px 6px; width: 100px; height: 32px;'
                     )
                 )
             );
@@ -164,7 +167,7 @@ class Content extends AbstractForm
                 $content = Table\Content::findById($mid);
                 if (isset($content->id)) {
                     $site = Table\Sites::getSite((int)$content->site_id);
-                    $fileInfo = Model\Content::getFileIcon($content->uri, $site->document_root . $site->base_path);
+                    $fileInfo = Model\Media::getFileIcon($content->uri, $site->document_root . $site->base_path);
                     $label = '<em>' . $this->i18n->__('Replace?') . '</em><br /><a href="http://' .
                         $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank"><img id="current-file" style="padding-top: 3px;" src="http://' .
                         $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $content->uri . '" target="_blank">' .

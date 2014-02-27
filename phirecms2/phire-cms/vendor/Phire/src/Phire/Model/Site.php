@@ -526,7 +526,7 @@ class Site extends \Phire\Model\AbstractModel
                             $c = Table\Content::findById($content->id);
                             if (isset($c->id)) {
                                 if (substr($c->uri, 0, 1) != '/') {
-                                    \Phire\Model\Content::removeMedia($c->uri, $site->document_root . $site->base_path);
+                                    \Phire\Model\Media::remove($c->uri, $site->document_root . $site->base_path);
                                 }
                                 $c->delete();
                             }

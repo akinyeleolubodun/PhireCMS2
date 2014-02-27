@@ -128,19 +128,19 @@ return array(
                 ),
                 'children' => array(
                     array(
-                        'name' => 'Themes',
-                        'href' => 'themes',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
-                            'permission' => 'themes'
-                        )
-                    ),
-                    array(
                         'name' => 'Modules',
                         'href' => 'modules',
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
                             'permission' => 'modules'
+                        )
+                    ),
+                    array(
+                        'name' => 'Themes',
+                        'href' => 'themes',
+                        'acl' => array(
+                            'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
+                            'permission' => 'themes'
                         )
                     )
                 )
