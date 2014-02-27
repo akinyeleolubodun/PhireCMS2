@@ -92,15 +92,16 @@ abstract class AbstractModel
      *
      * @param  string $sort
      * @param  string $page
+     * @param  string $ord
      * @return array
      */
-    public function getSortOrder($sort = null, $page = null)
+    public function getSortOrder($sort = null, $page = null, $ord = 'ASC')
     {
         $sess  = Session::getInstance();
         $limit = (int)$this->config->pagination_limit;
         $order = array(
             'field'  => 'id',
-            'order'  => 'ASC',
+            'order'  => $ord,
             'limit'  => (($limit > 0) ? $limit : null),
             'offset' => 0
         );
@@ -109,7 +110,7 @@ abstract class AbstractModel
             if ($page != $sess->lastPage) {
                 if ($sort != $sess->lastSortField) {
                     $order['field'] = $sort;
-                    $order['order'] = 'ASC';
+                    $order['order'] = $ord;
                 } else {
                     $order['field'] = $sess->lastSortField;
                     $order['order'] = $sess->lastSortOrder;
@@ -119,7 +120,7 @@ abstract class AbstractModel
                 if (isset($sess->lastSortOrder)) {
                     $order['order'] = ($sess->lastSortOrder == 'ASC') ? 'DESC' : 'ASC';
                 } else {
-                    $order['order'] = 'ASC';
+                    $order['order'] = $ord;
                 }
             }
         }

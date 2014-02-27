@@ -25,7 +25,10 @@ class FieldGroup extends AbstractForm
                 'type'       => 'text',
                 'label'      => $this->i18n->__('Name &amp; Order'),
                 'required'   => true,
-                'attributes' => array('size' => 46)
+                'attributes' => array(
+                    'size'  => 40,
+                    'style' => 'width: 376px;'
+                )
             ),
             'order' => array(
                 'type'       => 'text',
@@ -55,7 +58,7 @@ class FieldGroup extends AbstractForm
                 'value' => $this->i18n->__('SAVE'),
                 'attributes' => array(
                     'class' => 'save-btn',
-                    'style' => 'width: 167px;'
+                    'style' => 'width: 190px;'
                 )
             ),
             'update' => array(
@@ -64,7 +67,7 @@ class FieldGroup extends AbstractForm
                 'attributes' => array(
                     'onclick' => "return phire.updateForm('#field-group-form', false);",
                     'class' => 'update-btn',
-                    'style' => 'width: 167px;'
+                    'style' => 'width: 190px;'
                 )
             )
         );

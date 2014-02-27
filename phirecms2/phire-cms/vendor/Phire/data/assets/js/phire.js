@@ -918,6 +918,9 @@ jax(document).ready(function(){
                 jax('#field-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#field-remove-form').submit(function(){
+            return jax('#field-remove-form').checkValidate('checkbox', true);
+        });
     }
 
     if (jax('#field-group-remove-form')[0] != undefined) {
@@ -927,6 +930,9 @@ jax(document).ready(function(){
             } else {
                 jax('#field-group-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#field-group-remove-form').submit(function(){
+            return jax('#field-group-remove-form').checkValidate('checkbox', true);
         });
     }
 
@@ -978,14 +984,8 @@ jax(document).ready(function(){
                 jax('#content-remove-form').uncheckAll(this.value);
             }
         });
-    }
-    if (jax('#navigation-remove-form')[0] != undefined) {
-        jax('#checkall').click(function(){
-            if (this.checked) {
-                jax('#navigation-remove-form').checkAll(this.value);
-            } else {
-                jax('#navigation-remove-form').uncheckAll(this.value);
-            }
+        jax('#content-remove-form').submit(function(){
+            return jax('#content-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#category-remove-form')[0] != undefined) {
@@ -996,6 +996,9 @@ jax(document).ready(function(){
                 jax('#category-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#category-remove-form').submit(function(){
+            return jax('#category-remove-form').checkValidate('checkbox', true);
+        });
     }
     if (jax('#content-type-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
@@ -1004,6 +1007,9 @@ jax(document).ready(function(){
             } else {
                 jax('#content-type-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#content-type-remove-form').submit(function(){
+            return jax('#content-type-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#template-remove-form')[0] != undefined) {
@@ -1014,6 +1020,9 @@ jax(document).ready(function(){
                 jax('#template-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#template-remove-form').submit(function(){
+            return jax('#template-remove-form').checkValidate('checkbox', true);
+        });
     }
     if (jax('#themes-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
@@ -1022,6 +1031,9 @@ jax(document).ready(function(){
             } else {
                 jax('#themes-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#themes-remove-form').submit(function(){
+            return jax('#themes-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#modules-remove-form')[0] != undefined) {
@@ -1032,6 +1044,9 @@ jax(document).ready(function(){
                 jax('#modules-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#modules-remove-form').submit(function(){
+            return jax('#modules-remove-form').checkValidate('checkbox', true);
+        });
     }
     if (jax('#user-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
@@ -1040,6 +1055,9 @@ jax(document).ready(function(){
             } else {
                 jax('#user-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#user-remove-form').submit(function(){
+            return jax('#user-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#role-remove-form')[0] != undefined) {
@@ -1050,6 +1068,9 @@ jax(document).ready(function(){
                 jax('#role-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#role-remove-form').submit(function(){
+            return jax('#role-remove-form').checkValidate('checkbox', true);
+        });
     }
     if (jax('#session-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
@@ -1058,6 +1079,9 @@ jax(document).ready(function(){
             } else {
                 jax('#session-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#session-remove-form').submit(function(){
+            return jax('#session-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#type-remove-form')[0] != undefined) {
@@ -1068,6 +1092,9 @@ jax(document).ready(function(){
                 jax('#type-remove-form').uncheckAll(this.value);
             }
         });
+        jax('#type-remove-form').submit(function(){
+            return jax('#type-remove-form').checkValidate('checkbox', true);
+        });
     }
     if (jax('#sites-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
@@ -1076,6 +1103,9 @@ jax(document).ready(function(){
             } else {
                 jax('#sites-remove-form').uncheckAll(this.value);
             }
+        });
+        jax('#sites-remove-form').submit(function(){
+            return jax('#sites-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#site-migration-form')[0] != undefined) {

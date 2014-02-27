@@ -154,7 +154,7 @@ class Content extends AbstractModel
     public function getAll($typeId, $sort = null, $page = null)
     {
         $sess = Session::getInstance();
-        $order = $this->getSortOrder($sort, $page);
+        $order = $this->getSortOrder($sort, $page, 'DESC');
 
         $sql = Table\Content::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'content.id' : $order['field'];
