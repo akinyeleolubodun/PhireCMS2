@@ -171,6 +171,101 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `extensions`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `type` int(1) NOT NULL,
+  `active` int(1) NOT NULL,
+  `assets` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10002 ;
+
+--
+-- Dumping data for table `extensions`
+--
+
+INSERT INTO `[{prefix}]extensions` (`id`, `name`, `file`, `type`, `active`, `assets`) VALUES
+(10001, 'default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]field_groups` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255),
+  `order` int(16),
+  `dynamic` int(1),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12001 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]fields` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `group_id` int(16),
+  `type` varchar(255),
+  `name` varchar(255),
+  `label` varchar(255),
+  `values` varchar(255),
+  `default_values` varchar(255),
+  `attributes` varchar(255),
+  `validators` varchar(255),
+  `encryption` int(1) NOT NULL,
+  `order` int(16) NOT NULL,
+  `required` int(1) NOT NULL,
+  `editor` varchar(255),
+  `models` text,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11001 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_values`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]field_values` (
+  `field_id` int(16) NOT NULL,
+  `model_id` int(16) NOT NULL,
+  `value` mediumtext,
+  `timestamp` int(16),
+  `history` mediumtext,
+  UNIQUE (`field_id`, `model_id`),
+  CONSTRAINT `fk_field_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sites`
+--
+
+CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(255) NOT NULL,
+  `document_root` varchar(255) NOT NULL,
+  `base_path` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `force_ssl` int(1) NOT NULL,
+  `live` int(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13001 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `content_types`
 --
 
@@ -358,89 +453,15 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]templates` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `extensions`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
-  `id` int(16) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `file` varchar(255) NOT NULL,
-  `type` int(1) NOT NULL,
-  `active` int(1) NOT NULL,
-  `assets` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10002 ;
-
---
--- Dumping data for table `extensions`
---
-
-INSERT INTO `[{prefix}]extensions` (`id`, `name`, `file`, `type`, `active`, `assets`) VALUES
-(10001, 'default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `field_groups`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]field_groups` (
-  `id` int(16) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255),
-  `order` int(16),
-  `dynamic` int(1),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12001 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fields`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]fields` (
-  `id` int(16) NOT NULL AUTO_INCREMENT,
-  `group_id` int(16),
-  `type` varchar(255),
-  `name` varchar(255),
-  `label` varchar(255),
-  `values` varchar(255),
-  `default_values` varchar(255),
-  `attributes` varchar(255),
-  `validators` varchar(255),
-  `encryption` int(1) NOT NULL,
-  `order` int(16) NOT NULL,
-  `required` int(1) NOT NULL,
-  `editor` varchar(255),
-  `models` text,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11004 ;
-
---
 -- Dumping data for table `fields`
 --
 
-INSERT INTO `[{prefix}]fields` (`id`, `group_id`, `type`, `name`, `label`, `values`, `default_values`, `attributes`, `validators`, `encryption`, `order`, `required`, `editor`, `models`) VALUES
-(11001, NULL, 'text', 'description', 'Description:', '', '', 'size="80"', NULL, 0, 1, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}'),
-(11002, NULL, 'text', 'keywords', 'Keywords:', '', '', 'size="80"', NULL, 0, 2, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}'),
-(11003, NULL, 'textarea-history', 'content', 'Content:', '', '', 'rows="20" cols="110" style="display: block;"', NULL, 0, 3, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}');
+INSERT INTO `[{prefix}]fields` (`group_id`, `type`, `name`, `label`, `values`, `default_values`, `attributes`, `validators`, `encryption`, `order`, `required`, `editor`, `models`) VALUES
+(NULL, 'text', 'description', 'Description:', '', '', 'size="80"', NULL, 0, 1, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}'),
+(NULL, 'text', 'keywords', 'Keywords:', '', '', 'size="80"', NULL, 0, 2, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}'),
+(NULL, 'textarea-history', 'content', 'Content:', '', '', 'rows="20" cols="110" style="display: block;"', NULL, 0, 3, 0, 'source', 'a:1:{i:0;a:2:{s:5:"model";s:19:"Phire\\Model\\Content";s:7:"type_id";i:5001;}}');
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `field_values`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]field_values` (
-  `field_id` int(16) NOT NULL,
-  `model_id` int(16) NOT NULL,
-  `value` mediumtext,
-  `timestamp` int(16),
-  `history` mediumtext,
-  UNIQUE (`field_id`, `model_id`),
-  CONSTRAINT `fk_field_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 --
 -- Dumping data for table `field_values`
@@ -456,20 +477,3 @@ INSERT INTO `[{prefix}]field_values` (`field_id`, `model_id`, `value`, `timestam
 (11003, 6001, 's:999:"&lt;p&gt;This is the home page for Phire CMS 2.&lt;/p&gt;\r\n\r\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;\r\n\r\n&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL),
 (11003, 6002, 's:1000:"&lt;p&gt;This is the about page for Phire CMS 2.&lt;/p&gt;\r\n\r\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;\r\n\r\n&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL),
 (11003, 6003, 's:1001:"&lt;p&gt;This is the sample page for Phire CMS 2.&lt;/p&gt;\r\n\r\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;\r\n\r\n&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sites`
---
-
-CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
-  `id` int(16) NOT NULL AUTO_INCREMENT,
-  `domain` varchar(255) NOT NULL,
-  `document_root` varchar(255) NOT NULL,
-  `base_path` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `force_ssl` int(1) NOT NULL,
-  `live` int(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13001 ;

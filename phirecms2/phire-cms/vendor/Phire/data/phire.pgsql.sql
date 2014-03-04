@@ -187,6 +187,117 @@ ALTER SEQUENCE session_id_seq OWNED BY "[{prefix}]user_sessions"."id";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table "extensions"
+--
+
+CREATE SEQUENCE extension_id_seq START 10001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
+  "id" integer NOT NULL DEFAULT nextval('extension_id_seq'),
+  "name" varchar(255) NOT NULL,
+  "file" varchar(255) NOT NULL,
+  "type" integer NOT NULL,
+  "active" integer NOT NULL,
+  "assets" text,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE extension_id_seq OWNED BY "[{prefix}]extensions"."id";
+
+--
+-- Dumping data for table "extensions"
+--
+
+INSERT INTO "[{prefix}]extensions" ("name", "file", "type", "active", "assets") VALUES
+('default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_groups"
+--
+
+CREATE SEQUENCE group_id_seq START 12001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
+  "id" integer NOT NULL DEFAULT nextval('group_id_seq'),
+  "name" varchar(255),
+  "order" integer,
+  "dynamic" integer,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE group_id_seq OWNED BY "[{prefix}]field_groups"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "fields"
+--
+
+CREATE SEQUENCE field_id_seq START 11001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
+  "id" integer NOT NULL DEFAULT nextval('field_id_seq'),
+  "group_id" integer,
+  "type" varchar(255),
+  "name" varchar(255),
+  "label" varchar(255),
+  "values" varchar(255),
+  "default_values" varchar(255),
+  "attributes" varchar(255),
+  "validators" varchar(255),
+  "encryption" integer NOT NULL,
+  "order" integer NOT NULL,
+  "required" integer NOT NULL,
+  "editor" varchar(255),
+  "models" text,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+ALTER SEQUENCE field_id_seq OWNED BY "[{prefix}]fields"."id";
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_values"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
+  "field_id" integer NOT NULL,
+  "model_id" integer NOT NULL,
+  "value" text,
+  "timestamp" integer,
+  "history" text,
+  UNIQUE ("field_id", "model_id"),
+  CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "sites"
+--
+
+CREATE SEQUENCE site_id_seq START 13001;
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
+  "id" integer NOT NULL DEFAULT nextval('site_id_seq'),
+  "domain" varchar(255) NOT NULL,
+  "document_root" varchar(255) NOT NULL,
+  "base_path" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "force_ssl" integer NOT NULL,
+  "live" integer NOT NULL,
+  PRIMARY KEY ("id")
+) ;
+
+ALTER SEQUENCE site_id_seq OWNED BY "[{prefix}]sites"."id";
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table "content_types"
 --
 
@@ -383,85 +494,13 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   "content_type" varchar(255) NOT NULL,
   "device" varchar(255) NOT NULL,
   "template" text NOT NULL,
-PRIMARY KEY ("id"),
-CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY ("id"),
+  CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 ALTER SEQUENCE template_id_seq OWNED BY "[{prefix}]templates"."id";
 
 -- --------------------------------------------------------
-
---
--- Table structure for table "extensions"
---
-
-CREATE SEQUENCE extension_id_seq START 10001;
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
-  "id" integer NOT NULL DEFAULT nextval('extension_id_seq'),
-  "name" varchar(255) NOT NULL,
-  "file" varchar(255) NOT NULL,
-  "type" integer NOT NULL,
-  "active" integer NOT NULL,
-  "assets" text,
-  PRIMARY KEY ("id")
-) ;
-
-ALTER SEQUENCE extension_id_seq OWNED BY "[{prefix}]extensions"."id";
-
---
--- Dumping data for table "extensions"
---
-
-INSERT INTO "[{prefix}]extensions" ("name", "file", "type", "active", "assets") VALUES
-('default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
-
--- --------------------------------------------------------
-
---
--- Table structure for table "field_groups"
---
-
-CREATE SEQUENCE group_id_seq START 12001;
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
-  "id" integer NOT NULL DEFAULT nextval('group_id_seq'),
-  "name" varchar(255),
-  "order" integer,
-  "dynamic" integer,
-  PRIMARY KEY ("id")
-) ;
-
-ALTER SEQUENCE group_id_seq OWNED BY "[{prefix}]field_groups"."id";
-
--- --------------------------------------------------------
-
---
--- Table structure for table "fields"
---
-
-CREATE SEQUENCE field_id_seq START 11001;
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
-  "id" integer NOT NULL DEFAULT nextval('field_id_seq'),
-  "group_id" integer,
-  "type" varchar(255),
-  "name" varchar(255),
-  "label" varchar(255),
-  "values" varchar(255),
-  "default_values" varchar(255),
-  "attributes" varchar(255),
-  "validators" varchar(255),
-  "encryption" integer NOT NULL,
-  "order" integer NOT NULL,
-  "required" integer NOT NULL,
-  "editor" varchar(255),
-  "models" text,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-) ;
-
-ALTER SEQUENCE field_id_seq OWNED BY "[{prefix}]fields"."id";
 
 --
 -- Dumping data for table "fields"
@@ -475,24 +514,10 @@ INSERT INTO "[{prefix}]fields" ("group_id", "type", "name", "label", "values", "
 -- --------------------------------------------------------
 
 --
--- Table structure for table "field_values"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
-  "field_id" integer NOT NULL,
-  "model_id" integer NOT NULL,
-  "value" text,
-  "timestamp" integer,
-  "history" text,
-  UNIQUE ("field_id", "model_id"),
-  CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
-
---
 -- Dumping data for table "field_values"
 --
 
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES
 (11001, 6001, 's:41:"This is the welcome page for Phire CMS 2.";', NULL, NULL),
 (11002, 6001, 's:36:"default site, phire cms 2, home page";', NULL, NULL),
 (11003, 6001, E's:999:"&lt;p&gt;This is the home page for Phire CMS 2.&lt;/p&gt;\r\n\r\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;\r\n\r\n&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL),
@@ -502,24 +527,3 @@ INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp"
 (11001, 6003, 's:40:"This is the sample page for Phire CMS 2.";', NULL, NULL),
 (11002, 6003, 's:38:"default site, phire cms 2, sample page";', NULL, NULL),
 (11003, 6003, E's:1001:"&lt;p&gt;This is the sample page for Phire CMS 2.&lt;/p&gt;\r\n\r\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;\r\n\r\n&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "sites"
---
-
-CREATE SEQUENCE site_id_seq START 13001;
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
-  "id" integer NOT NULL DEFAULT nextval('site_id_seq'),
-  "domain" varchar(255) NOT NULL,
-  "document_root" varchar(255) NOT NULL,
-  "base_path" varchar(255) NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "force_ssl" integer NOT NULL,
-  "live" integer NOT NULL,
-  PRIMARY KEY ("id")
-) ;
-
-ALTER SEQUENCE site_id_seq OWNED BY "[{prefix}]sites"."id";

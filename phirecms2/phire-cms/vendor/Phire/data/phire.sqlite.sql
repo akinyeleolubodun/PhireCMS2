@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_types', 2000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_types', 2000);
 
 --
 -- Dumping data for table "user_types"
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
   CONSTRAINT "fk_role_type" FOREIGN KEY ("type_id") REFERENCES "[{prefix}]user_types" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_roles', 3000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_roles', 3000);
 
 --
 -- Dumping data for table "user_roles"
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
   CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]users', 1000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]users', 1000);
 
 --
 -- Dumping data for table "users"
@@ -176,11 +176,113 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]user_sessions', 4000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_sessions', 4000);
 
 --
 -- Dumping data for table "user_sessions"
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "extensions"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" varchar NOT NULL,
+  "file" varchar NOT NULL,
+  "type" integer NOT NULL,
+  "active" integer NOT NULL,
+  "assets" text,
+  UNIQUE ("id")
+) ;
+
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]extensions', 10000);
+
+--
+-- Dumping data for table "extensions"
+--
+
+INSERT INTO "[{prefix}]extensions" ("id", "name", "file", "type", "active", "assets") VALUES (10001, 'default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_groups"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" varchar,
+  "order" integer,
+  "dynamic" integer,
+  UNIQUE ("id")
+) ;
+
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]field_groups', 12000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "fields"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "group_id" integer,
+  "type" varchar,
+  "name" varchar,
+  "label" varchar,
+  "values" varchar,
+  "default_values" varchar,
+  "attributes" varchar,
+  "validators" varchar,
+  "encryption" integer NOT NULL,
+  "order" integer NOT NULL,
+  "required" integer NOT NULL,
+  "editor" varchar,
+  "models" text,
+  UNIQUE ("id"),
+  CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+) ;
+
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]fields', 11000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "field_values"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
+  "field_id" integer NOT NULL,
+  "model_id" integer NOT NULL,
+  "value" text,
+  "timestamp" integer,
+  "history" text,
+  UNIQUE ("field_id", "model_id"),
+  CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "sites"
+--
+
+CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "domain" varchar(255) NOT NULL,
+  "document_root" varchar(255) NOT NULL,
+  "base_path" varchar(255) NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "force_ssl" integer NOT NULL,
+  "live" integer NOT NULL,
+  UNIQUE ("id")
+) ;
+
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]sites', 13000);
 
 -- --------------------------------------------------------
 
@@ -196,7 +298,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content_types" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content_types', 5000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]content_types', 5000);
 
 --
 -- Dumping data for table "content_types"
@@ -237,7 +339,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]content" (
   CONSTRAINT "fk_updated_by" FOREIGN KEY ("updated_by") REFERENCES "[{prefix}]users" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]content', 6000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]content', 6000);
 
 --
 -- Dumping data for table "content"
@@ -274,7 +376,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]navigation" (
   UNIQUE ("id")
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]navigation', 7000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]navigation', 7000);
 
 --
 -- Dumping data for table "navigation"
@@ -300,7 +402,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]categories" (
   CONSTRAINT "fk_category_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]categories', 8000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]categories', 8000);
 
 --
 -- Dumping data for table "categories"
@@ -371,74 +473,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]templates" (
   CONSTRAINT "fk_template_parent_id" FOREIGN KEY ("parent_id") REFERENCES "[{prefix}]templates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]templates', 9000);
+INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]templates', 9000);
 
 -- --------------------------------------------------------
-
---
--- Table structure for table "extensions"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar NOT NULL,
-  "file" varchar NOT NULL,
-  "type" integer NOT NULL,
-  "active" integer NOT NULL,
-  "assets" text,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]extensions', 10000);
-
---
--- Dumping data for table "extensions"
---
-
-INSERT INTO "[{prefix}]extensions" ("id", "name", "file", "type", "active", "assets") VALUES (10001, 'default', 'default.tar.gz', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
-
--- --------------------------------------------------------
-
---
--- Table structure for table "field_groups"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "name" varchar,
-  "order" integer,
-  "dynamic" integer,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]field_groups', 12000);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "fields"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "group_id" integer,
-  "type" varchar,
-  "name" varchar,
-  "label" varchar,
-  "values" varchar,
-  "default_values" varchar,
-  "attributes" varchar,
-  "validators" varchar,
-  "encryption" integer NOT NULL,
-  "order" integer NOT NULL,
-  "required" integer NOT NULL,
-  "editor" varchar,
-  "models" text,
-  UNIQUE ("id"),
-  CONSTRAINT "fk_group_id" FOREIGN KEY ("group_id") REFERENCES "[{prefix}]field_groups" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]fields', 11000);
 
 --
 -- Dumping data for table "fields"
@@ -451,48 +488,15 @@ INSERT INTO "[{prefix}]fields" ("group_id", "type", "name", "label", "values", "
 -- --------------------------------------------------------
 
 --
--- Table structure for table "field_values"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
-  "field_id" integer NOT NULL,
-  "model_id" integer NOT NULL,
-  "value" text,
-  "timestamp" integer,
-  "history" text,
-  UNIQUE ("field_id", "model_id"),
-  CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-) ;
-
---
 -- Dumping data for table "field_values"
 --
 
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6001, 's:41:"This is the welcome page for Phire CMS 2.";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6001, 's:36:"default site, phire cms 2, home page";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6001, 's:991:"&lt;p&gt;This is the home page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6002, 's:39:"This is the about page for Phire CMS 2.";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6002, 's:37:"default site, phire cms 2, about page";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6002, 's:992:"&lt;p&gt;This is the about page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6003, 's:40:"This is the sample page for Phire CMS 2.";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6003, 's:38:"default site, phire cms 2, sample page";', NULL, NULL);
-INSERT INTO [{prefix}]field_values ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6003, 's:993:"&lt;p&gt;This is the sample page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table "sites"
---
-
-CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
-  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "domain" varchar(255) NOT NULL,
-  "document_root" varchar(255) NOT NULL,
-  "base_path" varchar(255) NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "force_ssl" integer NOT NULL,
-  "live" integer NOT NULL,
-  UNIQUE ("id")
-) ;
-
-INSERT INTO sqlite_sequence ("name", "seq") VALUES ('[{prefix}]sites', 13000);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6001, 's:41:"This is the welcome page for Phire CMS 2.";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6001, 's:36:"default site, phire cms 2, home page";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6001, 's:991:"&lt;p&gt;This is the home page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6002, 's:39:"This is the about page for Phire CMS 2.";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6002, 's:37:"default site, phire cms 2, about page";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6002, 's:992:"&lt;p&gt;This is the about page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11001, 6003, 's:40:"This is the sample page for Phire CMS 2.";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11002, 6003, 's:38:"default site, phire cms 2, sample page";', NULL, NULL);
+INSERT INTO "[{prefix}]field_values" ("field_id", "model_id", "value", "timestamp", "history") VALUES (11003, 6003, 's:993:"&lt;p&gt;This is the sample page for Phire CMS 2.&lt;/p&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin volutpat. Maecenas laoreet tempus quam. Maecenas faucibus semper leo. Nullam sit amet felis. Integer luctus interdum lacus. Vestibulum pulvinar, nunc a fermentum eleifend, dui ipsum condimentum urna, at hendrerit lacus mi elementum tortor. Maecenas lacus. Nunc varius. Duis malesuada. Vivamus facilisis quam et diam. Curabitur augue. Phasellus eros. Aliquam ultrices nisi lobortis pede.&lt;/p&gt;&lt;p&gt;Aliquam velit massa, ultricies sit amet, facilisis vitae, placerat vitae, justo. Pellentesque tortor orci, ornare a, consequat ut, mollis et, nisl. Suspendisse sem metus, convallis nec, fermentum sed, varius at, metus. Pellentesque ullamcorper diam eget urna. Aliquam risus risus, imperdiet sit amet, elementum nec, pellentesque vel, justo. Quisque dictum sagittis dolor. Nam nulla. Duis id ipsum. Proin ultrices. Maecenas egestas malesuada erat.&lt;/p&gt;";', NULL, NULL);
