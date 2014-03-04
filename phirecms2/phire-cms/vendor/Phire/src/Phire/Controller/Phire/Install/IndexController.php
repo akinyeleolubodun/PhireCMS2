@@ -192,12 +192,14 @@ class IndexController extends C
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
 
-                    $pages = array(6001, 6002, 6003);
-                    foreach ($pages as $pid) {
-                        $page = \Phire\Table\Content::findById($pid);
-                        if (isset($page->id)) {
-                            $page->created_by = $user->getData('id');
-                            $page->update();
+                    if (file_exists(__DIR__ . '/../../../Table/Content.php')) {
+                        $pages = array(6001, 6002, 6003);
+                        foreach ($pages as $pid) {
+                            $page = \Phire\Table\Content::findById($pid);
+                            if (isset($page->id)) {
+                                $page->created_by = $user->getData('id');
+                                $page->update();
+                            }
                         }
                     }
 
