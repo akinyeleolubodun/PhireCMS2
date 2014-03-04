@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title><?php echo (isset($title) ? $title : null); ?></title>
+    <title><?php echo $title; ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script type="text/javascript" src="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/js/jax.3.2.0.min.js"></script>
@@ -14,12 +14,15 @@
 <body>
 <div id="phire-container">
     <div id="install-header">
-        <h2><?php echo (isset($title) ? $title : null); ?></h2>
+        <h2><?php $i18n->_e('Error'); ?></h2>
     </div>
-    <div id="install">
 <?php if (isset($msg)): ?>
-<?php echo $msg; ?>
+        <h1 style="width: 860px; margin: 25px auto 25px auto; padding: 0; color: #8e0202;"><?php $i18n->_e('Routing Error'); ?></h1>
+        <div id="install-error" style="width: 825px; margin: 0 auto;">
+            <p><?php echo $msg; ?></p>
+        </div>
 <?php endif; ?>
+    <div id="install">
     </div>
     <div id="footer">
         <a href="http://www.phirecms.org/" target="_blank">Phire CMS</a> &copy; 2009-<?php echo date('Y'); ?> <a href="http://www.moc10media.com/" target="_blank">Moc 10 Media, LLC</a>. <?php $i18n->_e('All Rights Reserved.'); ?>

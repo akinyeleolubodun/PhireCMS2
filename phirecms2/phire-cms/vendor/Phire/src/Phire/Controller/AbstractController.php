@@ -88,23 +88,25 @@ class AbstractController extends \Pop\Mvc\Controller
                 // If the sub-children haven't been added yet
                 if (isset($tree[0])) {
                     // And any content types to the main phire nav
-                    $contentTypes = \Phire\Table\ContentTypes::findAll('order ASC');
-                    if (isset($contentTypes->rows)) {
-                        foreach ($contentTypes->rows as $type) {
-                            $perm = 'index_' . $type->id;
-                            if ($this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index') &&
-                                $this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $type->id)) {
-                                $perm = 'index';
-                            }
+                    if (file_exists(__DIR__ . '/../Table/ContentTypes.php')) {
+                        $contentTypes = \Phire\Table\ContentTypes::findAll('order ASC');
+                        if (isset($contentTypes->rows)) {
+                            foreach ($contentTypes->rows as $type) {
+                                $perm = 'index_' . $type->id;
+                                if ($this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index') &&
+                                    $this->view->acl->isAuth('Phire\Controller\Phire\Content\IndexController', 'index_' . $type->id)) {
+                                    $perm = 'index';
+                                }
 
-                            $this->view->phireNav->addLeaf('Content', array(
-                                'name'     => $type->name,
-                                'href'     => 'index/' . $type->id,
-                                'acl' => array(
-                                    'resource'   => 'Phire\Controller\Phire\Content\IndexController',
-                                    'permission' => $perm
-                                )
-                            ), 1);
+                                $this->view->phireNav->addLeaf('Content', array(
+                                    'name'     => $type->name,
+                                    'href'     => 'index/' . $type->id,
+                                    'acl' => array(
+                                        'resource'   => 'Phire\Controller\Phire\Content\IndexController',
+                                        'permission' => $perm
+                                    )
+                                ), 1);
+                            }
                         }
                     }
 

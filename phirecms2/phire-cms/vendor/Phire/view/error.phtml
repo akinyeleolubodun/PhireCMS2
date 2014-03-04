@@ -6,12 +6,25 @@
     <title><?php echo (isset($title) ? $title : null); ?></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/js/jax.3.2.0.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/css/phire.css" />
+    <link rel="shortcut icon" href="<?php echo BASE_PATH . CONTENT_PATH; ?>/assets/phire/img/phire.ico" type="image/ico" />
 
 </head>
 <body>
-    <h1 style="color: #f00;"><?php echo (isset($title) ? $title : null); ?></h1>
+<div id="phire-container">
+    <div id="install-header">
+        <h2><?php echo (isset($title) ? $title : null); ?></h2>
+    </div>
+    <h1 style="width: 860px; margin: 25px auto 25px auto; padding: 0; color: #8e0202;"><?php echo (isset($title) ? $title : null); ?></h1>
+    <div id="install">
 <?php if (isset($msg)): ?>
 <?php echo $msg; ?>
 <?php endif; ?>
+    </div>
+    <div id="footer">
+        <a href="http://www.phirecms.org/" target="_blank">Phire CMS</a> &copy; 2009-<?php echo date('Y'); ?> <a href="http://www.moc10media.com/" target="_blank">Moc 10 Media, LLC</a>. <?php $i18n->_e('All Rights Reserved.'); ?>
+    </div>
+</div>
 </body>
 </html>

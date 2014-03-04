@@ -87,7 +87,6 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $content    = new Model\Content();
         $config     = new Model\Config();
         $extensions = new Model\Extension();
 
@@ -106,8 +105,12 @@ class IndexController extends AbstractController
 
         $overview = $config->getOverview();
 
-        $this->view->set('recent', $content->getRecent())
-                   ->set('themes', $extensions->getAllThemes())
+        if (file_exists(__DIR__ . '/../../Model/Content.php')) {
+            $content = new Model\Content();
+            $this->view->set('recent', $content->getRecent());
+        }
+
+        $this->view->set('themes', $extensions->getAllThemes())
                    ->set('modules', $extensions->getAllModules())
                    ->set('overview', $overview['system'])
                    ->set('sites', $overview['sites']);

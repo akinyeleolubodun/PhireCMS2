@@ -275,10 +275,11 @@ class Project extends P
      */
     public static function error($router)
     {
-        $view = \Pop\Mvc\View::factory(__DIR__ . '/../../view/error.phtml', array(
-                'title' => 'Phire CMS 2 &gt; Routing Error',
-                'msg'   => '    <p>There was no controller assigned for this route.</p>'
-            ));
+        $view = \Pop\Mvc\View::factory(__DIR__ . '/../../view/route.phtml', array(
+            'i18n'  => \Phire\Table\Config::getI18n(),
+            'title' => 'Routing Error',
+            'msg'   => '    <p>There was no controller assigned for this route.</p>'
+        ));
 
         $response = new \Pop\Http\Response(404);
         $response->setBody($view->render(true));
