@@ -162,7 +162,14 @@ class Category extends AbstractModel
 
                         $fieldValues = FieldValue::getAll($c['id'], true);
                         foreach ($fieldValues as $key => $value) {
-                            $fieldValues[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+                            if (is_array($value)) {
+                                foreach ($value as $k => $v) {
+                                    $value[$k] = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
+                                }
+                                $fieldValues[$key] = $value;
+                            } else {
+                                $fieldValues[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+                            }
                         }
 
                         $c = array_merge($c, $fieldValues);
