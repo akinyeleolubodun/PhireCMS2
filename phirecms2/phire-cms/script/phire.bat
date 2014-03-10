@@ -203,6 +203,9 @@ IF "%1" == "archive" (
 IF NOT "%1" == "archive" (
     IF NOT "%1" == "sql" (
         php %SCRIPT_DIR%phire.php %*
+        IF "%1" == "install" (
+            php %SCRIPT_DIR%phire.php post
+        )
     )
 )
 

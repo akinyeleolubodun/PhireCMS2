@@ -147,7 +147,8 @@ class RolesController extends AbstractController
 
             // If role is found and valid
             if (isset($role->name)) {
-                $this->view->set('title', $this->view->i18n->__('User Roles') . ' ' . $this->view->separator . ' ' . $role->name);
+                $this->view->set('title', $this->view->i18n->__('User Roles') . ' ' . $this->view->separator . ' ' . $role->name)
+                           ->set('data_title', $this->view->i18n->__('User Roles') . ' ' . $this->view->separator . ' ');
                 $form = new Form\UserRole(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $role->id, $this->project->module('Phire')

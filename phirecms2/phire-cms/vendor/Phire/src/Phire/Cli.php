@@ -795,12 +795,31 @@ class Cli
             $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids, created) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "', '" . date('Y-m-d H:i:s') . "')");
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'config SET value = \'' . $user['email'] . '\' WHERE setting = \'system_email\'');
 
-            if (file_exists(__DIR__ . '/Table/Content.php')) {
-                $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'content SET created_by = 1001');
-            }
-
-            echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
+            \Phire\Table\Config::setDb($db, true);
+            \Phire\Table\Extensions::setDb($db, true);
         }
+    }
+
+    /**
+     * Post install command
+     *
+     * @return void
+     */
+    public static  function postInstall()
+    {
+        $ext = new Model\Extension();
+        $ext->getModules();
+
+        if (count($ext->new) > 0) {
+            $ext->installModules();
+        }
+
+        $dir = new \Pop\File\Dir(__DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/modules', true, true);
+        foreach ($dir->getFiles() as $file) {
+            chmod($file, 0777);
+        }
+
+        echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
     }
 
     /**

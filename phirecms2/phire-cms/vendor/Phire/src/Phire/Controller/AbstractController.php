@@ -173,8 +173,7 @@ class AbstractController extends \Pop\Mvc\Controller
                    ->set('separator', $config->separator)
                    ->set('default_language', $config->default_language)
                    ->set('error_message', $config->error_message)
-                   ->set('datetime_format', $config->datetime_format)
-                   ->set('incontent_editing', $config->incontent_editing);
+                   ->set('datetime_format', $config->datetime_format);
     }
 
     /**

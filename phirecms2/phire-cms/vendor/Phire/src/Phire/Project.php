@@ -251,9 +251,6 @@ class Project extends P
             // Set the auth method to trigger on 'dispatch.pre'
             $this->attachEvent('dispatch.pre', 'Phire\Project::auth');
 
-            // Set up in-content editing on 'dispatch.send'
-            $this->attachEvent('dispatch.send', 'Phire\Project::editor');
-
             // Set up routing error check on 'route.error'
             $this->attachEvent('route.error', 'Phire\Project::error');
 
@@ -358,48 +355,6 @@ class Project extends P
                 ($router->project()->getService('acl')->isAuth($resource, $permission))) {
                 \Pop\Http\Response::redirect($basePath . (($uri == '') ? '/' : $uri));
                 return \Pop\Event\Manager::KILL;
-            }
-        }
-    }
-
-    /**
-     * Event-based in-content editing trigger
-     *
-     * @param  \Pop\Mvc\Controller $controller
-     * @return void
-     */
-    public static function editor($controller)
-    {
-        $model = $controller->getView()->getData();
-        $i18n = Table\Config::getI18n();
-
-        if ((get_class($controller) == 'Phire\Controller\IndexController') &&
-            ($model['incontent_editing'])) {
-            if (isset($model['phireNav'])) {
-                $body = $controller->getResponse()->getBody();
-                $phireNav = $model['phireNav'];
-                $phireNav->addBranch(array(
-                    'name' => $i18n->__('Edit This Page'),
-                    'href' => BASE_PATH . APP_URI . '/content/edit/' . $controller->getView()->get('id') . '?live=1',
-                    'acl'  => array(
-                        'resource'   => 'Phire\Controller\Phire\Content\IndexController',
-                        'permission' => 'edit_' . $controller->getView()->get('type_id')
-                    )
-                ), true);
-                $phireNav->setConfig(array(
-                    'top' => array(
-                        'id'         => 'phire-nav',
-                        'attributes' => array('style' => 'display: none;')
-                    )
-                ));
-                $phireNav->rebuild();
-                if (strpos($body, 'jax.3.2.0.min.js') === false) {
-                    $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/js/jax.3.2.0.min.js"></script>' . PHP_EOL . '</head>', $body);
-                }
-                $body = str_replace('</head>', '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/phire/js/phire.edit.js"></script>' . PHP_EOL . '</head>', $body);
-                $body = str_replace('</head>', '    <link type="text/css" rel="stylesheet" href="' . BASE_PATH . CONTENT_PATH . '/assets/phire/css/phire.edit.css" />' . PHP_EOL . '</head>', $body);
-                $body = str_replace('</body>', '<a id="nav-flame" href="#" onclick="$(\'#phire-nav\').toggle(); return false;">Open</a>' . PHP_EOL . $phireNav . PHP_EOL . '</body>', $body);
-                $controller->getResponse()->setBody($body);
             }
         }
     }

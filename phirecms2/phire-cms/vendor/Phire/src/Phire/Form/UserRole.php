@@ -68,6 +68,10 @@ class UserRole extends AbstractForm
             )
         );
 
+        if ($rid != 0) {
+            $fields1['name']['attributes']['onkeyup'] = "phire.updateTitle('#user-role-title', this);";
+        }
+
         // Get any existing field values
         $fields2 = array();
         $fieldGroups = array();
@@ -101,6 +105,8 @@ class UserRole extends AbstractForm
                 $classActions[$key][$permAction] = $permAction;
             }
         }
+
+        asort($classes);
 
         // Get any current resource/permission fields
         if ($rid != 0) {

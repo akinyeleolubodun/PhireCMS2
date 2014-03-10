@@ -133,5 +133,8 @@ elif [ "$1" = "archive" ]; then
     fi
 else
     php $SCRIPT_PATH
+    if [ "$1" = "install" ]; then
+        "$SCRIPT_DIR/phire.php" post
+    fi
 fi
 

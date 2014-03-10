@@ -72,6 +72,10 @@ class FieldGroup extends AbstractForm
             )
         );
 
+        if (strpos($_SERVER['REQUEST_URI'], '/edit/') !== false) {
+            $this->initFieldsValues['name']['attributes']['onkeyup'] = "phire.updateTitle('#field-group-title', this);";
+        }
+
         $this->setAttributes('id', 'field-group-form');
     }
 

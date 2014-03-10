@@ -140,7 +140,8 @@ class FieldsController extends AbstractController
 
             // If field is found and valid
             if (isset($field->id)) {
-                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $field->name);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ' . $field->name)
+                           ->set('data_title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Fields') . ' ' . $this->view->separator . ' ');
                 $form = new Form\Field(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
                     $field->id, $this->project->module('Phire')
@@ -254,57 +255,6 @@ class FieldsController extends AbstractController
             $response->setHeader('Content-Type', 'application/json; charset=utf-8')
                      ->setBody(json_encode($body));
             $response->send();
-        }
-    }
-
-    /**
-     * Method to display browser for editors
-     *
-     * @return void
-     */
-    public function browser()
-    {
-        if ((null !== $this->request->getPath(1) && (null !== $this->request->getQuery('editor')))) {
-            $this->prepareView('browser.phtml', array(
-                'editor' => $this->request->getQuery('editor')
-            ));
-
-            if ($this->request->getPath(1) == 'image') {
-                $this->view->set('title', $this->view->i18n->__('Images'));
-            } else {
-                $this->view->set('title', $this->view->i18n->__('URIs &amp; Files'));
-            }
-
-            $field = new Model\Field();
-
-            if ($this->request->getPath(1) == 'image') {
-                $field->getImages();
-            } else if ($this->request->getPath(1) == 'file') {
-                $field->getFiles();
-            }
-
-            $this->view->merge($field->getData());
-
-            $form = new Form\Media();
-
-            if ($this->request->isPost()) {
-                $form->setFieldValues(
-                    $this->request->getPost(),
-                    array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
-                );
-
-                if ($form->isValid()) {
-                    $field->upload($form);
-                    $this->view->set('id', $field->id);
-                    Response::redirect($form->getAction());
-                } else {
-                    $this->view->set('form', $form);
-                    $this->send();
-                }
-            } else {
-                $this->view->set('form', $form);
-                $this->send();
-            }
         }
     }
 

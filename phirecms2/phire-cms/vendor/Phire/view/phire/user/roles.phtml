@@ -1,5 +1,5 @@
 <?php include $phireHeader; ?>
-        <h1><?php echo $title; ?></h1>
+        <h1 id="user-role-title" data-title="<?php echo (isset($data_title) ? $data_title : null); ?>"><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\RolesController', 'add')): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/roles/add">+ <?php $i18n->_e('Add'); ?></a>

@@ -123,9 +123,10 @@ class FieldValue extends \Phire\Model\AbstractModel
      *
      * @param array   $fields
      * @param int     $modelId
+     * @param string  $method
      * @return void
      */
-    public static function save(array $fields, $modelId)
+    public static function save(array $fields, $modelId, $method = 'POST')
     {
         // Check for an overriding config settings
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/phire.php')) {
@@ -161,7 +162,7 @@ class FieldValue extends \Phire\Model\AbstractModel
         foreach($fields as $key => $value) {
             if ((strpos($key, 'field_') !== false) && (!isset($_FILES[$key]))) {
                 $id = self::getFieldId($key);
-                if ($_POST) {
+                if ((($method == 'POST') && ($_POST)) || ($method == 'GET')) {
                     // If it's a dynamic field value, store in array
                     if (strpos($key, 'new_') !== false) {
                         foreach ($_POST as $k => $v) {
@@ -279,9 +280,10 @@ class FieldValue extends \Phire\Model\AbstractModel
      *
      * @param array   $fields
      * @param int     $modelId
+     * @param string  $method
      * @return void
      */
-    public static function update(array $fields, $modelId)
+    public static function update(array $fields, $modelId, $method = 'POST')
     {
         $config = static::factory()->config();
 
@@ -323,7 +325,7 @@ class FieldValue extends \Phire\Model\AbstractModel
         foreach($fields as $key => $value) {
             if ((strpos($key, 'field_') !== false) && (!isset($_FILES[$key]))) {
                 $id = self::getFieldId($key);
-                if ($_POST) {
+                if ((($method == 'POST') && ($_POST)) || ($method == 'GET')) {
                     // If it's a dynamic field value, store in array
                     if (strpos($key, 'field_' . $id . '_cur_') !== false) {
                         if (!isset($valueAry[$id])) {

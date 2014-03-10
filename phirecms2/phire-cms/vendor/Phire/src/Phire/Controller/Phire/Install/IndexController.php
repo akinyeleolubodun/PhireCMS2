@@ -187,21 +187,17 @@ class IndexController extends C
                         $newUser->update();
                     }
 
+                    $ext = new Model\Extension(array('acl' => $this->project->getService('acl')));
+                    $ext->getModules($this->project);
+
+                    if (count($ext->new) > 0) {
+                        $ext->installModules();
+                    }
+
                     $user->set('form', '        <p style="text-align: center; margin: 50px 0 0 0; line-height: 1.8em; font-size: 1.2em;">' . $this->i18n->__('Thank you. The system has been successfully installed.') . '<br />' . $this->i18n->__('You can now log in %1here%2 or view the home page %3here%4.', array('<a href="' . BASE_PATH . APP_URI . '/login">', '</a>', '<a href="' . BASE_PATH . '/" target="_blank">', '</a>')) . '</p>' . PHP_EOL);
                     Model\Install::send($form);
                     unset($this->sess->config);
                     unset($this->sess->app_uri);
-
-                    if (file_exists(__DIR__ . '/../../../Table/Content.php')) {
-                        $pages = array(6001, 6002, 6003);
-                        foreach ($pages as $pid) {
-                            $page = \Phire\Table\Content::findById($pid);
-                            if (isset($page->id)) {
-                                $page->created_by = $user->getData('id');
-                                $page->update();
-                            }
-                        }
-                    }
 
                     $this->view = View::factory($this->viewPath . '/user.phtml', $user->getData());
                     $this->view->set('i18n', $this->i18n);

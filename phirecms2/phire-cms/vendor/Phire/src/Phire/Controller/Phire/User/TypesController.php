@@ -146,7 +146,8 @@ class TypesController extends AbstractController
 
             // If type is found and valid
             if (null !== $type->type) {
-                $this->view->set('title', $this->view->i18n->__('User Types') . ' ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)));
+                $this->view->set('title', $this->view->i18n->__('User Types') . ' ' . $this->view->separator . ' ' . ucwords(str_replace('-', ' ', $type->type)))
+                           ->set('data_title', $this->view->i18n->__('User Types') . ' ' . $this->view->separator . ' ');
                 $form = new Form\UserType(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $this->request->getPath(1)
                 );

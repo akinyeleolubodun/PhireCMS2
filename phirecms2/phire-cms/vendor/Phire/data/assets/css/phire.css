@@ -264,8 +264,7 @@ input[type=submit]:focus, button:focus {
     width: 330px;
 }
 
-#login-form dl > dd, #content-form dl > dd, #content-type-form dl > dd, #field-form dl > dd,
-#field-group-form dl > dd, #navigation-form dl > dd, #template-form dl > dd, #category-form dl > dd,
+#login-form dl > dd, #field-form dl > dd, #field-group-form dl > dd,
 #user-role-form dl > dd, #user-type-form dl > dd {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -435,21 +434,8 @@ input[type=submit]:focus, button:focus {
     overflow: auto;
 }
 
-#search-title {
-    padding: 2px 5px 3px 5px;
-    height: 15px;
-    font-size: 0.9em;
-}
-
-#sites_search {
-    margin: 0 5px 0 0;
-    padding: 1px 2px 1px 2px;
-    font-size: 0.9em;
-}
-
-#content-form, #content-select-form, #content-type-form, #category-form, #template-form,
-#user-form, #user-select-form, #user-type-form, #user-role-form, #batch-form, #field-form,
-#field-group-form, #navigation-form, #site-form {
+#user-form, #user-select-form, #user-type-form, #user-role-form,
+#field-form, #field-group-form, #site-form {
     clear: both;
     display: block;
     margin: 45px 0 10px 0;
@@ -457,21 +443,8 @@ input[type=submit]:focus, button:focus {
     border-top: solid 1px #ccc;
 }
 
-#content-form-field-group-1 {
-    margin: 20px 0 40px 10px;
-    padding: 0 0 20px 15px;
-    float: right;
-    width: 280px;
-    min-height: 420px;
-    border-left: solid 1px #ccc;
-    background-image: url(../img/inner-shadow.gif);
-    background-repeat: repeat-y;
-    background-position: -4px 0px;
-}
-
-#template-form-field-group-1, #category-form-field-group-1, #content-type-form-field-group-1,
-#user-form-field-group-1, #user-role-form-field-group-1, #navigation-form-field-group-1,
-#field-form-field-group-1, #user-type-form-field-group-1, #site-form-field-group-1 {
+#user-form-field-group-1, #user-role-form-field-group-1, #field-form-field-group-1,
+#user-type-form-field-group-1, #site-form-field-group-1 {
     margin: 20px 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;
@@ -483,7 +456,6 @@ input[type=submit]:focus, button:focus {
     background-position: -4px 0px;
 }
 
-#content-form-field-group-1 fieldset, #category-form-field-group-1 fieldset,
 #field-form-field-group-1 fieldset, #user-form-field-group-1 fieldset,
 #site-form-field-group-1 fieldset {
     width: 220px;
@@ -493,10 +465,8 @@ input[type=submit]:focus, button:focus {
     border-top: solid 1px #ccc;
 }
 
-#content-form-field-group-1 dt, #content-type-form-field-group-1 dt, #category-form-field-group-1 dt,
-#navigation-form-field-group-1 dt, #template-form-field-group-1 dt, #field-form-field-group-1 dt,
-#user-form-field-group-1 dt, #user-role-form-field-group-1 dt, #user-type-form-field-group-1 dt,
-#site-form-field-group-1 dt {
+#field-form-field-group-1 dt, #user-form-field-group-1 dt, #user-role-form-field-group-1 dt,
+#user-type-form-field-group-1 dt, #site-form-field-group-1 dt {
     margin: 0;
     padding: 10px 3px 3px 3px;
     width: 220px;
@@ -506,51 +476,19 @@ input[type=submit]:focus, button:focus {
     line-height: 1.0em;
 }
 
-#content-form-field-group-1 dd, #content-type-form-field-group-1 dd, #category-form-field-group-1 dd,
-#navigation-form-field-group-1 dd, #template-form-field-group-1 dd, #field-form-field-group-1 dd,
-#user-form-field-group-1 dd, #user-role-form-field-group-1 dd, #user-type-form-field-group-1 dd,
-#site-form-field-group-1 dd {
+#field-form-field-group-1 dd, #user-form-field-group-1 dd, #user-role-form-field-group-1 dd,
+#user-type-form-field-group-1 dd, #site-form-field-group-1 dd {
     margin: 0 0 5px 0;
     padding: 0 3px 3px 3px;
     float: left;
     line-height: 1.0em;
 }
 
-#content-form-field-group-1 select, #template-form-field-group-1 select, #field-form-field-group-1 select,
-#category-form-field-group-1 select, #user-form-field-group-1 select, #user-role-form-field-group-1 select,
+#field-form-field-group-1 select, #user-form-field-group-1 select, #user-role-form-field-group-1 select,
 #user-type-form-field-group-1 select {
     margin: 0;
     padding: 2px 1px 2px 1px;
     font-size: 0.9em;
-}
-
-#content-process {
-    margin: 4px 6px 2px 6px;
-    padding: 3px;
-    float: right;
-}
-
-#batch-form-field-group-1 dt {
-    clear: left;
-    margin: 0;
-    padding: 12px 3px 6px 3px;
-    line-height: 1.2em;
-}
-
-#batch-form-field-group-1 dd {
-    float: left;
-    margin: 0;
-    padding: 6px 3px 9px 3px;
-    line-height: 1.2em;
-}
-
-#batch-form-field-group-2 {
-    margin: 10px 0 10px 0;
-    padding: 10px 0 10px 0;
-    border-top: solid 1px #ccc;
-    border-bottom: solid 1px #ccc;
-    width: 100%;
-    overflow: auto;
 }
 
 #user-type-form {
@@ -599,22 +537,6 @@ input[type=submit]:focus, button:focus {
 #user-role-form-field-group-3 dt, #user-role-form-field-group-4 dt {
     margin: 0;
     padding: 0;
-}
-
-#site-migration-form-field-group-1 {
-    clear: both;
-    margin: 0;
-    padding: 20px 0 0 0;
-}
-
-#uri-span, #slug-span {
-    margin: 0;
-    padding: 5px;
-    height: 10px;
-    color: #666;
-    font-weight: normal;
-    font-size: 1.0em;
-    display: block;
 }
 
 #media-sizes, #media-actions, #media-params, #media-quality, #media-remove {
@@ -684,28 +606,6 @@ input[type=submit]:focus, button:focus {
     padding: 0;
     width: 45%;
     line-height: 1.5em;
-}
-
-#content-search-form {
-    margin: 0 0 5px 0;
-    padding: 0;
-    overflow: auto;
-    float: right;
-}
-
-#batch-form-field-group-1 {
-    margin: 0 0 10px 0;
-    padding: 0 0 10px 0;
-    overflow: auto;
-}
-
-#quick-view {
-    clear: left;
-    margin: 5px 0 0 0;
-    padding: 0 10px 0 0;
-    font-size: 0.9em;
-    float: right;
-    text-align: right;
 }
 
 #updated {
@@ -1164,7 +1064,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     margin: 4px 5px 5px 0;
     padding: 5px 8px 5px 8px;
     display: block;
-    width: 75px;
+    width: 100px;
     color: #fff;
     text-align: center;
     font-weight: bold;

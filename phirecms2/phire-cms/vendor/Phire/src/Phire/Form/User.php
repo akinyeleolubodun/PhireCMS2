@@ -196,8 +196,15 @@ class User extends AbstractForm
                     )
                 )
             );
+            if ($uid != 0) {
+                $fields2['username']['attributes']['onkeyup'] = "phire.updateTitle('#username-title', this);";
+            }
         } else {
             $fields2 = array();
+
+            if ($uid != 0) {
+                $fields1['email1']['attributes']['onkeyup'] = "phire.updateTitle('#username-title', this);";
+            }
         }
 
         // Continue setting up initial user fields

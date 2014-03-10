@@ -138,7 +138,8 @@ class SitesController extends AbstractController
 
             // If field is found and valid
             if (isset($site->id)) {
-                $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $site->domain);
+                $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $site->domain)
+                           ->set('data_title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ');
                 $form = new Form\Site(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post', $site->id
                 );
@@ -183,46 +184,6 @@ class SitesController extends AbstractController
             } else {
                 Response::redirect($this->request->getBasePath());
             }
-        }
-    }
-
-    /**
-     * Site migrate method
-     *
-     * @return void
-     */
-    public function migrate()
-    {
-        $this->prepareView('sites.phtml', array(
-            'assets'   => $this->project->getAssets(),
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav'),
-        ));
-
-        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Sites') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Migrate'));
-
-        $form = new Form\Migrate(
-            $this->request->getBasePath() . $this->request->getRequestUri(), 'post'
-        );
-
-        if ($this->request->isPost()) {
-            $form->setFieldValues(
-                $this->request->getPost(),
-                array('htmlentities'),
-                array(array(ENT_QUOTES, 'UTF-8'))
-            );
-
-            if ($form->isValid()) {
-                $site = new Model\Site();
-                $site->migrate($form);
-                Response::redirect($this->request->getBasePath());
-            } else {
-                $this->view->set('form', $form);
-                $this->send();
-            }
-        } else {
-            $this->view->set('form', $form);
-            $this->send();
         }
     }
 

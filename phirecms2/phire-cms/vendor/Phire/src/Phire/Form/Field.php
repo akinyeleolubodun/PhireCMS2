@@ -239,10 +239,15 @@ class Field extends AbstractForm
             )
         );
 
+        if ($id != 0) {
+            $fields1['name']['attributes']['onkeyup'] = "phire.updateTitle('#field-title', this);";
+        }
         // Create next set of fields
         $fields3 = array();
 
         $models = Model\Field::getModels($config);
+
+        asort($models);
 
         $fields3['model_new_1'] = array(
             'type'       => 'select',

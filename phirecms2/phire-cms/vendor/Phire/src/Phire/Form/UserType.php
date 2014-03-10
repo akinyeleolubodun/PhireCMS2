@@ -104,6 +104,11 @@ class UserType extends AbstractForm
                 'attributes' => array('size' => 40)
             )
         );
+
+        if ($tid != 0) {
+            $fields1['type']['attributes']['onkeyup'] = "phire.updateTitle('#user-type-title', this);";
+        }
+
         $fields2a = array(
             'log_in' => array(
                 'type'   => 'radio',

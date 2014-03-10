@@ -227,11 +227,6 @@ class Config extends AbstractModel
         $maxSize->setAttributes('size', 10)
                 ->setAttributes('style', 'padding: 3px;');
 
-        // Set feed limit form element
-        $feedLimit = new Element('text', 'feed_limit', $config['feed_limit']);
-        $feedLimit->setAttributes('size', 10)
-                  ->setAttributes('style', 'padding: 3px;');
-
         // Set page limit form element
         $pageLimit = new Element('text', 'pagination_limit', $config['pagination_limit']);
         $pageLimit->setAttributes('size', 10)
@@ -274,12 +269,8 @@ class Config extends AbstractModel
             'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; [<strong style="color: #f00; padding: 0 0 0 5px;">PHP ' . $this->i18n->__('Limits') . ':</strong> ' . $phpLimitsString . ']',
             'media_actions'       => $mediaConfig,
             'media_image_adapter' => new Element\Select('media_image_adapter', $imageAdapters, $config['media_image_adapter'], '                    '),
-            'feed_type'           => new Element\Select('feed_type', array('9' => 'RSS', '10' => 'Atom'), $config['feed_type'], '                    '),
-            'feed_limit'          => '                    ' . $feedLimit,
             'pagination_limit'    => '                    ' . $pageLimit,
             'pagination_range'    => '                    ' . $pageRange,
-            'open_authoring'      => new Element\Radio('open_authoring', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['open_authoring'], '                    '),
-            'incontent_editing'   => new Element\Radio('incontent_editing', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['incontent_editing'], '                    '),
             'force_ssl'           => new Element\Radio('force_ssl', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['force_ssl'], '                    '),
             'live'                => new Element\Radio('live', array('1' => $this->i18n->__('Yes'), '0' => $this->i18n->__('No')), $config['live'], '                    ')
         );

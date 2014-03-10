@@ -8,15 +8,8 @@ var phire = {
     timeout           : null,
     submitted         : false,
     resourceCount     : 1,
-    batchCount        : 1,
     modelCount        : 1,
     valCount          : 1,
-    contentForm       : null,
-    categoryForm      : null,
-    contentParentId   : 0,
-    contentParentUri  : '',
-    categoryParentId  : 0,
-    categoryParentUri : '',
     curErrors         : 0,
     curValue          : null,
     selIds            : [],
@@ -33,6 +26,9 @@ var phire = {
         "speed"    : 500,
         "tween"    : 25,
         "easing"   : jax.tween.easein.quad
+    },
+    updateTitle : function(title, input) {
+        jax(title).val(jax(title).data('title') + jax(input).val());
     },
     addResource       : function() {
         phire.resourceCount++;
@@ -99,57 +95,6 @@ var phire = {
             for (var i = 0; i < j.actions.length; i++) {
                 jax('#permission_' + cur + '_' + id).append('option', {"value" : j.actions[i]}, j.actions[i]);
             }
-        }
-    },
-    slug : function(src, tar) {
-        if ((src != null) && (tar != null)) {
-            var uri = new jax.String(jax('#' + src).val());
-            jax('#' + tar).val(uri.slug());
-        }
-
-        if (jax('#uri-span')[0] != undefined) {
-            if (jax('#parent_id')[0] != undefined) {
-                var parent = jax('#parent_id').val();
-                if (parent != phire.contentParentId) {
-                    phire.contentParentId = parent;
-                    var j = jax.json.parse('../json/' + parent);
-                    phire.contentParentUri = j.uri;
-                }
-            }
-            var val = jax('#' + tar).val();
-            val = phire.contentParentUri + val;
-            if ((val != '') && (val.substring(0, 1) != '/')) {
-                val = '/' + val;
-            } else if (val == '') {
-                val = '/';
-            }
-            jax('#uri-span').val(((val.substring(0, 2) == '//') ? val.substring(1) : val));
-        }
-    },
-    catSlug : function(src, tar) {
-        if ((src != null) && (tar != null)) {
-            var uri = new jax.String(jax('#' + src).val());
-            jax('#' + tar).val(uri.slug());
-        }
-
-        if (jax('#slug-span')[0] != undefined) {
-            if (jax('#parent_id')[0] != undefined) {
-                var parent = jax('#parent_id').val();
-                if (parent != phire.categoryParentId) {
-                    phire.categoryParentId = parent;
-                    var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-                    var j = jax.json.parse(jsonLoc + parent);
-                    phire.categoryParentUri = j.uri;
-                }
-            }
-            var val = jax('#' + tar).val();
-            val = phire.categoryParentUri + val;
-            if ((val != '') && (val.substring(0, 1) != '/')) {
-                val = '/' + val;
-            } else if (val == '') {
-                val = '/';
-            }
-            jax('#slug-span').val(((val.substring(0, 2) == '//') ? val.substring(1) : val));
         }
     },
     customDatetime : function(val) {
@@ -281,23 +226,6 @@ var phire = {
         } else {
             jax(a).val(phire.i18n.t('Hide'));
             jax('#dir-errors').wipeUp(hgt, {tween : 10, speed: 200});
-        }
-    },
-    addBatchFields : function(max) {
-        if (phire.batchCount < max) {
-            phire.batchCount++;
-
-            // Add file name field
-            jax('#file_name_1').clone({
-                "name" : 'file_name_' + phire.batchCount,
-                "id"   : 'file_name_' + phire.batchCount
-            }).appendTo(jax('#file_name_1').parent());
-
-            // Add file title field
-            jax('#file_title_1').clone({
-                "name" : 'file_title_' + phire.batchCount,
-                "id"   : 'file_title_' + phire.batchCount
-            }).appendTo(jax('#file_title_1').parent());
         }
     },
     showLoading : function() {
@@ -546,11 +474,7 @@ var phire = {
                             'field_' + phire.selIds[i].id,
                             {
                                 width  : phire.selIds[i].width,
-                                height : phire.selIds[i].height,
-                                filebrowserBrowseUrl      : phire.sysBasePath + '/structure/fields/browser/file?editor=ckeditor',
-                                filebrowserImageBrowseUrl : phire.sysBasePath + '/structure/fields/browser/image?editor=ckeditor',
-                                filebrowserWindowWidth    : '900',
-                                filebrowserWindowHeight   : '700'
+                                height : phire.selIds[i].height
                             }
                         );
                     }
@@ -570,19 +494,7 @@ var phire = {
                                 height                : phire.selIds[i].height,
                                 relative_urls         : false,
                                 convert_urls          : 0,
-                                remove_script_host    : 0,
-                                file_browser_callback : function(field_name, url, type, win) {
-                                    tinymce.activeEditor.windowManager.open({
-                                        title  : "Asset Browser",
-                                        url    : phire.sysBasePath + '/structure/fields/browser/' + type + '?editor=tinymce',
-                                        width  : 900,
-                                        height : 700
-                                    }, {
-                                        oninsert : function(url) {
-                                            win.document.getElementById(field_name).value = url;
-                                        }
-                                    });
-                                }
+                                remove_script_host    : 0
                             }
                         );
                     } else {
@@ -707,80 +619,6 @@ jax(document).ready(function(){
         });
     }
 
-    // For content form
-    if (jax('#content-form')[0] != undefined) {
-        if (jax('#uri').attrib('type') == 'text') {
-            phire.contentForm = jax('#content-form').form({
-                "content_title" : {
-                    "required" : true
-                }
-            });
-        } else if (jax('#current-file')[0] == undefined) {
-            phire.contentForm = jax('#content-form').form({
-                "uri" : {
-                    "required" : phire.i18n.t('The file field is required.')
-                }
-            });
-        }
-
-        phire.contentForm.setErrorDisplay(phire.errorDisplay);
-        phire.contentForm.submit(function(){
-            phire.submitted = true;
-            return phire.contentForm.validate();
-        });
-
-        if (jax('#uri')[0] != undefined) {
-            var val = '';
-            if (jax('#parent_id')[0] != undefined) {
-                var parent = jax('#parent_id').val();
-                if (parent != phire.contentParentId) {
-                    phire.contentParentId = parent;
-                    var j = jax.json.parse('../json/' + parent);
-                    phire.contentParentUri = j.uri;
-                    val = phire.contentParentUri + jax('#uri').val();
-                } else {
-                    val = jax('#uri').val();
-                }
-            }
-            if (jax('#uri')[0].type != 'file') {
-                if ((val != '') && (val.substring(0, 1) != '/')) {
-                    val = '/' + val;
-                } else if (val == '') {
-                    val = '/';
-                }
-                jax(jax('#uri').parent()).append('span', {"id" : 'uri-span'}, ((val.substring(0, 2) == '//') ? val.substring(1) : val));
-            }
-
-            // Check preview timestamp to determine if a preview window should be opened
-            if (jax.query('preview') != undefined) {
-                var ts = Math.round(new Date().getTime() / 1000);
-                var diff = Math.abs(jax.query('preview') - ts);
-                if (diff < 180) {
-                    if (jax('#uri-span')[0] != undefined) {
-                        window.open(decodeURIComponent(jax.query('base_path')) + jax('#uri-span').val());
-                    }
-                }
-            }
-        }
-
-        phire.curForm = '#content-form';
-        jax.beforeunload(phire.checkFormChange);
-    }
-
-    // For content type form
-    if (jax('#content-type-form')[0] != undefined) {
-        var contentTypeForm = jax('#content-type-form').form({
-            "name" : {
-                "required" : true
-            }
-        });
-
-        contentTypeForm.setErrorDisplay(phire.errorDisplay);
-        contentTypeForm.submit(function(){
-            return contentTypeForm.validate();
-        });
-    }
-
     // For field form
     if (jax('#field-form')[0] != undefined) {
         var fieldForm = jax('#field-form').form({
@@ -807,73 +645,6 @@ jax(document).ready(function(){
         fieldGroupForm.submit(function(){
             return fieldGroupForm.validate();
         });
-    }
-
-    // For navigation form
-    if (jax('#navigation-form')[0] != undefined) {
-        var navigationForm = jax('#navigation-form').form({
-            "navigation" : {
-                "required" : true
-            }
-        });
-
-        navigationForm.setErrorDisplay(phire.errorDisplay);
-        navigationForm.submit(function(){
-            return navigationForm.validate();
-        });
-    }
-
-    // For template form
-    if (jax('#template-form')[0] != undefined) {
-        var templateForm = jax('#template-form').form({
-            "name" : {
-                "required" : true
-            },
-            "template" : {
-                "required" : true
-            }
-        });
-
-        templateForm.setErrorDisplay(phire.errorDisplay);
-        templateForm.submit(function(){
-            return templateForm.validate();
-        });
-    }
-
-    // For category form
-    if (jax('#category-form')[0] != undefined) {
-        phire.categoryForm = jax('#category-form').form({
-            "category_title" : {
-                "required" : 'The title field is required.'
-            }
-        });
-
-        phire.categoryForm.setErrorDisplay(phire.errorDisplay);
-        phire.categoryForm.submit(function(){
-            return phire.categoryForm.validate();
-        });
-
-        if (jax('#slug')[0] != undefined) {
-            var val = '';
-            if (jax('#parent_id')[0] != undefined) {
-                var parent = jax('#parent_id').val();
-                if (parent != phire.categoryParentId) {
-                    phire.categoryParentId = parent;
-                    var jsonLoc = (window.location.href.indexOf('edit') != -1) ? '../json/' : './json/';
-                    var j = jax.json.parse(jsonLoc + parent);
-                    phire.categoryParentUri = j.uri;
-                    val = phire.categoryParentUri + jax('#slug').val();
-                } else {
-                    val = jax('#slug').val();
-                }
-            }
-            if ((val != '') && (val.substring(0, 1) != '/')) {
-                val = '/' + val;
-            } else if (val == '') {
-                val = '/';
-            }
-            jax(jax('#slug').parent()).append('span', {"id" : 'slug-span'}, ((val.substring(0, 2) == '//') ? val.substring(1) : val));
-        }
     }
 
     // For user role form
@@ -976,54 +747,6 @@ jax(document).ready(function(){
         }
     }
 
-    if (jax('#content-remove-form')[0] != undefined) {
-        jax('#checkall').click(function(){
-            if (this.checked) {
-                jax('#content-remove-form').checkAll(this.value);
-            } else {
-                jax('#content-remove-form').uncheckAll(this.value);
-            }
-        });
-        jax('#content-remove-form').submit(function(){
-            return jax('#content-remove-form').checkValidate('checkbox', true);
-        });
-    }
-    if (jax('#category-remove-form')[0] != undefined) {
-        jax('#checkall').click(function(){
-            if (this.checked) {
-                jax('#category-remove-form').checkAll(this.value);
-            } else {
-                jax('#category-remove-form').uncheckAll(this.value);
-            }
-        });
-        jax('#category-remove-form').submit(function(){
-            return jax('#category-remove-form').checkValidate('checkbox', true);
-        });
-    }
-    if (jax('#content-type-remove-form')[0] != undefined) {
-        jax('#checkall').click(function(){
-            if (this.checked) {
-                jax('#content-type-remove-form').checkAll(this.value);
-            } else {
-                jax('#content-type-remove-form').uncheckAll(this.value);
-            }
-        });
-        jax('#content-type-remove-form').submit(function(){
-            return jax('#content-type-remove-form').checkValidate('checkbox', true);
-        });
-    }
-    if (jax('#template-remove-form')[0] != undefined) {
-        jax('#checkall').click(function(){
-            if (this.checked) {
-                jax('#template-remove-form').checkAll(this.value);
-            } else {
-                jax('#template-remove-form').uncheckAll(this.value);
-            }
-        });
-        jax('#template-remove-form').submit(function(){
-            return jax('#template-remove-form').checkValidate('checkbox', true);
-        });
-    }
     if (jax('#themes-remove-form')[0] != undefined) {
         jax('#checkall').click(function(){
             if (this.checked) {
@@ -1043,9 +766,6 @@ jax(document).ready(function(){
             } else {
                 jax('#modules-remove-form').uncheckAll(this.value);
             }
-        });
-        jax('#modules-remove-form').submit(function(){
-            return jax('#modules-remove-form').checkValidate('checkbox', true);
         });
     }
     if (jax('#user-remove-form')[0] != undefined) {
@@ -1107,8 +827,5 @@ jax(document).ready(function(){
         jax('#sites-remove-form').submit(function(){
             return jax('#sites-remove-form').checkValidate('checkbox', true);
         });
-    }
-    if (jax('#site-migration-form')[0] != undefined) {
-        jax(jax('#site_from').parent()).attrib('class', 'blue-arrow');
     }
 });

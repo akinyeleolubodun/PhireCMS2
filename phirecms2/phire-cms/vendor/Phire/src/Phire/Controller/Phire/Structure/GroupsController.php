@@ -136,7 +136,8 @@ class GroupsController extends AbstractController
 
             // If group is found and valid
             if (isset($group->id)) {
-                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $group->name);
+                $this->view->set('title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ' . $group->name)
+                           ->set('data_title', $this->view->i18n->__('Structure') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Field Groups') . ' ' . $this->view->separator . ' ');
                 $form = new Form\FieldGroup($this->request->getBasePath() . $this->request->getRequestUri());
 
                 // If form is submitted

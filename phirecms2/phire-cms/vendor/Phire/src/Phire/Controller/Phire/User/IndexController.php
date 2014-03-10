@@ -204,6 +204,7 @@ class IndexController extends AbstractController
             // If user is found and valid
             if ((null !== $user->id) && ($this->view->acl->isAuth('Phire\Controller\Phire\Users\IndexController', 'edit')) && ($this->view->acl->isAuth('Phire\Controller\Phire\Users\IndexController', 'edit_' . $user->type_id))) {
                 $this->view->set('title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ' . $user->username)
+                           ->set('data_title', $this->view->i18n->__('Users') . ' ' . $this->view->separator . ' ' . $user->type_name . ' ' . $this->view->separator . ' ')
                            ->set('typeId', $user->type_id);
                 $form = new Form\User(
                     $this->request->getBasePath() . $this->request->getRequestUri(), 'post',

@@ -105,11 +105,6 @@ class IndexController extends AbstractController
 
         $overview = $config->getOverview();
 
-        if (file_exists(__DIR__ . '/../../Model/Content.php')) {
-            $content = new Model\Content();
-            $this->view->set('recent', $content->getRecent());
-        }
-
         $this->view->set('themes', $extensions->getAllThemes())
                    ->set('modules', $extensions->getAllModules())
                    ->set('overview', $overview['system'])

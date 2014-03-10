@@ -64,6 +64,11 @@ class Site extends AbstractForm
                 'attributes' => array('size' => 80)
             )
         );
+
+        if ($sid != 0) {
+            $fields1['domain']['attributes']['onkeyup'] = "phire.updateTitle('#site-header-title', this);";
+        }
+
         $fields2 = array(
             'submit' => array(
                 'type'  => 'submit',

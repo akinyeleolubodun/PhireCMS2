@@ -16,7 +16,7 @@
 <?php endforeach; ?>
 <?php foreach ($config['settings'] as $setting => $value): ?>
 <?php
-    $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl', 'incontent'), array(' ', 'Date &amp; Time', 'SSL', 'In-Content'), $setting));
+    $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting));
     switch ($setting):
         case 'system_title':
             echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#system_title_row\').toggle(\'table-row\'); $(\'#system_email_row\').toggle(\'table-row\'); $(\'#site_title_row\').toggle(\'table-row\'); $(\'#separator_row\').toggle(\'table-row\'); $(\'#default_language_row\').toggle(\'table-row\'); $(\'#error_message_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Default Settings') . '</a></th></tr>' . PHP_EOL;
@@ -27,14 +27,10 @@
             $display = 'none';
             break;
         case 'media_allowed_types':
-            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#media_actions_row\').toggle(\'table-row\'); $(\'#media_allowed_types_row\').toggle(\'table-row\'); $(\'#media_image_adapter_row\').toggle(\'table-row\'); $(\'#media_max_filesize_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Media Settings') . '</a></th></tr>' . PHP_EOL;
+            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#media_actions_row\').toggle(\'table-row\'); $(\'#media_allowed_types_row\').toggle(\'table-row\'); $(\'#media_image_adapter_row\').toggle(\'table-row\'); $(\'#media_max_filesize_row\').toggle(\'table-row\');  $(\'#live-header_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Media Settings') . '</a></th></tr>' . PHP_EOL;
             $display = 'none';
             break;
-        case 'feed_type':
-            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#feed_type_row\').toggle(\'table-row\'); $(\'#feed_limit_row\').toggle(\'table-row\'); $(\'#pagination_limit_row\').toggle(\'table-row\'); $(\'#pagination_range_row\').toggle(\'table-row\'); $(\'#live-header_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Feed & Page Settings') . '</a></th></tr>' . PHP_EOL;
-            $display = 'none';
-            break;
-        case 'open_authoring':
+        case 'pagination_limit':
             echo '                <tr id="live-header_row" style="display: none;"><th class="config-header" colspan="2">&nbsp;</th></tr>' . PHP_EOL;
             $display = 'table-row';
             break;

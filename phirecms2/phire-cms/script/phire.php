@@ -10,9 +10,13 @@ define('PH_CLI_ROOT', __DIR__ . '/../..');
 
 require_once PH_CLI_ROOT . '/bootstrap.php';
 
-// Write header
-echo PHP_EOL;
-echo 'Phire CMS 2 CLI' . PHP_EOL;
-echo '===============' . PHP_EOL . PHP_EOL;
+if (isset($argv[1]) && ($argv[1] == 'post')) {
+    \Phire\Cli::postInstall();
+} else {
+    // Write header
+    echo PHP_EOL;
+    echo 'Phire CMS 2 CLI' . PHP_EOL;
+    echo '===============' . PHP_EOL . PHP_EOL;
 
-$cli = new \Phire\Cli($argv);
+    $cli = new \Phire\Cli($argv);
+}
