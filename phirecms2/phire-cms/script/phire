@@ -134,7 +134,13 @@ elif [ "$1" = "archive" ]; then
 else
     php $SCRIPT_PATH
     if [ "$1" = "install" ]; then
-        "$SCRIPT_DIR/phire.php" post
+        if [ "$CYG_PATH" != "" ]; then
+            SCRIPT_PATH="$( cygpath -w $SCRIPT_DIR )\\phire.php post"
+            SCRIPT_PATH=${SCRIPT_PATH//\\/\/}
+        else
+            SCRIPT_PATH="$SCRIPT_DIR/phire.php post"
+        fi
+        php $SCRIPT_PATH
     fi
 fi
 

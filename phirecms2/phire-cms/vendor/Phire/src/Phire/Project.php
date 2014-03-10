@@ -600,27 +600,27 @@ class Project extends P
                             $as->copy($newDir . '/' . $as->getBasename(), true);
                             $as->setPermissions(0777);
                         }
-                        if (($as->getExt() == 'js') && ($as->getBasename() != 'phire.edit.js')) {
+                        if ($as->getExt() == 'js') {
                             $folder = null;
-                            if (strpos($as->getFullPath(), '/js/') !== false) {
+                            if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/js/';
-                            } else if (strpos($as->getFullPath(), '/scripts/') !== false) {
+                            } else if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/scripts/';
-                            } else if (strpos($as->getFullPath(), '/script/') !== false) {
+                            } else if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'script/' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/script/';
-                            } else if (strpos($as->getFullPath(), '/scr/') !== false) {
+                            } else if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'scr/' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/scr/';
                             }
                             if (null !== $folder) {
                                 $this->assets['js'] .= '    <script type="text/javascript" src="' . BASE_PATH . CONTENT_PATH . '/assets/' . strtolower($moduleName) . $folder . $as->getBasename() . '"></script>' . PHP_EOL;
                             }
-                        } else if (($as->getExt() == 'css') && ($as->getBasename() != 'phire.edit.css')) {
+                        } else if ($as->getExt() == 'css') {
                             $folder = null;
-                            if (strpos($as->getFullPath(), '/css/') !== false) {
+                            if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/css/';
-                            } else if (strpos($as->getFullPath(), '/styles/') !== false) {
+                            } else if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/styles/';
-                            } else if (strpos($as->getFullPath(), '/style/') !== false) {
+                            } else if (strpos($as->getFullPath(), DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR) !== false) {
                                 $folder = '/style/';
                             }
                             if (null !== $folder) {
