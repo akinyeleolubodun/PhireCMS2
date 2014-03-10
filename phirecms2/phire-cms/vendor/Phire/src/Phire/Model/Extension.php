@@ -190,82 +190,88 @@ class Extension extends AbstractModel
                 }
             }
 
+            $formats = Archive::formats();
+
             $last = null;
             foreach ($this->data['new'] as $name => $theme) {
-                $archive = new Archive($themePath . '/' . $theme);
-                $archive->extract($themePath . '/');
-                if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($themePath . '/' . $name . '.tar'))) {
-                    unlink($themePath . '/' . $name . '.tar');
-                }
-
-                $templates = array();
-
-                $dir = new Dir($themePath . '/' . $name);
-                foreach ($dir->getFiles() as $file) {
-                    if (stripos($file, '.html') !== false) {
-                        $tmplName = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($file, 0, strrpos($file, '.'))));
-                        $templates['template_ph_' . $file] = $tmplName;
-                    } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
-                        $templates[] = $file;
+                $ext = substr($theme, (strrpos($theme, '.') + 1));
+                if (array_key_exists($ext, $formats)) {
+                    $archive = new Archive($themePath . '/' . $theme);
+                    $archive->extract($themePath . '/');
+                    if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($themePath . '/' . $name . '.tar'))) {
+                        unlink($themePath . '/' . $name . '.tar');
                     }
-                }
 
-                $style = null;
-                $info = array();
+                    $templates = array();
 
-                // Check for a style sheet
-                if (file_exists($themePath . '/' . $name . '/style.css')) {
-                    $style = $themePath . '/' . $name . '/style.css';
-                } else if (file_exists($themePath . '/' . $name . '/styles.css')) {
-                    $style = $themePath . '/' . $name . '/styles.css';
-                } else if (file_exists($themePath . '/' . $name . '/css/style.css')) {
-                    $style = $themePath . '/' . $name . '/css/style.css';
-                } else if (file_exists($themePath . '/' . $name . '/css/styles.css')) {
-                    $style = $themePath . '/' . $name . '/css/styles.css';
-                }
+                    $dir = new Dir($themePath . '/' . $name);
+                    foreach ($dir->getFiles() as $file) {
+                        if (stripos($file, '.html') !== false) {
+                            $tmplName = ucwords(str_replace(array('_', '-'), array(' ', ' '), substr($file, 0, strrpos($file, '.'))));
+                            $templates['template_ph_' . $file] = $tmplName;
+                        } else if ((stripos($file, '.phtml') !== false) || (stripos($file, '.php') !== false) || (stripos($file, '.php3') !== false)) {
+                            $templates[] = $file;
+                        }
+                    }
 
-                // Try and get theme info from style sheet
-                if (null !== $style) {
-                    $css = file_get_contents($style);
-                    if (strpos($css, '*/') !== false) {
-                        $cssHeader = substr($css, 0, strpos($css, '*/'));
-                        $cssHeader = substr($cssHeader, (strpos($cssHeader, '/*') + 2));
-                        $cssHeaderAry = explode("\n", $cssHeader);
-                        foreach ($cssHeaderAry as $line) {
-                            if (strpos($line, ':')) {
-                                $ary = explode(':', $line);
-                                if (isset($ary[0]) && isset($ary[1])) {
-                                    $key = trim(str_replace('*', '', $ary[0]));
-                                    $value = trim(str_replace('*', '', $ary[1]));
-                                    $info[$key] = $value;
+                    $style = null;
+                    $info = array();
+
+                    // Check for a style sheet
+                    if (file_exists($themePath . '/' . $name . '/style.css')) {
+                        $style = $themePath . '/' . $name . '/style.css';
+                    } else if (file_exists($themePath . '/' . $name . '/styles.css')) {
+                        $style = $themePath . '/' . $name . '/styles.css';
+                    } else if (file_exists($themePath . '/' . $name . '/css/style.css')) {
+                        $style = $themePath . '/' . $name . '/css/style.css';
+                    } else if (file_exists($themePath . '/' . $name . '/css/styles.css')) {
+                        $style = $themePath . '/' . $name . '/css/styles.css';
+                    }
+
+                    // Try and get theme info from style sheet
+                    if (null !== $style) {
+                        $css = file_get_contents($style);
+                        if (strpos($css, '*/') !== false) {
+                            $cssHeader = substr($css, 0, strpos($css, '*/'));
+                            $cssHeader = substr($cssHeader, (strpos($cssHeader, '/*') + 2));
+                            $cssHeaderAry = explode("\n", $cssHeader);
+                            foreach ($cssHeaderAry as $line) {
+                                if (strpos($line, ':')) {
+                                    $ary = explode(':', $line);
+                                    if (isset($ary[0]) && isset($ary[1])) {
+                                        $key = trim(str_replace('*', '', $ary[0]));
+                                        $value = trim(str_replace('*', '', $ary[1]));
+                                        $info[$key] = $value;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                $ext = new Table\Extensions(array(
-                    'name'   => $name,
-                    'file'   => $theme,
-                    'type'   => 0,
-                    'active' => 0,
-                    'assets' => serialize(array(
-                        'templates' => $templates,
-                        'info'      => $info
-                    ))
-                ));
-                $ext->save();
+                    $ext = new Table\Extensions(array(
+                        'name'   => $name,
+                        'file'   => $theme,
+                        'type'   => 0,
+                        'active' => 0,
+                        'assets' => serialize(array(
+                            'templates' => $templates,
+                            'info'      => $info
+                        ))
+                    ));
+                    $ext->save();
 
-                foreach ($docRoots as $docRoot) {
-                    $altThemePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
-                    copy($themePath . '/' . $theme, $altThemePath . '/' . $theme);
-                    $archive = new Archive($altThemePath . '/' . $theme);
-                    $archive->extract($altThemePath . '/');
-                    if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($altThemePath . '/' . $name . '.tar'))) {
-                        unlink($altThemePath . '/' . $name . '.tar');
+                    foreach ($docRoots as $docRoot) {
+                        $altThemePath = $docRoot . BASE_PATH . CONTENT_PATH . '/extensions/themes';
+                        copy($themePath . '/' . $theme, $altThemePath . '/' . $theme);
+                        $archive = new Archive($altThemePath . '/' . $theme);
+                        $archive->extract($altThemePath . '/');
+                        if ((stripos($theme, 'gz') || stripos($theme, 'bz')) && (file_exists($altThemePath . '/' . $name . '.tar'))) {
+                            unlink($altThemePath . '/' . $name . '.tar');
+                        }
                     }
                 }
             }
+
             if (isset($ext->id)) {
                 $ext->active = 1;
                 $ext->update();
@@ -292,155 +298,162 @@ class Extension extends AbstractModel
             $modulePath1 = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules';
             $modulePath2 = __DIR__ . '/../../../../../module';
 
+            $formats = Archive::formats();
+
             $phireCookie = null;
             foreach ($this->data['new'] as $name => $module) {
-                $modPath = (file_exists($modulePath1 . '/' . $module)) ? $modulePath1 : $modulePath2;
+                $ext = substr($module, (strrpos($module, '.') + 1));
+                if (array_key_exists($ext, $formats)) {
+                    $modPath = (file_exists($modulePath1 . '/' . $module)) ? $modulePath1 : $modulePath2;
 
-                if (!is_writable($modPath)) {
-                    throw new \Phire\Exception($this->i18n->__('The modules folder is not writable.'));
-                }
-
-                $archive = new Archive($modPath . '/' . $module);
-                $archive->extract($modPath . '/');
-                if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($modPath . '/' . $name . '.tar'))) {
-                    unlink($modPath . '/' . $name . '.tar');
-                }
-
-                $dbType =  Table\Extensions::getSql()->getDbType();
-                if ($dbType == \Pop\Db\Sql::SQLITE) {
-                    $type = 'sqlite';
-                } else if ($dbType == \Pop\Db\Sql::PGSQL) {
-                    $type = 'pgsql';
-                } else {
-                    $type = 'mysql';
-                }
-
-                $sqlFile = $modPath . '/' .
-                    $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
-
-                $cfg    = null;
-                $tables = array();
-                $info   = array();
-
-                // Check for a config and try to get info out of it
-                if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.php')) {
-                    $cfg = file_get_contents($modPath . '/' . $name . '/config/module.php');
-                    if (strpos($cfg, '*/') !== false) {
-                        $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
-                        $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));
-                        $cfgHeaderAry = explode("\n", $cfgHeader);
-                        foreach ($cfgHeaderAry as $line) {
-                            if (strpos($line, ':')) {
-                                $ary = explode(':', $line);
-                                if (isset($ary[0]) && isset($ary[1])) {
-                                    $key = trim(str_replace('*', '', $ary[0]));
-                                    $value = trim(str_replace('*', '', $ary[1]));
-                                    $info[$key] = $value;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (file_exists($sqlFile)) {
-                    // Get any tables required and created by this module
-                    $sql = file_get_contents($sqlFile);
-                    $tables = array();
-                    $matches = array();
-                    preg_match_all('/^CREATE TABLE(.*)$/mi', $sql, $matches);
-
-                    if (isset($matches[0]) && isset($matches[0][0])) {
-                        foreach ($matches[0] as $table) {
-                            if (strpos($table, '`') !== false) {
-                                $table = substr($table, (strpos($table, '`') + 1));
-                                $table = substr($table, 0, strpos($table, '`'));
-                            } else if (strpos($table, '"') !== false) {
-                                $table = substr($table, (strpos($table, '"') + 1));
-                                $table = substr($table, 0, strpos($table, '"'));
-                            } else if (strpos($table, "'") !== false) {
-                                $table = substr($table, (strpos($table, "'") + 1));
-                                $table = substr($table, 0, strpos($table, "'"));
-                            } else {
-                                if (stripos($table, 'EXISTS') !== false) {
-                                    $table = substr($table, (stripos($table, 'EXISTS') + 6));
-                                } else {
-                                    $table = substr($table, (stripos($table, 'TABLE') + 5));
-                                }
-                                if (strpos($table, '(') !== false) {
-                                    $table = substr($table, 0, strpos($table, '('));
-                                }
-                                $table = trim($table);
-                            }
-                            $tables[] = str_replace('[{prefix}]', DB_PREFIX, $table);
-                        }
+                    if (!is_writable($modPath)) {
+                        throw new \Phire\Exception($this->i18n->__('The modules folder is not writable.'));
                     }
 
-                    $ext = new Table\Extensions(array(
-                        'name'   => $name,
-                        'file'   => $module,
-                        'type'   => 1,
-                        'active' => 1,
-                        'assets' => serialize(array(
-                            'tables' => $tables,
-                            'info'   => $info
-                        ))
-                    ));
-                    $ext->save();
+                    $archive = new Archive($modPath . '/' . $module);
+                    $archive->extract($modPath . '/');
+                    if ((stripos($module, 'gz') || stripos($module, 'bz')) && (file_exists($modPath . '/' . $name . '.tar'))) {
+                        unlink($modPath . '/' . $name . '.tar');
+                    }
 
-                    // If DB is SQLite
-                    if (stripos($type, 'Sqlite') !== false) {
-                        $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/.htphire.sqlite');
-                        $dbUser = null;
-                        $dbPassword = null;
-                        $dbHost = null;
-                        $installFile = $dbName;
+                    $dbType =  Table\Extensions::getSql()->getDbType();
+                    if ($dbType == \Pop\Db\Sql::SQLITE) {
+                        $type = 'sqlite';
+                    } else if ($dbType == \Pop\Db\Sql::PGSQL) {
+                        $type = 'pgsql';
                     } else {
-                        $dbName = DB_NAME;
-                        $dbUser = DB_USER;
-                        $dbPassword = DB_PASS;
-                        $dbHost = DB_HOST;
-                        $installFile = null;
+                        $type = 'mysql';
                     }
 
-                    $db = array(
-                        'database' => $dbName,
-                        'username' => $dbUser,
-                        'password' => $dbPassword,
-                        'host'     => $dbHost,
-                        'prefix'   => DB_PREFIX,
-                        'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
-                    );
+                    $sqlFile = $modPath . '/' .
+                        $name . '/data/' . strtolower($name) . '.' . $type . '.sql';
 
-                    Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
-                } else {
-                    $ext = new Table\Extensions(array(
-                        'name'   => $name,
-                        'type'   => 1,
-                        'active' => 1,
-                        'assets' => serialize(array(
-                            'tables' => $tables,
-                            'info'   => $info
-                        ))
-                    ));
-                    $ext->save();
-                }
+                    $cfg    = null;
+                    $tables = array();
+                    $info   = array();
 
-                if (null !== $cfg) {
-                    $config = include $modPath . '/' . $name . '/config/module.php';
-                    if (null !== $config[$name]->install) {
-                        $installFunc = $config[$name]->install;
-                        $installFunc();
-                    }
-                }
-
-                if (php_sapi_name() != 'cli') {
-                    $cookie = Cookie::getInstance(array('path' => $path));
-                    if (isset($cookie->phire)) {
-                        if (null === $phireCookie) {
-                            $phireCookie = $cookie->phire;
+                    // Check for a config and try to get info out of it
+                    if (file_exists($modPath . '/' . $name . '/config') && file_exists($modPath . '/' . $name . '/config/module.php')) {
+                        $cfg = file_get_contents($modPath . '/' . $name . '/config/module.php');
+                        if (strpos($cfg, '*/') !== false) {
+                            $cfgHeader = substr($cfg, 0, strpos($cfg, '*/'));
+                            $cfgHeader = substr($cfgHeader, (strpos($cfgHeader, '/*') + 2));
+                            $cfgHeaderAry = explode("\n", $cfgHeader);
+                            foreach ($cfgHeaderAry as $line) {
+                                if (strpos($line, ':')) {
+                                    $ary = explode(':', $line);
+                                    if (isset($ary[0]) && isset($ary[1])) {
+                                        $key = trim(str_replace('*', '', $ary[0]));
+                                        $value = trim(str_replace('*', '', $ary[1]));
+                                        $info[$key] = $value;
+                                    }
+                                }
+                            }
                         }
-                        $i18n = (file_exists($modPath . '/' . $name . '/data/assets/i18n'));
-                        $phireCookie->modules[] = array('name' => $name, 'i18n' => $i18n);
+                    }
+
+                    if (file_exists($sqlFile)) {
+                        // Get any tables required and created by this module
+                        $sql = file_get_contents($sqlFile);
+                        $tables = array();
+                        $matches = array();
+                        preg_match_all('/^CREATE TABLE(.*)$/mi', $sql, $matches);
+
+                        if (isset($matches[0]) && isset($matches[0][0])) {
+                            foreach ($matches[0] as $table) {
+                                if (strpos($table, '`') !== false) {
+                                    $table = substr($table, (strpos($table, '`') + 1));
+                                    $table = substr($table, 0, strpos($table, '`'));
+                                } else if (strpos($table, '"') !== false) {
+                                    $table = substr($table, (strpos($table, '"') + 1));
+                                    $table = substr($table, 0, strpos($table, '"'));
+                                } else if (strpos($table, "'") !== false) {
+                                    $table = substr($table, (strpos($table, "'") + 1));
+                                    $table = substr($table, 0, strpos($table, "'"));
+                                } else {
+                                    if (stripos($table, 'EXISTS') !== false) {
+                                        $table = substr($table, (stripos($table, 'EXISTS') + 6));
+                                    } else {
+                                        $table = substr($table, (stripos($table, 'TABLE') + 5));
+                                    }
+                                    if (strpos($table, '(') !== false) {
+                                        $table = substr($table, 0, strpos($table, '('));
+                                    }
+                                    $table = trim($table);
+                                }
+                                $tables[] = str_replace('[{prefix}]', DB_PREFIX, $table);
+                            }
+                        }
+
+                        $ext = new Table\Extensions(array(
+                            'name'   => $name,
+                            'file'   => $module,
+                            'type'   => 1,
+                            'active' => 1,
+                            'assets' => serialize(array(
+                                'tables' => $tables,
+                                'info'   => $info
+                            ))
+                        ));
+                        $ext->save();
+
+                        // If DB is SQLite
+                        if (stripos($type, 'Sqlite') !== false) {
+                            $dbName = realpath($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/.htphire.sqlite');
+                            $dbUser = null;
+                            $dbPassword = null;
+                            $dbHost = null;
+                            $installFile = $dbName;
+                        } else {
+                            $dbName = DB_NAME;
+                            $dbUser = DB_USER;
+                            $dbPassword = DB_PASS;
+                            $dbHost = DB_HOST;
+                            $installFile = null;
+                        }
+
+                        $db = array(
+                            'database' => $dbName,
+                            'username' => $dbUser,
+                            'password' => $dbPassword,
+                            'host'     => $dbHost,
+                            'prefix'   => DB_PREFIX,
+                            'type'     => (DB_INTERFACE == 'Pdo') ? 'Pdo_' . ucfirst(DB_TYPE) : DB_INTERFACE
+                        );
+
+                        Dbs::install($dbName, $db, $sqlFile, $installFile, true, false);
+                    } else {
+                        $ext = new Table\Extensions(array(
+                            'name'   => $name,
+                            'type'   => 1,
+                            'active' => 1,
+                            'assets' => serialize(array(
+                                'tables' => $tables,
+                                'info'   => $info
+                            ))
+                        ));
+                        $ext->save();
+                    }
+
+                    if (null !== $cfg) {
+                        $config = include $modPath . '/' . $name . '/config/module.php';
+                        if (null !== $config[$name]->install) {
+                            $installFunc = $config[$name]->install;
+                            $installFunc();
+                        }
+                    }
+
+                    if (php_sapi_name() != 'cli') {
+                        $cookie = Cookie::getInstance(array('path' => $path));
+                        if (isset($cookie->phire)) {
+                            if (null === $phireCookie) {
+                                $phireCookie = $cookie->phire;
+                            }
+                            $i18n = (file_exists($modPath . '/' . $name . '/data/assets/i18n'));
+                            $modules = (array)$phireCookie->modules;
+                            $modules[] = array('name' => $name, 'i18n' => $i18n);
+                            $phireCookie->modules = $modules;
+                        }
                     }
                 }
             }
@@ -563,7 +576,7 @@ class Extension extends AbstractModel
         $phireCookie = null;
 
         if (php_sapi_name() != 'cli') {
-            $cookie      = Cookie::getInstance(array('path' => $path));
+            $cookie = Cookie::getInstance(array('path' => $path));
             if (isset($cookie->phire)) {
                 if (null === $phireCookie) {
                     $phireCookie = $cookie->phire;
@@ -641,7 +654,9 @@ class Extension extends AbstractModel
                     if (null !== $phireCookie) {
                         foreach ($phireCookie->modules as $key => $value) {
                             if ($value->name == $ext->name) {
-                                unset($phireCookie->modules[$key]);
+                                $modules = (array)$phireCookie->modules;
+                                unset($modules[$key]);
+                                $phireCookie->modules = $modules;
                             }
                         }
                     }

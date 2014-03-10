@@ -204,14 +204,6 @@ abstract class AbstractModel
             if (is_string($value)) {
                 $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
                 $value = str_replace(array('[{base_path}]', '[{content_path}]'), array($site->base_path, CONTENT_PATH), $value);
-                if (strpos($value, '[{') !== false) {
-                    $value = Model\Template::parse($value);
-                }
-                if (strpos($value, '[{categor') !== false) {
-                    $catAry = Model\Template::parseCategories($value);
-                    $view = new \Pop\Mvc\View($value, $catAry);
-                    $value = $view->render(true);
-                }
 
                 foreach ($keys as $k) {
                     if ((strpos($value, '[{' . $k . '}]') !== false) && ($dataAry[$k])) {
