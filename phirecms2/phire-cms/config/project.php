@@ -19,7 +19,7 @@ if ((DB_INTERFACE != '') && (DB_NAME != '')) {
         ))
     );
     $config['defaultDb'] = DB_NAME;
-    //$config['log']       = __DIR__ . '/../../' . CONTENT_PATH . '/log/phire.log';
+    //$config['log']       = __DIR__ . '/../../' . CONTENT_PATH . '/log/.htphire.log';
 }
 
 return new \Pop\Config($config);
