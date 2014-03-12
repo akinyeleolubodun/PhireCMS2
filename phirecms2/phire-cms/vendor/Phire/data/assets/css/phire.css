@@ -723,21 +723,41 @@ input[type=submit]:focus, button:focus {
     text-indent: -1000px;
 }
 
-.system-overview {
-    margin: 0;
-    padding: 0;
-    float: right;
-    width: 25%;
-    border: solid 1px #ccc;
+@media screen and (min-width: 1140px)
+{
+    .system-overview {
+        margin: 0;
+        padding: 0;
+        float: right;
+        width: 25%;
+        border: solid 1px #ccc;
+    }
+
+    .dashboard-table {
+        margin: 0 10px 20px 0;
+        padding: 0;
+        clear: left;
+        float: left;
+        width: 72%;
+        border: solid 1px #ccc;
+    }
 }
 
-.dashboard-table {
-    margin: 0 0 20px 0;
-    padding: 0;
-    clear: left;
-    float: left;
-    width: 73.5%;
-    border: solid 1px #ccc;
+@media screen and (max-width: 1139px)
+{
+    .system-overview {
+        margin: 0 auto 20px auto;
+        padding: 0;
+        width: 99.5%;
+        border: solid 1px #ccc;
+    }
+
+    .dashboard-table {
+        margin: 0 auto 20px auto;
+        padding: 0;
+        width: 99.5%;
+        border: solid 1px #ccc;
+    }
 }
 
 .system-overview tr, .dashboard-table tr {
@@ -804,7 +824,7 @@ td.site-not-live {
 .data-table {
     margin: 0 auto 10px auto;
     padding: 0;
-    width: 100%;
+    width: 99.5%;
     border-top: solid 1px #ccc;
 }
 
@@ -1039,7 +1059,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
 }
 
 .small-btn {
-    margin: 0 3px 6px 2px;
+    margin: 0 3px 6px 4px;
     padding: 4px 8px 4px 8px;
     display: block;
     float: left;

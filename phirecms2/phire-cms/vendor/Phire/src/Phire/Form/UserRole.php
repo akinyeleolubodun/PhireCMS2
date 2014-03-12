@@ -64,7 +64,10 @@ class UserRole extends AbstractForm
                 'type'       => 'text',
                 'label'      => $this->i18n->__('Name'),
                 'required'   => true,
-                'attributes' => array('size' => 84)
+                'attributes' => array(
+                    'size'  => 75,
+                    'style' => 'width: 600px;'
+                )
             )
         );
 
