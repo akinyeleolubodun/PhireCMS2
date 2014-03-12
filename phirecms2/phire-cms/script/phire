@@ -13,8 +13,8 @@ else
     SCRIPT_PATH="$SCRIPT_DIR/phire.php $@"
 fi
 
-TAR="$(which tar)"
-ZIP="$(which zip)"
+TAR="$(which tar 2> /dev/null)"
+ZIP="$(which zip 2> /dev/null)"
 
 PH_CLI_ROOT=../..
 DB_CLI=
@@ -67,22 +67,22 @@ let "POS-=1"
 DB_HOST=${DB_HOST:0:$POS}
 
 if [ "$DB_INTERFACE" = "Mysqli" ] || [ "$DB_TYPE" = "mysql" ]; then
-    DB_CLI=`which mysql`
-    DB_CLI_DUMP=`which mysqldump`
+    DB_CLI=`which mysql 2> /dev/null`
+    DB_CLI_DUMP=`which mysqldump 2> /dev/null`
     DB_CLI_PARAMS="--database=$DB_NAME --user=$DB_USER --password=$DB_PASS --host=$DB_HOST"
     DB_CLI_DUMP_PARAMS="--user=$DB_USER --password=$DB_PASS --host=$DB_HOST $DB_NAME > $DB_NAME""_$TIMESTAMP.mysql.sql"
     DB_DUMP_NAME="$DB_NAME"_"$TIMESTAMP".mysql.sql
 
 elif [ "$DB_INTERFACE" = "Pgsql" ] || [ "$DB_TYPE" = "pgsql" ]; then
-    DB_CLI=`which psql`
-    DB_CLI_DUMP=`which pg_dump`
+    DB_CLI=`which psql 2> /dev/null`
+    DB_CLI_DUMP=`which pg_dump 2> /dev/null`
     DB_CLI_PARAMS="--dbname=$DB_NAME --username=$DB_USER"
     DB_CLI_DUMP_PARAMS="--username=$DB_USER $DB_NAME > $DB_NAME""_$TIMESTAMP.pgsql.sql"
     DB_DUMP_NAME="$DB_NAME"_"$TIMESTAMP".pgsql.sql
 elif [ "$DB_INTERFACE" = "Sqlite" ] || [ "$DB_TYPE" = "sqlite" ]; then
     DB_NAME=${DB_NAME:10}
-    DB_CLI=`which sqlite3`
-    DB_CLI_DUMP=`which sqlite3`
+    DB_CLI=`which sqlite3 2> /dev/null`
+    DB_CLI_DUMP=`which sqlite3 2> /dev/null`
     DB_CLI_PARAMS="$PH_CLI_ROOT$DB_NAME"
     DB_CLI_DUMP_PARAMS="$PH_CLI_ROOT$DB_NAME .dump > phirecms_$TIMESTAMP.sqlite.sql"
     DB_DUMP_NAME=phirecms_"$TIMESTAMP".sqlite.sql

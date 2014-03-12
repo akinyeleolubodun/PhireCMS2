@@ -36,6 +36,3 @@
     ./phire upgrade           - Upgrade the system from a 1.* installation
     ./phire archive           - Archive the system
     ./phire deploy            - Deploy the system to a production local or remote location
-    ./phire deploy content    - Deploy only the content
-    ./phire deploy assets     - Deploy only the assets
-

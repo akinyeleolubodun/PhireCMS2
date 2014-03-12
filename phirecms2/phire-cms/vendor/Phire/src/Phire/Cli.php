@@ -51,10 +51,6 @@ class Cli
             'activate',
             'deactivate',
             'remove'
-        ),
-        'deploy' => array(
-            'content',
-            'assets'
         )
     );
 
@@ -782,6 +778,7 @@ class Cli
 
             if (stripos($input['db_adapter'], 'sqlite') !== false) {
                 $input['db_name'] = PH_CLI_ROOT . $input['content_path'] . '/.htphire.sqlite';
+                chmod(realpath(PH_CLI_ROOT . $input['content_path'] . '/.htphire.sqlite'), 0777);
             }
 
             $db = \Pop\Db\Db::factory($dbInterface, array(
@@ -794,9 +791,6 @@ class Cli
 
             $db->adapter()->query("INSERT INTO " . $input['db_prefix'] . "users (type_id, role_id, username, password, email, verified, failed_attempts, site_ids, created) VALUES (2001, 3001, '" . $user['username'] . "', '" . Model\User::encryptPassword($user['password'], 4) . "', '" . $user['email'] ."', 1, 0, '" . serialize(array(0)) . "', '" . date('Y-m-d H:i:s') . "')");
             $db->adapter()->query('UPDATE ' . $input['db_prefix'] .'config SET value = \'' . $user['email'] . '\' WHERE setting = \'system_email\'');
-
-            \Phire\Table\Config::setDb($db, true);
-            \Phire\Table\Extensions::setDb($db, true);
         }
     }
 
