@@ -1284,6 +1284,10 @@
             <output>保存</output>
         </text>
         <text>
+            <source>Removed</source>
+            <output>削除</output>
+        </text>
+        <text>
             <source>Please correct the errors below.</source>
             <output>次のエラーを修正してください。</output>
         </text>

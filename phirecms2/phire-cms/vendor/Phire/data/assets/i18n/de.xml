@@ -1281,7 +1281,11 @@
         </text>
         <text>
             <source>Saved</source>
-            <output>gespeichert</output>
+            <output>Gespeichert</output>
+        </text>
+        <text>
+            <source>Removed</source>
+            <output>Entfernt</output>
         </text>
         <text>
             <source>Please correct the errors below.</source>

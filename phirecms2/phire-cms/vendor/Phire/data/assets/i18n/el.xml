@@ -1284,6 +1284,10 @@
             <output>Αποθηκευμένα</output>
         </text>
         <text>
+            <source>Removed</source>
+            <output>αφαιρέθηκε</output>
+        </text>
+        <text>
             <source>Please correct the errors below.</source>
             <output>Παρακαλώ διορθώστε τα παρακάτω σφάλματα.</output>
         </text>

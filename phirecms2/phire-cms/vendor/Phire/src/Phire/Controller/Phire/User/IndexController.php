@@ -364,7 +364,7 @@ class IndexController extends AbstractController
             $user->remove($this->request->getPost());
         }
 
-        Response::redirect($this->request->getBasePath() . $typeId);
+        Response::redirect($this->request->getBasePath() . $typeId . '?removed=' . time());
     }
 
     /**

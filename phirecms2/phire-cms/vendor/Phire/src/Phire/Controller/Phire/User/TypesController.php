@@ -210,7 +210,7 @@ class TypesController extends AbstractController
             $type->remove($this->request->getPost());
         }
 
-        Response::redirect($this->request->getBasePath());
+        Response::redirect($this->request->getBasePath() . '?removed=' . time());
     }
 
     /**

@@ -1284,6 +1284,10 @@
             <output>הציל</output>
         </text>
         <text>
+            <source>Removed</source>
+            <output>הוסר</output>
+        </text>
+        <text>
             <source>Please correct the errors below.</source>
             <output>אנא תקן את השגיאות הבאות.</output>
         </text>

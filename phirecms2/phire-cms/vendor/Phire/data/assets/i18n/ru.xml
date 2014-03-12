@@ -1284,6 +1284,10 @@
             <output>Сохраненные</output>
         </text>
         <text>
+            <source>Removed</source>
+            <output>Удаленные</output>
+        </text>
+        <text>
             <source>Please correct the errors below.</source>
             <output>Пожалуйста, исправьте ошибки ниже.</output>
         </text>

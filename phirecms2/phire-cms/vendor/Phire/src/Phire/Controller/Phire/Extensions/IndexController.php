@@ -97,11 +97,11 @@ class IndexController extends AbstractController
                 $this->view->merge($ext->getData());
                 $this->send();
             } else {
-                Response::redirect($this->request->getBasePath() . '/themes');
+                Response::redirect($this->request->getBasePath() . '/themes?saved=' . time());
             }
         } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
             $ext->processThemes($this->request->getPost());
-            Response::redirect($this->request->getBasePath() . '/themes');
+            Response::redirect($this->request->getBasePath() . '/themes?saved=' . time());
         } else {
             Response::redirect($this->request->getBasePath() . '/themes');
         }
@@ -134,11 +134,11 @@ class IndexController extends AbstractController
                 $this->view->merge($ext->getData());
                 $this->send();
             } else {
-                Response::redirect($this->request->getBasePath() . '/modules');
+                Response::redirect($this->request->getBasePath() . '/modules?saved=' . time());
             }
         } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
             $ext->processModules($this->request->getPost());
-            Response::redirect($this->request->getBasePath() . '/modules');
+            Response::redirect($this->request->getBasePath() . '/modules?saved=' . time());
         } else {
             Response::redirect($this->request->getBasePath() . '/modules');
         }

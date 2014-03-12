@@ -213,7 +213,7 @@ class RolesController extends AbstractController
             $role->remove($this->request->getPost());
         }
 
-        Response::redirect($this->request->getBasePath());
+        Response::redirect($this->request->getBasePath() . '?removed=' . time());
     }
 
     /**

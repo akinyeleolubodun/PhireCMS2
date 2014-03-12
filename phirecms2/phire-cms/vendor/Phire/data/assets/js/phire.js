@@ -581,17 +581,29 @@ jax(document).ready(function(){
     }
 
     // Check saved timestamp to determine if the saved div should display
-    if (jax.query('saved') != undefined) {
+    if ((jax.query('saved') != undefined) || (jax.query('removed') != undefined))  {
+        if (jax.query('saved') != undefined) {
+            var tValue  = jax.query('saved');
+            var msg     = 'Saved';
+            var fgColor   = '#315900';
+            var bgColor = '#dbf2bf';
+        } else {
+            var tValue  = jax.query('removed');
+            var msg     = 'Removed';
+            var fgColor = '#8e0202';
+            var bgColor = '#e8d0d0';
+        }
+
         var ts = Math.round(new Date().getTime() / 1000);
-        var diff = Math.abs(jax.query('saved') - ts);
+        var diff = Math.abs(tValue - ts);
         if (diff < 180) {
             if (jax('#result')[0] != undefined) {
                 jax('#result').css({
-                    "background-color" : '#dbf2bf',
-                    "color"            : '#315900',
+                    "background-color" : bgColor,
+                    "color"            : fgColor,
                     "opacity"          : 0
                 });
-                jax('#result').val(phire.i18n.t('Saved') + '!');
+                jax('#result').val(phire.i18n.t(msg) + '!');
                 jax('#result').fade(100, {tween : 10, speed: 200});
                 phire.clear = setTimeout(phire.clearStatus, 3000);
             }

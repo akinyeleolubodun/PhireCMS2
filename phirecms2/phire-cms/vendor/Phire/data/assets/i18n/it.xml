@@ -1284,6 +1284,10 @@
             <output>Salvato</output>
         </text>
         <text>
+            <source>Removed</source>
+            <output>Rimosso</output>
+        </text>
+        <text>
             <source>Please correct the errors below.</source>
             <output>Si prega di correggere gli errori di seguito.</output>
         </text>

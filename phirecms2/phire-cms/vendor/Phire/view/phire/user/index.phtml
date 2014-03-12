@@ -1,5 +1,6 @@
 <?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
+        <div id="result" style="display: none;"></div>
 <?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'export' . (isset($typeId) ? '_' . $typeId : null)))): ?>
         <a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>"><?php $i18n->_e('Export'); ?></a>
 <?php endif; ?>
