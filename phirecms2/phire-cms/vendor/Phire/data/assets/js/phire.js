@@ -600,11 +600,6 @@ jax(document).ready(function(){
         var tzOffset = Math.abs(new Date().getTimezoneOffset());
         var ts = Math.round(new Date().getTime() / 1000);
         var diff = Math.abs(Math.abs(tValue - ts) - (Math.abs(tzOffset - phire.serverTzOffset) * 60));
-        console.log(tzOffset);
-        console.log(phire.serverTzOffset);
-        console.log(ts);
-        console.log(tValue);
-        console.log(diff);
         if (diff < 30) {
             if (jax('#result')[0] != undefined) {
                 jax('#result').css({
