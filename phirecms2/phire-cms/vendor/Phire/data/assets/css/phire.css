@@ -583,9 +583,9 @@ input[type=submit]:focus, button:focus {
 
 #result {
     clear: both;
-    margin: 5px 0 10px 0;
+    margin: 5px auto 10px auto;
     padding: 1%;
-    width: 98%;
+    width: 97.5%;
     display: none;
     font-weight: bold;
     border-radius: 4px;
