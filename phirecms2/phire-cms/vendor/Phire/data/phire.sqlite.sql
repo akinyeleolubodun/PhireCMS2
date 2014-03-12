@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_types', 2000);
+CREATE INDEX "user_type" ON "[{prefix}]user_types" ("type");
 
 --
 -- Dumping data for table "user_types"
@@ -116,6 +117,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_roles', 3000);
+CREATE INDEX "role_type_id" ON "[{prefix}]user_roles" ("type_id");
+CREATE INDEX "role_name" ON "[{prefix}]user_roles" ("name");
 
 --
 -- Dumping data for table "user_roles"
@@ -150,6 +153,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]users', 1000);
+CREATE INDEX "user_type_id" ON "[{prefix}]users" ("type_id");
+CREATE INDEX "user_role_id" ON "[{prefix}]users" ("role_id");
+CREATE INDEX "username" ON "[{prefix}]users" ("username");
+CREATE INDEX "user_email" ON "[{prefix}]users" ("email");
 
 --
 -- Dumping data for table "users"
@@ -167,12 +174,12 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "ip" varchar NOT NULL,
   "ua" varchar NOT NULL,
   "start" datetime NOT NULL,
-  "last" datetime NOT NULL,
   UNIQUE ("id"),
   CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_sessions', 4000);
+CREATE INDEX "sess_user_id" ON "[{prefix}]user_sessions" ("user_id");
 
 --
 -- Dumping data for table "user_sessions"
@@ -195,6 +202,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]extensions', 10000);
+CREATE INDEX "ext_name" ON "[{prefix}]extensions" ("name");
+CREATE INDEX "ext_type" ON "[{prefix}]extensions" ("type");
 
 --
 -- Dumping data for table "extensions"
@@ -217,6 +226,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]field_groups', 12000);
+CREATE INDEX "field_group_name" ON "[{prefix}]field_groups" ("name");
+CREATE INDEX "field_group_order" ON "[{prefix}]field_groups" ("order");
 
 -- --------------------------------------------------------
 
@@ -244,6 +255,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]fields', 11000);
+CREATE INDEX "field_group_id" ON "[{prefix}]fields" ("group_id");
+CREATE INDEX "field_field_type" ON "[{prefix}]fields" ("type");
+CREATE INDEX "field_field_name" ON "[{prefix}]fields" ("name");
 
 -- --------------------------------------------------------
 
@@ -260,6 +274,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
   UNIQUE ("field_id", "model_id"),
   CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+CREATE INDEX "field_id" ON "[{prefix}]field_values" ("field_id");
+CREATE INDEX "model_id" ON "[{prefix}]field_values" ("model_id");
 
 -- --------------------------------------------------------
 
@@ -279,3 +296,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]sites', 13000);
+CREATE INDEX "site_domain" ON "[{prefix}]sites" ("domain");
+CREATE INDEX "site_title" ON "[{prefix}]sites" ("title");
+CREATE INDEX "site_force_ssl" ON "[{prefix}]sites" ("force_ssl");
+CREATE INDEX "site_live" ON "[{prefix}]sites" ("live");

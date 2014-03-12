@@ -32,14 +32,15 @@ class UserSessions extends Record
     /**
      * Method is see if the session has expired.
      *
-     * @param  int  $exp
+     * @param  int    $exp
+     * @param  string $time
      * @return boolean
      */
-    public function hasExpired($exp)
+    public function hasExpired($exp, $time)
     {
         $expired = false;
 
-        if ((time() - strtotime($this->last)) > ($exp * 60)) {
+        if ((time() - strtotime($time)) > ($exp * 60)) {
             $expired = true;
         }
 
@@ -57,13 +58,13 @@ class UserSessions extends Record
         $sql = static::getSql();
         $sql->delete()
             ->where()->equalTo('user_id', ':user_id')
-            ->lessThanOrEqualTo('last', ':last');
+            ->lessThanOrEqualTo('start', ':start');
 
         static::execute(
             $sql->render(true),
             array(
                 'user_id' => $id,
-                'last' => date('Y-m-d H:i:s', time() - 86400)
+                'start'   => date('Y-m-d H:i:s', time() - 86400)
             )
         );
     }

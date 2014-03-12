@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_types" (
 ) ;
 
 ALTER SEQUENCE type_id_seq OWNED BY "[{prefix}]user_types"."id";
+CREATE INDEX "user_type" ON "[{prefix}]user_types" ("type");
 
 --
 -- Dumping data for table "user_types"
@@ -112,6 +113,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_roles" (
 ) ;
 
 ALTER SEQUENCE role_id_seq OWNED BY "[{prefix}]user_roles"."id";
+CREATE INDEX "role_type_id" ON "[{prefix}]user_roles" ("type_id");
+CREATE INDEX "role_name" ON "[{prefix}]user_roles" ("name");
 
 --
 -- Dumping data for table "user_roles"
@@ -150,6 +153,10 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]users" (
 ) ;
 
 ALTER SEQUENCE user_id_seq OWNED BY "[{prefix}]users"."id";
+CREATE INDEX "user_type_id" ON "[{prefix}]users" ("type_id");
+CREATE INDEX "user_role_id" ON "[{prefix}]users" ("role_id");
+CREATE INDEX "username" ON "[{prefix}]users" ("username");
+CREATE INDEX "user_email" ON "[{prefix}]users" ("email");
 
 --
 -- Dumping data for table "users"
@@ -169,12 +176,12 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "ip" varchar(255) NOT NULL,
   "ua" varchar(255) NOT NULL,
   "start" timestamp NOT NULL,
-  "last" timestamp NOT NULL,
   PRIMARY KEY ("id"),
   CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 ALTER SEQUENCE session_id_seq OWNED BY "[{prefix}]user_sessions"."id";
+CREATE INDEX "sess_user_id" ON "[{prefix}]user_sessions" ("user_id");
 
 --
 -- Dumping data for table "user_sessions"
@@ -199,6 +206,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]extensions" (
 ) ;
 
 ALTER SEQUENCE extension_id_seq OWNED BY "[{prefix}]extensions"."id";
+CREATE INDEX "ext_name" ON "[{prefix}]extensions" ("name");
+CREATE INDEX "ext_type" ON "[{prefix}]extensions" ("type");
 
 --
 -- Dumping data for table "extensions"
@@ -224,6 +233,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_groups" (
 ) ;
 
 ALTER SEQUENCE group_id_seq OWNED BY "[{prefix}]field_groups"."id";
+CREATE INDEX "field_group_name" ON "[{prefix}]field_groups" ("name");
+CREATE INDEX "field_group_order" ON "[{prefix}]field_groups" ("order");
 
 -- --------------------------------------------------------
 
@@ -253,6 +264,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]fields" (
 ) ;
 
 ALTER SEQUENCE field_id_seq OWNED BY "[{prefix}]fields"."id";
+CREATE INDEX "field_group_id" ON "[{prefix}]fields" ("group_id");
+CREATE INDEX "field_field_type" ON "[{prefix}]fields" ("type");
+CREATE INDEX "field_field_name" ON "[{prefix}]fields" ("name");
 
 -- --------------------------------------------------------
 
@@ -269,6 +283,9 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]field_values" (
   UNIQUE ("field_id", "model_id"),
   CONSTRAINT "fk_field_id" FOREIGN KEY ("field_id") REFERENCES "[{prefix}]fields" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+CREATE INDEX "field_id" ON "[{prefix}]field_values" ("field_id");
+CREATE INDEX "model_id" ON "[{prefix}]field_values" ("model_id");
 
 -- --------------------------------------------------------
 
@@ -290,3 +307,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]sites" (
 ) ;
 
 ALTER SEQUENCE site_id_seq OWNED BY "[{prefix}]sites"."id";
+CREATE INDEX "site_domain" ON "[{prefix}]sites" ("domain");
+CREATE INDEX "site_title" ON "[{prefix}]sites" ("title");
+CREATE INDEX "site_force_ssl" ON "[{prefix}]sites" ("force_ssl");
+CREATE INDEX "site_live" ON "[{prefix}]sites" ("live");

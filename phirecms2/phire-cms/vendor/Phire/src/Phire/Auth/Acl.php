@@ -67,7 +67,7 @@ class Acl extends A
         // If tracking sessions is on
         if (($this->type->track_sessions) && ((isset($this->sess->user->sess_id) && null !== $this->sess->user->sess_id))) {
             $session = Table\UserSessions::findById($this->sess->user->sess_id);
-            if (!isset($session->id) || (($this->type->session_expiration != 0) && $session->hasExpired($this->type->session_expiration))) {
+            if (!isset($session->id) || (($this->type->session_expiration != 0) && $session->hasExpired($this->type->session_expiration, $this->sess->user->last_action))) {
                 $this->sess->lastUrl = (strpos($_SERVER['REQUEST_URI'], '/users/sessions/json') === false) ? $_SERVER['REQUEST_URI'] : BASE_PATH . APP_URI . '/';
                 $this->sess->expired = true;
                 $this->logout();
@@ -75,8 +75,7 @@ class Acl extends A
                 // If the user is not the right type, check for global access
                 if ($this->type->id != $this->sess->user->type_id) {
                     if ($this->sess->user->global_access) {
-                        $session->last = date('Y-m-d H:i:s');
-                        $session->save();
+                        $this->sess->user->last_action = date('Y-m-d H:i:s');
                         $auth = true;
                     } else {
                         $this->sess->authError = true;
@@ -90,16 +89,14 @@ class Acl extends A
                         $this->addResource($resource);
                     }
                     if ($this->isAllowed($role, $resource, $permission)) {
-                        $session->last = date('Y-m-d H:i:s');
-                        $session->save();
+                        $this->sess->user->last_action = date('Y-m-d H:i:s');
                         $auth = true;
                     } else {
                         $auth = false;
                     }
                 // Else, validate the session and record the action
                 } else {
-                    $session->last = date('Y-m-d H:i:s');
-                    $session->save();
+                    $this->sess->user->last_action = date('Y-m-d H:i:s');
                     $auth = true;
                 }
             }

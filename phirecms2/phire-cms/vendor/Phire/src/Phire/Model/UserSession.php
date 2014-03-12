@@ -32,7 +32,6 @@ class UserSession extends AbstractModel
             4 => DB_PREFIX . 'user_sessions.user_id',
             5 => DB_PREFIX . 'user_sessions.ua',
             6 => DB_PREFIX . 'user_sessions.start',
-            'last_date' => DB_PREFIX . 'user_sessions.last',
             7 => DB_PREFIX . 'users.type_id'
         ))->join(DB_PREFIX . 'users', array('user_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'user_types', array(DB_PREFIX . 'users.type_id', 'id'), 'LEFT JOIN')
@@ -85,7 +84,6 @@ class UserSession extends AbstractModel
                     'ip'         => $this->i18n->__('IP'),
                     'ua'         => $this->i18n->__('User Agent'),
                     'started'    => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=start">' . $this->i18n->__('Started') . '</a>',
-                    'last_date'  => '<a href="' . BASE_PATH . APP_URI . '/users/sessions?sort=last">' . $this->i18n->__('Last Action') . '</a>',
                     'process'    => $removeCheckAll
                 ),
                 'class'       => 'data-table',

@@ -40,11 +40,11 @@ class User extends AbstractModel
                     'user_id' => $user->id,
                     'ip'      => $_SERVER['REMOTE_ADDR'],
                     'ua'      => $_SERVER['HTTP_USER_AGENT'],
-                    'start'   => date('Y-m-d H:i:s'),
-                    'last'    => date('Y-m-d H:i:s')
+                    'start'   => date('Y-m-d H:i:s')
                 ));
                 $session->save();
                 $sessionId = $session->id;
+
 
                 $otherSession = Table\UserSessions::findBy(array('user_id' => $user->id));
                 if (isset($otherSession->rows[0])) {
@@ -130,7 +130,8 @@ class User extends AbstractModel
                     'last_ua'	    => $lastUa,
                     'last_ip'       => $lastIp,
                     'sess_id'       => $sessionId,
-                    'last'          => $lastLoginString
+                    'last'          => $lastLoginString,
+                    'last_action'   => date('Y-m-d H:i:s')
                 ),
                 \ArrayObject::ARRAY_AS_PROPS
             );

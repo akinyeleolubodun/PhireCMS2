@@ -54,7 +54,7 @@ class Project extends P
 
         $sess = Session::getInstance();
 
-        $errors = self::checkDirs($docRoot . $basePath . CONTENT_PATH, true, $docRoot);
+        $errors = self::checkDirsQuick($docRoot . $basePath . CONTENT_PATH, true, $docRoot);
         if (count($errors) > 0) {
             $sess->errors = '            ' . implode('<br />' . PHP_EOL . '            ', $errors) . PHP_EOL;
         } else {
@@ -658,6 +658,44 @@ class Project extends P
         }
 
         return true;
+    }
+
+    /**
+     * Quickly determine whether or not the necessary system directories are writable or not.
+     *
+     * @param  string  $contentDir
+     * @param  boolean $msgs
+     * @param  string  $docRoot
+     * @return boolean|array
+     */
+    public static function checkDirsQuick($contentDir, $msgs = false, $docRoot = null)
+    {
+        if (null === $docRoot) {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        }
+
+        $errorMsgs = array();
+
+        $dirs = array(
+            $contentDir . DIRECTORY_SEPARATOR . 'assets',
+            $contentDir . DIRECTORY_SEPARATOR . 'extensions',
+            $contentDir . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes',
+            $contentDir . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules',
+            $contentDir . DIRECTORY_SEPARATOR . 'log',
+            $contentDir . DIRECTORY_SEPARATOR . 'media',
+        );
+
+        foreach ($dirs as $value) {
+            if (!is_writable($value)) {
+                $errorMsgs[] = "The directory " . str_replace($docRoot, '', $value) . " is not writable.";
+            }
+        }
+
+        if ($msgs) {
+            return $errorMsgs;
+        } else {
+            return (count($errorMsgs) == 0) ? true : false;
+        }
     }
 
     /**

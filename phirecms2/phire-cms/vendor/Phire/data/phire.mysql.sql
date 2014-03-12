@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_types` (
   `log_exclude` text,
   `controller` text,
   `sub_controllers` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `user_type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2002 ;
 
 --
@@ -102,6 +103,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_roles` (
   `name` varchar(255) NOT NULL,
   `permissions` text,
   PRIMARY KEY (`id`),
+  INDEX `role_type_id` (`type_id`),
+  INDEX `role_name` (`name`),
   CONSTRAINT `fk_role_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3002 ;
 
@@ -135,6 +138,10 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]users` (
   `updated` datetime,
   `updated_pwd` datetime,
   PRIMARY KEY (`id`),
+  INDEX `user_type_id` (`type_id`),
+  INDEX `user_role_id` (`role_id`),
+  INDEX `username` (`username`),
+  INDEX `user_email` (`email`),
   CONSTRAINT `fk_user_type` FOREIGN KEY (`type_id`) REFERENCES `[{prefix}]user_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;
@@ -155,8 +162,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
   `ip` varchar(255) NOT NULL,
   `ua` varchar(255) NOT NULL,
   `start` datetime NOT NULL,
-  `last` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  INDEX `sess_user_id` (`user_id`),
   CONSTRAINT `fk_session_user` FOREIGN KEY (`user_id`) REFERENCES `[{prefix}]users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4001 ;
 
@@ -177,7 +184,9 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]extensions` (
   `type` int(1) NOT NULL,
   `active` int(1) NOT NULL,
   `assets` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `ext_name` (`name`),
+  INDEX `ext_type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10002 ;
 
 --
@@ -198,7 +207,9 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]field_groups` (
   `name` varchar(255),
   `order` int(16),
   `dynamic` int(1),
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `field_group_name` (`name`),
+  INDEX `field_group_order` (`order`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12001 ;
 
 -- --------------------------------------------------------
@@ -223,6 +234,9 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]fields` (
   `editor` varchar(255),
   `models` text,
   PRIMARY KEY (`id`),
+  INDEX `field_group_id` (`group_id`),
+  INDEX `field_type` (`type`),
+  INDEX `field_name` (`name`),
   CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `[{prefix}]field_groups` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11001 ;
 
@@ -238,6 +252,8 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]field_values` (
   `value` mediumtext,
   `timestamp` int(16),
   `history` mediumtext,
+  INDEX `field_id` (`field_id`),
+  INDEX `model_id` (`model_id`),
   UNIQUE (`field_id`, `model_id`),
   CONSTRAINT `fk_field_id` FOREIGN KEY (`field_id`) REFERENCES `[{prefix}]fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
@@ -256,5 +272,9 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]sites` (
   `title` varchar(255) NOT NULL,
   `force_ssl` int(1) NOT NULL,
   `live` int(1) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `site_domain` (`domain`),
+  INDEX `site_title` (`title`),
+  INDEX `site_force_ssl` (`force_ssl`),
+  INDEX `site_live` (`live`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13001 ;
