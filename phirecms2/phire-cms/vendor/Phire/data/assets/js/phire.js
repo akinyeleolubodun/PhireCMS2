@@ -19,6 +19,7 @@ var phire = {
     contentPath       : null,
     sysBasePath       : null,
     i18n              : null,
+    serverTzOffset    : 0,
     errorDisplay      : {
         "color"    : '#f00',
         "bgColor"  : '#ffe5e5',
@@ -512,19 +513,21 @@ var phire = {
 jax(document).ready(function(){
     phire.i18n = jax.i18n();
     if (jax.cookie.load('phire') != '') {
-        var path = jax.cookie.load('phire');
-        phire.appUri      = path.app_uri;
-        phire.appPath     = path.app_path;
-        phire.contentPath = path.content_path;
-        phire.basePath    = path.base_path;
-        phire.sysBasePath = path.base_path + path.app_uri;
+        var phireCookie = jax.cookie.load('phire');
+
+        phire.appUri         = phireCookie.app_uri;
+        phire.appPath        = phireCookie.app_path;
+        phire.contentPath    = phireCookie.content_path;
+        phire.basePath       = phireCookie.base_path;
+        phire.sysBasePath    = phireCookie.base_path + phireCookie.app_uri;
+        phire.serverTzOffset = phireCookie.server_tz_offset;
 
         phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/phire/i18n/' + phire.i18n.getLanguage() + '.xml');
 
-        if (path.modules.length > 0) {
-            for (var i = 0; i < path.modules.length; i++) {
-                if (path.modules[i].i18n) {
-                    phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/' + path.modules[i].name.toLowerCase() + '/i18n/' + phire.i18n.getLanguage() + '.xml');
+        if (phireCookie.modules.length > 0) {
+            for (var i = 0; i < phireCookie.modules.length; i++) {
+                if (phireCookie.modules[i].i18n) {
+                    phire.i18n.loadFile(phire.basePath + phire.contentPath + '/assets/' + phireCookie.modules[i].name.toLowerCase() + '/i18n/' + phire.i18n.getLanguage() + '.xml');
                 }
             }
         }
@@ -594,9 +597,15 @@ jax(document).ready(function(){
             var bgColor = '#e8d0d0';
         }
 
+        var tzOffset = Math.abs(new Date().getTimezoneOffset());
         var ts = Math.round(new Date().getTime() / 1000);
-        var diff = Math.abs(tValue - ts);
-        if (diff < 180) {
+        var diff = Math.abs(Math.abs(tValue - ts) - (Math.abs(tzOffset - phire.serverTzOffset) * 60));
+        console.log(tzOffset);
+        console.log(phire.serverTzOffset);
+        console.log(ts);
+        console.log(tValue);
+        console.log(diff);
+        if (diff < 30) {
             if (jax('#result')[0] != undefined) {
                 jax('#result').css({
                     "background-color" : bgColor,

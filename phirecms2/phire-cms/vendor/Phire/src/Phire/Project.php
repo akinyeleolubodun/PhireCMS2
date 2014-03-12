@@ -184,11 +184,12 @@ class Project extends P
                 }
 
                 $cookie->set('phire', array(
-                    'base_path'    => BASE_PATH,
-                    'app_path'     => APP_PATH,
-                    'content_path' => CONTENT_PATH,
-                    'app_uri'      => APP_URI,
-                    'modules'      => $modsAry
+                    'base_path'        => BASE_PATH,
+                    'app_path'         => APP_PATH,
+                    'content_path'     => CONTENT_PATH,
+                    'app_uri'          => APP_URI,
+                    'server_tz_offset' => abs(date('Z')) / 60,
+                    'modules'          => $modsAry
                 ));
             }
         }
