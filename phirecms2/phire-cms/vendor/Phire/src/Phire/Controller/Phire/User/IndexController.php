@@ -159,7 +159,7 @@ class IndexController extends AbstractController
                                 'form'     => 'user-form'
                             ));
                         } else {
-                            Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1));
+                            Response::redirect($this->request->getBasePath() . '/index/' . $this->request->getPath(1) . '?saved=' . time());
                         }
                     // Else, re-render form with errors
                     } else {
@@ -234,7 +234,7 @@ class IndexController extends AbstractController
                                 'form'    => 'user-form'
                             ));
                         } else {
-                            Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id);
+                            Response::redirect($this->request->getBasePath() . '/index/' . $form->type_id . '?saved=' . time());
                         }
                     // Else, re-render form with errors
                     } else {
@@ -295,7 +295,7 @@ class IndexController extends AbstractController
                     // If the form is valid, save user type
                     if ($form->isValid()) {
                         $user->updateType($form, $this->project->module('Phire'));
-                        Response::redirect($this->request->getBasePath());
+                        Response::redirect($this->request->getBasePath() . '?saved=' . time());
                     // Else, re-render the form with errors
                     } else {
                         $this->view->set('form', $form);

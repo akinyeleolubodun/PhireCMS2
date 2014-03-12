@@ -108,7 +108,7 @@ class RolesController extends AbstractController
                         'form'     => 'user-role-form'
                     ));
                 } else {
-                    Response::redirect($this->request->getBasePath());
+                    Response::redirect($this->request->getBasePath() . '?saved=' . time());
                 }
             // Else, re-render the form with errors
             } else {
@@ -174,7 +174,7 @@ class RolesController extends AbstractController
                                 'form'    => 'user-role-form'
                             ));
                         } else {
-                            Response::redirect($this->request->getBasePath());
+                            Response::redirect($this->request->getBasePath() . '?saved=' . time());
                         }
                     // Else, re-render the form with errors
                     } else {

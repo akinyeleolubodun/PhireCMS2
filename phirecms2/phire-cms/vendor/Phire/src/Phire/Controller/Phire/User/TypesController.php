@@ -107,7 +107,7 @@ class TypesController extends AbstractController
                         'form'     => 'user-type-form'
                     ));
                 } else {
-                    Response::redirect($this->request->getBasePath());
+                    Response::redirect($this->request->getBasePath() . '?saved=' . time());
                 }
             // Else, re-render the form with errors
             } else {
@@ -172,7 +172,7 @@ class TypesController extends AbstractController
                                 'form'    => 'user-type-form'
                             ));
                         } else {
-                            Response::redirect($this->request->getBasePath());
+                            Response::redirect($this->request->getBasePath() . '?saved=' . time());
                         }
                     // Else, re-render the form with errors
                     } else {

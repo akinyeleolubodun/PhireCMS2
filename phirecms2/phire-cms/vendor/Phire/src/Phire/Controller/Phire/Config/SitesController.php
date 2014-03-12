@@ -101,7 +101,7 @@ class SitesController extends AbstractController
                         'updated'  => ''
                     ));
                 } else {
-                    Response::redirect($this->request->getBasePath());
+                    Response::redirect($this->request->getBasePath() . '?saved=' . time());
                 }
             } else {
                 if (null !== $this->request->getQuery('update')) {
@@ -161,7 +161,7 @@ class SitesController extends AbstractController
                                 'updated' => ''
                             ));
                         } else {
-                            Response::redirect($this->request->getBasePath());
+                            Response::redirect($this->request->getBasePath() . '?saved=' . time());
                         }
                     // Else, re-render the form with errors
                     } else {
