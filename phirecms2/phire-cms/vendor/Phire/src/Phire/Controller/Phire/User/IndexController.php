@@ -64,9 +64,11 @@ class IndexController extends AbstractController
 
         // If type id is set, get users by type
         if ((null !== $this->request->getPath(1)) && is_numeric($this->request->getPath(1))) {
-            $user->getAll($this->request->getPath(1), $this->request->getQuery('sort'), $this->request->getQuery('page'));
+            $user->getAll($this->request->getPath(1), $this->project->module('Phire'), $this->request->getQuery('sort'), $this->request->getQuery('page'));
             $this->view->set('typeId', $this->request->getPath(1))
                        ->set('table', $user->table)
+                       ->set('searchBy', $user->searchBy)
+                       ->set('searchFor', $user->searchFor)
                        ->set('title', $this->view->title . ' '. $this->view->separator . ' '. $user->title);
         // Else, list user types to choose from
         } else {

@@ -539,6 +539,33 @@ input[type=submit]:focus, button:focus {
     padding: 0;
 }
 
+#user-search-form {
+    margin: 0 4px 5px 0;
+    padding: 0;
+    overflow: auto;
+    float: right;
+}
+
+#search-for {
+    margin-top: 1px;
+    padding: 2px 5px 3px 5px;
+    height: 14px;
+    font-size: 0.9em;
+}
+
+#search_by {
+    margin: 0 5px 0 0;
+    padding: 1px 2px 1px 2px;
+    height: 21px;
+    font-size: 0.9em;
+}
+
+#search-for:focus {
+    border: solid 1px #52b2e5;
+    background-color: #efefef;
+    box-shadow: 0 0 2px 1px #8cd6ff;
+}
+
 #media-sizes, #media-actions, #media-params, #media-quality, #media-remove {
     margin: 0 20px 0 0;
     padding: 0;
@@ -1138,6 +1165,7 @@ tr.table-bottom-row:hover, td.table-bottom-row:hover {
     margin: 0 2px 6px 2px;
     padding: 4px 8px 4px 8px;
     display: block;
+    height: 14px;
     color: #fff;
     text-align: center;
     font-weight: bold;

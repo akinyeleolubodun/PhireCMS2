@@ -13,10 +13,15 @@ class FieldValue extends \Phire\Model\AbstractModel
 {
 
     /**
+     * Flag for getting both
+     */
+    const GET_BOTH = 2;
+
+    /**
      * Static method to get field values
      *
-     * @param  int     $modelId
-     * @param  boolean $byName
+     * @param  int   $modelId
+     * @param  mixed $byName
      * @return array
      */
     public static function getAll($modelId, $byName = false)
@@ -54,7 +59,22 @@ class FieldValue extends \Phire\Model\AbstractModel
                 $value = unserialize($field->value);
                 $groupAry = Table\Fields::getFieldGroup($field->field_id);
                 if (count($groupAry) > 0) {
-                    if ($byName) {
+                    if ($byName === self::GET_BOTH) {
+                        if (is_array($value)) {
+                            $values[$field->name] = array();
+                            foreach ($value as $k => $v) {
+                                $values[$field->name] = array(
+                                    'id'    => 'field_' . $field->field_id,
+                                    'value' => self::decrypt($v, $f->encryption, $encOptions)
+                                );
+                            }
+                        } else {
+                            $values[$field->name] = array(
+                                'id'    => 'field_' . $field->field_id,
+                                'value' => self::decrypt($value, $f->encryption, $encOptions)
+                            );
+                        }
+                    } else if ($byName) {
                         if (is_array($value)) {
                             $values[$field->name] = array();
                             foreach ($value as $k => $v) {
@@ -73,8 +93,16 @@ class FieldValue extends \Phire\Model\AbstractModel
                         }
                     }
                 } else {
-                    $key = ($byName) ? $field->name : 'field_' . $field->field_id;
-                    $values[$key] = self::decrypt($value, $f->encryption, $encOptions);
+                    $value = self::decrypt($value, $f->encryption, $encOptions);
+                    if ($byName === self::GET_BOTH) {
+                        $values[$field->name] = array(
+                            'id'    => 'field_' . $field->field_id,
+                            'value' => $value
+                        );
+                    } else {
+                        $key = ($byName) ? $field->name : 'field_' . $field->field_id;
+                        $values[$key] = $value;
+                    }
                 }
             }
         }

@@ -164,6 +164,8 @@ return array(
             'Phire\Model\UserSession',
             '*\Model\Phire'
         ),
+        // Customize the user view columns
+        'user_view' => array(),
         // Encryption options for whichever encryption method you choose
         'encryptionOptions' => array(),
         // Amount of revision history to store

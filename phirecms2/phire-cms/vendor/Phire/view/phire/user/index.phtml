@@ -1,11 +1,12 @@
 <?php include $phireHeader; ?>
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
-<?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'export' . (isset($typeId) ? '_' . $typeId : null)))): ?>
-        <a class="export-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId; ?>"><?php $i18n->_e('Export'); ?></a>
-<?php endif; ?>
+        <form id="user-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="<?php $i18n->_e('Search'); ?>" id="submit" class="search-btn" style="font-size: 10px; margin-top: 1px; padding-top: 4px; height: 21px;" name="submit" /> <?php echo $searchBy; ?> <input type="text" name="search_for" id="search-for" size="20" value="<?php echo $searchFor; ?>" /></div></form>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add') && $acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ <?php $i18n->_e('Add'); ?></a>
+<?php endif; ?>
+<?php if (isset($table) && isset($typeId) && ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'export' . (isset($typeId) ? '_' . $typeId : null)))): ?>
+        <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/export/<?php echo $typeId . ((!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : null)); ?>"><?php $i18n->_e('Export'); ?></a>
 <?php endif; ?>
 <?php if (isset($table)): ?>
 <?php echo $table;

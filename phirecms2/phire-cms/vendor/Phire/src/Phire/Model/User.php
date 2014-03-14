@@ -173,13 +173,22 @@ class User extends AbstractModel
     /**
      * Get all users method
      *
-     * @param  int    $typeId
-     * @param  string $sort
-     * @param  string $page
+     * @param  int         $typeId
+     * @param  \Pop\Config $config
+     * @param  string      $sort
+     * @param  string      $page
      * @return void
      */
-    public function getAll($typeId, $sort = null, $page = null)
+    public function getAll($typeId, $config, $sort = null, $page = null)
     {
+        $userView = array();
+        if (null !== $config->user_view) {
+            $uv = $config->user_view->asArray();
+            if (isset($uv[$typeId]) && (count($uv[$typeId]) > 0)) {
+                $userView = $uv[$typeId];
+            }
+        }
+
         $order = $this->getSortOrder($sort, $page);
         $sql = Table\Users::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
@@ -193,7 +202,7 @@ class User extends AbstractModel
             DB_PREFIX . 'user_roles.name',
             DB_PREFIX . 'users.username',
             DB_PREFIX . 'users.email',
-            DB_PREFIX . 'users.logins'
+            DB_PREFIX . 'users.logins',
         ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
           ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
           ->orderBy($order['field'], $order['order']);
@@ -204,9 +213,40 @@ class User extends AbstractModel
         }
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
+        $params = array('type_id' => $typeId);
+
+        $searchByAry = array(
+            'username' => 'Username',
+            'email'    => 'Email'
+        );
+        $searchByMarked = null;
+        $searchFor = null;
+
+        if (isset($_GET['search_by'])) {
+            if ($_GET['search_by'] == 'username') {
+                $sql->select()->where()->like(DB_PREFIX . 'users.username', ':username');
+                $searchByMarked = 'username';
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['username'] = '%' . $searchFor . '%';
+            } else if ($_GET['search_by'] == 'email') {
+                $sql->select()->where()->like(DB_PREFIX . 'users.email', ':email');
+                $searchByMarked = 'email';
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['email'] = '%' . $searchFor . '%';
+            } else if (strpos($_GET['search_by'], 'field_') !== false) {
+                $id = (int)substr($_GET['search_by'], (strrpos($_GET['search_by'], '_') + 1));
+                $sql->select()->join(DB_PREFIX . 'field_values', array('id', 'model_id'), 'LEFT JOIN');
+                $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id');
+                $sql->select()->where()->like(DB_PREFIX . 'field_values.value', ':value');
+                $searchByMarked = $_GET['search_by'];
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['field_id']    = $id;
+                $params['value'] = '%' . $searchFor . '%';
+            }
+        }
 
         // Execute SQL query and get user type
-        $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
+        $users    = Table\Users::execute($sql->render(true), $params);
         $userType = Table\UserTypes::findById($typeId);
 
         $this->data['title'] = (isset($userType->id)) ? ucwords(str_replace('-', ' ', $userType->type)) : null;
@@ -268,18 +308,36 @@ class User extends AbstractModel
             $lastLogin = $userRows[$key]->last_login;
             $lastLoginShort = (strlen($lastLogin) > 100) ? substr($lastLogin, 0, 100) . '...' : $lastLogin;
 
-            $uAry = array(
-                'id'          => $userRows[$key]->id,
-                'username'    => $userRows[$key]->username,
-                'email'       => $userRows[$key]->email,
-                'name'        => $userRows[$key]->name,
-                'type'        => $userRows[$key]->type,
-                'last_login'  => $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>'
-            );
+            if (count($userView) > 0) {
+                $fieldValues = FieldValue::getAll($userRows[$key]->id, FieldValue::GET_BOTH);
+                $uAry = array('id' => $userRows[$key]->id);
+                foreach ($userView as $name) {
+                    if (isset($userRows[$key]->{$name})) {
+                        $uAry[$name] = $userRows[$key]->{$name};
+                        $searchByAry[$name] = ucwords(str_replace('_', ' ', $name));
+                    } else {
+                        if (isset($fieldValues[$name])) {
+                            $uAry[$name] = $fieldValues[$name]['value'];
+                            $searchByAry[$fieldValues[$name]['id']] = ucwords(str_replace('_', ' ', $name));
+                        }
+                    }
+
+                }
+            } else {
+                $uAry = array('id' => $userRows[$key]->id);
+                if (!$userType->email_as_username) {
+                    $uAry['username'] = $userRows[$key]->username;
+                }
+                $uAry['email']      = $userRows[$key]->email;
+                $uAry['name']       = $userRows[$key]->name;
+                $uAry['type']       = $userRows[$key]->type;
+                $uAry['last_login'] = $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>';
+            }
 
             if (null !== $edit) {
                 $uAry['edit'] = $edit;
             }
+
 
             $userAry[] = $uAry;
         }
@@ -314,9 +372,17 @@ class User extends AbstractModel
             'indent'    => '        '
         );
 
+        if ($userType->email_as_username) {
+            unset($options['table']['headers']['username']);
+            unset($searchByAry['username']);
+        }
+
         if (isset($userRows[0])) {
             $this->data['table'] = Html::encode($userAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\Users::getCount(array('type_id' => $typeId)));
         }
+
+        $this->data['searchBy']  = new \Pop\Form\Element\Select('search_by', $searchByAry, $searchByMarked);
+        $this->data['searchFor'] = $searchFor;
     }
 
     /**
@@ -342,9 +408,30 @@ class User extends AbstractModel
         ))->orderBy($order['field'], $order['order']);
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
+        $params = array('type_id' => $typeId);
+
+        if (isset($_GET['search_by'])) {
+            if ($_GET['search_by'] == 'username') {
+                $sql->select()->where()->like(DB_PREFIX . 'users.username', ':username');
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['username'] = '%' . $searchFor . '%';
+            } else if ($_GET['search_by'] == 'email') {
+                $sql->select()->where()->like(DB_PREFIX . 'users.email', ':email');
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['email'] = '%' . $searchFor . '%';
+            } else if (strpos($_GET['search_by'], 'field_') !== false) {
+                $id = (int)substr($_GET['search_by'], (strrpos($_GET['search_by'], '_') + 1));
+                $sql->select()->join(DB_PREFIX . 'field_values', array('id', 'model_id'), 'LEFT JOIN');
+                $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id');
+                $sql->select()->where()->like(DB_PREFIX . 'field_values.value', ':value');
+                $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
+                $params['field_id']    = $id;
+                $params['value'] = '%' . $searchFor . '%';
+            }
+        }
 
         // Execute SQL query and get user type
-        $users = Table\Users::execute($sql->render(true), array('type_id' => $typeId));
+        $users = Table\Users::execute($sql->render(true), $params);
         $type = Table\UserTypes::findById($typeId);
 
         $userRows = array();
@@ -438,8 +525,7 @@ class User extends AbstractModel
                 'cellspacing' => 0,
                 'border'      => 0
             ),
-            'separator' => '',
-            'date'      => 'D  M j, Y H:i:s'
+            'date' => 'D  M j, Y H:i:s'
         );
 
         $this->data['table']  = Html::encode($loginsAry, $options, $this->config()->pagination_limit, $this->config()->pagination_range);
