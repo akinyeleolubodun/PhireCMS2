@@ -556,7 +556,7 @@ input[type=submit]:focus, button:focus {
 #search_by {
     margin: 0 5px 0 0;
     padding: 1px 2px 1px 2px;
-    height: 21px;
+    height: 20px;
     font-size: 0.9em;
 }
 
