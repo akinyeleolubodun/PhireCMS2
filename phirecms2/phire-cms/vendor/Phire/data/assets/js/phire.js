@@ -474,8 +474,9 @@ var phire = {
                         CKEDITOR.replace(
                             'field_' + phire.selIds[i].id,
                             {
-                                width  : phire.selIds[i].width,
-                                height : phire.selIds[i].height
+                                width          : phire.selIds[i].width,
+                                height         : phire.selIds[i].height,
+                                allowedContent : true
                             }
                         );
                     }
