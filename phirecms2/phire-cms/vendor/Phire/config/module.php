@@ -149,8 +149,6 @@ return array(
         ),
         // Exclude parameter for excluding user-specific resources (controllers) and permissions (actions)
         'exclude_controllers' => array(
-            'Phire\Controller\IndexController',
-            'Phire\Controller\Phire\IndexController',
             'Phire\Controller\Phire\Install\IndexController'
         ),
         // Exclude parameter for excluding model objects from field assignment

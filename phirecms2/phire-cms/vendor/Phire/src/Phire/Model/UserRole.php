@@ -88,7 +88,7 @@ class UserRole extends AbstractModel
 
                             $types = array(0 => '(All)');
 
-                            if ($class != 'Phire\Controller\IndexController') {
+                            if (strpos($class, "\\Controller\\IndexController") === false) {
                                 $classAry = explode('\\', $class);
                                 $end1 = count($classAry) - 2;
                                 $end2 = count($classAry) - 1;
@@ -108,20 +108,19 @@ class UserRole extends AbstractModel
                                     $model = substr($model, 0, -1);
                                 }
                                 $types = \Phire\Project::getModelTypes($model);
-                            }
 
+                                // Format the resource and permissions
+                                $c = str_replace(array('Controller.php', '\\'), array('', '/'), $c);
+                                $c = substr($c, (strpos($c, 'Controller') + 11));
+                                $c = str_replace('Phire/', '', $c);
 
-                            // Format the resource and permissions
-                            $c = str_replace(array('Controller.php', '\\'), array('', '/'), $c);
-                            $c = substr($c, (strpos($c, 'Controller') + 11));
-                            $c = str_replace('Phire/', '', $c);
-
-                            if (!in_array($class, $exclude) || (isset($exclude[$class]) && is_array($exclude[$class]))) {
-                                $resources[$class] = array(
-                                    'name'    => $c,
-                                    'types'   => $types,
-                                    'actions' => $actions
-                                );
+                                if (!in_array($class, $exclude) || (isset($exclude[$class]) && is_array($exclude[$class]))) {
+                                    $resources[$class] = array(
+                                        'name'    => $c,
+                                        'types'   => $types,
+                                        'actions' => $actions
+                                    );
+                                }
                             }
                         }
                     }

@@ -62,11 +62,18 @@ class IndexController extends AbstractController
             // If it is not a user, or a user globally logged into another area
             if (((strtolower($this->type->type) != 'user') && (!$this->type->global_access)) ||
                 (substr($_SERVER['REQUEST_URI'], 0, strlen(BASE_PATH . APP_URI)) != BASE_PATH . APP_URI)) {
-                $typePath = $viewPath . '/../' . strtolower($this->type->type);
-                if (file_exists($typePath)) {
-                    $viewPath = $typePath;
-                } else {
-                    $viewPath = __DIR__ . '/../../../../view/member';
+                $site            = Table\Sites::getSite();
+                $theme           = Table\Extensions::findBy(array('type' => 0, 'active' => 1), null, 1);
+                $themePath       = $site->document_root . $site->base_path . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $this->type->type;
+                $activeThemePath = null;
+
+                if (isset($theme->rows[0])) {
+                    $activeThemePath = $site->document_root . $site->base_path . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->rows[0]->name . DIRECTORY_SEPARATOR . $this->type->type;
+                }
+                if ((null !== $activeThemePath) && file_exists($activeThemePath)) {
+                    $viewPath = $activeThemePath;
+                } else if (file_exists($themePath)) {
+                    $viewPath = $themePath;
                 }
             }
         }

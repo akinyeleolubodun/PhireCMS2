@@ -770,7 +770,7 @@ class User extends AbstractModel
             );
 
             // Send email verification
-            $mail = new Mail($domain . ' - ' . $this->i18n('Unsubscribed'), $rcpt);
+            $mail = new Mail($domain . ' - ' . $this->i18n->__('Unsubscribed'), $rcpt);
             $mail->from('noreply@' . $domain);
             $mail->setText($mailTmpl);
             $mail->send();
