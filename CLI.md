@@ -41,6 +41,6 @@ System
 
     ./phire install             - Install the system
     ./phire update              - Update the system
-    ./phire upgrade             - Upgrade the system from a 1.* installation
+    ./phire migrate             - Migrate the system from a 1.* installation
     ./phire archive             - Archive the system
     ./phire deploy              - Deploy the system to a production local or remote location
