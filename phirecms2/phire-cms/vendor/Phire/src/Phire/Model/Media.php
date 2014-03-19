@@ -210,7 +210,7 @@ class Media extends AbstractModel
                 $fileSize = ' &lt; 1 KB';
             }
         } else {
-            $fileSize = '0 B';
+            $fileSize = '';
         }
 
         return array('fileIcon' => $fileIcon, 'fileSize' => $fileSize);
