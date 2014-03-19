@@ -111,6 +111,55 @@ var phire = {
             if (j.redirect != undefined) {
                 window.location.href = j.redirect;
             } else {
+                // If there is a history field
+                if ((j.form != undefined) && (jax('#' + j.form)[0] != undefined)) {
+                    var frm = jax('#' + j.form)[0];
+                    if (frm.elements.length > 0) {
+                        for (var name in frm.elements) {
+                            if (name.indexOf('history_') != -1) {
+                                var ids = name.split('_');
+                                if (ids.length == 3) {
+                                    if (jax('#field_' + ids[2])[0] != undefined) {
+                                        phire.curValue = jax('#field_' + ids[2]).val();
+                                    }
+                                    var h = jax.json.parse(phire.basePath + phire.appUri + '/structure/fields/json/history/' + ids[1] + '/' + ids[2]);
+                                    var hisSelOptions = jax('#' + name + ' > option');
+                                    var start = hisSelOptions.length - 1;
+                                    for (var i = start; i >= 0; i--) {
+                                        jax(hisSelOptions[i]).remove();
+                                    }
+                                    jax('#' + name).append('option', {"value" : '0'}, '(' + phire.i18n.t('Current') + ')');
+                                    for (var i = 0; i < h.length; i++) {
+                                        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                        var dte     = new Date(h[i] * 1000);
+                                        var month   = months[dte.getMonth()];
+                                        var day     = dte.getDate();
+                                        var year    = dte.getFullYear();
+                                        var hours   = dte.getHours();
+                                        var minutes = dte.getMinutes();
+                                        var seconds = dte.getSeconds();
+
+                                        if (day < 10) {
+                                            day = '0' + day;
+                                        }
+                                        if (hours < 10) {
+                                            hours = '0' + hours;
+                                        }
+                                        if (minutes < 10) {
+                                            minutes = '0' + minutes;
+                                        }
+                                        if (seconds < 10) {
+                                            seconds = '0' + seconds;
+                                        }
+                                        var dateFormat = month + ' ' + day + ', ' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+                                        jax('#' + name).append('option', {"value" : h[i]}, dateFormat);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (jax('#result')[0] != undefined) {
                     jax('#result').css({
                         "background-color" : '#dbf2bf',

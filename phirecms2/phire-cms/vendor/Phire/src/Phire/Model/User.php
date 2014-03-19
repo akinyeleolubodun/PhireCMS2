@@ -642,7 +642,7 @@ class User extends AbstractModel
 
             $sess = Session::getInstance();
 
-            if ($fields['reset_pwd']) {
+            if (isset($fields['reset_pwd']) && ($fields['reset_pwd'])) {
                 $user->updated_pwd = date('Y-m-d H:i:s');
                 unset($sess->reset_pwd);
             }

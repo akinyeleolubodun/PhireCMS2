@@ -215,8 +215,10 @@ class FieldsController extends AbstractController
      */
     public function json()
     {
+        $body = '';
+
         if (null !== $this->request->getPath(1)) {
-            // Get the field history
+            // Get the selected field history value
             if (($this->request->getPath(1) == 'history') &&
                 (null !== $this->request->getPath(2)) &&
                 is_numeric($this->request->getPath(2)) &&
@@ -241,6 +243,21 @@ class FieldsController extends AbstractController
                     }
                 }
                 $body = array('fieldId' => $fieldId, 'modelId' => $modelId, 'value' => html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
+            // Get the field history timestamps
+            } else if (($this->request->getPath(1) == 'history') &&
+                (null !== $this->request->getPath(2)) &&
+                is_numeric($this->request->getPath(2)) &&
+                (null !== $this->request->getPath(3)) &&
+                is_numeric($this->request->getPath(3))) {
+
+                $modelId = $this->request->getPath(2);
+                $fieldId = $this->request->getPath(3);
+
+                $fv = Table\FieldValues::findById(array($fieldId, $modelId));
+                if (isset($fv->field_id) && (null !== $fv->history)) {
+                    $body = array_keys(json_decode($fv->history, true));
+                    rsort($body);
+                }
             // Get the model types
             } else {
                 $clsAry = $this->request->getPath();
