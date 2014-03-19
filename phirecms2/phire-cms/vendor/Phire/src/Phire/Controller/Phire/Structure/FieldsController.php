@@ -240,7 +240,7 @@ class FieldsController extends AbstractController
                         $value = Model\FieldValue::decrypt($value, $f->encryption, $encOptions);
                     }
                 }
-                $body = array('fieldId' => $fieldId, 'modelId' => $modelId, 'value' => $value);
+                $body = array('fieldId' => $fieldId, 'modelId' => $modelId, 'value' => html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
             // Get the model types
             } else {
                 $clsAry = $this->request->getPath();
