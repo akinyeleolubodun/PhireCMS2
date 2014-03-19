@@ -233,21 +233,8 @@ class Install extends Form
                 'value' => CONTENT_PATH
             ),
             'password_encryption' => array (
-                'type' => 'select',
-                'label' => $this->i18n->__('Password Encryption'),
-                'value' => array(
-                    '1' => 'MD5',
-                    '2' => 'SHA1',
-                    '3' => 'Crypt',
-                    '4' => 'Bcrypt',
-                    '5' => 'Mcrypt (2-Way)',
-                    '6' => 'Crypt_MD5',
-                    '7' => 'Crypt_SHA256',
-                    '8' => 'Crypt_SHA512',
-                    '0' => 'None'
-                ),
-                'marked' => 4,
-                'attributes' => array('style' => 'width: 260px;')
+                'type' => 'hidden',
+                'value' => 4
             ),
             'submit' => array (
                 'type' => 'submit',

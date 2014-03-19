@@ -155,16 +155,11 @@ class Field extends \Phire\Model\AbstractModel
                     if ($mid != 0) {
                         $fileValue = Table\FieldValues::findById(array($field->id, $mid));
                         if (isset($fileValue->field_id)) {
-                            $fileName = unserialize($fileValue->value);
-                            $fileContent = Table\Content::findById($mid);
-
-                            $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
-                            $site = Table\Sites::getSite($siteId);
-
-                            $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
-                            $fld['label'] .= '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
-                                $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
-                                $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                            $fileName = json_decode($fileValue->value, true);
+                            $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
+                            $fld['label'] .= '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="' .
+                                BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
+                                BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                 $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
 
                             $fld['required'] = false;
@@ -218,7 +213,7 @@ class Field extends \Phire\Model\AbstractModel
                 $values = Table\FieldValues::findAll(null, array('field_id' => $field->id));
                 if (isset($values->rows[0])) {
                     foreach ($values->rows as $value) {
-                        $val = unserialize($value->value);
+                        $val = json_decode($value->value);
                         if ((count($groupAry) > 0) && ($value->model_id == $mid)) {
                             if (is_array($val)) {
                                 foreach ($val as $k => $v) {
@@ -275,7 +270,7 @@ class Field extends \Phire\Model\AbstractModel
                     $fv = Table\FieldValues::findById(array($field->id, $mid));
                     if (isset($fv->field_id) && (null !== $fv->history)) {
                         $history = array(0 => '(Current)');
-                        $historyAry = unserialize($fv->history);
+                        $historyAry = json_decode($fv->history, true);
                         krsort($historyAry);
                         foreach ($historyAry as $time => $fieldValue) {
                             $history[$time] = date('M j, Y H:i:s', $time);
@@ -360,15 +355,10 @@ class Field extends \Phire\Model\AbstractModel
                                     $fileName = $f['value'];
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
-                                        $fileContent = Table\Content::findBy(array('uri' => $fileName));
-
-                                        $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
-                                        $site = Table\Sites::getSite($siteId);
-
-                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') .'</em><br /><a href="http://' .
-                                            $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
-                                            $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
+                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') .'</em><br /><a href="' .
+                                            BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
+                                            BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
                                         $f['label'] = $i18n->__('Replace?');
@@ -385,15 +375,10 @@ class Field extends \Phire\Model\AbstractModel
                                     $fileName = $f['value'];
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
-                                        $fileContent = Table\Content::findBy(array('uri' => $fileName));
-
-                                        $siteId = (isset($fileContent->id) && ((int)$fileContent->site_id != 0)) ? (int)$fileContent->site_id : 0;
-                                        $site = Table\Sites::getSite($siteId);
-
-                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName, $site->document_root . $site->base_path);
-                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="http://' .
-                                            $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="http://' .
-                                            $site->domain . BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="http://' . $site->domain . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
+                                        $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
+                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="' .
+                                            BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
+                                            BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
                                             $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
                                     } else {
                                         $f['label'] = $i18n->__('Replace?');

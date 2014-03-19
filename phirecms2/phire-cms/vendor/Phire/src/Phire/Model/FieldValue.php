@@ -56,7 +56,7 @@ class FieldValue extends \Phire\Model\AbstractModel
         if (isset($fields->rows[0])) {
             foreach ($fields->rows as $field) {
                 $f = Table\Fields::findById($field->field_id);
-                $value = unserialize($field->value);
+                $value = json_decode($field->value, true);
                 $groupAry = Table\Fields::getFieldGroup($field->field_id);
                 if (count($groupAry) > 0) {
                     if ($byName === self::GET_BOTH) {
@@ -209,7 +209,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                         $f = new Table\FieldValues(array(
                             'field_id'  => $id,
                             'model_id'  => $modelId,
-                            'value'     => serialize($value),
+                            'value'     => json_encode($value),
                             'timestamp' => time()
                         ));
                         $f->save();
@@ -252,7 +252,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $f = new Table\FieldValues(array(
                                 'field_id'  => $id,
                                 'model_id'  => $modelId,
-                                'value'     => serialize($fileName),
+                                'value'     => json_encode($fileName),
                                 'timestamp' => time()
                             ));
                             $f->save();
@@ -295,7 +295,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                 $f = new Table\FieldValues(array(
                     'field_id'  => $id,
                     'model_id'  => $modelId,
-                    'value'     => serialize($value),
+                    'value'     => json_encode($value),
                     'timestamp' => time()
                 ));
                 $f->save();
@@ -376,24 +376,24 @@ class FieldValue extends \Phire\Model\AbstractModel
                             if ((null !== $historyCount) && ($historyCount > 0)) {
                                 $f = Table\Fields::findById($field->field_id);
                                 if (isset($f->id) && (strpos($f->type, '-history') !== false)) {
-                                    $oldValue = unserialize($field->value);
+                                    $oldValue = json_decode($field->value, true);
                                     // If value is different that the last value
                                     if ($realValue != $oldValue) {
                                         $ts = (null !== $field->timestamp) ? $field->timestamp : time() - 300;
                                         if (null !== $field->history) {
-                                            $history = unserialize($field->history);
+                                            $history = json_decode($field->history, true);
                                             $history[$ts] = $oldValue;
                                             if (count($history) > $historyCount) {
                                                 $history = array_slice($history, 1, $historyCount, true);
                                             }
-                                            $field->history = serialize($history);
+                                            $field->history = json_encode($history);
                                         } else {
-                                            $field->history = serialize(array($ts => $oldValue));
+                                            $field->history = json_encode(array($ts => $oldValue));
                                         }
                                     }
                                 }
                             }
-                            $field->value = serialize($realValue);
+                            $field->value = json_encode($realValue);
                             $field->timestamp = time();
                             $field->update();
                         // Else, save new field
@@ -402,7 +402,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $f = new Table\FieldValues(array(
                                 'field_id'  => $id,
                                 'model_id'  => $modelId,
-                                'value'     => serialize($realValue),
+                                'value'     => json_encode($realValue),
                                 'timestamp' => time()
                             ));
                             $f->save();
@@ -427,7 +427,7 @@ class FieldValue extends \Phire\Model\AbstractModel
 
                             // If file exists and is being replaced, remove it
                             if (isset($fv->field_id)) {
-                                $fValue = unserialize($fv->value);
+                                $fValue = json_decode($fv->value, true);
                                 if (isset($fValue[$num])) {
                                     if ($_FILES) {
                                         \Phire\Model\Media::remove($fValue[$num], $docRoot . $basePath);
@@ -448,7 +448,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $num = substr($key, (strrpos($key, '_') + 1)) - 1;
                             $fv = Table\FieldValues::findById(array($id, $modelId));
                             if (isset($fv->field_id)) {
-                                $fValue = unserialize($fv->value);
+                                $fValue = json_decode($fv->value, true);
                                 if (isset($fValue[$num])) {
                                     $fileName = $fValue[$num];
                                 }
@@ -482,10 +482,10 @@ class FieldValue extends \Phire\Model\AbstractModel
                             // If file field value exists, update
                             if (isset($field->field_id)) {
                                 if ($_FILES) {
-                                    \Phire\Model\Media::remove(unserialize($field->value), $docRoot . $basePath);
+                                    \Phire\Model\Media::remove(json_decode($field->value, true), $docRoot . $basePath);
                                 }
 
-                                $field->value = serialize($fileName);
+                                $field->value = json_encode($fileName);
                                 $field->timestamp = time();
                                 $field->update();
                             // Else, save new
@@ -493,7 +493,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                                 $f = new Table\FieldValues(array(
                                     'field_id'  => $id,
                                     'model_id'  => $modelId,
-                                    'value'     => serialize($fileName),
+                                    'value'     => json_encode($fileName),
                                     'timestamp' => time()
                                 ));
                                 $f->save();
@@ -520,7 +520,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                     if (isset($f->id) && ($f->type == 'file')) {
                         $fv = Table\FieldValues::findById(array($id, $modelId));
                         if (isset($fv->field_id)) {
-                            $fValue = unserialize($fv->value);
+                            $fValue = json_decode($fv->value, true);
                             if (is_array($fValue) && isset($fValue[$num])) {
                                 if ($_FILES) {
                                     \Phire\Model\Media::remove($fValue[$num], $docRoot . $basePath);
@@ -637,7 +637,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                                     if (isset($f->id) && ($f->type == 'file')) {
                                         $fv = Table\FieldValues::findById(array($id, $modelId));
                                         if (isset($fv->field_id)) {
-                                            $fValue = unserialize($fv->value);
+                                            $fValue = json_decode($fv->value, true);
                                             if (isset($fValue[$key])) {
                                                 $valueAry[$id][$key] = $fValue[$key];
                                             }
@@ -696,9 +696,9 @@ class FieldValue extends \Phire\Model\AbstractModel
                     if (!empty($value) && ($value != '[Encrypted]')) {
                         $value = self::encrypt($value, $f->encryption, $encOptions);
                     } else {
-                        $value = unserialize($field->value);
+                        $value = json_decode($field->value, true);
                     }
-                    $field->value = serialize($value);
+                    $field->value = json_encode($value);
                     $field->timestamp = time();
                     $field->update();
                 } else {
@@ -706,7 +706,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                     $f = new Table\FieldValues(array(
                         'field_id'  => $id,
                         'model_id'  => $modelId,
-                        'value'     => serialize($value),
+                        'value'     => json_encode($value),
                         'timestamp' => time()
                     ));
                     $f->save();
@@ -747,7 +747,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                     if (isset($fld->field_id)) {
                         // If field type is file, delete file(s)
                         if ($fld->type == 'file') {
-                            $file = unserialize($fld->value);
+                            $file = json_decode($fld->value, true);
                             if (is_array($file)) {
                                 foreach ($file as $f) {
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/media/' . $f)) {

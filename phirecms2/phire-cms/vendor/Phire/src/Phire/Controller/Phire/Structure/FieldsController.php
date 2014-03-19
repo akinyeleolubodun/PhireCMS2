@@ -233,7 +233,7 @@ class FieldsController extends AbstractController
                 $fv = Table\FieldValues::findById(array($fieldId, $modelId));
 
                 if (isset($fv->field_id) && (null !== $fv->history)) {
-                    $history = unserialize($fv->history);
+                    $history = json_decode($fv->history, true);
                     if (isset($history[$time])) {
                         $value = $history[$time];
                         $f = Table\Fields::findById($fieldId);
