@@ -182,6 +182,7 @@ class User extends AbstractModel
     public function getAll($typeId, $config, $sort = null, $page = null)
     {
         $userView = array();
+
         if (null !== $config->user_view) {
             $uv = $config->user_view->asArray();
             if (isset($uv[$typeId]) && (count($uv[$typeId]) > 0)) {
@@ -193,19 +194,47 @@ class User extends AbstractModel
         $sql = Table\Users::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
 
+        $searchString = null;
+        if (isset($_GET['search_by']) && isset($_GET['search_for'])) {
+            $searchString = '&search_by=' . $_GET['search_by'] . '&search_for=' . $_GET['search_for'];
+        }
+
         // Build the SQL statement to get users
-        $sql->select(array(
-            DB_PREFIX . 'users.id',
-            DB_PREFIX . 'users.type_id',
-            DB_PREFIX . 'users.role_id',
-            DB_PREFIX . 'user_types.type',
-            DB_PREFIX . 'user_roles.name',
-            DB_PREFIX . 'users.username',
-            DB_PREFIX . 'users.email',
-            DB_PREFIX . 'users.logins',
-        ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
-          ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
-          ->orderBy($order['field'], $order['order']);
+        if (isset($_GET['field_id'])) {
+            $sql->select(array(
+                0      => DB_PREFIX . 'users.id',
+                1      => DB_PREFIX . 'users.type_id',
+                2      => DB_PREFIX . 'users.role_id',
+                3      => DB_PREFIX . 'user_types.type',
+                'role' => DB_PREFIX . 'user_roles.name',
+                4 => DB_PREFIX . 'users.username',
+                5 => DB_PREFIX . 'users.email',
+                6 => DB_PREFIX . 'users.logins',
+                7 => DB_PREFIX . 'field_values.field_id',
+                8 => DB_PREFIX . 'field_values.value',
+            ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
+              ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
+              ->join(DB_PREFIX . 'field_values', array('id', 'model_id'), 'LEFT JOIN')
+              ->orderBy('value', $order['order']);
+
+            $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id');
+            $params = array('field_id' => (int)$_GET['field_id'], 'type_id' => $typeId);
+        } else {
+            $sql->select(array(
+                0      => DB_PREFIX . 'users.id',
+                1      => DB_PREFIX . 'users.type_id',
+                2      => DB_PREFIX . 'users.role_id',
+                3      => DB_PREFIX . 'user_types.type',
+                'role' => DB_PREFIX . 'user_roles.name',
+                4 => DB_PREFIX . 'users.username',
+                5 => DB_PREFIX . 'users.email',
+                6 => DB_PREFIX . 'users.logins',
+            ))->join(DB_PREFIX . 'user_types', array('type_id', 'id'), 'LEFT JOIN')
+              ->join(DB_PREFIX . 'user_roles', array('role_id', 'id'), 'LEFT JOIN')
+              ->orderBy($order['field'], $order['order']);
+
+            $params   = array('type_id' => $typeId);
+        }
 
         if (null !== $order['limit']) {
             $sql->select()->limit($order['limit'])
@@ -213,7 +242,6 @@ class User extends AbstractModel
         }
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
-        $params = array('type_id' => $typeId);
 
         $searchByAry = array(
             'username' => 'Username',
@@ -235,13 +263,15 @@ class User extends AbstractModel
                 $params['email'] = '%' . $searchFor . '%';
             } else if (strpos($_GET['search_by'], 'field_') !== false) {
                 $id = (int)substr($_GET['search_by'], (strrpos($_GET['search_by'], '_') + 1));
-                $sql->select()->join(DB_PREFIX . 'field_values', array('id', 'model_id'), 'LEFT JOIN');
-                $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id');
+                if (!isset($_GET['field_id'])) {
+                    $sql->select()->join(DB_PREFIX . 'field_values', array('id', 'model_id'), 'LEFT JOIN');
+                    $sql->select()->where()->equalTo(DB_PREFIX . 'field_values.field_id', ':field_id');
+                    $params['field_id'] = $id;
+                }
                 $sql->select()->where()->like(DB_PREFIX . 'field_values.value', ':value');
                 $searchByMarked = $_GET['search_by'];
                 $searchFor = htmlentities(strip_tags($_GET['search_for']), ENT_QUOTES, 'UTF-8');
-                $params['field_id']    = $id;
-                $params['value'] = '%' . $searchFor . '%';
+                $params['value']    = '%' . $searchFor . '%';
             }
         }
 
@@ -269,6 +299,36 @@ class User extends AbstractModel
                 'style' => 'display: none;'
             );
         }
+
+        $options = array(
+            'form' => array(
+                'id'      => 'user-remove-form',
+                'action'  => BASE_PATH . APP_URI . '/users/remove/' . $typeId,
+                'method'  => 'post',
+                'process' => $removeCheckbox,
+                'submit'  => $submit
+            ),
+            'table' => array(
+                'headers' => array(
+                    'id'          => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=id' . $searchString . '">#</a>',
+                    'edit'        => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
+                    'role'        => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=role' . $searchString . '">' . $this->i18n->__('Role') . '</a>',
+                    'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username' . $searchString . '">' . $this->i18n->__('Username') . '</a>',
+                    'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email' . $searchString . '">' . $this->i18n->__('Email') . '</a>',
+                    'last_login'  => $this->i18n->__('Logins') . ' <span style="font-weight: normal;">[ ' . $this->i18n->__('Last Login') . ' ]</span>',
+                    'process'     => $removeCheckAll
+                ),
+                'class'       => 'data-table',
+                'cellpadding' => 0,
+                'cellspacing' => 0,
+                'border'      => 0
+            ),
+            'separator' => '',
+            'exclude'   => array(
+                'type_id', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
+            ),
+            'indent'    => '        '
+        );
 
         // Clean up user data
         $userRows = $users->rows;
@@ -301,7 +361,7 @@ class User extends AbstractModel
                 $userRows[$key]->type = '<a href="' . BASE_PATH . APP_URI . '/users/type/' . $userRows[$key]->id . '">' . $userRows[$key]->type . '</a>';
             }
 
-            $userRows[$key]->name = (null !== $value->name) ? $value->name : '(Blocked)';
+            $userRows[$key]->role = (null !== $value->role) ? $value->role : '(Blocked)';
             $userRows[$key]->last_login = $last;
             $userRows[$key]->login_count = $count;
 
@@ -319,9 +379,16 @@ class User extends AbstractModel
                         if (isset($fieldValues[$name])) {
                             $uAry[$name] = $fieldValues[$name]['value'];
                             $searchByAry[$fieldValues[$name]['id']] = ucwords(str_replace('_', ' ', $name));
+                            if ((null !== $searchString) && ($_GET['search_by'] == $fieldValues[$name]['id'])) {
+                                $realSearchString = $searchString;
+                            } else {
+                                $realSearchString = null;
+                            }
+                            $options['table']['headers'][$name] = '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=field_id' . $realSearchString . '&field_id=' . substr($fieldValues[$name]['id'], (strrpos($fieldValues[$name]['id'], '_') + 1)) . '">' . ucwords(str_replace('_', ' ', $name)) . '</a>';
+                        } else {
+                            $uAry[$name] = '';
                         }
                     }
-
                 }
             } else {
                 $uAry = array('id' => $userRows[$key]->id);
@@ -329,7 +396,7 @@ class User extends AbstractModel
                     $uAry['username'] = $userRows[$key]->username;
                 }
                 $uAry['email']      = $userRows[$key]->email;
-                $uAry['name']       = $userRows[$key]->name;
+                $uAry['role']       = $userRows[$key]->role;
                 $uAry['type']       = $userRows[$key]->type;
                 $uAry['last_login'] = $userRows[$key]->login_count . ' &nbsp; <span title="' . $lastLogin . '">[ ' . $lastLoginShort . ' ]</span>';
             }
@@ -338,39 +405,8 @@ class User extends AbstractModel
                 $uAry['edit'] = $edit;
             }
 
-
             $userAry[] = $uAry;
         }
-
-        $options = array(
-            'form' => array(
-                'id'      => 'user-remove-form',
-                'action'  => BASE_PATH . APP_URI . '/users/remove/' . $typeId,
-                'method'  => 'post',
-                'process' => $removeCheckbox,
-                'submit'  => $submit
-            ),
-            'table' => array(
-                'headers' => array(
-                    'id'          => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=id">#</a>',
-                    'edit'        => '<span style="display: block; margin: 0 auto; width: 100%; text-align: center;">' . $this->i18n->__('Edit') . '</span>',
-                    'name'        => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=name">' . $this->i18n->__('Role') . '</a>',
-                    'username'    => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=username">' . $this->i18n->__('Username') . '</a>',
-                    'email'       => '<a href="' . BASE_PATH . APP_URI . '/users/index/' . $typeId . '?sort=email">' . $this->i18n->__('Email') . '</a>',
-                    'last_login'  => $this->i18n->__('Logins') . ' <span style="font-weight: normal;">[ ' . $this->i18n->__('Last Login') . ' ]</span>',
-                    'process'     => $removeCheckAll
-                ),
-                'class'       => 'data-table',
-                'cellpadding' => 0,
-                'cellspacing' => 0,
-                'border'      => 0
-            ),
-            'separator' => '',
-            'exclude'   => array(
-                'type_id', 'role_id', 'logins', 'process' => array('id' => $this->data['user']->id)
-            ),
-            'indent'    => '        '
-        );
 
         if ($userType->email_as_username) {
             unset($options['table']['headers']['username']);
