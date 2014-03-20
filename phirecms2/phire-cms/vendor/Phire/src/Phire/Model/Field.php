@@ -260,8 +260,8 @@ class Field extends \Phire\Model\AbstractModel
                 }
 
                 // Add field to the field array
-
                 $fieldsAry[$fieldName] = $fld;
+                $editorField = null;
 
                 // If in the system back end, and the field is a textarea, add history select field
                 if (($mid != 0) &&
@@ -275,15 +275,45 @@ class Field extends \Phire\Model\AbstractModel
                         foreach ($historyAry as $time => $fieldValue) {
                             $history[$time] = date('M j, Y H:i:s', $time);
                         }
+
+                        $historyLabel = $i18n->__('Select Revision');
+
+                        if (strpos($field->type, 'textarea') !== false) {
+                            if ((null !== $field->editor) && ($field->editor != 'source')) {
+                                $editors = array('source' => 'Source');
+                                if (($field->editor == 'ckeditor') &&
+                                    file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/ckeditor')) {
+                                    $editors['ckeditor'] = 'CKEditor';
+                                } else if (($field->editor == 'tinymce') &&
+                                    file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/tinymce')) {
+                                    $editors['tinymce'] = 'TinyMCE';
+                                }
+                                $editorField = array(
+                                    'type'       => 'select',
+                                    'value'      => $editors,
+                                    'marked'     => $field->editor,
+                                    'attributes' => array(
+                                        'onchange' => "phire.changeEditor(this);",
+                                        'style'    => 'width: 160px;'
+                                    )
+                                );
+                                $historyLabel = '<span style="display: inline-block; width: 165px;">' . $i18n->__('Select Revision') . '</span><span>' . $i18n->__('Change Editor') . '</span>';
+                            }
+                        }
+
                         $fieldsAry['history_' . $mid . '_' . $field->id] = array(
                             'type'       => 'select',
-                            'label'      => $i18n->__('Select Revision'),
+                            'label'      => $historyLabel,
                             'value'      => $history,
                             'marked'     => 0,
                             'attributes' => array(
-                                'onchange' => "phire.changeHistory(this, '" . BASE_PATH . APP_URI . "');"
+                                'onchange' => "phire.changeHistory(this, '" . BASE_PATH . APP_URI . "');",
+                                'style'    => 'width: 160px;'
                             )
                         );
+                        if (null !== $editorField) {
+                            $fieldsAry['editor_' . $field->id] = $editorField;
+                        }
                     }
                 }
 
@@ -297,15 +327,18 @@ class Field extends \Phire\Model\AbstractModel
                             file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/tinymce')) {
                             $editors['tinymce'] = 'TinyMCE';
                         }
-                        $fieldsAry['editor_' . $field->id] = array(
-                            'type'       => 'select',
-                            'label'      => $i18n->__('Change Editor:'),
-                            'value'      => $editors,
-                            'marked'     => $field->editor,
-                            'attributes' => array(
-                                'onchange' => "phire.changeEditor(this);"
-                            )
-                        );
+                        if (null === $editorField) {
+                            $fieldsAry['editor_' . $field->id] = array(
+                                'type'       => 'select',
+                                'label'      => $i18n->__('Change Editor'),
+                                'value'      => $editors,
+                                'marked'     => $field->editor,
+                                'attributes' => array(
+                                    'onchange' => "phire.changeEditor(this);",
+                                    'style'    => 'width: 160px;'
+                                )
+                            );
+                        }
                     }
                 }
 
