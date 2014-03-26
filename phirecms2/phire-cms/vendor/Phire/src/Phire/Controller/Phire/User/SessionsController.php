@@ -62,7 +62,8 @@ class SessionsController extends AbstractController
 
         $session = new Model\UserSession(array('acl' => $this->project->getService('acl')));
         $session->getAll($this->request->getQuery('sort'), $this->request->getQuery('page'));
-        $this->view->set('table', $session->table);
+        $this->view->set('table', $session->table)
+                   ->set('searchBy', $session->searchBy);
         $this->send();
     }
 

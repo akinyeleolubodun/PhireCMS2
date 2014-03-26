@@ -50,6 +50,28 @@ class UserSessions extends Record
     /**
      * Static method to clear sessions
      *
+     * @param  int $tid
+     * @return int
+     */
+    public static function getCountOfType($tid)
+    {
+        $sql = static::getSql();
+        $sql->select(array(
+            0 => DB_PREFIX . 'user_sessions.id',
+            4 => DB_PREFIX . 'user_sessions.user_id',
+            7 => DB_PREFIX . 'users.type_id'
+        ))->join(DB_PREFIX . 'users', array('user_id', 'id'), 'LEFT JOIN')
+          ->join(DB_PREFIX . 'user_types', array(DB_PREFIX . 'users.type_id', 'id'), 'LEFT JOIN');
+
+        $sql->select()->where()->equalTo('type_id', (int)$tid);
+
+        $sessions = static::execute($sql->render(true));
+        return $sessions->count();
+    }
+
+    /**
+     * Static method to clear sessions
+     *
      * @param  int $id
      * @return void
      */

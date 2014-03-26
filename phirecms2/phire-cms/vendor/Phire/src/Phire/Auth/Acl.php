@@ -75,7 +75,6 @@ class Acl extends A
                 // If the user is not the right type, check for global access
                 if ($this->type->id != $this->sess->user->type_id) {
                     if ($this->sess->user->global_access) {
-                        $this->sess->user->last_action = date('Y-m-d H:i:s');
                         $auth = true;
                     } else {
                         $this->sess->authError = true;
@@ -88,15 +87,9 @@ class Acl extends A
                     if ((null !== $resource) && (!$this->hasResource($resource))) {
                         $this->addResource($resource);
                     }
-                    if ($this->isAllowed($role, $resource, $permission)) {
-                        $this->sess->user->last_action = date('Y-m-d H:i:s');
-                        $auth = true;
-                    } else {
-                        $auth = false;
-                    }
+                    $auth = ($this->isAllowed($role, $resource, $permission));
                 // Else, validate the session and record the action
                 } else {
-                    $this->sess->user->last_action = date('Y-m-d H:i:s');
                     $auth = true;
                 }
             }

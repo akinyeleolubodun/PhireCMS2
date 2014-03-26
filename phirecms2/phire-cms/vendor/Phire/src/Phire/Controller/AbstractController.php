@@ -59,7 +59,12 @@ class AbstractController extends \Pop\Mvc\Controller
         if (isset($this->view->assets)) {
             $jsVars = '?lang=' . $config->default_language;
         }
+
         if (isset($sess->user)) {
+            if (isset($this->sess->user->last_action)) {
+                $this->sess->user->last_action = date('Y-m-d H:i:s');
+            }
+
             // Set the timeout warning, giving a 30 second buffer to act
             if (isset($this->view->assets)) {
                 if (isset($this->view->acl) && ($this->view->acl->getType()->session_expiration > 0) && ($this->view->acl->getType()->timeout_warning)) {

@@ -42,6 +42,21 @@ class UserSession extends AbstractModel
                           ->offset($order['offset']);
         }
 
+        $searchByMarked = null;
+        $searchByAry = array();
+        $types = Table\UserTypes::findAll();
+        foreach ($types->rows as $type) {
+            $searchByAry[$type->id] = $type->type;
+        }
+
+        if (isset($_GET['search_by'])) {
+            $count = Table\UserSessions::getCountOfType((int)$_GET['search_by']);
+            $searchByMarked = (int)$_GET['search_by'];
+            $sql->select()->where()->equalTo('type_id', (int)$_GET['search_by']);
+        } else {
+            $count = Table\UserSessions::getCount();
+        }
+
         // Execute SQL query
         $sessions = Table\UserSessions::execute($sql->render(true));
 
@@ -107,7 +122,8 @@ class UserSession extends AbstractModel
         }
 
         if (isset($sessAry[0])) {
-            $this->data['table'] = Html::encode($sessAry, $options, $this->config->pagination_limit, $this->config->pagination_range, Table\UserSessions::getCount());
+            $this->data['table'] = Html::encode($sessAry, $options, $this->config->pagination_limit, $this->config->pagination_range, $count);
+            $this->data['searchBy']  = new \Pop\Form\Element\Select('search_by', $searchByAry, $searchByMarked);
         }
     }
 
