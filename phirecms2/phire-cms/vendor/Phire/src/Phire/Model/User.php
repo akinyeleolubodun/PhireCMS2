@@ -243,11 +243,6 @@ class User extends AbstractModel
 
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
 
-        $searchByAry = array(
-            'username' => 'Username',
-            'email'    => 'Email'
-        );
-
         $search         = false;
         $searchByMarked = null;
         $searchFor      = null;
@@ -379,12 +374,17 @@ class User extends AbstractModel
             $lastLoginShort = (strlen($lastLogin) > 100) ? substr($lastLogin, 0, 100) . '...' : $lastLogin;
 
             if (count($userView) > 0) {
+                $searchByAry = array();
                 $fieldValues = FieldValue::getAll($userRows[$key]->id, FieldValue::GET_BOTH);
                 $uAry = array('id' => $userRows[$key]->id);
                 foreach ($userView as $name) {
                     if (isset($userRows[$key]->{$name})) {
                         $uAry[$name] = $userRows[$key]->{$name};
-                        $searchByAry[$name] = ucwords(str_replace('_', ' ', $name));
+                        if (($name !== 'username') && ($name !== 'email')) {
+                            $searchByAry[$name] = ucwords(str_replace('_', ' ', $name));
+                        } else {
+                            $searchByAry[$name] = ucwords($name);
+                        }
                     } else {
                         if (isset($fieldValues[$name])) {
                             $uAry[$name] = $fieldValues[$name]['value'];
@@ -401,6 +401,11 @@ class User extends AbstractModel
                     }
                 }
             } else {
+                $searchByAry = array(
+                    'username' => 'Username',
+                    'email'    => 'Email'
+                );
+
                 $uAry = array('id' => $userRows[$key]->id);
                 if (!$userType->email_as_username) {
                     $uAry['username'] = $userRows[$key]->username;
