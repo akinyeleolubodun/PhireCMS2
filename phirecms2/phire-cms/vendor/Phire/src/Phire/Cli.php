@@ -23,7 +23,6 @@ class Cli
         'version',
         'user',
         'ext',
-        'sql',
         'install',
         'update',
         'archive'
@@ -835,7 +834,7 @@ class Cli
         echo '  You must pass an argument with the \'' . $cmd . '\' command.' . PHP_EOL;
         echo '  Available arguments for the \'' . $cmd . '\' command are: ' . PHP_EOL . PHP_EOL;
         echo '     ' . implode(', ', $this->arguments[$cmd]) . PHP_EOL . PHP_EOL;
-        echo '  Use ./phire help for help.' . PHP_EOL;
+        echo '  Use ./phire help for help.' . PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -850,7 +849,7 @@ class Cli
         echo '  The argument \'' . $arg . '\' was not recognized.' . PHP_EOL;
         echo '  Available arguments for the \'' . $cmd . '\' command are: ' . PHP_EOL . PHP_EOL;
         echo '    ' . implode(', ', $this->arguments[$cmd]) . PHP_EOL . PHP_EOL;
-        echo '  Use ./phire help for help.' . PHP_EOL;
+        echo '  Use ./phire help for help.' . PHP_EOL . PHP_EOL;
     }
 
     /**
