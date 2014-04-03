@@ -56,6 +56,17 @@ class Update extends AbstractForm
             )
         );
 
+        if (isset($_GET['module'])) {
+            $type = 'module';
+            $name = $_GET['module'];
+        } else if (isset($_GET['theme'])) {
+            $type = 'theme';
+            $name = $_GET['theme'];
+        } else {
+            $type = 'system';
+            $name = 'phire';
+        }
+
         $fields2 = array(
             'submit' => array(
                 'type'  => 'submit',
@@ -84,7 +95,11 @@ class Update extends AbstractForm
             ),
             'type' => array(
                 'type'  => 'hidden',
-                'value' => (isset($_GET['type']) ? $_GET['type'] : 'system')
+                'value' => $type
+            ),
+            'name' => array(
+                'type'  => 'hidden',
+                'value' => $name
             ),
             'base_path' => array(
                 'type'  => 'hidden',

@@ -85,7 +85,14 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $title = ((null !== $this->request->getQuery('type')) ? ucfirst($this->request->getQuery('type')) : 'System') . ' Update';
+        if (null !== $this->request->getQuery('module')) {
+            $title = 'Module Update';
+        } else if (null !== $this->request->getQuery('theme')) {
+            $title = 'Theme Update';
+        } else {
+            $title = 'System Update';
+        }
+
         $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__($title));
 
         $form = new Form\Update();
