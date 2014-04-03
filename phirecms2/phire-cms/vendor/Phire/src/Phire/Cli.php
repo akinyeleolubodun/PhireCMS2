@@ -23,10 +23,10 @@ class Cli
         'version',
         'user',
         'ext',
+        'sql',
         'install',
         'update',
-        'upgrade',
-        'deploy'
+        'archive'
     );
     /**
      *
@@ -103,14 +103,6 @@ class Cli
 
                     case 'update':
                         $this->update();
-                        break;
-
-                    case 'upgrade':
-                        $this->upgrade();
-                        break;
-
-                    case 'deploy':
-                        $this->deploy();
                         break;
                 }
             }
@@ -830,36 +822,6 @@ class Cli
         echo 'System Update' . PHP_EOL;
         echo '-------------' . PHP_EOL;
         echo PHP_EOL;
-    }
-
-    /**
-     * Perform system upgrade
-     *
-     * @return void
-     */
-    protected function upgrade()
-    {
-        echo 'System Upgrade' . PHP_EOL;
-        echo '--------------' . PHP_EOL;
-        echo PHP_EOL;
-    }
-
-    /**
-     * Perform system deploy
-     *
-     * @return void
-     */
-    protected function deploy()
-    {
-        echo 'System Deploy' . PHP_EOL;
-        echo '-------------' . PHP_EOL;
-        echo PHP_EOL;
-
-        if (isset($this->args[2]) && !in_array($this->args[2], $this->arguments['user'])) {
-            $this->argInvalid('deploy', $this->args[2]);
-        } else {
-            echo 'deploy' . PHP_EOL;
-        }
     }
 
     /**
