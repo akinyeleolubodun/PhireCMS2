@@ -801,19 +801,23 @@ class Cli
      */
     public static  function postInstall()
     {
-        $ext = new Model\Extension();
-        $ext->getModules();
+        try {
+            $ext = new Model\Extension();
+            $ext->getModules();
 
-        if (count($ext->new) > 0) {
-            $ext->installModules();
+            if (count($ext->new) > 0) {
+                $ext->installModules();
+            }
+
+            $dir = new \Pop\File\Dir(__DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/modules', true, true);
+            foreach ($dir->getFiles() as $file) {
+                chmod($file, 0777);
+            }
+
+            echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
+        } catch (\Exception $e) {
+            echo '  ' . $e->getMessage() . PHP_EOL . PHP_EOL;
         }
-
-        $dir = new \Pop\File\Dir(__DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/modules', true, true);
-        foreach ($dir->getFiles() as $file) {
-            chmod($file, 0777);
-        }
-
-        echo '  Installation Complete!' . PHP_EOL . PHP_EOL;
     }
 
     /**
