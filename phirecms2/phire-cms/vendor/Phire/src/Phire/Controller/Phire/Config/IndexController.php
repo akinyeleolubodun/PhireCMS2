@@ -16,7 +16,7 @@ class IndexController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the templates controller object
+     * Constructor method to instantiate the config controller object
      *
      * @param  Request  $request
      * @param  Response $response
@@ -46,7 +46,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * Templates index method
+     * Config index method
      *
      * @return void
      */
@@ -71,8 +71,45 @@ class IndexController extends AbstractController
             $this->send();
         }
     }
+
     /**
-     * Method to get example
+     * Config update method
+     *
+     * @return void
+     */
+    public function update()
+    {
+        $this->prepareView('update.phtml', array(
+            'assets'   => $this->project->getAssets(),
+            'acl'      => $this->project->getService('acl'),
+            'phireNav' => $this->project->getService('phireNav')
+        ));
+
+        $title = ((null !== $this->request->getQuery('type')) ? ucfirst($this->request->getQuery('type')) : 'System') . ' Update';
+        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__($title));
+
+        $form = new Form\Update();
+        if ($this->request->isPost()) {
+            $form->setFieldValues(
+                $this->request->getPost(),
+                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
+            );
+
+            if ($form->isValid()) {
+                $config = new Model\Config();
+                $config->getUpdate($this->request->getPost());
+            } else {
+                $this->view->set('form', $form);
+                $this->send();
+            }
+        } else {
+            $this->view->set('form', $form);
+            $this->send();
+        }
+    }
+
+    /**
+     * Method to get date format
      *
      * @return void
      */
@@ -102,7 +139,8 @@ class IndexController extends AbstractController
             'phireNav' => $this->project->getService('phireNav')
         ));
 
-        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'));
+        $this->view->set('title', $this->view->i18n->__('404 Error') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Page Not Found'))
+                   ->set('msg', $this->view->error_message);
         $this->send(404);
     }
 

@@ -130,9 +130,21 @@ class Config extends AbstractModel
                 unserialize($c->value) : $c->value;
         }
 
+        $sysVersion = $config['system_version'];
+        $latest = '';
+        $handle = fopen('http://www.phirecms.org/version', 'r');
+        if ($handle !== false) {
+            $latest = trim(stream_get_contents($handle));
+            fclose($handle);
+        }
+
+        if (version_compare(\Phire\Project::VERSION, $latest) < 0) {
+            $sysVersion .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
+        }
+
         // Set server config settings
         $overview['system'] = array(
-            'system_version'          => $config['system_version'],
+            'system_version'          => $sysVersion,
             'system_domain'           => $config['system_domain'],
             'server_operating_system' => $config['server_operating_system'],
             'server_software'         => $config['server_software'],
@@ -170,9 +182,21 @@ class Config extends AbstractModel
                 $value = unserialize($c->value) : $c->value;
         }
 
+        $sysVersion = $config['system_version'];
+        $latest = '';
+        $handle = fopen('http://www.phirecms.org/version', 'r');
+        if ($handle !== false) {
+            $latest = trim(stream_get_contents($handle));
+            fclose($handle);
+        }
+
+        if (version_compare(\Phire\Project::VERSION, $latest) < 0) {
+            $sysVersion .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
+        }
+
         // Set server config settings
         $formattedConfig['server'] = array(
-            'system_version'          => $config['system_version'],
+            'system_version'          => $sysVersion,
             'system_domain'           => $config['system_domain'],
             'system_document_root'    => $config['system_document_root'],
             'system_base_path'        => BASE_PATH,
@@ -365,6 +389,25 @@ class Config extends AbstractModel
 
         // Reset base config settings
         Table\Config::setConfig();
+    }
+
+    /**
+     * Perform update to system
+     *
+     * @param array $post
+     * @return void
+     */
+    public function getUpdate($post)
+    {
+        unset($post['submit']);
+        $curl = new \Pop\Curl\Curl('http://update.phirecms.org/update.php');
+        $curl->setPost(true);
+        $curl->setFields($post);
+
+        $curl->execute();
+
+        $response = json_decode($curl->getBody());
+        print_r($response);
     }
 
     /**

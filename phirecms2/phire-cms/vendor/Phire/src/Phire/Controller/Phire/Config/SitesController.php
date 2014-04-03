@@ -16,7 +16,7 @@ class SitesController extends AbstractController
 {
 
     /**
-     * Constructor method to instantiate the fields controller object
+     * Constructor method to instantiate the sites controller object
      *
      * @param  Request  $request
      * @param  Response $response

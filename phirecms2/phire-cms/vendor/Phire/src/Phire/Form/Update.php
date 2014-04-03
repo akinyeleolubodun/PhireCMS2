@@ -7,7 +7,7 @@ namespace Phire\Form;
 use Pop\Validator;
 use Phire\Table;
 
-class Site extends AbstractForm
+class Update extends AbstractForm
 {
 
     /**
@@ -15,114 +15,93 @@ class Site extends AbstractForm
      *
      * @param  string $action
      * @param  string $method
-     * @param  int    $sid
      * @return self
      */
-    public function __construct($action = null, $method = 'post', $sid = 0)
+    public function __construct($action = null, $method = 'post')
     {
         parent::__construct($action, $method, null, '        ');
 
-        $fieldGroups = array();
-        $dynamicFields = false;
-
-        $model = str_replace('Form', 'Model', get_class($this));
-        $newFields = \Phire\Model\Field::getByModel($model, 0, $sid);
-        if ($newFields['dynamic']) {
-            $dynamicFields = true;
-        }
-        if ($newFields['hasFile']) {
-            $this->hasFile = true;
-        }
-        foreach ($newFields as $key => $value) {
-            if (is_numeric($key)) {
-                $fieldGroups[] = $value;
-            }
-        }
+        $site      = Table\Sites::getSite();
+        $domain    = 'ftp.' . str_replace('www.', '', $site->domain);
+        $rootValue = (($_POST) && isset($_POST['change_ftp_root'])) ? $_POST['change_ftp_root'] : null;
 
         $fields1 = array(
-            'title' => array(
+            'ftp_address' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Title'),
+                'label'      => $this->i18n->__('FTP Address'),
                 'required'   => true,
-                'attributes' => array('size' => 80)
+                'attributes' => array('size' => 40),
+                'value'      => $domain
             ),
-            'domain' => array(
+            'username' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Domain'),
+                'label'      => $this->i18n->__('Username'),
                 'required'   => true,
-                'attributes' => array('size' => 80)
+                'attributes' => array('size' => 40)
             ),
-            'document_root' => array(
+            'password' => array(
                 'type'       => 'text',
-                'label'      => $this->i18n->__('Document Root'),
+                'label'      => $this->i18n->__('Password'),
                 'required'   => true,
-                'attributes' => array('size' => 80)
+                'attributes' => array('size' => 40)
             ),
-            'base_path' => array(
-                'type'       => 'text',
-                'label'      => $this->i18n->__('Base Path'),
-                'attributes' => array('size' => 80)
+            'ftp_root' => array(
+                'type'       => 'radio',
+                'label'      => $this->i18n->__('FTP Root'),
+                'value' => array(
+                    '0' => $this->i18n->__('Log directly into the document root.<br /><br />'),
+                    '1' => $this->i18n->__('No, change the directory to <input style="margin-left: 5px; width: 150px; height: 15px; font-size: 0.9em;" type="text" size="18" name="change_ftp_root" value="' . $rootValue . '" />')
+                ),
+                'marked' => '0'
             )
         );
-
-        if ($sid != 0) {
-            $fields1['domain']['attributes']['onkeyup'] = "phire.updateTitle('#site-header-title', this);";
-        }
 
         $fields2 = array(
             'submit' => array(
                 'type'  => 'submit',
-                'value' => $this->i18n->__('SAVE'),
+                'value' => $this->i18n->__('UPDATE'),
                 'attributes' => array(
                     'class' => 'save-btn'
                 )
             ),
-            'update' => array(
-                'type'       => 'button',
-                'value'      => $this->i18n->__('UPDATE'),
-                'attributes' => array(
-                    'onclick' => "return phire.updateForm('#site-form', " . ((($this->hasFile) || ($dynamicFields)) ? 'true' : 'false') . ");",
-                    'class'   => 'update-btn'
-                )
-            ),
-            'force_ssl' => array(
+            'use_pasv' => array(
                 'type'     => 'radio',
-                'label'    => $this->i18n->__('Force SSL'),
+                'label'    => $this->i18n->__('Use PASV'),
                 'value' => array(
-                    '0' => $this->i18n->__('No'),
-                    '1' => $this->i18n->__('Yes')
-                ),
-                'marked' => '0'
-            ),
-            'live' => array(
-                'type'     => 'radio',
-                'label'    => $this->i18n->__('Live'),
-                'value'    => array(
-                    '0' => $this->i18n->__('No'),
-                    '1' => $this->i18n->__('Yes')
+                    '1' => $this->i18n->__('Yes'),
+                    '0' => $this->i18n->__('No')
                 ),
                 'marked' => '1'
             ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => 0
+            'protocol' => array(
+                'type'     => 'radio',
+                'label'    => $this->i18n->__('Protocol'),
+                'value'    => array(
+                    '0' => $this->i18n->__('FTP'),
+                    '1' => $this->i18n->__('FTPS')
+                ),
+                'marked' => '0'
             ),
-            'update_value' => array(
+            'type' => array(
                 'type'  => 'hidden',
-                'value' => 0
+                'value' => (isset($_GET['type']) ? $_GET['type'] : 'system')
+            ),
+            'base_path' => array(
+                'type'  => 'hidden',
+                'value' => BASE_PATH
+            ),
+            'content_path' => array(
+                'type'  => 'hidden',
+                'value' => CONTENT_PATH
+            ),
+            'app_path' => array(
+                'type'  => 'hidden',
+                'value' => APP_PATH
             )
         );
 
-        $allFields = array($fields2);
-        if (count($fieldGroups) > 0) {
-            foreach ($fieldGroups as $fg) {
-                $allFields[] = $fg;
-            }
-        }
-
-        $allFields[] = $fields1;
-        $this->initFieldsValues = $allFields;
-        $this->setAttributes('id', 'site-form');
+        $this->initFieldsValues = array($fields2, $fields1);
+        $this->setAttributes('id', 'update-form');
     }
 
     /**

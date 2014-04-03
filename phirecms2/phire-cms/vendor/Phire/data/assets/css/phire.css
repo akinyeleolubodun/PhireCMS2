@@ -435,7 +435,7 @@ input[type=submit]:focus, button:focus {
 }
 
 #user-form, #user-select-form, #user-type-form, #user-role-form,
-#field-form, #field-group-form, #site-form {
+#field-form, #field-group-form, #site-form, #update-form {
     clear: both;
     display: block;
     margin: 45px 0 10px 0;
@@ -444,7 +444,7 @@ input[type=submit]:focus, button:focus {
 }
 
 #user-form-field-group-1, #user-role-form-field-group-1, #field-form-field-group-1,
-#user-type-form-field-group-1, #site-form-field-group-1 {
+#user-type-form-field-group-1, #site-form-field-group-1, #update-form-field-group-1 {
     margin: 20px 0 40px 10px;
     padding: 0 0 20px 15px;
     float: right;
