@@ -67,6 +67,14 @@ class Update extends AbstractForm
             $name = 'phire';
         }
 
+        $format  = null;
+        $formats = \Pop\Archive\Archive::formats();
+        if (isset($formats['zip'])) {
+            $format = 'zip';
+        } else if (isset($formats['tar']) && isset($formats['gz'])) {
+            $format = 'tar.gz';
+        }
+
         $fields2 = array(
             'submit' => array(
                 'type'  => 'submit',
@@ -100,6 +108,10 @@ class Update extends AbstractForm
             'name' => array(
                 'type'  => 'hidden',
                 'value' => $name
+            ),
+            'format' => array(
+                'type'      => 'hidden',
+                'value'     => $format
             ),
             'base_path' => array(
                 'type'  => 'hidden',
