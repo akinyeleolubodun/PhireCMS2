@@ -407,20 +407,39 @@ class Config extends AbstractModel
         $curl->execute();
 
         $response = json_decode($curl->getBody());
+        unset($curl);
 
         if ($response->error == 0) {
-            switch ($response->type) {
-                case 'system':
-                    $msg = 'The system has been updated.';
-                    break;
-                case 'module':
-                    $msg = 'The ' . $response->name . ' module has been updated.';
-                    break;
-                case 'theme':
-                    $msg = 'The ' . $response->name . ' theme has been updated.';
-                    break;
+            $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+            $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
+            unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+
+            $post['complete'] = 1;
+
+            $curl = new \Pop\Curl\Curl('http://update.phirecms.org/update.php');
+            $curl->setPost(true);
+            $curl->setFields($post);
+
+            $curl->execute();
+
+            $complete = json_decode($curl->getBody());
+
+            if ($complete->error == 0) {
+                switch ($complete->type) {
+                    case 'system':
+                        $msg = 'The system has been updated.';
+                        break;
+                    case 'module':
+                        $msg = 'The ' . $complete->name . ' module has been updated.';
+                        break;
+                    case 'theme':
+                        $msg = 'The ' . $complete->name . ' theme has been updated.';
+                        break;
+                }
+                $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
+            } else {
+                $this->data['error'] = '<span style="color: #a00b0b">' . $complete->message . '</span>';
             }
-            $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
         } else {
             $this->data['error'] = '<span style="color: #a00b0b">' . $response->message . '</span>';
         }
