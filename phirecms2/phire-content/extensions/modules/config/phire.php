@@ -1,13 +1,13 @@
 <?php
 /**
- * Phire CMS 2.0 Override Config File
+ * Phire CMS 2.0 Override Module Config File
  */
 
 $phCfg = include __DIR__ . '/../../../..' . APP_PATH . '/vendor/Phire/config/module.php';
 
 /**
  * Option 1:
- * Merge the existing Phire config with any new custom values.
+ * Merge the existing Phire module config with any new custom values.
  */
 /*
 return array(
@@ -25,7 +25,7 @@ return array(
 
 /**
  * Option 2:
- * Completely replace the entire Phire config.
+ * Completely replace the entire Phire module config.
  *
  * IMPORTANT! If you do this, you must copy the original config and build upon that.
  * Failure to do so could cause the system to break or act irregular.

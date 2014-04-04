@@ -19,7 +19,14 @@ if ((DB_INTERFACE != '') && (DB_NAME != '')) {
         ))
     );
     $config['defaultDb'] = DB_NAME;
-    //$config['log']       = __DIR__ . '/../../' . CONTENT_PATH . '/log/.htphire.log';
+
+    // Merge any overriding project config values
+    if (file_exists(__DIR__ . '/../..' . CONTENT_PATH . '/extensions/modules/config/project.php')) {
+        $cfg = include __DIR__ . '/../..' . CONTENT_PATH . '/extensions/modules/config/project.php';
+        if (is_array($cfg) && (count($cfg) > 0)) {
+            $config = array_merge($config, $cfg);
+        }
+    }
 }
 
 return new \Pop\Config($config);
