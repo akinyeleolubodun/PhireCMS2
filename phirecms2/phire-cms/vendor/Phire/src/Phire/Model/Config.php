@@ -407,7 +407,23 @@ class Config extends AbstractModel
         $curl->execute();
 
         $response = json_decode($curl->getBody());
-        print_r($response);
+
+        if ($response->error == 0) {
+            switch ($response->type) {
+                case 'system':
+                    $msg = 'The system has been updated.';
+                    break;
+                case 'module':
+                    $msg = 'The ' . $response->name . ' module has been updated.';
+                    break;
+                case 'theme':
+                    $msg = 'The ' . $response->name . ' theme has been updated.';
+                    break;
+            }
+            $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
+        } else {
+            $this->data['error'] = '<span style="color: #a00b0b">' . $response->message . '</span>';
+        }
     }
 
     /**

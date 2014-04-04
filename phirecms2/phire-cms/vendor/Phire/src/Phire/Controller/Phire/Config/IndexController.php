@@ -105,6 +105,13 @@ class IndexController extends AbstractController
             if ($form->isValid()) {
                 $config = new Model\Config();
                 $config->getUpdate($this->request->getPost());
+                if (null !== $config->error) {
+                    $this->view->set('msg', $config->error);
+                    $this->send();
+                } else {
+                    $this->view->set('msg', $config->msg);
+                    $this->send();
+                }
             } else {
                 $this->view->set('form', $form);
                 $this->send();
