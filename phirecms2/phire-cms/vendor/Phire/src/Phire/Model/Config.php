@@ -410,9 +410,10 @@ class Config extends AbstractModel
         unset($curl);
 
         if ($response->error == 0) {
-            $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
-            $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
-            unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH. CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+            $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+            $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
+            unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+            chmod($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/phire-cms', 0777);
 
             $post['complete'] = 1;
 
@@ -428,6 +429,7 @@ class Config extends AbstractModel
                 switch ($complete->type) {
                     case 'system':
                         $msg = 'The system has been updated.';
+                        chmod($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH, 0755);
                         break;
                     case 'module':
                         $msg = 'The ' . $complete->name . ' module has been updated.';
