@@ -62,14 +62,27 @@ class Update extends AbstractForm
         );
 
         if (isset($_GET['module'])) {
-            $type = 'module';
-            $name = $_GET['module'];
+            $type    = 'module';
+            $name    = $_GET['module'];
+            $version = null;
+            $ext     = Table\Extensions::findBy(array('name' => $_GET['module']));
+            if (isset($ext->id)) {
+                $assets = unserialize($ext->assets);
+                $version = $assets['info']['Version'];
+            }
         } else if (isset($_GET['theme'])) {
-            $type = 'theme';
-            $name = $_GET['theme'];
+            $type    = 'theme';
+            $name    = $_GET['theme'];
+            $version = null;
+            $ext     = Table\Extensions::findBy(array('name' => $_GET['theme']));
+            if (isset($ext->id)) {
+                $assets = unserialize($ext->assets);
+                $version = $assets['info']['Version'];
+            }
         } else {
-            $type = 'system';
-            $name = 'phire';
+            $type    = 'system';
+            $name    = 'phire';
+            $version = \Phire\Project::VERSION;
         }
 
         $format  = null;
@@ -113,6 +126,10 @@ class Update extends AbstractForm
             'name' => array(
                 'type'  => 'hidden',
                 'value' => $name
+            ),
+            'version' => array(
+                'type'  => 'hidden',
+                'value' => $version
             ),
             'format' => array(
                 'type'      => 'hidden',
