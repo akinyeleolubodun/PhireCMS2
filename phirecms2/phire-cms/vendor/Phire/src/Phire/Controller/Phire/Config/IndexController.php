@@ -86,39 +86,87 @@ class IndexController extends AbstractController
         ));
 
         if (null !== $this->request->getQuery('module')) {
-            $title = 'Module Update ' . $this->view->separator . ' ' . $this->request->getQuery('module');
+            $type    = 'module';
+            $name    = $this->request->getQuery('module');
+            $version = null;
+            $title   = 'Module Update ' . $this->view->separator . ' ' . $name;
+            $ext     = Table\Extensions::findBy(array('name' => $name));
+            if (isset($ext->id)) {
+                $assets = unserialize($ext->assets);
+                $version = $assets['info']['Version'];
+            }
         } else if (null !== $this->request->getQuery('theme')) {
-            $title = 'Theme Update ' . $this->view->separator . ' ' . $this->request->getQuery('theme');
+            $type    = 'theme';
+            $name    = $this->request->getQuery('theme');
+            $version = null;
+            $title   = 'Theme Update ' . $this->view->separator . ' ' . $name;
+            $ext     = Table\Extensions::findBy(array('name' => $name));
+            if (isset($ext->id)) {
+                $assets = unserialize($ext->assets);
+                $version = $assets['info']['Version'];
+            }
         } else {
-            $title = 'System Update';
+            $type    = 'system';
+            $name    = 'phire';
+            $version = \Phire\Project::VERSION;
+            $title   = 'System Update';
+        }
+
+        $format  = null;
+        $formats = \Pop\Archive\Archive::formats();
+        if (isset($formats['zip'])) {
+            $format = 'zip';
+        } else if (isset($formats['tar']) && isset($formats['gz'])) {
+            $format = 'tar.gz';
         }
 
         $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__($title));
+        $config = new Model\Config();
 
-        $form = new Form\Update();
-        if ($this->request->isPost()) {
-            $form->setFieldValues(
-                $this->request->getPost(),
-                array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
+        if (($type == 'system') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH)) {
+            if (null !== $this->request->getQuery('writable')) {
+                $config->getUpdate(array(
+                    'type'    => $type,
+                    'name'    => $name,
+                    'version' => $version,
+                    'format'  => $format
+                ));
+
+                $this->view->set('msg', $config->msg);
+                $this->send();
+            } else {
+                $form = '<div id="update-form">The system folder has been detected as writable. You can proceed with the system update by clicking the update button below.<br /><br /><a href="' . $this->request->getFullUri() . '?writable=1" class="save-btn" style="display: block; width: 220px; height: 20px; color: #fff; text-decoration: none;">UPDATE</a></div>';
+                $this->view->set('form', $form);
+                $this->send();
+            }
+        } else {
+            $form = new Form\Update(
+                $this->request->getBasePath() . $this->request->getRequestUri(), 'post',
+                $type, $name, $version, $format
             );
+            if ($this->request->isPost()) {
+                $form->setFieldValues(
+                    $this->request->getPost(),
+                    array('htmlentities' => array(ENT_QUOTES, 'UTF-8'))
+                );
 
-            if ($form->isValid()) {
-                $config = new Model\Config();
-                $config->getUpdate($this->request->getPost());
-                if (null !== $config->error) {
-                    $this->view->set('msg', $config->error);
-                    $this->send();
+                if ($form->isValid()) {
+                    $config->getUpdate($this->request->getPost());
+                    if (null !== $config->error) {
+                        $this->view->set('msg', $config->error);
+                        $this->send();
+                    } else {
+                        $this->view->set('msg', $config->msg);
+                        $this->send();
+                    }
                 } else {
-                    $this->view->set('msg', $config->msg);
+                    $this->view->set('form', $form);
                     $this->send();
                 }
             } else {
                 $this->view->set('form', $form);
                 $this->send();
             }
-        } else {
-            $this->view->set('form', $form);
-            $this->send();
         }
     }
 

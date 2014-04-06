@@ -15,9 +15,13 @@ class Update extends AbstractForm
      *
      * @param  string $action
      * @param  string $method
+     * @param  string $type
+     * @param  string $name
+     * @param  string $format
+     * @param  string $version
      * @return self
      */
-    public function __construct($action = null, $method = 'post')
+    public function __construct($action = null, $method = 'post', $type = null, $name = null, $format = null, $version = null)
     {
         parent::__construct($action, $method, null, '        ');
 
@@ -60,38 +64,6 @@ class Update extends AbstractForm
                 'marked' => '0'
             )
         );
-
-        if (isset($_GET['module'])) {
-            $type    = 'module';
-            $name    = $_GET['module'];
-            $version = null;
-            $ext     = Table\Extensions::findBy(array('name' => $_GET['module']));
-            if (isset($ext->id)) {
-                $assets = unserialize($ext->assets);
-                $version = $assets['info']['Version'];
-            }
-        } else if (isset($_GET['theme'])) {
-            $type    = 'theme';
-            $name    = $_GET['theme'];
-            $version = null;
-            $ext     = Table\Extensions::findBy(array('name' => $_GET['theme']));
-            if (isset($ext->id)) {
-                $assets = unserialize($ext->assets);
-                $version = $assets['info']['Version'];
-            }
-        } else {
-            $type    = 'system';
-            $name    = 'phire';
-            $version = \Phire\Project::VERSION;
-        }
-
-        $format  = null;
-        $formats = \Pop\Archive\Archive::formats();
-        if (isset($formats['zip'])) {
-            $format = 'zip';
-        } else if (isset($formats['tar']) && isset($formats['gz'])) {
-            $format = 'tar.gz';
-        }
 
         $fields2 = array(
             'submit' => array(
