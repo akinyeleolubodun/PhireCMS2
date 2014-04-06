@@ -142,5 +142,10 @@ else
         fi
         php $SCRIPT_PATH
     fi
+
+    if [ -d "$PH_CLI_ROOT/phire-cms-new" ]; then
+        mv "$PH_CLI_ROOT/phire-cms" "$PH_CLI_ROOT/phire-cms-$(date +%s)"
+        mv "$PH_CLI_ROOT/phire-cms-new" "$PH_CLI_ROOT/phire-cms"
+    fi
 fi
 

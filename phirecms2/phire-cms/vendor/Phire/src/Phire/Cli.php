@@ -853,7 +853,7 @@ class Cli
                 $format = 'tar.gz';
             }
 
-            $config = new Model\Config();
+
 
             $writable = false;
             if (($type == 'system') && is_writable(__DIR__ . '/../../../../')) {
@@ -865,16 +865,17 @@ class Cli
             }
 
             if ($writable) {
+                $config = new Model\Config();
                 $config->getUpdate(array(
                     'type'    => $type,
                     'name'    => $name,
                     'version' => $version,
                     'format'  => $format
-                ));
+                ), true);
                 if (null !== $config->error) {
-                    echo '  ' . $config->error . PHP_EOL . PHP_EOL;
+                    echo '  ' . strip_tags($config->error) . PHP_EOL . PHP_EOL;
                 } else {
-                    echo '  ' . $config->msg . PHP_EOL . PHP_EOL;
+                    echo '  ' . strip_tags($config->msg) . PHP_EOL . PHP_EOL;
                 }
             } else {
                 echo '  The ' . $type . ' folder must be writable to perform the update.' . PHP_EOL . PHP_EOL;

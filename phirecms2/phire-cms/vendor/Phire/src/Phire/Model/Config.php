@@ -394,12 +394,13 @@ class Config extends AbstractModel
     /**
      * Perform update
      *
-     * @param array $post
+     * @param array   $post
+     * @param boolean $cli
      * @return void
      */
-    public function getUpdate($post = array())
+    public function getUpdate($post = array(), $cli = false)
     {
-        $docRoot = __DIR__ . '/../../../../../../';
+        $docRoot = __DIR__ . '/../../../../../..';
 
         // If system is writable for updates
         if (!isset($post['submit'])) {
@@ -446,53 +447,61 @@ class Config extends AbstractModel
                     }
                     $msg = 'The ' . $post['name'] . ' theme has been updated.';
                 } else if ($post['type'] == 'system') {
-                    $time = time();
-                    mkdir($docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time);
+                    if ($cli) {
+                        rename(
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms',
+                            $docRoot . DIRECTORY_SEPARATOR . 'phire-cms-new'
+                        );
+                        $msg = 'The system has been updated.';
+                    } else {
+                        $time = time();
+                        mkdir($docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time);
 
-                    // Move old files into archive folder
-                    rename(
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
-                    );
-                    rename(
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
-                    );
-                    rename(
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
-                    );
-                    rename(
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
-                    );
+                        // Move old files into archive folder
+                        rename(
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
+                        );
+                        rename(
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
+                        );
+                        rename(
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
+                        );
+                        rename(
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
+                        );
 
-                    // Move new files into main application path
-                    rename(
-                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config'
-                    );
-                    rename(
-                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module'
-                    );
-                    rename(
-                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script'
-                    );
-                    rename(
-                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
-                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
-                    );
+                        // Move new files into main application path
+                        rename(
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config'
+                        );
+                        rename(
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module'
+                        );
+                        rename(
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script'
+                        );
+                        rename(
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
+                            $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
+                        );
 
-                    $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
-                    $dir->emptyDir(null, true);
+                        $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
+                        $dir->emptyDir(null, true);
 
-                    $config = Table\Config::findById('updated_on');
-                    $config->value = date('Y-m-d H:i:s');
-                    $config->update();
+                        $config = Table\Config::findById('updated_on');
+                        $config->value = date('Y-m-d H:i:s');
+                        $config->update();
 
-                    $msg = 'The system has been updated.';
+                        $msg = 'The system has been updated.';
+                    }
                 }
 
                 $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
