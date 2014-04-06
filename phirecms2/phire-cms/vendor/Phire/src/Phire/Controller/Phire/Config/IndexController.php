@@ -86,9 +86,9 @@ class IndexController extends AbstractController
         ));
 
         if (null !== $this->request->getQuery('module')) {
-            $title = 'Module Update';
+            $title = 'Module Update ' . $this->view->separator . ' ' . $this->request->getQuery('module');
         } else if (null !== $this->request->getQuery('theme')) {
-            $title = 'Theme Update';
+            $title = 'Theme Update ' . $this->view->separator . ' ' . $this->request->getQuery('theme');
         } else {
             $title = 'System Update';
         }
