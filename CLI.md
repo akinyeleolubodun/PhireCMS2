@@ -39,6 +39,10 @@ SQL
 System
 ------
 
-    ./phire install             - Install the system
-    ./phire update              - Update the system
-    ./phire archive             - Archive the system
+    ./phire install           - Install the system
+    ./phire archive           - Archive the system
+    ./phire update            - Update the system, module or theme, e.g.,
+                                ./phire update system
+                                ./phire update module Content
+                                ./phire update theme default
+

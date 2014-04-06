@@ -488,6 +488,10 @@ class Config extends AbstractModel
                     $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
                     $dir->emptyDir(null, true);
 
+                    $config = Table\Config::findById('updated_on');
+                    $config->value = date('Y-m-d H:i:s');
+                    $config->update();
+
                     $msg = 'The system has been updated.';
                 }
 
@@ -530,6 +534,10 @@ class Config extends AbstractModel
                 if ($complete->error == 0) {
                     switch ($complete->type) {
                         case 'system':
+                            $config = Table\Config::findById('updated_on');
+                            $config->value = date('Y-m-d H:i:s');
+                            $config->update();
+
                             $msg = 'The system has been updated.';
                             chmod($docRoot . APP_PATH, 0755);
                             break;

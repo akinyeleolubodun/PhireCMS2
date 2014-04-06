@@ -50,6 +50,11 @@ class Cli
             'activate',
             'deactivate',
             'remove'
+        ),
+        'update'    => array(
+            'system',
+            'module',
+            'theme'
         )
     );
 
@@ -812,7 +817,7 @@ class Cli
     }
 
     /**
-     * Perform system update
+     * Perform update
      *
      * @return void
      */
@@ -821,6 +826,60 @@ class Cli
         echo 'System Update' . PHP_EOL;
         echo '-------------' . PHP_EOL;
         echo PHP_EOL;
+
+        if (!isset($this->args[2])) {
+            $this->argNotFound('update');
+        } else if (!in_array($this->args[2], $this->arguments['update'])) {
+            $this->argInvalid('update', $this->args[2]);
+        } else {
+            $type    = $this->args[2];
+            $name    = (isset($this->args[3])) ? $this->args[3] : 'phire';
+            $version = null;
+            if ($type == 'system') {
+                $version = \Phire\Project::VERSION;
+            } else {
+                $ext = Table\Extensions::findBy(array('name' => $name));
+                if (isset($ext->id)) {
+                    $assets = unserialize($ext->assets);
+                    $version = $assets['info']['Version'];
+                }
+            }
+
+            $format  = null;
+            $formats = \Pop\Archive\Archive::formats();
+            if (isset($formats['zip'])) {
+                $format = 'zip';
+            } else if (isset($formats['tar']) && isset($formats['gz'])) {
+                $format = 'tar.gz';
+            }
+
+            $config = new Model\Config();
+
+            $writable = false;
+            if (($type == 'system') && is_writable(__DIR__ . '/../../../../')) {
+                $writable = true;
+            } else if (($type == 'module') && is_writable(__DIR__ . '/../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules')) {
+                $writable = true;
+            } else if (($type == 'theme') && is_writable(__DIR__ . '/../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes')) {
+                $writable = true;
+            }
+
+            if ($writable) {
+                $config->getUpdate(array(
+                    'type'    => $type,
+                    'name'    => $name,
+                    'version' => $version,
+                    'format'  => $format
+                ));
+                if (null !== $config->error) {
+                    echo '  ' . $config->error . PHP_EOL . PHP_EOL;
+                } else {
+                    echo '  ' . $config->msg . PHP_EOL . PHP_EOL;
+                }
+            } else {
+                echo '  The ' . $type . ' folder must be writable to perform the update.' . PHP_EOL . PHP_EOL;
+            }
+        }
     }
 
     /**
