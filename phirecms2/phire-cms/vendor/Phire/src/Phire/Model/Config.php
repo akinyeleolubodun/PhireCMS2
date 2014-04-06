@@ -392,7 +392,7 @@ class Config extends AbstractModel
     }
 
     /**
-     * Perform update to system
+     * Perform update
      *
      * @param array $post
      * @return void
@@ -561,6 +561,31 @@ class Config extends AbstractModel
             } else {
                 $this->data['error'] = '<span style="color: #a00b0b">' . $response->message . '</span>';
             }
+        }
+
+        $this->postUpdate($post);
+    }
+
+    /**
+     * Perform post update functions
+     *
+     * @param array $post
+     * @return void
+     */
+    public function postUpdate($post)
+    {
+        $update = null;
+        switch ($post['type']) {
+            case 'system':
+                $update = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'Phire' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
+                break;
+            case 'module':
+                $update = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
+                break;
+        }
+
+        if ((null !== $update) && file_exists($update)) {
+            include_once $update;
         }
     }
 
