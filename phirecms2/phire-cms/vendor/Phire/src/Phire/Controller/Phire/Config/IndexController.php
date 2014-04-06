@@ -127,11 +127,11 @@ class IndexController extends AbstractController
         $config = new Model\Config();
 
         $writable = false;
-        if (($type == 'system') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH)) {
+        if (($type == 'system') && is_writable(__DIR__ . '/../../../../../../../')) {
             $writable = true;
-        } else if (($type == 'module') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules')) {
+        } else if (($type == 'module') && is_writable(__DIR__ . '/../../../../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules')) {
             $writable = true;
-        } else if (($type == 'theme') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes')) {
+        } else if (($type == 'theme') && is_writable(__DIR__ . '/../../../../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes')) {
             $writable = true;
         }
 

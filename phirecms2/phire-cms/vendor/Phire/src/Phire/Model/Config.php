@@ -399,6 +399,8 @@ class Config extends AbstractModel
      */
     public function getUpdate($post = array())
     {
+        $docRoot = __DIR__ . '/../../../../../../';
+
         // If system is writable for updates
         if (!isset($post['submit'])) {
             switch ($post['type']) {
@@ -415,75 +417,75 @@ class Config extends AbstractModel
 
             $remoteContents =@ file_get_contents($remoteFile);
             if ($remoteContents !== false) {
-                $localFile  = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format'];
+                $localFile  = $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format'];
                 file_put_contents($localFile, $remoteContents);
 
-                $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
-                $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
-                unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $arc = new \Pop\Archive\Archive($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $arc->extract($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
+                unlink($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
                 $msg = null;
 
                 if ($post['type'] == 'module') {
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'])) {
-                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']);
+                    if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'])) {
+                        $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']);
                         $dir->emptyDir(null, true);
                         rename(
-                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
-                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
                         );
                     }
                     $msg = 'The ' . $post['name'] . ' module has been updated.';
                 } else if ($post['type'] == 'theme') {
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
-                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
+                    if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
+                        $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
                         $dir->emptyDir(null, true);
                         rename(
-                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
-                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                            $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
                         );
                     }
                     $msg = 'The ' . $post['name'] . ' theme has been updated.';
                 } else if ($post['type'] == 'system') {
                     $time = time();
-                    mkdir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time);
+                    mkdir($docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time);
 
                     // Move old files into archive folder
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
                     );
 
                     // Move new files into main application path
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config'
+                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'config'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module'
+                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'module'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script'
+                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'script'
                     );
                     rename(
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
-                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
+                        $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
+                        $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
                     );
 
-                    $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
+                    $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
                     $dir->emptyDir(null, true);
 
                     $msg = 'The system has been updated.';
@@ -506,13 +508,13 @@ class Config extends AbstractModel
             unset($curl);
 
             if ($response->error == 0) {
-                $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
-                $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
-                unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $arc = new \Pop\Archive\Archive($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $arc->extract($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
+                unlink($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
                 if ($post['type'] == 'system') {
-                    chmod($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/phire-cms', 0777);
-                } else if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'])) {
-                    chmod($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'], 0777);
+                    chmod($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/phire-cms', 0777);
+                } else if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'])) {
+                    chmod($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'], 0777);
                 }
 
                 $post['complete'] = 1;
@@ -529,26 +531,26 @@ class Config extends AbstractModel
                     switch ($complete->type) {
                         case 'system':
                             $msg = 'The system has been updated.';
-                            chmod($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH, 0755);
+                            chmod($docRoot . APP_PATH, 0755);
                             break;
                         case 'module':
-                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'])) {
-                                $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']);
+                            if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'])) {
+                                $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']);
                                 $dir->emptyDir(null, true);
                                 rename(
-                                    $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
-                                    $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
+                                    $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                                    $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
                                 );
                             }
                             $msg = 'The ' . $complete->name . ' module has been updated.';
                             break;
                         case 'theme':
-                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
-                                $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
+                            if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
+                                $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
                                 $dir->emptyDir(null, true);
                                 rename(
-                                    $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
-                                    $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
+                                    $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                                    $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
                                 );
                             }
                             $msg = 'The ' . $complete->name . ' theme has been updated.';
@@ -574,13 +576,15 @@ class Config extends AbstractModel
      */
     public function postUpdate($post)
     {
-        $update = null;
+        $docRoot = __DIR__ . '/../../../../../../';
+        $update  = null;
+
         switch ($post['type']) {
             case 'system':
-                $update = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'Phire' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
+                $update = $docRoot . APP_PATH . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'Phire' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
                 break;
             case 'module':
-                $update = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
+                $update = $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'update.php';
                 break;
         }
 
