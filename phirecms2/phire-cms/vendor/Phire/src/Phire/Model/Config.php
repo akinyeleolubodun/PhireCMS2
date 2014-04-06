@@ -132,7 +132,7 @@ class Config extends AbstractModel
 
         $sysVersion = $config['system_version'];
         $latest = '';
-        $handle = fopen('http://www.phirecms.org/version', 'r');
+        $handle = fopen('http://update.phirecms.org/system/version', 'r');
         if ($handle !== false) {
             $latest = trim(stream_get_contents($handle));
             fclose($handle);
@@ -184,7 +184,7 @@ class Config extends AbstractModel
 
         $sysVersion = $config['system_version'];
         $latest = '';
-        $handle = fopen('http://www.phirecms.org/version', 'r');
+        $handle = fopen('http://update.phirecms.org/system/version', 'r');
         if ($handle !== false) {
             $latest = trim(stream_get_contents($handle));
             fclose($handle);
@@ -401,57 +401,98 @@ class Config extends AbstractModel
     {
         // If system is writable for updates
         if (!isset($post['submit'])) {
-            $remoteFile = 'http://update.phirecms.org/system/latest.' . $post['format'];
-            $localFile  = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format'];
-            file_put_contents($localFile, file_get_contents($remoteFile));
+            switch ($post['type']) {
+                case 'system':
+                    $remoteFile = 'http://update.phirecms.org/system/latest.' . $post['format'];
+                    break;
+                case 'module':
+                    $remoteFile = 'http://update.phirecms.org/modules/' . strtolower($post['name']) . '/latest.' . $post['format'];
+                    break;
+                case 'theme':
+                    $remoteFile = 'http://update.phirecms.org/themes/' . strtolower($post['name']) . '/latest.' . $post['format'];
+                    break;
+            }
 
-            $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
-            $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
-            unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+            $remoteContents =@ file_get_contents($remoteFile);
+            if ($remoteContents !== false) {
+                $localFile  = $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format'];
+                file_put_contents($localFile, $remoteContents);
 
-            $time = time();
-            mkdir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time);
+                $arc = new \Pop\Archive\Archive($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $arc->extract($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update');
+                unlink($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'latest.' . $post['format']);
+                $msg = null;
 
-            // Move old files into archive folder
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
-            );
+                if ($post['type'] == 'module') {
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name'])) {
+                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']);
+                        $dir->emptyDir(null, true);
+                        rename(
+                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
+                        );
+                    }
+                    $msg = 'The ' . $post['name'] . ' module has been updated.';
+                } else if ($post['type'] == 'theme') {
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
+                        $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
+                        $dir->emptyDir(null, true);
+                        rename(
+                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update/' . $post['name'],
+                            $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
+                        );
+                    }
+                    $msg = 'The ' . $post['name'] . ' theme has been updated.';
+                } else if ($post['type'] == 'system') {
+                    $time = time();
+                    mkdir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time);
 
-            // Move new files into main application path
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script'
-            );
-            rename(
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
-                $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
-            );
+                    // Move old files into archive folder
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'config'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'module'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'script'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time . DIRECTORY_SEPARATOR . 'vendor'
+                    );
 
-            $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
-            $dir->emptyDir(null, true);
+                    // Move new files into main application path
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'config',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'config'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'module',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'module'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'script',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'script'
+                    );
+                    rename(
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms' . DIRECTORY_SEPARATOR . 'vendor',
+                        $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . 'vendor'
+                    );
 
-            $this->data['msg'] = '<span style="color: #347703">The system has been updated.</span>';
+                    $dir = new Dir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms');
+                    $dir->emptyDir(null, true);
+
+                    $msg = 'The system has been updated.';
+                }
+
+                $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
+            } else {
+                $this->data['error'] = '<span style="color: #a00b0b">The update file was not found.</span>';
+            }
         // Else use cURL/FTP
         } else {
             unset($post['submit']);

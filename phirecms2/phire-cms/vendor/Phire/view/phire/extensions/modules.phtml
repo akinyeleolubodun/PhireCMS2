@@ -13,7 +13,7 @@
 <?php if (count($modules) > 0): ?>
         <form id="modules-remove-form" action="<?php echo BASE_PATH . APP_URI; ?>/extensions/modules/process" method="post">
             <table class="data-table" cellpadding="0" cellspacing="0" border="0">
-                <tr><th class="first-th">#</th><th><?php $i18n->_e('Module'); ?></th><th style="width: 50%;"><?php $i18n->_e('Description'); ?></th><th><?php $i18n->_e('Author'); ?></th><th style="text-align: center; width: 5%;"><?php $i18n->_e('Version'); ?></th><th style="width: 10%;"><?php $i18n->_e('Active'); ?></th><th class="last-th"><input type="checkbox" id="checkall" name="checkall" value="remove_modules" /></th></tr>
+                <tr><th class="first-th">#</th><th><?php $i18n->_e('Module'); ?></th><th style="width: 50%;"><?php $i18n->_e('Description'); ?></th><th><?php $i18n->_e('Author'); ?></th><th style="text-align: center; width: 10%;"><?php $i18n->_e('Version'); ?></th><th style="width: 10%;"><?php $i18n->_e('Active'); ?></th><th class="last-th"><input type="checkbox" id="checkall" name="checkall" value="remove_modules" /></th></tr>
 <?php
 foreach ($modules as $module):
     $nav = null;

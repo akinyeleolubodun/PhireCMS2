@@ -86,30 +86,33 @@ class IndexController extends AbstractController
         ));
 
         if (null !== $this->request->getQuery('module')) {
-            $type    = 'module';
-            $name    = $this->request->getQuery('module');
-            $version = null;
-            $title   = 'Module Update ' . $this->view->separator . ' ' . $name;
-            $ext     = Table\Extensions::findBy(array('name' => $name));
+            $type      = 'module';
+            $name      = $this->request->getQuery('module');
+            $version   = null;
+            $title     = 'Module Update ' . $this->view->separator . ' ' . $name;
+            $linkParam = '&module=' . $name;
+            $ext       = Table\Extensions::findBy(array('name' => $name));
             if (isset($ext->id)) {
                 $assets = unserialize($ext->assets);
                 $version = $assets['info']['Version'];
             }
         } else if (null !== $this->request->getQuery('theme')) {
-            $type    = 'theme';
-            $name    = $this->request->getQuery('theme');
-            $version = null;
-            $title   = 'Theme Update ' . $this->view->separator . ' ' . $name;
-            $ext     = Table\Extensions::findBy(array('name' => $name));
+            $type      = 'theme';
+            $name      = $this->request->getQuery('theme');
+            $version   = null;
+            $title     = 'Theme Update ' . $this->view->separator . ' ' . $name;
+            $linkParam = '&theme=' . $name;
+            $ext       = Table\Extensions::findBy(array('name' => $name));
             if (isset($ext->id)) {
                 $assets = unserialize($ext->assets);
                 $version = $assets['info']['Version'];
             }
         } else {
-            $type    = 'system';
-            $name    = 'phire';
-            $version = \Phire\Project::VERSION;
-            $title   = 'System Update';
+            $type      = 'system';
+            $name      = 'phire';
+            $version   = \Phire\Project::VERSION;
+            $title     = 'System Update';
+            $linkParam = null;
         }
 
         $format  = null;
@@ -123,7 +126,16 @@ class IndexController extends AbstractController
         $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__($title));
         $config = new Model\Config();
 
+        $writable = false;
         if (($type == 'system') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH)) {
+            $writable = true;
+        } else if (($type == 'module') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules')) {
+            $writable = true;
+        } else if (($type == 'theme') && is_writable($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes')) {
+            $writable = true;
+        }
+
+        if ($writable) {
             if (null !== $this->request->getQuery('writable')) {
                 $config->getUpdate(array(
                     'type'    => $type,
@@ -131,11 +143,16 @@ class IndexController extends AbstractController
                     'version' => $version,
                     'format'  => $format
                 ));
-
-                $this->view->set('msg', $config->msg);
-                $this->send();
+                if (null !== $config->error) {
+                    $this->view->set('msg', $config->error);
+                    $this->send();
+                } else {
+                    $this->view->set('msg', $config->msg);
+                    $this->send();
+                }
             } else {
-                $form = '<div id="update-form">The system folder has been detected as writable. You can proceed with the system update by clicking the update button below.<br /><br /><a href="' . $this->request->getFullUri() . '?writable=1" class="save-btn" style="display: block; width: 220px; height: 20px; color: #fff; text-decoration: none;">UPDATE</a></div>';
+                $link = $this->request->getFullUri() . '?writable=1' . $linkParam;
+                $form = '<div id="update-form">The ' . $type . ' folder has been detected as writable. You can proceed with the ' . $type . ' update by clicking the update button below.<br /><br /><a href="' . $link . '" class="save-btn" style="display: block; width: 220px; height: 20px; color: #fff; text-decoration: none;">UPDATE</a></div>';
                 $this->view->set('form', $form);
                 $this->send();
             }

@@ -151,7 +151,7 @@ class Cli
     protected function version()
     {
         $latest = 'N/A';
-        $handle = fopen('http://www.phirecms.org/version', 'r');
+        $handle = fopen('http://update.phirecms.org/system/version', 'r');
         if ($handle !== false) {
             $latest = trim(stream_get_contents($handle));
             fclose($handle);

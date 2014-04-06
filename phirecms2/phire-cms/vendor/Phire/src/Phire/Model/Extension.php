@@ -59,6 +59,7 @@ class Extension extends AbstractModel
         }
 
         foreach ($themeRows as $key => $theme) {
+            $themeName = $theme->name;
             if (file_exists($themePath . '/' . $theme->name . '/screenshot.jpg')) {
                 $themeRows[$key]->screenshot = '<img class="theme-screenshot" src="' . BASE_PATH . CONTENT_PATH . '/extensions/themes/' . $theme->name . '/screenshot.jpg" width="100" />';
             } else if (file_exists($themePath . '/' . $theme->name . '/screenshot.png')) {
@@ -87,6 +88,16 @@ class Extension extends AbstractModel
                 } else if (stripos($k, 'version') !== false) {
                     $themeRows[$key]->version = $v;
                 }
+            }
+
+            $latest = '';
+            $handle = fopen('http://update.phirecms.org/themes/' . strtolower($themeName) . '/version', 'r');
+            if ($handle !== false) {
+                $latest = trim(stream_get_contents($handle));
+                fclose($handle);
+            }
+            if (version_compare($themeRows[$key]->version, $latest) < 0) {
+                $themeRows[$key]->version .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update?theme=' . $themeName . '">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
             }
         }
 
@@ -119,6 +130,7 @@ class Extension extends AbstractModel
         }
 
         foreach ($moduleRows as $key => $module) {
+            $moduleName = $module->name;
             if (null !== $project) {
                 $cfg = $project->module($module->name);
                 if ((null !== $cfg) && (null !== $cfg->module_nav)) {
@@ -154,6 +166,16 @@ class Extension extends AbstractModel
                 } else if (stripos($k, 'version') !== false) {
                     $moduleRows[$key]->version = $v;
                 }
+            }
+
+            $latest = '';
+            $handle = fopen('http://update.phirecms.org/modules/' . strtolower($moduleName) . '/version', 'r');
+            if ($handle !== false) {
+                $latest = trim(stream_get_contents($handle));
+                fclose($handle);
+            }
+            if (version_compare($moduleRows[$key]->version, $latest) < 0) {
+                $moduleRows[$key]->version .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update?module=' . $moduleName . '">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
             }
         }
 
