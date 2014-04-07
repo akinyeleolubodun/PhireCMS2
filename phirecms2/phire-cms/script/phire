@@ -17,6 +17,7 @@ TAR="$(which tar 2> /dev/null)"
 ZIP="$(which zip 2> /dev/null)"
 
 PH_CLI_ROOT=../..
+PH_APP_PATH=
 DB_CLI=
 DB_CLI_DUMP=
 DB_CLI_PARAMS=
@@ -29,6 +30,12 @@ DB_USER=
 DB_PASS=
 DB_HOST=
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
+
+PH_APP_PATH=`cat "$PH_CLI_ROOT/config.php" | grep APP_PATH`
+PH_APP_PATH=${PH_APP_PATH:20}
+POS=`expr index "$PH_APP_PATH" "'"`
+let "POS-=1"
+PH_APP_PATH=${PH_APP_PATH:0:$POS}
 
 DB_INTERFACE=`cat "$PH_CLI_ROOT/config.php" | grep DB_INTERFACE`
 DB_INTERFACE=${DB_INTERFACE:24}
@@ -144,8 +151,12 @@ else
     fi
 
     if [ -d "$PH_CLI_ROOT/phire-cms-new" ]; then
-        mv "$PH_CLI_ROOT/phire-cms" "$PH_CLI_ROOT/phire-cms-$(date +%s)"
-        mv "$PH_CLI_ROOT/phire-cms-new" "$PH_CLI_ROOT/phire-cms"
+        mv "$PH_CLI_ROOT$PH_APP_PATH" "$PH_CLI_ROOT$PH_APP_PATH-$(date +%s)"
+        mv "$PH_CLI_ROOT/phire-cms-new" "$PH_CLI_ROOT$PH_APP_PATH"
+
+        if [ -f "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php" ]; then
+            php "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php"
+        fi
     fi
 fi
 
