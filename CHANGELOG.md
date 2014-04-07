@@ -5,7 +5,7 @@ Phire CMS 2 is a complete rewrite of the application from the ground up. So ther
 it completely breaks any backwards compatibility and really has no architectural
 relationship to the 1.* branch. What has been deprecated is listed below.
 
-But here's the good news! This is a list of what's been added or drastically improved:
+But here's the good news! Here is a list of what's been added or drastically improved:
 
 2.0.0b
 ------
@@ -13,22 +13,22 @@ Released TBD
 
 #### New Core System Features
 
-* More robust media settings, including the ability to set custom media processing and sizes,
-  while preserving the original media file.
+* Improved media settings, with the ability to set custom media processing and sizes, while
+  preserving the original media file.
 * Support for both the GD and Imagick extensions, including vector processing via
   Ghostscript (if installed and properly configured with Imagick.)
 * Better support for custom date/time formatting.
 * __User types__, which support a more robust and dynamic user base and what users of a certain
   type are allowed to do (login, register, etc.)
-* A new, full-featured ACL sub-system, including user roles, which allows for the setting of system
+* A new, full-featured __ACL sub-system__, including __user roles__, which allows for the setting of system
   permissions, allowing or denying access of certain areas to a user of a certain role.
 * A new, completely re-written module sub-system, allowing easier development, installation and
   management of custom-written modules.
-* A new, completely re-written theme sub-system, allowing easier development, installation and
-  management of custom-written themes.
-    - Support for file-based templates for greater control within the PHP environment.
+* A re-written theme sub-system, allowing easier development, installation and management of
+  custom-written themes, which includes:
+    - Support for file-based templates for greater control within the PHP environment (*.phtml, *.php, etc.)
     - Support for string-based templates that are managed within the system (like in the 1.* branch.)
-* A completely new Structure feature set, allowing for dynamic fields and field groups to be
+* A completely new feature set called __Structure__, which allows for dynamic fields and field groups to be
   assigned to to just about any object within the system (users, content, etc.)
     - Support for the popular CKEditor and TinyMCE editors for textarea field, including multiple
       instances if needed.
