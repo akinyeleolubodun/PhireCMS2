@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>Το νέο κωδικό δεν μπορεί να είναι το ίδιο.</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>Ενότητα Ενημέρωση</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>θέμα Ενημέρωση</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>Ενημέρωση Συστήματος</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>Ο φάκελος %1 έχει ανιχνευθεί ως εγγράψιμος.</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>Μπορείτε να συνεχίσετε με την ενημέρωση %1 κάνοντας κλικ στο παρακάτω κουμπί ενημέρωσης.</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>FTP Διεύθυνση</output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>FTP Root</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>Log 'ευθείας εντός της ρίζας εγγράφου.</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>Όχι, αλλάξτε τον κατάλογο με</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>Χρησιμοποιήστε PASV</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>πρωτόκολλο</output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>Το %1 module έχει ενημερωθεί. </output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>Το %1 θέμα έχει ενημερωθεί. </output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>Το σύστημα έχει ενημερωθεί.</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>Το αρχείο ενημέρωσης δεν βρέθηκε.</output>
+        </text>
     </locale>
 </language>

@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>הסיסמה החדשה לא יכולה להיות אותו הדבר.</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>עדכון מודול</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>עדכון נושא</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>עדכון מערכת</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>תיקיית %1 זוהתה כניתנת לכתיבה.</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>אתה יכול להמשיך עם עדכון %1 על ידי לחיצה על כפתור העדכון בהמשך.</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>כתובת ה-FTP</output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>שורש FTP</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>התחבר ישירות לשורש המסמך.</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>לא, לשנות את הספרייה ל</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>השימוש PASV</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>פרוטוקול</output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>% מודול 1 עודכן.</output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>% הנושא 1 עודכן.</output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>המערכת כבר מעודכנת.</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>קובץ העדכון לא נמצא.</output>
+        </text>
     </locale>
 </language>

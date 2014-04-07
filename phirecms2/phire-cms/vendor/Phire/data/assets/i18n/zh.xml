@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>新密码不能相同。</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>模块更新</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>主题更新</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>系统更新</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>%1文件夹已被检测为可写。</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>您可以通过点击下面的更新按钮的%1进行更新。</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>FTP地址</output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>FTP的根</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>直接登录到文档根目录。</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>不，将目录更改为</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>使用PASV</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>协议 </output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>%1模块已更新。</output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>%1的主题已经更新。</output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>该系统已经更新。</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>未找到更新文件。</output>
+        </text>
     </locale>
 </language>

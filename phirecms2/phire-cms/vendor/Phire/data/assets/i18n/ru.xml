@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>Новый пароль не может быть то же самое.</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>Модуль обновление</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>Стиль обновление</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>обновление системы</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>Папка %1 был обнаружен с правом записи.</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>Вы можете приступить к %1 обновления, нажав кнопку обновления ниже.</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>FTP Адрес</output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>FTP Root</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>Войти непосредственно в корневом каталоге сайта.</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>Нет, измените каталог на</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>Использование ПАСВ</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>протокол </output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>%1 модуль был обновлен.</output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>%1 тема была обновлена​​.</output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>Система была обновлена​​.</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>Файл обновления не был найден.</output>
+        </text>
     </locale>
 </language>

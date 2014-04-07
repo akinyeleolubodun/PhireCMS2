@@ -89,7 +89,7 @@ class IndexController extends AbstractController
             $type      = 'module';
             $name      = $this->request->getQuery('module');
             $version   = null;
-            $title     = 'Module Update ' . $this->view->separator . ' ' . $name;
+            $title     = $this->view->i18n->__('Module Update') . ' ' . $this->view->separator . ' ' . $name;
             $linkParam = '&module=' . $name;
             $ext       = Table\Extensions::findBy(array('name' => $name));
             if (isset($ext->id)) {
@@ -100,7 +100,7 @@ class IndexController extends AbstractController
             $type      = 'theme';
             $name      = $this->request->getQuery('theme');
             $version   = null;
-            $title     = 'Theme Update ' . $this->view->separator . ' ' . $name;
+            $title     = $this->view->i18n->__('Theme Update') . ' ' . $this->view->separator . ' ' . $name;
             $linkParam = '&theme=' . $name;
             $ext       = Table\Extensions::findBy(array('name' => $name));
             if (isset($ext->id)) {
@@ -111,7 +111,7 @@ class IndexController extends AbstractController
             $type      = 'system';
             $name      = 'phire';
             $version   = \Phire\Project::VERSION;
-            $title     = 'System Update';
+            $title     = $this->view->i18n->__('System Update');
             $linkParam = null;
         }
 
@@ -123,7 +123,7 @@ class IndexController extends AbstractController
             $format = 'tar.gz';
         }
 
-        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__($title));
+        $this->view->set('title', $this->view->i18n->__('Configuration') . ' ' . $this->view->separator . ' ' . $title);
         $config = new Model\Config();
 
         $writable = false;
@@ -152,7 +152,10 @@ class IndexController extends AbstractController
                 }
             } else {
                 $link = $this->request->getFullUri() . '?writable=1' . $linkParam;
-                $form = '<div id="update-form">The ' . $type . ' folder has been detected as writable. You can proceed with the ' . $type . ' update by clicking the update button below.<br /><br /><a href="' . $link . '" class="save-btn" style="display: block; width: 220px; height: 20px; color: #fff; text-decoration: none;">UPDATE</a></div>';
+                $form = '<div id="update-form">' .
+                        $this->view->i18n->__('The %1 folder has been detected as writable.', $type) . ' ' .
+                        $this->view->i18n->__('You can proceed with the %1 update by clicking the update button below.', $type) .
+                        '<br /><br /><a href="' . $link . '" class="save-btn" style="display: block; width: 220px; height: 20px; color: #fff; text-decoration: none;">' . $this->view->i18n->__('UPDATE') . '</a></div>';
                 $this->view->set('form', $form);
                 $this->send();
             }

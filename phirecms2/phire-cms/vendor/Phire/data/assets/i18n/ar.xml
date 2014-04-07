@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>كلمة المرور الجديدة لا يمكن أن تكون هي نفسها.</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>تحديث وحدة</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>موضوع التحديث</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>تحديث نظام</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>وقد تم الكشف عن المجلد 1٪ كما قابل للكتا%1 ة.</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>ي%1 كنك المضي قدما في٪ 1 التحديث من خلال النقر على زر التحديث أدناه.</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>FTP العنوان </output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>الجذر FTP</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>تسجيل الدخول مباشرة إلى جذر المستند.</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>لا، تغيير الدليل إلى</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>استخدام PASV</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>بروتوكول</output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>تم تحديث 1٪ الوحدة النمطي%1.</output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>%1تحديث٪ 1 الموضوع.</output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>تم تحديث النظام.</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>لم يتم العثور على ملف التحديث.</output>
+        </text>
     </locale>
 </language>

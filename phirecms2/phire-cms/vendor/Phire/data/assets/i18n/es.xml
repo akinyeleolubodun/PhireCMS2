@@ -1395,5 +1395,65 @@
             <source>The new password cannot be the same.</source>
             <output>La nueva contraseña no puede ser igual.</output>
         </text>
+        <text>
+            <source>Module Update</source>
+            <output>Módulo de Actualización</output>
+        </text>
+        <text>
+            <source>Theme Update</source>
+            <output>Tema de Actualización</output>
+        </text>
+        <text>
+            <source>System Update</source>
+            <output>Sistema Actualización</output>
+        </text>
+        <text>
+            <source>The %1 folder has been detected as writable.</source>
+            <output>La carpeta %1 ha sido detectado como de escritura.</output>
+        </text>
+        <text>
+            <source>You can proceed with the %1 update by clicking the update button below.</source>
+            <output>Usted puede continuar con la actualización %1 haciendo clic en el botón de actualización más adelante.</output>
+        </text>
+        <text>
+            <source>FTP Address</source>
+            <output>FTP Dirección</output>
+        </text>
+        <text>
+            <source>FTP Root</source>
+            <output>Raíz de FTP</output>
+        </text>
+        <text>
+            <source>Log directly into the document root.</source>
+            <output>Entrar directamente en la raíz del documento.</output>
+        </text>
+        <text>
+            <source>No, change the directory to</source>
+            <output>No, cambie el directorio a</output>
+        </text>
+        <text>
+            <source>Use PASV</source>
+            <output>Utilice PASV</output>
+        </text>
+        <text>
+            <source>Protocol</source>
+            <output>Protocolo</output>
+        </text>
+        <text>
+            <source>The %1 module has been updated.</source>
+            <output>El %1 módulo se ha actualizado.</output>
+        </text>
+        <text>
+            <source>The %1 theme has been updated.</source>
+            <output>El %1 tema se ha actualizado.</output>
+        </text>
+        <text>
+            <source>The system has been updated.</source>
+            <output>El sistema se ha actualizado.</output>
+        </text>
+        <text>
+            <source>The update file was not found.</source>
+            <output>No se encontró el archivo de actualización.</output>
+        </text>
     </locale>
 </language>

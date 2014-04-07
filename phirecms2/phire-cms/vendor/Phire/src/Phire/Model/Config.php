@@ -435,7 +435,7 @@ class Config extends AbstractModel
                             $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
                         );
                     }
-                    $msg = 'The ' . $post['name'] . ' module has been updated.';
+                    $msg = $this->i18n->__('The %1 module has been updated.', $post['name']);
                 } else if ($post['type'] == 'theme') {
                     if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
                         $dir = new Dir($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']);
@@ -445,7 +445,7 @@ class Config extends AbstractModel
                             $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
                         );
                     }
-                    $msg = 'The ' . $post['name'] . ' theme has been updated.';
+                    $msg = $this->i18n->__('The %1 theme has been updated.', $post['name']);
                 } else if ($post['type'] == 'system') {
                     if ($cli) {
                         rename(
@@ -457,7 +457,7 @@ class Config extends AbstractModel
                         $config->value = date('Y-m-d H:i:s');
                         $config->update();
 
-                        $msg = 'The system has been updated.';
+                        $msg = $this->i18n->__('The system has been updated.');
                     } else {
                         $time = time();
                         mkdir($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . APP_PATH . DIRECTORY_SEPARATOR . $time);
@@ -505,13 +505,13 @@ class Config extends AbstractModel
                         $config->value = date('Y-m-d H:i:s');
                         $config->update();
 
-                        $msg = 'The system has been updated.';
+                        $msg = $this->i18n->__('The system has been updated.');
                     }
                 }
 
                 $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';
             } else {
-                $this->data['error'] = '<span style="color: #a00b0b">The update file was not found.</span>';
+                $this->data['error'] = '<span style="color: #a00b0b">' . $this->i18n->__('The update file was not found.') . '</span>';
             }
         // Else use cURL/FTP
         } else {
@@ -552,7 +552,7 @@ class Config extends AbstractModel
                             $config->value = date('Y-m-d H:i:s');
                             $config->update();
 
-                            $msg = 'The system has been updated.';
+                            $msg = $this->i18n->__('The system has been updated.');
                             chmod($docRoot . APP_PATH, 0755);
                             break;
                         case 'module':
@@ -564,7 +564,7 @@ class Config extends AbstractModel
                                     $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $post['name']
                                 );
                             }
-                            $msg = 'The ' . $complete->name . ' module has been updated.';
+                            $msg = $this->i18n->__('The %1 module has been updated.', $complete->name);
                             break;
                         case 'theme':
                             if (file_exists($docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name'])) {
@@ -575,7 +575,7 @@ class Config extends AbstractModel
                                     $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $post['name']
                                 );
                             }
-                            $msg = 'The ' . $complete->name . ' theme has been updated.';
+                            $msg = $this->i18n->__('The %1 theme has been updated.', $complete->name);
                             break;
                     }
                     $this->data['msg'] = '<span style="color: #347703">' . $msg . '</span>';

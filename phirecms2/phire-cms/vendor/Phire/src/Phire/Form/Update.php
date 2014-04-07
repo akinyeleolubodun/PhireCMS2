@@ -58,8 +58,8 @@ class Update extends AbstractForm
                 'type'       => 'radio',
                 'label'      => $this->i18n->__('FTP Root'),
                 'value' => array(
-                    '0' => $this->i18n->__('Log directly into the document root.<br /><br />'),
-                    '1' => $this->i18n->__('No, change the directory to <input style="margin-left: 5px; width: 150px; height: 15px; font-size: 0.9em;" type="text" size="18" name="change_ftp_root" value="' . $rootValue . '" />')
+                    '0' => $this->i18n->__('Log directly into the document root.') . '<br /><br />',
+                    '1' => $this->i18n->__('No, change the directory to') . ' <input style="margin-left: 5px; width: 150px; height: 15px; font-size: 0.9em;" type="text" size="18" name="change_ftp_root" value="' . $rootValue . '" />'
                 ),
                 'marked' => '0'
             )
