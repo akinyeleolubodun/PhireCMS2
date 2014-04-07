@@ -3,7 +3,7 @@ Phire CMS 2.0.0b Changelog
 
 Phire CMS 2 is a complete rewrite of the application from the ground up. So therefore,
 it completely breaks any backwards compatibility and really has no architectural
-relationship to the 1.* branch. What has been deprecated is listde below.
+relationship to the 1.* branch. What has been deprecated is listed below.
 
 But here's the good news! This is a list of what's been added or drastically improved:
 
