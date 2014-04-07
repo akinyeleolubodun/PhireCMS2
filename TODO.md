@@ -1,5 +1,5 @@
-Phire CMS 2.0.0 TO-DO
-=====================
+Phire CMS 2.0.0b TO-DO
+======================
 
 - Stats/Reporting
 - Code Review & Testing

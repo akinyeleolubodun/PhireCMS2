@@ -21,8 +21,8 @@ if ((DB_INTERFACE != '') && (DB_NAME != '')) {
     $config['defaultDb'] = DB_NAME;
 
     // Merge any overriding project config values
-    if (file_exists(__DIR__ . '/../..' . CONTENT_PATH . '/extensions/modules/config/project.php')) {
-        $cfg = include __DIR__ . '/../..' . CONTENT_PATH . '/extensions/modules/config/project.php';
+    if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/project.php')) {
+        $cfg = include $_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/modules/config/project.php';
         if (is_array($cfg) && (count($cfg) > 0)) {
             $config = array_merge($config, $cfg);
         }
