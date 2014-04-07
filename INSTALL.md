@@ -4,18 +4,18 @@ Phire CMS 2.0.0b Installation
 Quick Install
 -------------
 
-Once you have your database set up with the proper credentials, to begin the installation process,
+Once you have your database set up with the proper credentials, to begin the installation process,  
 you can simply go to the URL: http://www.yourdomain.com/phirecms2/phire/install
 
-Of course, you can move it to another folder or just have it at the top level as well:
+Of course, you can move it to another folder or just have it at the top level as well:  
 http://www.yourdomain.com/phire/install
 
 The installation is a simple 3 step process:
-1. Database credentials and system info
-2. The code to be pasted into the config file (this step is skipped if the config file is writable.)
-3. Initial user set up
+1.  Database credentials and system info
+2.  The code to be pasted into the config file (this step is skipped if the config file is writable.)
+3.  Initial user set up
 
-And that's it! You can start using Phire CMS 2. The login link will be:
+And that's it! You can start using Phire CMS 2. The login link will be:  
 http://www.yourdomain.com/phirecms2/phire/login
 
 
