@@ -151,12 +151,22 @@ else
     fi
 
     if [ -d "$PH_CLI_ROOT/phire-cms-new" ]; then
-        mv "$PH_CLI_ROOT$PH_APP_PATH" "$PH_CLI_ROOT$PH_APP_PATH-$(date +%s)"
-        mv "$PH_CLI_ROOT/phire-cms-new" "$PH_CLI_ROOT$PH_APP_PATH"
+        if [ "$CYG_PATH" = "" ]; then
+            mv "$PH_CLI_ROOT$PH_APP_PATH" "$PH_CLI_ROOT$PH_APP_PATH-$(date +%s)"
+            mv "$PH_CLI_ROOT/phire-cms-new" "$PH_CLI_ROOT$PH_APP_PATH"
 
-        if [ -f "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php" ]; then
-            php "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php"
+            if [ -f "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php" ]; then
+                php "$PH_CLI_ROOT$PH_APP_PATH/vendor/Phire/data/update.php"
+            fi
+        else
+           if [ -f "$PH_CLI_ROOT/phire-cms-new/vendor/Phire/data/update.php" ]; then
+               php "$PH_CLI_ROOT/phire-cms-new/vendor/Phire/data/update.php"
+           fi
+           echo -e "  For the Windows OS, you will have to manually rename the new system folder '/phire-cms-new'"
+           echo -e "  to the correct application path, due to file and folder permission restrictions.\n"
         fi
+
+
     fi
 fi
 

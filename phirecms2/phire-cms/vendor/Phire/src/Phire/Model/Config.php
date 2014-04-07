@@ -452,6 +452,11 @@ class Config extends AbstractModel
                             $docRoot . CONTENT_PATH . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'phire-cms',
                             $docRoot . DIRECTORY_SEPARATOR . 'phire-cms-new'
                         );
+
+                        $config = Table\Config::findById('updated_on');
+                        $config->value = date('Y-m-d H:i:s');
+                        $config->update();
+
                         $msg = 'The system has been updated.';
                     } else {
                         $time = time();

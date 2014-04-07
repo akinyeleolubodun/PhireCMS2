@@ -8,7 +8,8 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET SCRIPT_DIR=%~dp0
 SET TAR=
 SET ZIP=
-SET PH_CLI_ROOT=../..
+SET PH_CLI_ROOT=..\..
+SET PH_APP_PATH=
 SET DB_CLI=
 SET DB_CLI_DUMP=
 SET DB_DUMP_NAME=
@@ -31,6 +32,7 @@ if "%HOUR:~0,1%" == " " (SET TIMESTAMP=!TIMESTAMP9!) else (SET TIMESTAMP=!TIMEST
 FOR /f "delims=" %%i IN ('where tar') DO SET TAR=%%i
 FOR /f "delims=" %%i IN ('where zip') DO SET ZIP=%%i
 
+FOR /f "delims=" %%a in ('findstr "APP_PATH" !PH_CLI_ROOT!\config.php') DO SET PH_APP_PATH=%%a
 FOR /f "delims=" %%a in ('findstr "DB_INTERFACE" !PH_CLI_ROOT!\config.php') DO SET DB_INTERFACE=%%a
 FOR /f "delims=" %%a in ('findstr "DB_TYPE" !PH_CLI_ROOT!\config.php') DO SET DB_TYPE=%%a
 FOR /f "delims=" %%a in ('findstr "DB_NAME" !PH_CLI_ROOT!\config.php') DO SET DB_NAME=%%a
@@ -38,6 +40,7 @@ FOR /f "delims=" %%a in ('findstr "DB_USER" !PH_CLI_ROOT!\config.php') DO SET DB
 FOR /f "delims=" %%a in ('findstr "DB_PASS" !PH_CLI_ROOT!\config.php') DO SET DB_PASS=%%a
 FOR /f "delims=" %%a in ('findstr "DB_HOST" !PH_CLI_ROOT!\config.php') DO SET DB_HOST=%%a
 
+SET PH_APP_PATH=!PH_APP_PATH:~21,-3!
 SET DB_INTERFACE=!DB_INTERFACE:~24,-3!
 SET DB_TYPE=!DB_TYPE:~19,-3!
 SET DB_NAME=!DB_NAME:~19,-3!
@@ -197,7 +200,6 @@ IF "%1" == "archive" (
         echo   That database CLI dump client was not found.
         echo.
     )
-
 )
 
 IF NOT "%1" == "archive" (
@@ -205,6 +207,15 @@ IF NOT "%1" == "archive" (
         php %SCRIPT_DIR%phire.php %*
         IF "%1" == "install" (
             php %SCRIPT_DIR%phire.php post
+        )
+
+        IF EXIST !PH_CLI_ROOT!\phire-cms-new (
+            IF EXIST !PH_CLI_ROOT!\phire-cms-new\vendor\Phire\data\update.php (
+                php "!PH_CLI_ROOT!\phire-cms-new\vendor\Phire\data\update.php"
+                echo   For the Windows OS, you will have to manually rename the new system folder '/phire-cms-new'
+                echo   to the correct application path, due to file and folder permission restrictions.
+                echo.
+            )
         )
     )
 )

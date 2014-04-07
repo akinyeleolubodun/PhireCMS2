@@ -853,8 +853,6 @@ class Cli
                 $format = 'tar.gz';
             }
 
-
-
             $writable = false;
             if (($type == 'system') && is_writable(__DIR__ . '/../../../../')) {
                 $writable = true;
