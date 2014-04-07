@@ -1455,5 +1455,9 @@
             <source>The update file was not found.</source>
             <output>Файл обновления не был найден.</output>
         </text>
+        <text>
+            <source>Update to</source>
+            <output>обновить до</output>
+        </text>
     </locale>
 </language>

@@ -1455,5 +1455,9 @@
             <source>The update file was not found.</source>
             <output>لم يتم العثور على ملف التحديث.</output>
         </text>
+        <text>
+            <source>Update to</source>
+            <output>تحديث ل</output>
+        </text>
     </locale>
 </language>

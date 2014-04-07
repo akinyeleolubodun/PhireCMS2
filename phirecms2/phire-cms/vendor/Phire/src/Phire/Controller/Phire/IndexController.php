@@ -94,7 +94,7 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $config     = new Model\Config();
+        $config     = new Model\Config(array('acl' => $this->project->getService('acl')));
         $extensions = new Model\Extension();
 
         $this->prepareView('index.phtml', array(

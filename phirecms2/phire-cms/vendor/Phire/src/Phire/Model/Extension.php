@@ -96,7 +96,7 @@ class Extension extends AbstractModel
                 $latest = trim(stream_get_contents($handle));
                 fclose($handle);
             }
-            if (version_compare($themeRows[$key]->version, $latest) < 0) {
+            if ((version_compare($themeRows[$key]->version, $latest) < 0) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Config\IndexController', 'update'))) {
                 $themeRows[$key]->version .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update?theme=' . $themeName . '">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
             }
         }
@@ -174,7 +174,7 @@ class Extension extends AbstractModel
                 $latest = trim(stream_get_contents($handle));
                 fclose($handle);
             }
-            if (version_compare($moduleRows[$key]->version, $latest) < 0) {
+            if ((version_compare($moduleRows[$key]->version, $latest) < 0) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Config\IndexController', 'update'))) {
                 $moduleRows[$key]->version .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update?module=' . $moduleName . '">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
             }
         }

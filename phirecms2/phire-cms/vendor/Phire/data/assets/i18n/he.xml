@@ -1455,5 +1455,9 @@
             <source>The update file was not found.</source>
             <output>קובץ העדכון לא נמצא.</output>
         </text>
+        <text>
+            <source>Update to</source>
+            <output>עדכון ל</output>
+        </text>
     </locale>
 </language>

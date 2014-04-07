@@ -1455,5 +1455,9 @@
             <source>The update file was not found.</source>
             <output>Το αρχείο ενημέρωσης δεν βρέθηκε.</output>
         </text>
+        <text>
+            <source>Update to</source>
+            <output>Ενημέρωση για</output>
+        </text>
     </locale>
 </language>

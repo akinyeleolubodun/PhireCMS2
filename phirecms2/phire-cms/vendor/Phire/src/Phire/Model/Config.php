@@ -138,7 +138,7 @@ class Config extends AbstractModel
             fclose($handle);
         }
 
-        if (version_compare(\Phire\Project::VERSION, $latest) < 0) {
+        if ((version_compare(\Phire\Project::VERSION, $latest) < 0) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Config\IndexController', 'update'))) {
             $sysVersion .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
         }
 
@@ -190,7 +190,7 @@ class Config extends AbstractModel
             fclose($handle);
         }
 
-        if (version_compare(\Phire\Project::VERSION, $latest) < 0) {
+        if ((version_compare(\Phire\Project::VERSION, $latest) < 0) && ($this->data['acl']->isAuth('Phire\Controller\Phire\Config\IndexController', 'update'))) {
             $sysVersion .= ' (<a href="' . BASE_PATH . APP_URI . '/config/update">' . $this->i18n->__('Update to') . ' ' . $latest . '</a>?)';
         }
 

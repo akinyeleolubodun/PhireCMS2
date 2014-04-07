@@ -60,7 +60,7 @@ class IndexController extends AbstractController
 
         $this->view->set('title', $this->view->i18n->__('Configuration'));
 
-        $config = new Model\Config();
+        $config = new Model\Config(array('acl' => $this->project->getService('acl')));
 
         if ($this->request->isPost()) {
             $config->update($this->request->getPost());
