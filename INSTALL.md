@@ -11,9 +11,10 @@ Of course, you can move it to another folder or just have it at the top level as
 http://www.yourdomain.com/phire/install
 
 The installation is a simple 3 step process:
-1.  Database credentials and system info
-2.  The code to be pasted into the config file (this step is skipped if the config file is writable.)
-3.  Initial user set up
+
+1. Database credentials and system info
+2. The code to be pasted into the config file (this step is skipped if the config file is writable.)
+3. Initial user set up
 
 And that's it! You can start using Phire CMS 2. The login link will be:  
 http://www.yourdomain.com/phirecms2/phire/login
