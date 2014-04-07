@@ -336,8 +336,10 @@ class User extends AbstractModel
         );
 
         // Clean up user data
-        $userRows = $users->rows;
-        $userAry = array();
+        $userRows    = $users->rows;
+        $userAry     = array();
+        $searchByAry = array();
+
         foreach ($userRows as $key => $value) {
             $logins = unserialize($value->logins);
             if (is_array($logins)) {
