@@ -266,18 +266,20 @@ class FieldValue extends \Phire\Model\AbstractModel
         if (count($valueAry) > 0) {
             // Clean up, check for empties
             foreach ($groups as $group) {
-                $keys = array_keys($valueAry[$group[0]]);
-                foreach ($keys as $key) {
-                    $i = 0;
-                    foreach ($group as $id) {
-                        if (($valueAry[$id][$key] == '----') || (empty($valueAry[$id][$key])) || (is_array($valueAry[$id][$key]) && (count($valueAry[$id][$key]) == 0))) {
-                            $i++;
+                if (isset($group['fields']) && isset($group['fields'][0]) && isset($valueAry[$group['fields'][0]])) {
+                    $keys = array_keys($valueAry[$group['fields'][0]]);
+                    foreach ($keys as $key) {
+                        $i = 0;
+                        foreach ($group['fields'] as $id) {
+                            if (($valueAry[$id][$key] == '----') || (empty($valueAry[$id][$key])) || (is_array($valueAry[$id][$key]) && (count($valueAry[$id][$key]) == 0))) {
+                                $i++;
+                            }
                         }
-                    }
-                    if ($i == count($group)) {
-                        foreach ($valueAry as $k => $v) {
-                            if (in_array($k, $group)) {
-                                unset($valueAry[$k][$key]);
+                        if ($i == count($group['fields'])) {
+                            foreach ($valueAry as $k => $v) {
+                                if (in_array($k, $group['fields'])) {
+                                    unset($valueAry[$k][$key]);
+                                }
                             }
                         }
                     }
@@ -624,7 +626,7 @@ class FieldValue extends \Phire\Model\AbstractModel
         if (count($valueAry) > 0) {
             // Clean up, check for empties
             foreach ($groups as $group) {
-                if (isset($valueAry[$group['fields'][0]])) {
+                if (isset($group['fields']) && isset($group['fields'][0]) && isset($valueAry[$group['fields'][0]])) {
                     $keys = array_keys($valueAry[$group['fields'][0]]);
                     foreach ($keys as $key) {
                         $i = 0;

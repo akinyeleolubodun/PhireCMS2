@@ -157,10 +157,10 @@ class Field extends \Phire\Model\AbstractModel
                         if (isset($fileValue->field_id)) {
                             $fileName = json_decode($fileValue->value, true);
                             $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
-                            $fld['label'] .= '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="' .
+                            $fld['label'] .= '<br /><a href="' .
                                 BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
                                 BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
-                                $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
+                                $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span><br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em>';
 
                             $fld['required'] = false;
 
@@ -389,10 +389,10 @@ class Field extends \Phire\Model\AbstractModel
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
                                         $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
-                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') .'</em><br /><a href="' .
+                                        $f['label'] = '<br /><a href="' .
                                             BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
                                             BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
-                                            $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
+                                            $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span><br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') .'</em>';
                                     } else {
                                         $f['label'] = $i18n->__('Replace?');
                                     }
@@ -409,10 +409,10 @@ class Field extends \Phire\Model\AbstractModel
                                     // Calculate file icon, set label
                                     if (!empty($fileName)) {
                                         $fileInfo = \Phire\Model\Media::getFileIcon($fileName);
-                                        $f['label'] = '<br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em><br /><a href="' .
+                                        $f['label'] = '<br /><a href="' .
                                             BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank"><img style="padding-top: 3px;" src="' .
                                             BASE_PATH . CONTENT_PATH . $fileInfo['fileIcon'] . '" width="50" /></a><br /><a href="' . BASE_PATH . CONTENT_PATH . '/media/' . $fileName . '" target="_blank">' .
-                                            $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span>';
+                                            $fileName . '</a><br /><span style="font-size: 0.9em;">(' . $fileInfo['fileSize'] . ')</span><br /><em style="font-size: 0.9em; font-weight:normal;">' . $i18n->__('Replace?') . '</em>';
                                     } else {
                                         $f['label'] = $i18n->__('Replace?');
                                     }
