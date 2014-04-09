@@ -510,12 +510,10 @@ class FieldValue extends \Phire\Model\AbstractModel
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'rm_fields_') !== false) {
                 $ids = substr($key, 10);
+                $num = substr($ids, (strrpos($ids, '_') + 1)) - 1;
+                $ids = substr($ids, 0, strrpos($ids, '_'));
                 $ids = explode('_', $ids);
-                $num = null;
-                if (isset($ids[2])) {
-                    $num = $ids[2] - 1;
-                    unset($ids[2]);
-                }
+
                 foreach ($ids as $id) {
                     $f = Table\Fields::findById($id);
                     // If it's a file, remove the file too
