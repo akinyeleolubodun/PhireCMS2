@@ -547,17 +547,19 @@ input[type=submit]:focus, button:focus {
 }
 
 #search-for {
-    margin-top: 1px;
+    margin: 3px;
     padding: 2px 5px 3px 5px;
     height: 14px;
     font-size: 0.9em;
+    float: right;
 }
 
 #search_by {
-    margin: 0 5px 0 0;
+    margin: 3px;
     padding: 1px 2px 1px 2px;
-    height: 20px;
+    height: 21px;
     font-size: 0.9em;
+    float: right;
 }
 
 #search-for:focus {

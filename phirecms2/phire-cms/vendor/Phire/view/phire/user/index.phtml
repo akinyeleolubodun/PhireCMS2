@@ -2,7 +2,7 @@
         <h1><?php echo $title; ?></h1>
         <div id="result" style="display: none;"></div>
 <?php if (isset($table)): ?>
-        <form id="user-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="<?php $i18n->_e('Search'); ?>" id="submit" class="search-btn" style="font-size: 10px; margin-top: 1px; padding-top: 4px; height: 21px;" name="submit" /> <?php echo $searchBy; ?> <input type="text" name="search_for" id="search-for" size="20" value="<?php echo $searchFor; ?>" /></div></form>
+        <form id="user-search-form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get"><div><input type="submit" value="<?php $i18n->_e('Search'); ?>" id="submit" class="search-btn" style="font-size: 10px; margin: 3px 0 3px 3px; padding: 4px 5px 4px 5px; height: 21px; float: right;" name="submit" /><input type="text" name="search_for" id="search-for" size="20" value="<?php echo $searchFor; ?>" /><?php echo $searchBy; ?></div></form>
 <?php endif; ?>
 <?php if ($acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add') && $acl->isAuth('Phire\Controller\Phire\User\IndexController', 'add' . (isset($typeId) ? '_' . $typeId : null))): ?>
         <a class="small-btn" href="<?php echo BASE_PATH . APP_URI; ?>/users/add<?php echo ((isset($typeId) && (null !== $typeId)) ? '/' . $typeId : null); ?>">+ <?php $i18n->_e('Add'); ?></a>
