@@ -91,7 +91,7 @@ class Extension extends AbstractModel
             }
 
             $latest = '';
-            $handle = fopen('http://update.phirecms.org/themes/' . strtolower($themeName) . '/version', 'r');
+            $handle =@ fopen('http://update.phirecms.org/themes/' . strtolower($themeName) . '/version', 'r');
             if ($handle !== false) {
                 $latest = trim(stream_get_contents($handle));
                 fclose($handle);
@@ -169,7 +169,7 @@ class Extension extends AbstractModel
             }
 
             $latest = '';
-            $handle = fopen('http://update.phirecms.org/modules/' . strtolower($moduleName) . '/version', 'r');
+            $handle =@ fopen('http://update.phirecms.org/modules/' . strtolower($moduleName) . '/version', 'r');
             if ($handle !== false) {
                 $latest = trim(stream_get_contents($handle));
                 fclose($handle);
