@@ -758,9 +758,28 @@ class Cli
                 'password' => null,
             );
 
-            $user['email']    = self::cliInput('  Enter User Email: ');
-            $user['username'] = self::cliInput('  Enter Username: ');
-            $user['password'] = self::cliInput('  Enter Password: ');
+            $email    = '';
+            $username = '';
+            $password = '';
+
+            $emailValidator    = new \Pop\Validator\Email();
+            $usernameValidator = new \Pop\Validator\AlphaNumeric();
+
+            while (!$emailValidator->evaluate($email)) {
+                $email = self::cliInput('  Enter User Email: ');
+            }
+
+            while ((strlen($username) < 4) || (!$usernameValidator->evaluate($username))) {
+                $username = self::cliInput('  Enter Username (> 4 characters): ');
+            }
+
+            while (strlen($password) < 6) {
+                $password = self::cliInput('  Enter Password (> 6 characters): ');
+            }
+
+            $user['email']    = $email;
+            $user['username'] = $username;
+            $user['password'] = $password;
 
             echo PHP_EOL . '  ...Saving Initial User...' . PHP_EOL . PHP_EOL;
 
