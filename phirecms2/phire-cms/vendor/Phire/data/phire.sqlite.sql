@@ -209,8 +209,6 @@ CREATE INDEX "ext_type" ON "[{prefix}]extensions" ("type");
 -- Dumping data for table "extensions"
 --
 
-INSERT INTO "[{prefix}]extensions" ("id", "name", "file", "type", "active", "assets") VALUES (10001, 'default', 'default.zip', 0, 1, 'a:2:{s:9:"templates";a:9:{i:0;s:10:"date.phtml";i:1;s:11:"error.phtml";i:2;s:13:"sidebar.phtml";i:3;s:14:"category.phtml";i:4;s:11:"index.phtml";i:5;s:12:"header.phtml";i:6;s:12:"search.phtml";i:7;s:9:"sub.phtml";i:8;s:12:"footer.phtml";}s:4:"info";a:4:{s:10:"Theme Name";s:13:"Default Theme";s:6:"Author";s:11:"Nick Sagona";s:11:"Description";s:41:"This is a default theme for Phire CMS 2.0";s:7:"Version";s:3:"1.0";}}');
-
 -- --------------------------------------------------------
 
 --

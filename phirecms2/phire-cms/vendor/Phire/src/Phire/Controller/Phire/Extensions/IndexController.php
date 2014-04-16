@@ -71,43 +71,6 @@ class IndexController extends AbstractController
     }
 
     /**
-     * Themes method
-     *
-     * @return void
-     */
-    public function themes()
-    {
-        $this->prepareView('themes.phtml', array(
-            'assets'   => $this->project->getAssets(),
-            'acl'      => $this->project->getService('acl'),
-            'phireNav' => $this->project->getService('phireNav')
-        ));
-
-        $ext = new Model\Extension(array('acl' => $this->project->getService('acl')));
-        $ext->getThemes();
-
-        if (null === $this->request->getPath(1)) {
-            $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Themes'));
-            $this->view->merge($ext->getData());
-            $this->send();
-        } else if ((null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'install') && (count($ext->new) > 0)) {
-            $ext->installThemes();
-            if (null !== $ext->error) {
-                $this->view->set('title', $this->view->i18n->__('Extensions') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Themes') . ' ' . $this->view->separator . ' ' . $this->view->i18n->__('Installation Error'));
-                $this->view->merge($ext->getData());
-                $this->send();
-            } else {
-                Response::redirect($this->request->getBasePath() . '/themes?saved=' . time());
-            }
-        } else if (($this->request->isPost()) && (null !== $this->request->getPath(1)) && ($this->request->getPath(1) == 'process')) {
-            $ext->processThemes($this->request->getPost());
-            Response::redirect($this->request->getBasePath() . '/themes?saved=' . time());
-        } else {
-            Response::redirect($this->request->getBasePath() . '/themes');
-        }
-    }
-
-    /**
      * Modules method
      *
      * @return void

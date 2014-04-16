@@ -18,11 +18,11 @@
 
   Extensions
   ----------
-    ./phire ext install               - Install a module or theme
-    ./phire ext list                  - List modules and themes installed
-    ./phire ext activate              - Activate a module or theme
-    ./phire ext deactivate            - De-activate a module or theme
-    ./phire ext remove                - Remove module or theme
+    ./phire ext install               - Install a module
+    ./phire ext list                  - List modules installed
+    ./phire ext activate              - Activate a module
+    ./phire ext deactivate            - De-activate a module
+    ./phire ext remove                - Remove module
 
   SQL
   ---

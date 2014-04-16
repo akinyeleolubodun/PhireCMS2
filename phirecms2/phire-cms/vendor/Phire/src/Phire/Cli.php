@@ -472,23 +472,8 @@ class Cli
                     echo '  Extension Installation:' . PHP_EOL;
                     echo '  =======================' . PHP_EOL . PHP_EOL;
 
-                    $themes = new Model\Extension();
-                    $themes->getThemes();
-
                     $modules = new Model\Extension();
                     $modules->getModules();
-
-                    echo '  Installing Theme(s):' . PHP_EOL;
-                    echo '  ====================' . PHP_EOL . PHP_EOL;
-                    if (count($themes->new) > 0) {
-                        echo '  ' . count($themes->new) . ' theme(s) available for installation.' . PHP_EOL;
-                        echo '  Installing...';
-                        $themes->installThemes();
-                        echo 'OK!' . PHP_EOL;
-                    } else {
-                        echo '  There are no themes available for installation.' . PHP_EOL;
-                    }
-                    echo PHP_EOL . PHP_EOL;
 
                     echo '  Installing Modules(s):' . PHP_EOL;
                     echo '  ====================' . PHP_EOL . PHP_EOL;
@@ -504,32 +489,8 @@ class Cli
 
                     break;
                 case 'list':
-                    $themes = new Model\Extension();
-                    $themes->getThemes();
-
                     $modules = new Model\Extension();
                     $modules->getModules();
-
-                    $installThemes = null;
-                    if (count($themes->new) > 0) {
-                        $installThemes = ' (' . count($themes->new) . ' Available for Install) ';
-                    }
-
-                    echo '  Themes:' . $installThemes . PHP_EOL;
-                    echo '  =======' . PHP_EOL . PHP_EOL;
-                    echo "  ID# \t\tName\t\tActive" . PHP_EOL;
-                    echo "  ----\t\t----\t\t------" . PHP_EOL;
-                    if (isset($themes->themes[0])) {
-                        foreach ($themes->themes as $theme) {
-                            $themeName = $theme->name;
-                            if (strlen($themeName) < 8) {
-                                $themeName .= str_repeat(' ', 8 - strlen($themeName));
-                            }
-                            echo "  " . $theme->id . "\t\t" . $themeName . "\t" . (($theme->active) ? "Yes" : "No") . PHP_EOL;
-                        }
-                    } else {
-                        echo "  There are currently no themes." . PHP_EOL;
-                    }
 
                     $installModules = null;
                     if (count($modules->new) > 0) {
@@ -598,11 +559,7 @@ class Cli
                     $ext = Table\Extensions::findById($id);
                     if (isset($ext->id)) {
                         $ex = new Model\Extension();
-                        if (!$ext->type) {
-                            $ex->processThemes(array('remove_themes' => array($id)));
-                        } else {
-                            $ex->processModules(array('remove_modules' => array($id)));
-                        }
+                        $ex->processModules(array('remove_modules' => array($id)));
                         echo '  The extension ID ' . $id . ' has been removed.' . PHP_EOL;
                     } else {
                         echo '  The extension ID ' . $id . ' was not found.' . PHP_EOL;
@@ -825,6 +782,11 @@ class Cli
             }
 
             $dir = new \Pop\File\Dir(__DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/modules', true, true);
+            foreach ($dir->getFiles() as $file) {
+                chmod($file, 0777);
+            }
+
+            $dir = new \Pop\File\Dir(__DIR__ . '/../../../../..' . CONTENT_PATH . '/extensions/themes', true, true);
             foreach ($dir->getFiles() as $file) {
                 chmod($file, 0777);
             }

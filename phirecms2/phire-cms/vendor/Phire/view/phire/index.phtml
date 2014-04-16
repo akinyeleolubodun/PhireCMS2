@@ -3,16 +3,6 @@
 <?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'index')): ?>
         <table class="dashboard-table" cellpadding="0" cellspacing="0">
             <tr><th colspan="2"><?php $i18n->_e('Extensions'); ?></th></tr>
-<?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'themes')): ?>
-            <tr><th class="recent-header" style="background-color: #efefef;" colspan="2"><?php $i18n->_e('Themes'); ?></th></tr>
-<?php if (count($themes) > 0): ?>
-<?php foreach ($themes as $theme): ?>
-            <tr><td><?php echo $theme->name; ?></td><td><?php echo ($theme->active) ? $i18n->__('Active') : $i18n->__('Not Active'); ?></td></tr>
-<?php endforeach; ?>
-<?php else: ?>
-            <tr><td colspan="2"><?php $i18n->_e('There are currently no themes installed.'); ?></td></tr>
-<?php endif; ?>
-<?php endif; ?>
 <?php if ($acl->isAuth('Phire\Controller\Phire\Extensions\IndexController', 'modules')): ?>
             <tr><th class="recent-header" style="background-color: #efefef;" colspan="2"><?php $i18n->_e('Modules'); ?></th></tr>
 <?php if (count($modules) > 0): ?>

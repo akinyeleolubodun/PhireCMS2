@@ -19,7 +19,9 @@ return array(
                     '/fields'     => 'Phire\Controller\Phire\Structure\FieldsController',
                     '/groups'     => 'Phire\Controller\Phire\Structure\GroupsController'
                 ),
-                '/extensions' => 'Phire\Controller\Phire\Extensions\IndexController',
+                '/extensions' => array(
+                    '/' => 'Phire\Controller\Phire\Extensions\IndexController'
+                ),
                 '/users' => array(
                     '/'         => 'Phire\Controller\Phire\User\IndexController',
                     '/roles'    => 'Phire\Controller\Phire\User\RolesController',
@@ -74,14 +76,6 @@ return array(
                         'acl' => array(
                             'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
                             'permission' => 'modules'
-                        )
-                    ),
-                    array(
-                        'name' => 'Themes',
-                        'href' => 'themes',
-                        'acl' => array(
-                            'resource'   => 'Phire\Controller\Phire\Extensions\IndexController',
-                            'permission' => 'themes'
                         )
                     )
                 )

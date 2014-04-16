@@ -112,8 +112,7 @@ class IndexController extends AbstractController
 
         $overview = $config->getOverview();
 
-        $this->view->set('themes', $extensions->getAllThemes())
-                   ->set('modules', $extensions->getAllModules())
+        $this->view->set('modules', $extensions->getAllModules())
                    ->set('overview', $overview['system'])
                    ->set('sites', $overview['sites']);
 
