@@ -431,7 +431,10 @@ class IndexController extends AbstractController
 
             // If form is valid, send reminder
             if ($form->isValid()) {
-                $form->filter('html_entity_decode', array(ENT_QUOTES, 'UTF-8'));
+                $form->filter(array(
+                    'strip_tags'   => null,
+                    'htmlentities' => array(ENT_QUOTES, 'UTF-8')
+                ));
                 $user = new Model\User();
                 $user->sendReminder($form->email, $this->project->module('Phire'));
                 if (null !== $redirect) {
