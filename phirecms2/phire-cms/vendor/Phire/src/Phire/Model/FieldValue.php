@@ -84,7 +84,7 @@ class FieldValue extends \Phire\Model\AbstractModel
                             $values[$field->name] = self::decrypt($value, $f->encryption, $encOptions);
                         }
                     } else {
-                        if (is_array($value)) {
+                        if (is_array($value) && in_array($field->field_id, $groupAry['fields'])) {
                             foreach ($value as $k => $v) {
                                 $values['field_' . $field->field_id . '_cur_' . ($k + 1)] = self::decrypt($v, $f->encryption, $encOptions);
                             }
