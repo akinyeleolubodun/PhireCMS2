@@ -211,24 +211,24 @@ class Config extends AbstractModel
                 date($this->config->datetime_format, strtotime($config['updated_on'])) : '(' . $this->i18n->__('Never') . ')'
         );
 
+        // Set site title form element
+        $siteTitle = new Element('text', 'site_title', $config['site_title']);
+        $siteTitle->setAttributes('size', 85)
+                  ->setAttributes('style', 'padding: 5px;');
+
         // Set system title form element
         $systemTitle = new Element('text', 'system_title', $config['system_title']);
-        $systemTitle->setAttributes('size', 40)
+        $systemTitle->setAttributes('size', 85)
                     ->setAttributes('style', 'padding: 5px;');
 
         // Set system email form element
         $systemEmail = new Element('text', 'system_email', $config['system_email']);
-        $systemEmail->setAttributes('size', 40)
+        $systemEmail->setAttributes('size', 85)
                     ->setAttributes('style', 'padding: 5px;');
-
-        // Set site title form element
-        $siteTitle = new Element('text', 'site_title', $config['site_title']);
-        $siteTitle->setAttributes('size', 40)
-                  ->setAttributes('style', 'padding: 5px;');
 
         // Set separator form element
         $separator = new Element('text', 'separator', $config['separator']);
-        $separator->setAttributes('size', 10)
+        $separator->setAttributes('size', 3)
                   ->setAttributes('style', 'padding: 5px;');
 
         // Set default language form element
@@ -282,9 +282,9 @@ class Config extends AbstractModel
         }
 
         $formattedConfig['settings'] = array(
+            'site_title'          => $siteTitle,
             'system_title'        => $systemTitle,
             'system_email'        => $systemEmail,
-            'site_title'          => $siteTitle,
             'separator'           => $separator,
             'default_language'    => $lang,
             'error_message'       => '                    ' . $error,
