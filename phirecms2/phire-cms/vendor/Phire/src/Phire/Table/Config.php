@@ -210,8 +210,11 @@ class Config extends Record
         $lang = static::findById('default_language')->value;
         if (!defined('POP_LANG')) {
             define('POP_LANG', $lang);
+            $i18n = \Pop\I18n\I18n::factory($lang);
+        } else {
+            $i18n = \Pop\I18n\I18n::factory(POP_LANG);
         }
-        $i18n = \Pop\I18n\I18n::factory($lang);
+
         $i18n->loadFile(__DIR__ . '/../../../data/assets/i18n/' . $i18n->getLanguage() . '.xml');
 
         // Load any module language files
