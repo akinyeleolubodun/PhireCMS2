@@ -18,8 +18,8 @@ Users
     ./phire user role                 - Set a user role
     ./phire user remove               - Remove a user
     ./phire user list                 - List users
-    ./phire user kill                 - Kill user session
     ./phire user sessions             - List user sessions
+    ./phire user kill                 - Kill user session
 
 Extensions
 ----------
@@ -42,7 +42,6 @@ System
     ./phire install                   - Install the system
     ./phire archive                   - Archive the system
     ./phire update system             - Update the system
-    ./phire update module Content     - Update a module
-    ./phire update theme default      - Update a theme
+    ./phire update module Name        - Update a module
 
 

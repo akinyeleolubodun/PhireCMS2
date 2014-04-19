@@ -53,8 +53,7 @@ class Cli
         ),
         'update'    => array(
             'system',
-            'module',
-            'theme'
+            'module'
         )
     );
 
@@ -194,7 +193,7 @@ class Cli
                 // Show user types
                 case 'types':
                     echo '  User Types:' . PHP_EOL;
-                    echo '  ===========' . PHP_EOL;
+                    echo '  ===========' . PHP_EOL . PHP_EOL;
                     $types = Table\UserTypes::findAll('id ASC');
                     echo "  ID# \tType" . PHP_EOL;
                     echo "  ----\t----" . PHP_EOL;
@@ -211,7 +210,7 @@ class Cli
                 // Show user roles
                 case 'roles':
                     echo '  User Roles:' . PHP_EOL;
-                    echo '  ===========' . PHP_EOL;
+                    echo '  ===========' . PHP_EOL . PHP_EOL;
                     $roles = Table\UserRoles::findAll('type_id, id ASC');
                     echo "  ID# \tType\tRole" . PHP_EOL;
                     echo "  ----\t----\t----" . PHP_EOL;
@@ -234,7 +233,7 @@ class Cli
                 // Change a user's role
                 case 'role':
                     echo '  Change User Role:' . PHP_EOL;
-                    echo '  =================' . PHP_EOL;
+                    echo '  =================' . PHP_EOL . PHP_EOL;
                     $userId = self::cliInput('  Enter User ID#: ');
                     $user = Table\Users::findById($userId);
                     if (isset($user->id)) {
@@ -335,7 +334,7 @@ class Cli
                 // Change a user's password
                 case 'password':
                     echo '  Change User Password:' . PHP_EOL;
-                    echo '  =====================' . PHP_EOL;
+                    echo '  =====================' . PHP_EOL . PHP_EOL;
                     $userId = self::cliInput('  Enter User ID#: ');
                     $user = Table\Users::findById($userId);
                     if (isset($user->id)) {
@@ -389,11 +388,11 @@ class Cli
                 // List user sessions
                 case 'sessions':
                     echo '  User Sessions:' . PHP_EOL;
-                    echo '  ==============' . PHP_EOL;
+                    echo '  ==============' . PHP_EOL . PHP_EOL;
                     $sessions = Table\UserSessions::findAll('id ASC');
-                    echo "  ID# \tUsername\tIP  \t\tBrowser\t\tLast\t\t\tStart" . PHP_EOL;
-                    echo "  ----\t--------\t----\t\t-------\t\t----\t\t\t-----" . PHP_EOL;
                     if (isset($sessions->rows[0])) {
+                        echo "  ID# \tUsername\tIP  \t\tBrowser\t\tStart" . PHP_EOL;
+                        echo "  ----\t--------\t----\t\t-------\t\t-----" . PHP_EOL;
                         foreach ($sessions->rows as $session) {
                             $user = Table\Users::findById($session->user_id);
                             $username = (isset($user->id)) ? $user->username : '(N/A)';
@@ -410,17 +409,18 @@ class Cli
                             } else if ((stripos($session->ua, 'msie') !== false) || (stripos($session->ua, 'trident') !== false)) {
                                 $browser = 'MSIE';
                             }
-                            echo "  " . $session->id . "\t" . $username . "\t" . $session->ip . "\t" . $browser . "\t\t" .  date('M d Y H:i:s', strtotime($session->last)) . "\t" . date('M d Y H:i:s', strtotime($session->start)) . PHP_EOL;
+                            echo "  " . $session->id . "\t" . $username . "\t" . $session->ip . "\t" . $browser . "\t\t" . date('M d Y H:i:s', strtotime($session->start)) . PHP_EOL;
                         }
+                        echo PHP_EOL;
                     } else {
-                        echo "  There are currently no user sessions." . PHP_EOL;
+                        echo "  There are currently no user sessions." . PHP_EOL . PHP_EOL;
                     }
                     break;
 
                 // Remove a user
                 case 'remove':
                     echo '  Remove User:' . PHP_EOL;
-                    echo '  ============' . PHP_EOL;
+                    echo '  ============' . PHP_EOL . PHP_EOL;
                     $id = self::cliInput('  Enter User ID#: ');
                     $user = Table\Users::findById($id);
                     if (isset($user->id)) {
@@ -437,14 +437,14 @@ class Cli
                 // Remove a user's session
                 case 'kill':
                     echo '  Remove User Session:' . PHP_EOL;
-                    echo '  ====================' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL . PHP_EOL;
                     $id = self::cliInput('  Enter User Session ID#: ');
                     $sess = Table\UserSessions::findById($id);
                     if (isset($sess->id)) {
                         $sess->delete();
-                        echo '  The user session ID ' . $id . ' has been removed.' . PHP_EOL;
+                        echo '  The user session ID ' . $id . ' has been removed.' . PHP_EOL . PHP_EOL;
                     } else {
-                        echo '  The user session ID ' . $id . ' was not found.' . PHP_EOL;
+                        echo '  The user session ID ' . $id . ' was not found.' . PHP_EOL . PHP_EOL;
                     }
                     break;
             }
@@ -476,7 +476,7 @@ class Cli
                     $modules->getModules();
 
                     echo '  Installing Modules(s):' . PHP_EOL;
-                    echo '  ====================' . PHP_EOL . PHP_EOL;
+                    echo '  ----------------------' . PHP_EOL . PHP_EOL;
                     if (count($modules->new) > 0) {
                         echo '  ' . count($modules->new) . ' module(s) available for installation.' . PHP_EOL;
                         echo '  Installing...';
@@ -497,7 +497,7 @@ class Cli
                         $installModules = ' (' . count($modules->new) . ' Available for Install) ';
                     }
 
-                    echo PHP_EOL . PHP_EOL . '  Modules:' . $installModules . PHP_EOL;
+                    echo '  Modules:' . $installModules . PHP_EOL;
                     echo '  ========' . PHP_EOL . PHP_EOL;
                     echo "  ID# \t\tName\t\tActive" . PHP_EOL;
                     echo "  ----\t\t----\t\t------" . PHP_EOL;
@@ -516,7 +516,7 @@ class Cli
                     break;
                 case 'activate':
                     echo '  Activate an Extension:' . PHP_EOL;
-                    echo '  ======================' . PHP_EOL;
+                    echo '  ======================' . PHP_EOL . PHP_EOL;
                     $id = self::cliInput('  Enter Extension ID#: ');
                     $ext = Table\Extensions::findById($id);
                     if (isset($ext->id)) {
@@ -540,7 +540,7 @@ class Cli
                     break;
                 case 'deactivate':
                     echo '  Deactivate an Extension:' . PHP_EOL;
-                    echo '  ========================' . PHP_EOL;
+                    echo '  ========================' . PHP_EOL . PHP_EOL;
                     $id = self::cliInput('  Enter Extension ID#: ');
                     $ext = Table\Extensions::findById($id);
                     if (isset($ext->id)) {
@@ -554,7 +554,7 @@ class Cli
                     break;
                 case 'remove':
                     echo '  Remove an Extension:' . PHP_EOL;
-                    echo '  ====================' . PHP_EOL;
+                    echo '  ====================' . PHP_EOL . PHP_EOL;
                     $id = self::cliInput('  Enter Extension ID#: ');
                     $ext = Table\Extensions::findById($id);
                     if (isset($ext->id)) {
@@ -838,8 +838,6 @@ class Cli
             if (($type == 'system') && is_writable(__DIR__ . '/../../../../')) {
                 $writable = true;
             } else if (($type == 'module') && is_writable(__DIR__ . '/../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'modules')) {
-                $writable = true;
-            } else if (($type == 'theme') && is_writable(__DIR__ . '/../../../../../' . CONTENT_PATH . DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . 'themes')) {
                 $writable = true;
             }
 
