@@ -236,11 +236,6 @@ class User extends AbstractModel
             $params   = array('type_id' => $typeId);
         }
 
-        if (null !== $order['limit']) {
-            $sql->select()->limit($order['limit'])
-                          ->offset($order['offset']);
-        }
-
         $sql->select()->where()->equalTo(DB_PREFIX . 'users.type_id', ':type_id');
 
         $search         = false;
@@ -274,13 +269,20 @@ class User extends AbstractModel
             }
         }
 
-        // Execute SQL query and get user type
-        $users    = Table\Users::execute($sql->render(true), $params);
+        if (null !== $order['limit']) {
+            $rowCount = Table\Users::execute($sql->render(true), $params)->count();
+            $sql->select()->limit($order['limit'])
+                ->offset($order['offset']);
+            $users = Table\Users::execute($sql->render(true), $params);
+        } else {
+            $users = Table\Users::execute($sql->render(true), $params);
+        }
+
         $userType = Table\UserTypes::findById($typeId);
 
-        if ($search) {
+        if ((null === $rowCount) && ($search)) {
             $rowCount = $users->count();
-        } else {
+        } else if (null === $rowCount) {
             $rowCount = Table\Users::getCount(array('type_id' => $typeId));
         }
 
