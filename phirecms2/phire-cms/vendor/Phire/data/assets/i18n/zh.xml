@@ -1459,5 +1459,13 @@
             <source>Update to</source>
             <output>要更新</output>
         </text>
+        <text>
+            <source>Registration Notification</source>
+            <output>报名通知</output>
+        </text>
+        <text>
+            <source>A new user has registered at</source>
+            <output>新用户注册在</output>
+        </text>
     </locale>
 </language>

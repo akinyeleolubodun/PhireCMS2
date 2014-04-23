@@ -1459,5 +1459,13 @@
             <source>Update to</source>
             <output>Aktualisieren Sie auf</output>
         </text>
+        <text>
+            <source>Registration Notification</source>
+            <output>Registrierung Mitteilung</output>
+        </text>
+        <text>
+            <source>A new user has registered at</source>
+            <output>Ein neuer Benutzer registriert hat bei</output>
+        </text>
     </locale>
 </language>

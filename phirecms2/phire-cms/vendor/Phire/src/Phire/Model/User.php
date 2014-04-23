@@ -644,6 +644,13 @@ class User extends AbstractModel
         if (($type->verification) && !($user->verified)) {
             $this->sendVerification($user, $type);
         }
+
+        // Send registration notification to system admin
+        if ($type->	registration_notification) {
+            $this->sendNotification($user, $type);
+        }
+
+        $form->clear();
     }
 
     /**
@@ -804,7 +811,7 @@ class User extends AbstractModel
                 'domain' => $domain
             );
 
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/unsubscribe.txt')) {
                 $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/unsubscribe.txt');
             } else {
                 $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/unsubscribe.txt');
@@ -875,7 +882,7 @@ class User extends AbstractModel
             'domain' => $domain
         );
 
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/approval.txt')) {
             $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/approval.txt');
         } else {
             $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/approval.txt');
@@ -926,7 +933,7 @@ class User extends AbstractModel
             'domain' => $domain
         );
 
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/verify.txt')) {
             $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/verify.txt');
         } else {
             $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/verify.txt');
@@ -950,6 +957,56 @@ class User extends AbstractModel
 
         // Send email verification
         $mail = new Mail($domain . ' - ' . $this->i18n->__('Email Verification'), $rcpt);
+        $mail->from('noreply@' . $domain);
+        $mail->setText($mailTmpl);
+        $mail->send();
+    }
+
+    /**
+     * Send registration notification email to a system email
+     *
+     * @param \Phire\Table\Users $user
+     * @param \Phire\Table\UserTypes $type
+     * @return void
+     */
+    public function sendNotification(\Phire\Table\Users $user, $type)
+    {
+        // Get the base path and domain
+        $basePath = (strtolower($type->type) != 'user') ? BASE_PATH . '/' . strtolower($type->type) : BASE_PATH . APP_URI;
+        $domain = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+
+        // Set the recipient
+        $rcpt = array(
+            'email'       => $this->config->system_email,
+            'username'    => $user->username,
+            'user_email'  => $user->email,
+            'domain'      => $domain
+        );
+
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/register.txt')) {
+            $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/register.txt');
+        } else {
+            $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/register.txt');
+        }
+
+        $mailTmpl = str_replace(
+            array(
+                'A new user has registered at',
+                'Username',
+                'Email',
+                'Thank You'
+            ),
+            array(
+                $this->i18n->__('A new user has registered at'),
+                $this->i18n->__('Username'),
+                $this->i18n->__('Email'),
+                $this->i18n->__('Thank You')
+            ),
+            $mailTmpl
+        );
+
+        // Send email verification
+        $mail = new Mail($domain . ' - ' . $this->i18n->__('Registration Notification'), $rcpt);
         $mail->from('noreply@' . $domain);
         $mail->setText($mailTmpl);
         $mail->send();
@@ -1000,7 +1057,7 @@ class User extends AbstractModel
                 'message'  => $msg
             );
 
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/forgot.txt')) {
                 $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/forgot.txt');
             } else {
                 $mailTmpl = file_get_contents(__DIR__ . '/../../../view/phire/mail/forgot.txt');

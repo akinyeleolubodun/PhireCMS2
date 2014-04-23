@@ -122,6 +122,12 @@ class UserType extends AbstractForm
                 'value'  => $yesNo,
                 'marked' => '1'
             ),
+            'registration_notification' => array(
+                'type'   => 'radio',
+                'label'  => $this->i18n->__('Registration Notification'),
+                'value'  => $yesNo,
+                'marked' => '0'
+            ),
             'use_captcha' => array(
                 'type'   => 'radio',
                 'label'  => $this->i18n->__('Use CAPTCHA'),
@@ -163,6 +169,12 @@ class UserType extends AbstractForm
             'email_verification' => array(
                 'type'   => 'radio',
                 'label'  => $this->i18n->__('User Email Verification'),
+                'value'  => $yesNo,
+                'marked' => '0'
+            ),
+            'global_access' => array(
+                'type'   => 'radio',
+                'label'  => $this->i18n->__('Allow Global Access'),
                 'value'  => $yesNo,
                 'marked' => '0'
             ),
@@ -266,12 +278,6 @@ class UserType extends AbstractForm
             'attributes' => array(
                 'style' => 'width: 200px;'
             )
-        );
-        $fields4['global_access'] = array(
-            'type'   => 'select',
-            'label'  => $this->i18n->__('Allow Global Access'),
-            'value'  => $yesNo,
-            'marked' => '0'
         );
         $fields4['reset_password'] = array(
             'type'   => 'select',

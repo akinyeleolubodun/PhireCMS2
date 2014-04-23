@@ -1459,5 +1459,13 @@
             <source>Update to</source>
             <output>обновить до</output>
         </text>
+        <text>
+            <source>Registration Notification</source>
+            <output>Регистрация Уведомление</output>
+        </text>
+        <text>
+            <source>A new user has registered at</source>
+            <output>Новый пользователь зарегистрирован в</output>
+        </text>
     </locale>
 </language>
