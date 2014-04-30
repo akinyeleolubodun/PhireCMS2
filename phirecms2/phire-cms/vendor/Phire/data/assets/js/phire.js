@@ -417,6 +417,10 @@ var phire = {
                     "name" : realNewName,
                     "id"   : newName
                 }).appendTo(jax('#' + oldName).parent());
+
+                if (jax('#' + newName)[0].value != '') {
+                    jax('#' + newName)[0].value = '';
+                }
             }
         }
     },
