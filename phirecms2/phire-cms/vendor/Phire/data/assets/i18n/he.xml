@@ -1467,5 +1467,13 @@
             <source>A new user has registered at</source>
             <output>משתמש חדש נרשם ב</output>
         </text>
+        <text>
+            <source>Current</source>
+            <output>הנוכחי</output>
+        </text>
+        <text>
+            <source>Editor</source>
+            <output>עורך</output>
+        </text>
     </locale>
 </language>

@@ -1467,5 +1467,13 @@
             <source>A new user has registered at</source>
             <output>Новый пользователь зарегистрирован в</output>
         </text>
+        <text>
+            <source>Current</source>
+            <output>ток</output>
+        </text>
+        <text>
+            <source>Editor</source>
+            <output>редактор</output>
+        </text>
     </locale>
 </language>

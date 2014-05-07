@@ -261,7 +261,6 @@ class Field extends \Phire\Model\AbstractModel
 
                 // Add field to the field array
                 $fieldsAry[$fieldName] = $fld;
-                $editorField = null;
 
                 // If in the system back end, and the field is a textarea, add history select field
                 if (($mid != 0) &&
@@ -269,41 +268,16 @@ class Field extends \Phire\Model\AbstractModel
                     (count($groupAry) == 0) && (strpos($_SERVER['REQUEST_URI'], APP_URI) !== false)) {
                     $fv = Table\FieldValues::findById(array($field->id, $mid));
                     if (isset($fv->field_id) && (null !== $fv->history)) {
-                        $history = array(0 => '(Current)');
+                        $history = array(0 => '(' . $i18n->__('Current') . ')');
                         $historyAry = json_decode($fv->history, true);
                         krsort($historyAry);
                         foreach ($historyAry as $time => $fieldValue) {
                             $history[$time] = date('M j, Y H:i:s', $time);
                         }
 
-                        $historyLabel = $i18n->__('Select Revision');
-
-                        if (strpos($field->type, 'textarea') !== false) {
-                            if ((null !== $field->editor) && ($field->editor != 'source')) {
-                                $editors = array('source' => 'Source');
-                                if (($field->editor == 'ckeditor') &&
-                                    file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/ckeditor')) {
-                                    $editors['ckeditor'] = 'CKEditor';
-                                } else if (($field->editor == 'tinymce') &&
-                                    file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/tinymce')) {
-                                    $editors['tinymce'] = 'TinyMCE';
-                                }
-                                $editorField = array(
-                                    'type'       => 'select',
-                                    'value'      => $editors,
-                                    'marked'     => $field->editor,
-                                    'attributes' => array(
-                                        'onchange' => "phire.changeEditor(this);",
-                                        'style'    => 'width: 160px;'
-                                    )
-                                );
-                                $historyLabel = '<span style="display: inline-block; width: 165px;">' . $i18n->__('Select Revision') . '</span><span>' . $i18n->__('Change Editor') . '</span>';
-                            }
-                        }
-
                         $fieldsAry['history_' . $mid . '_' . $field->id] = array(
                             'type'       => 'select',
-                            'label'      => $historyLabel,
+                            'label'      => $i18n->__('Select Revision'),
                             'value'      => $history,
                             'marked'     => 0,
                             'attributes' => array(
@@ -311,34 +285,12 @@ class Field extends \Phire\Model\AbstractModel
                                 'style'    => 'width: 160px;'
                             )
                         );
-                        if (null !== $editorField) {
-                            $fieldsAry['editor_' . $field->id] = $editorField;
-                        }
                     }
                 }
 
                 if (strpos($field->type, 'textarea') !== false) {
                     if ((null !== $field->editor) && ($field->editor != 'source')) {
-                        $editors = array('source' => 'Source');
-                        if (($field->editor == 'ckeditor') &&
-                            file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/ckeditor')) {
-                            $editors['ckeditor'] = 'CKEditor';
-                        } else if (($field->editor == 'tinymce') &&
-                            file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/assets/js/tinymce')) {
-                            $editors['tinymce'] = 'TinyMCE';
-                        }
-                        if (null === $editorField) {
-                            $fieldsAry['editor_' . $field->id] = array(
-                                'type'       => 'select',
-                                'label'      => $i18n->__('Change Editor'),
-                                'value'      => $editors,
-                                'marked'     => $field->editor,
-                                'attributes' => array(
-                                    'onchange' => "phire.changeEditor(this);",
-                                    'style'    => 'width: 160px;'
-                                )
-                            );
-                        }
+                        $fieldsAry[$fieldName]['label'] .= ' <span style="float: right; margin-right: 4%; font-weight: normal;">[ <a href="#" class="editor-link" id="editor-' . $field->id . '" data-editor="' . $field->editor . '" data-editor-status="on" onclick="phire.changeEditor(this); return false;">' . $i18n->__('Source') . '</a> ]</span>';
                     }
                 }
 

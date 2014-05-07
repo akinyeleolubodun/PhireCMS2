@@ -637,14 +637,14 @@ input[type=submit]:focus, button:focus {
     line-height: 1.5em;
 }
 
-#updated {
+#updated, #created {
     clear: left;
-    margin: 5px 0 0 0;
+    margin: 5px 10px 0 0;
     padding: 0 10px 0 0;
-    width: 300px;
     font-size: 0.9em;
     float: right;
     text-align: right;
+    border-right: solid 1px #ccc;
 }
 
 #install-nav {
@@ -795,7 +795,7 @@ input[type=submit]:focus, button:focus {
 }
 
 .system-overview tr:hover, .dashboard-table tr:hover {
-    background-color: #eff6fc;
+    background-color: #e8f4f7;
 }
 
 .system-overview th, .dashboard-table th {
@@ -863,7 +863,7 @@ td.site-not-live {
 }
 
 .data-table tr:hover {
-    background-color: #eff6fc;
+    background-color: #e8f4f7;
 }
 
 .data-table th {
@@ -878,6 +878,15 @@ td.site-not-live {
     padding: 8px 5px 8px 5px;
     border-top: solid 1px #ccc;
     font-size: 0.9em;
+}
+
+
+.data-table tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+.data-table tr:nth-child(odd):hover {
+    background-color: #e8f4f7;
 }
 
 .required {
@@ -929,6 +938,10 @@ tr.table-bottom-row, td.table-bottom-row {
     padding: 7px 0 7px 0;
     font-size: 1.0em;
     text-align: right;
+    background: transparent;
+}
+
+.data-table tr.table-bottom-row:nth-child(odd) {
     background: transparent;
 }
 

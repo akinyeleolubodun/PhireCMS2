@@ -230,20 +230,11 @@ var phire = {
             }
         }
     },
-    updateForm : function(form, ret, prev) {
+    updateForm : function(form, ret) {
         phire.submitted = true;
         if (ret) {
-            if (prev != null) {
-                if (jax('#status')[0] != undefined) {
-                    jax('#status').val(1);
-                }
-                if (jax('#update_value')[0] != undefined) {
-                    jax('#update_value').val(2);
-                }
-            } else {
-                if (jax('#update_value')[0] != undefined) {
-                    jax('#update_value').val(1);
-                }
+            if (jax('#update_value')[0] != undefined) {
+                jax('#update_value').val(1);
             }
             return true;
         } else {
@@ -483,14 +474,17 @@ var phire = {
             }
         }
     },
-    changeEditor : function(sel) {
+    changeEditor : function(a) {
         var content = '';
-        var val = jax(sel).val();
-        var id = sel.id.substring(sel.id.indexOf('_') + 1);
-        var w = Math.round(jax('#field_' + id).width());
-        var h = Math.round(jax('#field_' + id).height());
+        var val     = jax(a).data('editor');
+        var status  = jax(a).data('editor-status');
+        var id      = a.id.substring(a.id.indexOf('-') + 1);
+        var w       = Math.round(jax('#field_' + id).width());
+        var h       = Math.round(jax('#field_' + id).height());
 
-        if (val == 'source') {
+        if (status == 'on') {
+            jax(a).val(phire.i18n.t('Editor'));
+            jax(a).data('editor-status', 'off');
             if (typeof CKEDITOR !== 'undefined') {
                 content = CKEDITOR.instances['field_' + id].getData();
                 CKEDITOR.instances['field_' + id].destroy();
@@ -500,10 +494,14 @@ var phire = {
             }
             jax('#field_' + id).val(content);
             jax('#field_' + id).show();
-        } else if (val == 'ckeditor') {
-            phire.loadEditor('ckeditor', id);
-        } else if (val == 'tinymce') {
-            phire.loadEditor('tinymce', id);
+        } else {
+            jax(a).val(phire.i18n.t('Source'));
+            jax(a).data('editor-status', 'on');
+            if (val == 'ckeditor') {
+                phire.loadEditor('ckeditor', id);
+            } else if (val == 'tinymce') {
+                phire.loadEditor('tinymce', id);
+            }
         }
     },
     toggleEditor : function(sel) {
@@ -777,23 +775,24 @@ jax(document).ready(function(){
         });
     }
 
-    var sels = jax('select').toArray();
-    var selVal = null;
-    if ((sels != '') && (sels.length > 0)) {
-        for (var i = 0; i < sels.length; i++) {
-            if (sels[i].id.indexOf('editor_') != -1) {
-                var id = sels[i].id.substring(sels[i].id.indexOf('_') + 1);
+    var aLinks = jax('a.editor-link').toArray();
+    var aVal = null;
+    if ((aLinks != '') && (aLinks.length > 0)) {
+
+        for (var i = 0; i < aLinks.length; i++) {
+            if (aLinks[i].id.indexOf('editor-') != -1) {
+                var id = aLinks[i].id.substring(aLinks[i].id.indexOf('-') + 1);
                 var w = Math.round(jax('#field_' + id).width());
                 var h = Math.round(jax('#field_' + id).height());
                 phire.selIds.push({ "id" : id, "width" : w, "height" : h });
-                selVal = jax(sels[i]).val();
+                aVal = jax(aLinks[i]).data('editor');
             }
         }
 
-        if (null != selVal) {
+        if (null != aVal) {
             var head = document.getElementsByTagName('head')[0];
             var script = document.createElement("script");
-            switch (selVal) {
+            switch (aVal) {
                 case 'ckeditor':
                     script.src = jax.root + 'ckeditor/ckeditor.js';
                     script.onload = script.onreadystatechange = function() {

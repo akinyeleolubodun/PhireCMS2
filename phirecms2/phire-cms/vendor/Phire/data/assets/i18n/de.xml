@@ -1467,5 +1467,13 @@
             <source>A new user has registered at</source>
             <output>Ein neuer Benutzer registriert hat bei</output>
         </text>
+        <text>
+            <source>Current</source>
+            <output>Strom </output>
+        </text>
+        <text>
+            <source>Editor</source>
+            <output>Editor</output>
+        </text>
     </locale>
 </language>
