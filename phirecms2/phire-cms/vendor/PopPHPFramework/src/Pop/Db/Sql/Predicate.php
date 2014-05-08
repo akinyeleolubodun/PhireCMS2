@@ -76,9 +76,9 @@ class Predicate
      * @param  int $i
      * @return boolean
      */
-    public function hasNest($i)
+    public function hasNest($i = null)
     {
-        return (isset($this->nested[$i]));
+        return (null === $i) ? (count($this->nested) > 0) : (isset($this->nested[$i]));
     }
 
     /**
