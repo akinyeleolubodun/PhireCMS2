@@ -1354,6 +1354,16 @@ th.config-header > a:hover {
     color: #e56300;
 }
 
+.blue {
+    font-weight: bold;
+    color: #53aae8;
+}
+
+.red {
+    font-weight: bold;
+    color: #ce3718;
+}
+
 .recent-header {
     font-size: 0.9em;
     border-top: solid 1px #ccc;
