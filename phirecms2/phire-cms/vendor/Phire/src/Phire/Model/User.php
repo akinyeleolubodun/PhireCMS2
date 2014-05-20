@@ -833,7 +833,7 @@ class User extends AbstractModel
 
             // Send email verification
             $mail = new Mail($domain . ' - ' . $this->i18n->__('Unsubscribed'), $rcpt);
-            $mail->from('noreply@' . $domain);
+            $mail->from(Table\Config::findById('reply_email')->value);
             $mail->setText($mailTmpl);
             $mail->send();
 
@@ -906,7 +906,7 @@ class User extends AbstractModel
 
         // Send email verification
         $mail = new Mail($domain . ' - ' . $this->i18n->__('Access Granted'), $rcpt);
-        $mail->from('noreply@' . $domain);
+        $mail->from(Table\Config::findById('reply_email')->value);
         $mail->setText($mailTmpl);
         $mail->send();
     }
@@ -957,7 +957,7 @@ class User extends AbstractModel
 
         // Send email verification
         $mail = new Mail($domain . ' - ' . $this->i18n->__('Email Verification'), $rcpt);
-        $mail->from('noreply@' . $domain);
+        $mail->from(Table\Config::findById('reply_email')->value);
         $mail->setText($mailTmpl);
         $mail->send();
     }
@@ -1007,7 +1007,7 @@ class User extends AbstractModel
 
         // Send email verification
         $mail = new Mail($domain . ' - ' . $this->i18n->__('Registration Notification'), $rcpt);
-        $mail->from('noreply@' . $domain);
+        $mail->from(Table\Config::findById('reply_email')->value);
         $mail->setText($mailTmpl);
         $mail->send();
     }
@@ -1081,7 +1081,7 @@ class User extends AbstractModel
 
             // Send reminder
             $mail = new Mail($domain . ' - ' . $this->i18n->__('Password Reset'), $rcpt);
-            $mail->from('noreply@' . $domain);
+            $mail->from(Table\Config::findById('reply_email')->value);
             $mail->setText($mailTmpl);
             $mail->send();
         }
@@ -1204,7 +1204,7 @@ class User extends AbstractModel
 
         if (!in_array($_SERVER['REMOTE_ADDR'], $exclude)) {
             $emails = explode(',', $type->log_emails);
-            $noreply = 'noreply@' . $domain;
+            $noreply = Table\Config::findById('reply_email')->value;
 
             $options = array(
                 'subject' => 'Phire CMS ' . ucfirst(strtolower($type->type)) . ' ' . $this->i18n->__('Login Notification') . ' (' . $domain . ')',

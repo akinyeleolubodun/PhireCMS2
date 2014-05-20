@@ -133,7 +133,7 @@
         </text>
         <text>
             <source>Re-Type Email</source>
-            <output>Re-Tipo Email</output>
+            <output>Confirmar Email</output>
         </text>
         <text>
             <source>Username</source>
@@ -141,11 +141,11 @@
         </text>
         <text>
             <source>Enter Password</source>
-            <output>Introducir contraseña</output>
+            <output>Contraseña</output>
         </text>
         <text>
             <source>Re-Type Password</source>
-            <output>Vuelva a escribir la contraseña</output>
+            <output>Confirmar Contraseña</output>
         </text>
         <text>
             <source>User Role</source>

@@ -226,6 +226,11 @@ class Config extends AbstractModel
         $systemEmail->setAttributes('size', 85)
                     ->setAttributes('style', 'padding: 5px;');
 
+        // Set system email form element
+        $replyEmail = new Element('text', 'reply_email', $config['reply_email']);
+        $replyEmail->setAttributes('size', 85)
+                   ->setAttributes('style', 'padding: 5px;');
+
         // Set separator form element
         $separator = new Element('text', 'separator', $config['separator']);
         $separator->setAttributes('size', 3)
@@ -285,6 +290,7 @@ class Config extends AbstractModel
             'site_title'          => $siteTitle,
             'system_title'        => $systemTitle,
             'system_email'        => $systemEmail,
+            'reply_email'         => $replyEmail,
             'separator'           => $separator,
             'default_language'    => $lang,
             'error_message'       => '                    ' . $error,

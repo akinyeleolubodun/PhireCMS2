@@ -30,6 +30,7 @@ INSERT INTO "[{prefix}]config" ("setting", "value") VALUES
 ('updated_on', '0000-00-00 00:00:00'),
 ('system_title', 'Phire CMS 2.0'),
 ('system_email', ''),
+('reply_email', ''),
 ('site_title', 'Default Site Title'),
 ('separator', '&gt;'),
 ('default_language', 'en_US'),

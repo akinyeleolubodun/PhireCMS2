@@ -219,6 +219,10 @@ class Install
         $config->value = $form->email1;
         $config->update();
 
+        $config = \Phire\Table\Config::findById('reply_email');
+        $config->value = 'noreply@' . $domain;
+        $config->update();
+
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail')) {
             $mailTmpl = file_get_contents($_SERVER['DOCUMENT_ROOT'] . BASE_PATH . CONTENT_PATH . '/extensions/themes/phire/mail/install.txt');
         } else {
