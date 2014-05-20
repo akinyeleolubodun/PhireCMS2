@@ -146,6 +146,10 @@ class Config extends Record
             $cfg = static::findById('php_version');
             $cfg->value = $server->getPhp();
             $cfg->update();
+
+            $cfg = static::findById('reply_email');
+            $cfg->value = 'noreply@' . str_replace('www.', '', $_SERVER['HTTP_HOST']);
+            $cfg->update();
         }
     }
 
