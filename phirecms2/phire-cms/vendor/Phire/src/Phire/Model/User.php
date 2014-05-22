@@ -190,7 +190,7 @@ class User extends AbstractModel
             }
         }
 
-        $order = $this->getSortOrder($sort, $page);
+        $order = $this->getSortOrder($sort, $page, 'DESC');
         $sql = Table\Users::getSql();
         $order['field'] = ($order['field'] == 'id') ? DB_PREFIX . 'users.id' : $order['field'];
 
