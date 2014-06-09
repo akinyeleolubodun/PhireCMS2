@@ -619,6 +619,13 @@ class User extends AbstractModel
             $fields['verified'] = ($type->verification) ? 0 : 1;
         }
 
+        if (isset($fields['site_ids'])) {
+            $siteIds = $fields['site_ids'];
+        } else {
+            $site = Table\Sites::getSite();
+            $siteIds = array($site->id);
+        }
+
         // Save the new user
         $user = new Table\Users(array(
             'type_id'         => $fields['type_id'],
@@ -629,7 +636,7 @@ class User extends AbstractModel
             'verified'        => $fields['verified'],
             'logins'          => null,
             'failed_attempts' => 0,
-            'site_ids'        => (isset($fields['site_ids']) ? serialize($fields['site_ids']) : serialize(array())),
+            'site_ids'        => serialize($siteIds),
             'created'         => date('Y-m-d H:i:s')
         ));
         $user->save();
