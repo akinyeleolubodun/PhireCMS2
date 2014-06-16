@@ -34,7 +34,6 @@ INSERT INTO `[{prefix}]config` (`setting`, `value`) VALUES
 ('site_title', 'Default Site Title'),
 ('separator', '&gt;'),
 ('default_language', 'en_US'),
-('error_message', 'Sorry. That page was not found.'),
 ('datetime_format', 'M j Y g:i A'),
 ('media_allowed_types', 'a:27:{i:0;s:2:"ai";i:1;s:3:"bz2";i:2;s:3:"csv";i:3;s:3:"doc";i:4;s:4:"docx";i:5;s:3:"eps";i:6;s:3:"gif";i:7;s:2:"gz";i:8;s:4:"html";i:9;s:3:"htm";i:10;s:3:"jpe";i:11;s:3:"jpg";i:12;s:4:"jpeg";i:13;s:3:"pdf";i:14;s:3:"png";i:15;s:3:"ppt";i:16;s:4:"pptx";i:17;s:3:"psd";i:18;s:3:"svg";i:19;s:3:"swf";i:20;s:3:"tar";i:21;s:3:"txt";i:22;s:3:"xls";i:23;s:4:"xlsx";i:24;s:5:"xhtml";i:25;s:3:"xml";i:26;s:3:"zip";}'),
 ('media_max_filesize', '25000000'),

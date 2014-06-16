@@ -19,7 +19,7 @@
     $formattedSetting = ucwords(str_replace(array('_', 'datetime', 'ssl'), array(' ', 'Date &amp; Time', 'SSL'), $setting));
     switch ($setting):
         case 'site_title':
-            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#site_title_row\').toggle(\'table-row\'); $(\'#system_email_row\').toggle(\'table-row\'); $(\'#reply_email_row\').toggle(\'table-row\');$(\'#system_title_row\').toggle(\'table-row\'); $(\'#separator_row\').toggle(\'table-row\'); $(\'#default_language_row\').toggle(\'table-row\'); $(\'#error_message_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Default Settings') . '</a></th></tr>' . PHP_EOL;
+            echo '                <tr><th class="config-header" colspan="2"><a href="#" onclick="$(\'#site_title_row\').toggle(\'table-row\'); $(\'#system_email_row\').toggle(\'table-row\'); $(\'#reply_email_row\').toggle(\'table-row\');$(\'#system_title_row\').toggle(\'table-row\'); $(\'#separator_row\').toggle(\'table-row\'); $(\'#default_language_row\').toggle(\'table-row\'); return false;">' . $i18n->__('Default Settings') . '</a></th></tr>' . PHP_EOL;
             $display = 'none';
             break;
         case 'datetime_format':

@@ -17,9 +17,7 @@
         <h2 style="color: #FF3F3F;"><?php echo (isset($title) ? $title : null); ?></h2>
     </div>
     <div id="install" style="padding-top: 50px; font-size: 1.4em;">
-<?php if (isset($msg)): ?>
-<?php echo $msg; ?>
-<?php endif; ?>
+        <p><?php $i18n->_e('Sorry. That page was not found.'); ?></p>
     </div>
     <div id="footer">
         <a href="http://www.phirecms.org/" target="_blank">Phire CMS</a> &copy; 2009-<?php echo date('Y'); ?> <a href="http://www.moc10media.com/" target="_blank">Moc 10 Media, LLC</a>. <?php $i18n->_e('All Rights Reserved.'); ?>

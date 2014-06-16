@@ -60,7 +60,6 @@ class Config extends Record
             'site_title',
             'separator',
             'default_language',
-            'error_message',
             'datetime_format',
             'media_allowed_types',
             'media_max_filesize',

@@ -244,10 +244,6 @@ class Config extends AbstractModel
 
         $lang = new Element\Select('default_language', $langs, $config['default_language'], '                    ');
 
-        // Set error message form element
-        $error = new Element\Textarea('error_message', $config['error_message']);
-        $error->setAttributes(array('rows' => 5, 'cols' => 100));
-
         // Set date and time format form element
         $datetime = $this->getDateTimeFormat($config['datetime_format']);
 
@@ -293,7 +289,6 @@ class Config extends AbstractModel
             'reply_email'         => $replyEmail,
             'separator'           => $separator,
             'default_language'    => $lang,
-            'error_message'       => '                    ' . $error,
             'datetime_format'     => $datetime,
             'media_allowed_types' => $mediaTypes,
             'media_max_filesize'  => '                    ' . $maxSize . ' &nbsp;&nbsp;&nbsp; [<strong style="color: #f00; padding: 0 0 0 5px;">PHP ' . $this->i18n->__('Limits') . ':</strong> ' . $phpLimitsString . ']',
