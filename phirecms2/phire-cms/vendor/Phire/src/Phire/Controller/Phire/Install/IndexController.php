@@ -100,7 +100,7 @@ class IndexController extends C
 
                 if ($form->isValid()) {
                     $install->config($form);
-                    $url = ($install->configWritable) ?
+                    $url = (isset($install->configWritable) && ($install->configWritable)) ?
                         BASE_PATH . $form->app_uri . '/install/user' :
                         BASE_PATH . APP_URI . '/install/config';
                     Response::redirect($url . '?lang=' . POP_LANG);
