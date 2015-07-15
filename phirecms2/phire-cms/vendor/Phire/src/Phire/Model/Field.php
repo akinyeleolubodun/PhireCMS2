@@ -76,7 +76,48 @@ class Field extends \Phire\Model\AbstractModel
                 if (($field->type == 'select') || ($field->type == 'checkbox') || ($field->type == 'radio')) {
                     if ($field->values != '') {
                         // Get fields values of a multiple value field
-                        if (strpos($field->values, '|') !== false) {
+                        if ((strpos($field->values, '[') !== false) && (strpos($field->values, ']') !== false)) {
+                            $valsAry = explode('|', $field->values);
+                            $fieldValues = [];
+                            foreach ($valsAry as $vals) {
+                                $key    = substr($vals, 0, strpos($vals, '['));
+                                $vls    = substr($vals, (strpos($vals, '[') + 1));
+                                $vls    = substr($vls, 0, strpos($vls, ']'));
+                                $vls    = str_replace('::', '|', $vls);
+                                $vlsAry = explode('|', $vls);
+
+                                $vs = [];
+                                foreach ($vlsAry as $va) {
+                                    // If the values are a name/value pair
+                                    if (strpos($va, ',') !== false) {
+                                        $vAry = explode(',', $va);
+                                        if (count($vAry) >= 2) {
+                                            // If the values are to be pulled from a database table
+                                            if (strpos($vAry[0], 'Table') !== false) {
+                                                $class = $vAry[0];
+                                                $order = $vAry[1] . (isset($vAry[2]) ? ', ' . $vAry[2] : null);
+                                                $order .= ' ' . ((isset($vAry[3])) ? $vAry[3] : 'ASC');
+                                                $id = $vAry[1];
+                                                $name = (isset($vAry[2]) ? $vAry[2] : $vAry[1]);
+                                                $valRows = $class::findAll($order);
+                                                if (isset($valRows->rows[0])) {
+                                                    foreach ($valRows->rows as $vRow) {
+                                                        $vs[$vRow->{$id}] = $vRow->{$name};
+                                                    }
+                                                }
+                                            // Else, if the value is a simple name/value pair
+                                            } else {
+                                                $vs[$vAry[0]] = $vAry[1];
+                                            }
+                                        }
+                                    } else {
+                                        $vs[$va] = $va;
+                                    }
+                                }
+                                $fieldValues[$key] = $vs;
+                            }
+                            $fld['value'] = $fieldValues;
+                        } else if (strpos($field->values, '|') !== false) {
                             $vals = explode('|', $field->values);
                             $valAry = array();
                             foreach ($vals as $v) {
